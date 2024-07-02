@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: vp-mobil
-Version: 0.1
-Author: Annhilati
-Description-Content-Type: text/markdown
-Requires-Dist: selenium
-
-# vp-mobile-py
