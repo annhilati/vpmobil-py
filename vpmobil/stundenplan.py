@@ -52,7 +52,7 @@ class vpDay():
     def __init__(self, xml: str | ET.ElementTree):
         self.xml = ET.ElementTree(ET.fromstring(xml)) if isinstance(xml, str) else xml
 
-    def convert(self, format: str = "str"):
+    def getxml(self, format: str = "ElementTree"):
         """
         Returns all the information of the day in a certain format
 

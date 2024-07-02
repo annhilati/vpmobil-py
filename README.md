@@ -8,3 +8,5 @@
 ## List of features
 - Stundenplan
     - fetch()
+- vpDay
+    - getxml()
