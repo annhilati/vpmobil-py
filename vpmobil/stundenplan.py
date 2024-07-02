@@ -1,9 +1,6 @@
 import selenium
 import selenium.webdriver
 import selenium.webdriver.common.by
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.edge.options import Options as EdgeOptions
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import chromedriver_autoinstaller
 import time
 
@@ -28,19 +25,11 @@ class Stundenplan():
 
         match browser:
             case "Chrome":
-                chrome_options = ChromeOptions()
-                chrome_options.add_argument("--headless")
-                chrome_options.add_argument("--disable-gpu")
-                driver = selenium.webdriver.Chrome(options=chrome_options)
+                driver = selenium.webdriver.Chrome()
             case "Edge":
-                edge_options = EdgeOptions()
-                edge_options.add_argument("--headless")
-                edge_options.add_argument("--disable-gpu")
-                driver = selenium.webdriver.Edge(options=edge_options)
+                driver = selenium.webdriver.Edge()
             case "Firefox":
-                firefox_options = FirefoxOptions()
-                firefox_options.headless = True
-                driver = selenium.webdriver.Firefox(options=firefox_options)
+                driver = selenium.webdriver.Firefox()
             case "Safari":
                 driver = selenium.webdriver.Safari()
             case _:
