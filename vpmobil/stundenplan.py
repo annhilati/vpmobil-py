@@ -9,6 +9,7 @@ class Stundenplan():
     """
     Refers to a specific account on a specific VpMobil-Stundenplan
     """
+
     def __init__(self, schulnummer: int, benutzername: str, passwort: str):
         self.schulnummer = schulnummer
         self.benutzername = benutzername
@@ -49,6 +50,10 @@ class Stundenplan():
         return vpDay(xml=data) 
             
 class vpDay():
+    """
+    Contains all information about a specific day
+    """
+
     def __init__(self, xml: str | ET.ElementTree):
         self.xml = ET.ElementTree(ET.fromstring(xml)) if isinstance(xml, str) else xml
 
@@ -58,6 +63,7 @@ class vpDay():
 
         - format: "str" or "ElementTree"
         """
+
         match format:
             case "str":
                 return ET.tostring(self.xml.getroot(), encoding="utf-8", method="xml")

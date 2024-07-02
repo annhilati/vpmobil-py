@@ -1,10 +1,10 @@
 import xml.etree.ElementTree as ET
-from vpmobil import Stundenplan, vpDay
+from vpmobil import Stundenplan
 
 stundenplan = Stundenplan(10126582, "schueler", "s361o97")
 
-vday = stundenplan.fetch(date=20240619, browser="Edge")
+zuCheckenderTag = stundenplan.fetch(date=20240619)
 
-print(vday.getxml("str"))
+print(zuCheckenderTag.getxml("str"))
 
-print(vday.getxml("ElementTree").getroot().tag)
+print(zuCheckenderTag.getxml("ElementTree").getroot().tag)
