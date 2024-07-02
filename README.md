@@ -1,1 +1,1 @@
-# vp-mobile-py
+# vpmobile-py

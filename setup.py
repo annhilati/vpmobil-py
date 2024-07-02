@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="vp-mobil",
+    name="vpmobil",
     version="0.1",
     packages=find_packages(),
     install_requires=["selenium"],  # Hier können Abhängigkeiten aufgelistet werden
-    author="Annhilati",
+    author="Annhilati & Joshi",
     #author_email="Ihre Email",
     #description="Eine kurze Beschreibung Ihres Pakets",
     long_description=open('README.md').read(),
