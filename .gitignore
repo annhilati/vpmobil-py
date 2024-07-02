@@ -1,0 +1,4 @@
+*.env
+temp.py
+acemeta.egg-info/
+build/
