@@ -14,9 +14,9 @@ class Stundenplan():
         self.benutzername = benutzername
         self.passwort = passwort
 
-    def fetch(self, date: int, browser: str = "Chrome", returntype: str = "str") -> ET.Element:
+    def fetch(self, date: int, browser: str = "Chrome", returntype: str = "str"):
         """
-        Prints all the information of a specific day as XML
+        Returns all the information about a specific day as XML
 
         - date: Specific day in yyyymmdd format
         - browser: "Chrome", "Edge", "Firefox" or "Safari"
@@ -42,14 +42,18 @@ class Stundenplan():
 
         driver.get(uri)
         time.sleep(1)
-        data = str((driver.find_element(selenium.webdriver.common.by.By.CLASS_NAME, "pretty-print").text).encode("ascii", "ignore"))
+
+        #data = str((driver.find_element(selenium.webdriver.common.by.By.CLASS_NAME, "pretty-print").text).encode("ascii", "ignore"))
+        data = driver.find_element(selenium.webdriver.common.by.By.CLASS_NAME, "pretty-print").text
+        data = data.strip()
 
         driver.quit()
+
 
         match returntype:
             case "str":
                 return data
             case "XML":
-                return ET.fromstring(data)
+                return ET.ElementTree(ET.fromstring(data))
             case _:
                 raise ValueError(f"Unsupported type: {returntype}")
