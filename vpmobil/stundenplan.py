@@ -49,19 +49,19 @@ class Stundenplan():
         return vpDay(xml=data) 
             
 class vpDay():
-    def __init__(self, xml: str):
-        self.xml = xml
+    def __init__(self, xml: str | ET.ElementTree):
+        self.xml = ET.ElementTree(ET.fromstring(xml)) if isinstance(xml, str) else xml
 
-    def out(self, returnformat: str = "str"):
+    def convert(self, format: str = "str"):
         """
         Returns all the information of the day in a certain format
 
-        - returnformat: "str" or "ElementTree"
+        - format: "str" or "ElementTree"
         """
-        match returnformat:
+        match format:
             case "str":
-                return ET.tostring(ET.ElementTree(ET.fromstring(self.xml)).getroot(), encoding="utf-8", method="xml")
+                return ET.tostring(self.xml.getroot(), encoding="utf-8", method="xml")
             case "ElementTree":
-                return ET.ElementTree(ET.fromstring(self.xml))
+                return self.xml
             case _:
-                raise ValueError(f"Unsupported type: {returnformat}")
+                raise ValueError(f"Unsupported type: {format}")

@@ -5,4 +5,6 @@ stundenplan = Stundenplan(10126582, "schueler", "s361o97")
 
 vday = stundenplan.fetch(date=20240619, browser="Edge")
 
-print(vday.out(returnformat="ElementTree"))
+et = vday.out("str")
+
+print(et.getroot().tag)
