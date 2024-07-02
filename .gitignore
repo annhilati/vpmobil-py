@@ -1,4 +1,4 @@
 *.env
 temp.py
-acemeta.egg-info/
+vpmobil.egg-info/
 build/
