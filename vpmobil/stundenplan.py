@@ -1,6 +1,9 @@
 import selenium
 import selenium.webdriver
 import selenium.webdriver.common.by
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import chromedriver_autoinstaller
 import time
 
@@ -16,25 +19,37 @@ class Stundenplan():
 
     def fetch(self, date: int, browser: str = "Chrome"):
         """
-        Prints the entire information of a specific day as XML
+        Prints all the information of a specific day as XML
 
-        - Available browsers: "Chrome", "Edge", "Firefox", "Safari"
+        - date: Specific day in yyyymmdd format
+        - browser: One of "Chrome", "Edge", "Firefox" and "Safari"
         """
         chromedriver_autoinstaller.install()
 
         match browser:
             case "Chrome":
-                driver = selenium.webdriver.Chrome()
+                chrome_options = ChromeOptions()
+                chrome_options.add_argument("--headless")
+                chrome_options.add_argument("--disable-gpu")
+                driver = selenium.webdriver.Chrome(options=chrome_options)
             case "Edge":
-                driver = selenium.webdriver.Edge()
+                edge_options = EdgeOptions()
+                edge_options.add_argument("--headless")
+                edge_options.add_argument("--disable-gpu")
+                driver = selenium.webdriver.Edge(options=edge_options)
             case "Firefox":
-                driver = selenium.webdriver.Firefox()
+                firefox_options = FirefoxOptions()
+                firefox_options.headless = True
+                driver = selenium.webdriver.Firefox(options=firefox_options)
             case "Safari":
                 driver = selenium.webdriver.Safari()
+            case _:
+                raise ValueError(f"Unsupported browser: {browser}")
+            
 
-        link = f"http://{self.benutzername}:{self.passwort}@stundenplan24.de/{self.schulnummer}/mobil/mobdaten/PlanKl{date}.xml"
+        uri = f"http://{self.benutzername}:{self.passwort}@stundenplan24.de/{self.schulnummer}/mobil/mobdaten/PlanKl{date}.xml"
 
-        driver.get(link)
+        driver.get(uri)
         time.sleep(1)
         data = str((driver.find_element(selenium.webdriver.common.by.By.CLASS_NAME, "pretty-print").text).encode("ascii", "ignore"))
 
