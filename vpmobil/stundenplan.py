@@ -14,13 +14,12 @@ class Stundenplan():
         self.benutzername = benutzername
         self.passwort = passwort
 
-    def fetch(self, date: int, browser: str = "Chrome", returntype: str = "str"):
+    def fetch(self, date: int, browser: str = "Chrome"):
         """
-        Returns all the information about a specific day as XML
+        Creates a vpDay object containing all information about a specific day
 
         - date: Specific day in yyyymmdd format
         - browser: "Chrome", "Edge", "Firefox" or "Safari"
-        - returntype: "str" or "XML"
         """
 
         chromedriver_autoinstaller.install()
@@ -39,21 +38,30 @@ class Stundenplan():
             
 
         uri = f"http://{self.benutzername}:{self.passwort}@stundenplan24.de/{self.schulnummer}/mobil/mobdaten/PlanKl{date}.xml"
-
         driver.get(uri)
         time.sleep(1)
 
-        #data = str((driver.find_element(selenium.webdriver.common.by.By.CLASS_NAME, "pretty-print").text).encode("ascii", "ignore"))
         data = driver.find_element(selenium.webdriver.common.by.By.CLASS_NAME, "pretty-print").text
         data = data.strip()
 
         driver.quit()
 
+        return vpDay(xml=data) 
+            
+class vpDay():
+    def __init__(self, xml: str):
+        self.xml = xml
 
-        match returntype:
+    def out(self, returnformat: str = "str"):
+        """
+        Returns all the information of the day in a certain format
+
+        - returnformat: "str" or "ElementTree"
+        """
+        match returnformat:
             case "str":
-                return data
-            case "XML":
-                return ET.ElementTree(ET.fromstring(data))
+                return ET.tostring(ET.ElementTree(ET.fromstring(self.xml)).getroot(), encoding="utf-8", method="xml")
+            case "ElementTree":
+                return ET.ElementTree(ET.fromstring(self.xml))
             case _:
-                raise ValueError(f"Unsupported type: {returntype}")
+                raise ValueError(f"Unsupported type: {returnformat}")
