@@ -3,6 +3,7 @@ import selenium.webdriver
 import selenium.webdriver.common.by
 import chromedriver_autoinstaller
 import time
+import xml.etree.ElementTree as ET
 
 class Stundenplan():
     """
@@ -12,15 +13,16 @@ class Stundenplan():
         self.schulnummer = schulnummer
         self.benutzername = benutzername
         self.passwort = passwort
-        #self.visiblewindow = False # TODO
 
-    def fetch(self, date: int, browser: str = "Chrome"):
+    def fetch(self, date: int, browser: str = "Chrome", returntype: str = "str") -> ET.Element:
         """
         Prints all the information of a specific day as XML
 
         - date: Specific day in yyyymmdd format
-        - browser: One of "Chrome", "Edge", "Firefox" and "Safari"
+        - browser: "Chrome", "Edge", "Firefox" or "Safari"
+        - returntype: "str" or "XML"
         """
+
         chromedriver_autoinstaller.install()
 
         match browser:
@@ -44,4 +46,10 @@ class Stundenplan():
 
         driver.quit()
 
-        print(data) #Debug
+        match returntype:
+            case "str":
+                return data
+            case "XML":
+                return ET.fromstring(data)
+            case _:
+                raise ValueError(f"Unsupported type: {returntype}")
