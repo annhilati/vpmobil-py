@@ -54,8 +54,8 @@ class VpData():
     Contains specific information about a specific day
     Can be built from an XML-Element or -ElementTree
     """
-    def __init__(self, data: ET.Element | ET.ElementTree):
-        self.data = data if isinstance(data, ET.Element) else data.getroot()
+    def __init__(self, data: ET.Element | VpDay):
+        self.data = data if isinstance(data, ET.Element) else data.data.getroot()
 
     def getxml(self, format: str = "Element"):
         """
