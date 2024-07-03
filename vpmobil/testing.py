@@ -33,7 +33,7 @@ class vpDay():
     """
 
     def __init__(self, xml: bytes):
-        self.xml = ET.ElementTree(ET.fromstring(xml))
+        self.data = ET.ElementTree(ET.fromstring(xml))
 
     def getxml(self, format: str = "ElementTree"):
         """
@@ -43,8 +43,8 @@ class vpDay():
         """
 
         if format == "str":
-            return ET.tostring(self.xml.getroot(), encoding="utf-8", method="xml")
+            return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml")
         elif format == "ElementTree":
-            return self.xml
+            return self.data
         else:
             raise ValueError(f"Unsupported type: {format}")
