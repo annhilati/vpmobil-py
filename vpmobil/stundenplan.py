@@ -1,8 +1,4 @@
-import selenium
-import selenium.webdriver
-import selenium.webdriver.common.by
-import chromedriver_autoinstaller
-import time
+import requests
 import xml.etree.ElementTree as ET
 
 class Stundenplan():
@@ -14,48 +10,32 @@ class Stundenplan():
         self.schulnummer = schulnummer
         self.benutzername = benutzername
         self.passwort = passwort
+        self.webpath = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
 
-    def fetch(self, date: int, browser: str = "Chrome"):
+    def fetch(self, date: int):
         """
         Creates a vpDay object containing all information about a specific day
 
         - date: Specific day in yyyymmdd format
-        - browser: "Chrome", "Edge", "Firefox" or "Safari"
         """
 
-        chromedriver_autoinstaller.install()
+        uri = f"{self.webpath}PlanKl{date}.xml"
+        response = requests.get(uri)
 
-        match browser:
-            case "Chrome":
-                driver = selenium.webdriver.Chrome()
-            case "Edge":
-                driver = selenium.webdriver.Edge()
-            case "Firefox":
-                driver = selenium.webdriver.Firefox()
-            case "Safari":
-                driver = selenium.webdriver.Safari()
-            case _:
-                raise ValueError(f"Unsupported browser: {browser}")
-            
+        if response.status_code != 200:
+            raise ValueError(f"Failed to fetch data for date {date}. Status code: {response.status_code}")
 
-        uri = f"http://{self.benutzername}:{self.passwort}@stundenplan24.de/{self.schulnummer}/mobil/mobdaten/PlanKl{date}.xml"
-        driver.get(uri)
-        time.sleep(1)
+        return vpDay(xml=response.content)
 
-        data = driver.find_element(selenium.webdriver.common.by.By.CLASS_NAME, "pretty-print").text
-        data = data.strip()
-
-        driver.quit()
-
-        return vpDay(xml=data) 
-            
 class vpDay():
     """
     Contains all information about a specific day
     """
 
+    # def __init__(self, xml: bytes):
+    #     self.data = ET.ElementTree(ET.fromstring(xml))
     def __init__(self, xml: str | ET.ElementTree):
-        self.xml = ET.ElementTree(ET.fromstring(xml)) if isinstance(xml, str) else xml
+        self.data = ET.ElementTree(ET.fromstring(xml)) if isinstance(xml, str) else xml
 
     def getxml(self, format: str = "ElementTree"):
         """
@@ -64,10 +44,9 @@ class vpDay():
         - format: "str" or "ElementTree"
         """
 
-        match format:
-            case "str":
-                return ET.tostring(self.xml.getroot(), encoding="utf-8", method="xml")
-            case "ElementTree":
-                return self.xml
-            case _:
-                raise ValueError(f"Unsupported type: {format}")
+        if format == "str":
+            return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml")
+        elif format == "ElementTree":
+            return self.data
+        else:
+            raise ValueError(f"Unsupported type: {format}")
