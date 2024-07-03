@@ -41,7 +41,7 @@ class VpDay():
 
         - format: "str" or "Element"
         """
-
+        
         match format:
             case "str":
                 return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml").decode('utf-8')
@@ -50,16 +50,19 @@ class VpDay():
             case _:
                 raise ValueError(f"Unsupported type: {format}")
             
-    def getclass(self, class_short: str):
-        """
-        Returns all information about a specific class
+    # def getclass(self, class_short: str):
+    #     """
+    #     Returns all information about a specific class
 
-        - class_short: Short name of the class to find
-        """
-        root = self.data.getroot()
-        for kl in root.findall('.//Kl'):
-            kurz = kl.find('Kurz')
-            if kurz is not None and kurz.text == class_short:
-                return kl
-            else:
-                print(f"No class {class_short} found")
+    #     - class_short: Short name of the class to find
+    #     """
+    #     root = self.data.getroot()
+    #     for kl in root.findall('.//Kl'):
+    #         kurz = kl.find('Kurz')
+    #         if kurz is not None and kurz.text == class_short:
+    #             return kl
+    #         else:
+    #             print(f"No class {class_short} found")
+
+    def get_substitution(self, class_short):
+        pass
