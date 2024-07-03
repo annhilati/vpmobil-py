@@ -44,7 +44,7 @@ class VpDay():
 
         match format:
             case "str":
-                return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml")
+                return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml").decode('utf-8')
             case "ElementTree":
                 return self.data
             case _:
