@@ -4,7 +4,7 @@ setup(
     name="vpmobil",
     version="0.1",
     packages=find_packages(),
-    install_requires=["selenium", "chromedriver_autoinstaller"],  # Hier können Abhängigkeiten aufgelistet werden
+    install_requires=["requests"],  # Hier können Abhängigkeiten aufgelistet werden
     author="Annhilati & Joshi",
     #author_email="Ihre Email",
     #description="Eine kurze Beschreibung Ihres Pakets",

@@ -44,9 +44,10 @@ class vpDay():
         - format: "str" or "ElementTree"
         """
 
-        if format == "str":
-            return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml")
-        elif format == "ElementTree":
-            return self.data
-        else:
-            raise ValueError(f"Unsupported type: {format}")
+        match format:
+            case "str":
+                return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml")
+            case "ElementTree":
+                return self.data
+            case _:
+                raise ValueError(f"Unsupported type: {format}")
