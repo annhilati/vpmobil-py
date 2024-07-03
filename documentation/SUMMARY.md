@@ -1,3 +1,5 @@
 # Table of contents
 
-* [Page](README.md)
+* [How to get started](README.md)
+* [Stundenplan](stundenplan.md)
+* [vpDay](vpday.md)
