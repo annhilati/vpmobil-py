@@ -10,3 +10,8 @@
     - fetch()
 - vpDay
     - getxml()
+
+## List of future features
+- Stundenplan
+    - list of teachers sick today
+    - ...more
