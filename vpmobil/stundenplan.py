@@ -14,7 +14,7 @@ class Stundenplan():
 
     def fetch(self, date: int):
         """
-        Creates a vpDay object containing all information about a specific day
+        Creates a VpDay object containing all information about a specific day
 
         - date: Specific day in yyyymmdd format
         """
@@ -25,17 +25,15 @@ class Stundenplan():
         if response.status_code != 200:
             raise ValueError(f"Failed to fetch data for date {date}. Status code: {response.status_code}")
 
-        return vpDay(xml=response.content)
+        return VpDay(xmldata=response.content)
 
-class vpDay():
+class VpDay():
     """
     Contains all information about a specific day
     """
 
-    # def __init__(self, xml: bytes):
-    #     self.data = ET.ElementTree(ET.fromstring(xml))
-    def __init__(self, xml: str | ET.ElementTree):
-        self.data = ET.ElementTree(ET.fromstring(xml)) if isinstance(xml, str) else xml
+    def __init__(self, xmldata: ET.ElementTree | bytes | str):
+        self.data = xmldata if isinstance(xmldata, ET.ElementTree) else ET.ElementTree(ET.fromstring(xmldata))
 
     def getxml(self, format: str = "ElementTree"):
         """

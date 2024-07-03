@@ -1,4 +1,4 @@
-from .stundenplan import Stundenplan, vpDay
+from .stundenplan import Stundenplan, VpDay
 #from .testing import Stundenplan, vpDay
 
-__all__ = ['Stundenplan', "vpDay"]
+__all__ = ['Stundenplan', "VpDay"]
