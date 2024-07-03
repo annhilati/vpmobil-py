@@ -10,7 +10,7 @@ class Stundenplan():
         self.schulnummer = schulnummer
         self.benutzername = benutzername
         self.passwort = passwort
-        self.base_url = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
+        self.webpath = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
 
     def fetch(self, date: int):
         """
@@ -19,8 +19,8 @@ class Stundenplan():
         - date: Specific day in yyyymmdd format
         """
 
-        url = f"{self.base_url}PlanKl{date}.xml"
-        response = requests.get(url)
+        uri = f"{self.webpath}PlanKl{date}.xml"
+        response = requests.get(uri)
 
         if response.status_code != 200:
             raise ValueError(f"Failed to fetch data for date {date}. Status code: {response.status_code}")
