@@ -5,4 +5,4 @@ stundenplan = Stundenplan(10126582, "schueler", "s361o97")
 
 zuCheckenderTag = stundenplan.fetch(date=20240619)
 
-print(VpData(data=zuCheckenderTag).getxml("str"))
+print(VpData(data=zuCheckenderTag.getclass("9a")).getxml("str"))

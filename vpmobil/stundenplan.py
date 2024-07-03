@@ -33,7 +33,22 @@ class VpDay():
     """
 
     def __init__(self, xmldata: ET.ElementTree | bytes | str):
-        self.data = xmldata if isinstance(xmldata, ET.ElementTree) else ET.ElementTree(ET.fromstring(xmldata))
+        self.data: ET.ElementTree = xmldata if isinstance(xmldata, ET.ElementTree) else ET.ElementTree(ET.fromstring(xmldata))
+
+    def getxml(self, format: str = "ElementTree"):
+        """
+        Returns all the information of the day in a certain format
+
+        - format: "str" or "Element"
+        """
+
+        match format:
+            case "str":
+                return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml").decode('utf-8')
+            case "ElementTree":
+                return self.data
+            case _:
+                raise ValueError(f"Unsupported type: {format}")
             
     def getclass(self, class_short: str):
         """
@@ -45,29 +60,6 @@ class VpDay():
         for kl in root.findall('.//Kl'):
             kurz = kl.find('Kurz')
             if kurz is not None and kurz.text == class_short:
-                return VpData(data=kl)
+                return kl
             else:
                 print(f"No class {class_short} found")
-    
-class VpData():
-    """
-    Contains specific information about a specific day
-    Can be built from an XML-Element or -ElementTree
-    """
-    def __init__(self, data: ET.Element | VpDay):
-        self.data = data if isinstance(data, ET.Element) else data.data.getroot()
-
-    def getxml(self, format: str = "Element"):
-        """
-        Returns all the information of the day in a certain format
-
-        - format: "str" or "Element"
-        """
-
-        match format:
-            case "str":
-                return ET.tostring(self.data, encoding="utf-8", method="xml").decode('utf-8')
-            case "Element":
-                return self.data
-            case _:
-                raise ValueError(f"Unsupported type: {format}")
