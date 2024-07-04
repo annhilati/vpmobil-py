@@ -41,7 +41,7 @@ class VpDay():
         """
         Returns all data for the day in a specific format
 
-        - format: "str" or "Element"
+        - format: The format in which the data is to be output. One of "str" or "ElementTree"
         """
         
         match format:
@@ -51,6 +51,15 @@ class VpDay():
                 return self.datatree
             case _:
                 raise ValueError(f"Unsupported type: {format}")
+
+    def zeitstempel(self) -> DT:
+        """
+        Returns all data for the day in a specific format
+
+        - format: The format in which the data is to be output. One of "str" or "ElementTree"
+        """
+        zeitstempel = self.datatree.find('Kopf/zeitstempel').text
+        return DT.strptime(zeitstempel, "%d.%m.%Y, %H:%M")
             
     def get_substitution(self, class_short):
         # """
