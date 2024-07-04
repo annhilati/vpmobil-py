@@ -1,6 +1,6 @@
-import requests
+from datetime import datetime as DT
 import xml.etree.ElementTree as ET
-from datetime import datetime
+import requests as RQ
 
 class Stundenplan():
     """
@@ -13,7 +13,7 @@ class Stundenplan():
         self.passwort = passwort
         self.webpath = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
 
-    def fetch(self, date: int = datetime.today().strftime('%Y%m%d')):
+    def fetch(self, date: int = DT.today().strftime('%Y%m%d')):
         """
         Retrieves all data for a specific day and writes it to a VpDay object.
         An error is raised if no data is available for the specified day
@@ -22,7 +22,7 @@ class Stundenplan():
         """
 
         uri = f"{self.webpath}PlanKl{date}.xml"
-        response = requests.get(uri)
+        response = RQ.get(uri)
 
         if response.status_code != 200:
             raise ValueError(f"Failed to fetch data for date {date}. Status code: {response.status_code}")
