@@ -33,7 +33,7 @@ class VpDay():
     """
 
     def __init__(self, xmldata: ET.ElementTree | bytes | str):
-        self.data: ET.ElementTree = xmldata if isinstance(xmldata, ET.ElementTree) else ET.ElementTree(ET.fromstring(xmldata))
+        self.datatree: ET.ElementTree = xmldata if isinstance(xmldata, ET.ElementTree) else ET.ElementTree(ET.fromstring(xmldata))
 
     def getxml(self, format: str = "ElementTree"):
         """
@@ -44,25 +44,23 @@ class VpDay():
         
         match format:
             case "str":
-                return ET.tostring(self.data.getroot(), encoding="utf-8", method="xml").decode('utf-8')
+                return ET.tostring(self.datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
             case "ElementTree":
-                return self.data
+                return self.datatree
             case _:
                 raise ValueError(f"Unsupported type: {format}")
             
-    # def getclass(self, class_short: str):
-    #     """
-    #     Returns all information about a specific class
-
-    #     - class_short: Short name of the class to find
-    #     """
-    #     root = self.data.getroot()
-    #     for kl in root.findall('.//Kl'):
-    #         kurz = kl.find('Kurz')
-    #         if kurz is not None and kurz.text == class_short:
-    #             return kl
-    #         else:
-    #             print(f"No class {class_short} found")
-
     def get_substitution(self, class_short):
+        # """
+        # Returns a list of the substitution planned for a class
+
+        # - class_short: Short name of the class to find
+        # """
+        # vpmobil = self.data.getroot()
+        # for kl in vpmobil.findall('.//Kl'):
+        #     kurz = kl.find('Kurz')
+        #     if kurz is not None and kurz.text == class_short:
+        #         return kl
+        #     else:
+        #         print(f"No class {class_short} found")
         pass
