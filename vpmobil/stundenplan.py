@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 
 class Stundenplan():
     """
-    Refers to a specific account on a specific VpMobil-Stundenplan
+    Contains the necessary data to access a stundenplan24.de substitution plan
     """
 
     def __init__(self, schulnummer: int, benutzername: str, passwort: str):
@@ -14,7 +14,8 @@ class Stundenplan():
 
     def fetch(self, date: int):
         """
-        Creates a VpDay object containing all information about a specific day
+        Retrieves all data for a specific day and writes it to a VpDay object.
+        An error is raised if no data is available for the specified day
 
         - date: Specific day in yyyymmdd format
         """
@@ -29,15 +30,15 @@ class Stundenplan():
 
 class VpDay():
     """
-    Contains all information about a specific day
+    Contains all data for a specific day 
     """
 
     def __init__(self, xmldata: ET.ElementTree | bytes | str):
         self.datatree: ET.ElementTree = xmldata if isinstance(xmldata, ET.ElementTree) else ET.ElementTree(ET.fromstring(xmldata))
 
-    def getxml(self, format: str = "ElementTree"):
+    def getxml(self, format: str = "ElementTree") -> (ET.ElementTree | str):
         """
-        Returns all the information of the day in a certain format
+        Returns all data for the day in a specific format
 
         - format: "str" or "Element"
         """

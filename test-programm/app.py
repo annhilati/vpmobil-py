@@ -3,6 +3,7 @@ from vpmobil import Stundenplan
 
 stundenplan = Stundenplan(10126582, "schueler", "s361o97")
 
-zuCheckenderTag = stundenplan.fetch(date=20240619)
+#tag = stundenplan.fetch(date=20240619)
+tag = stundenplan.fetch(date=20240704)
 
-print(zuCheckenderTag.getxml("str"))
+print(tag.getxml())
