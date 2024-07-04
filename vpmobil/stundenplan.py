@@ -54,9 +54,7 @@ class VpDay():
 
     def zeitstempel(self) -> DT:
         """
-        Returns all data for the day in a specific format
-
-        - format: The format in which the data is to be output. One of "str" or "ElementTree"
+        Returns the time at which the substitution plan was published
         """
         zeitstempel = self.datatree.find('Kopf/zeitstempel').text
         return DT.strptime(zeitstempel, "%d.%m.%Y, %H:%M")
