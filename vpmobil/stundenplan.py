@@ -1,6 +1,6 @@
-from datetime import datetime as DT
-import xml.etree.ElementTree as ET
-import requests as RQ
+from datetime import datetime as DT # mach zu datetime
+import xml.etree.ElementTree as ET # mach zu XML
+import requests as RQ # mach zu REQ
 
 class Stundenplan():
     """
