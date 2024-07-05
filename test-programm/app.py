@@ -1,10 +1,10 @@
 import xml.etree.ElementTree as ET
-from vpmobil import Stundenplan
+from vpmobil import Vertretungsplan
 
-stundenplan = Stundenplan(10126582, "schueler", "s361o97")
+vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
-#tag = stundenplan.fetch(date=20240619)
-tag = stundenplan.fetch(date=20240619)
+#tag = vertretungsplan.fetch(date=20240619)
+tag = vertretungsplan.fetch(date=20240619)
 
 print(tag.getxml())
 print(tag.zeitstempel())
