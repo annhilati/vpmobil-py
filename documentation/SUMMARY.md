@@ -1,9 +1,9 @@
 # Table of contents
 
-## Get started
+## Getting started
 
 * [vpmobil-py installieren](README.md)
-* [Vertretungsplandaten abrufen](get-started/vertretungsplandaten-abrufen.md)
+* [Vertretungsplandaten abrufen](getting-started/vertretungsplandaten-abrufen.md)
 
 ## Klassen & Funktionen <a href="#klassen_und_funktionen" id="klassen_und_funktionen"></a>
 
