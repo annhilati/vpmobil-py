@@ -7,8 +7,8 @@
 
 ## Classes
 
-* [Stundenplan](classes/stundenplan/README.md)
-  * [.fetch()](classes/stundenplan/.fetch.md)
+* [Vertretungsplan](classes/vertretungsplan/README.md)
+  * [.fetch()](classes/vertretungsplan/.fetch.md)
 * [VpDay](classes/vpday/README.md)
   * [.getxml()](classes/vpday/.getxml.md)
   * [.klasse()](classes/vpday/.klasse.md)
