@@ -3,9 +3,9 @@ from datetime import datetime, date
 import xml.etree.ElementTree as XML 
 import requests as WEB 
 
-# ╭────────────────────────────────────────────────────────────────────────────────────────────────────╮
-# │                                         Vertretungsplan                                            │ 
-# ╰────────────────────────────────────────────────────────────────────────────────────────────────────╯
+# ╭──────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                    Vertretungsplan                                       │ 
+# ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Vertretungsplan():
     """
@@ -35,9 +35,9 @@ class Vertretungsplan():
 
         return VpDay(xmldata=response.content)
     
-# ╭────────────────────────────────────────────────────────────────────────────────────────────────────╮
-# │                                              VpDay                                                 │ 
-# ╰────────────────────────────────────────────────────────────────────────────────────────────────────╯
+# ╭──────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                         VpDay                                            │ 
+# ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class VpDay():
     """
@@ -62,6 +62,21 @@ class VpDay():
                 return self.datatree
             case _:
                 raise ValueError(f"Nicht unterstütztes Format: {format}")
+            
+    def klasse(self, class_short: str) -> XML.Element:
+        """
+        Gibt das XML-Element der angegebenen Klasse zurück.
+        Ein Fehler wird ausgegeben, wenn die angegebene Klasse nicht gefunden werden kann. 
+
+        - class_short: Kürzel der zu suchenden Klasse (z.B. "8b")
+        """
+
+        for kl in self.rootVpMobil.findall('.//Kl'):
+            kurz = kl.find('Kurz')
+            if kurz is not None and kurz.text == class_short:
+                return kl
+        raise ValueError(f"Keine Klasse {class_short} gefunden")
+        
 
     def zeitstempel(self) -> datetime:
         """
@@ -92,18 +107,3 @@ class VpDay():
             if ft.text is not None:
                 freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
         return freieTageList
-            
-    def klasse(self, class_short: str) -> XML.Element:
-        """
-        Gibt das XML-Element der angegebenen Klasse zurück.
-        Ein Fehler wird ausgegeben, wenn die angegebene Klasse nicht gefunden werden kann. 
-
-        - class_short: Kürzel der zu suchenden Klasse (z.B. "8b")
-        """
-
-        for kl in self.rootVpMobil.findall('.//Kl'):
-            kurz = kl.find('Kurz')
-            if kurz is not None and kurz.text == class_short:
-                return kl
-        raise ValueError(f"Keine Klasse {class_short} gefunden")
-        
