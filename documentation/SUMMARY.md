@@ -2,13 +2,13 @@
 
 ## Get started
 
-* [Install vpmobil-py](README.md)
-* [Get the data of a stundenplan24.de substitution plan](get-started/get-the-data-of-a-stundenplan24.de-substitution-plan.md)
+* [vpmobil-py installieren](README.md)
+* [Vertretungsplandaten abrufen](get-started/vertretungsplandaten-abrufen.md)
 
 ## Classes
 
-* [Stundenplan](classes/stundenplan/README.md)
-  * [.fetch()](classes/stundenplan/.fetch.md)
+* [Vertretungsplan](classes/vertretungsplan/README.md)
+  * [.fetch()](classes/vertretungsplan/.fetch.md)
 * [VpDay](classes/vpday/README.md)
   * [.getxml()](classes/vpday/.getxml.md)
   * [.klasse()](classes/vpday/.klasse.md)

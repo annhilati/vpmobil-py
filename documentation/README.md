@@ -1,18 +1,18 @@
-# Install vpmobil-py
+# vpmobil-py installieren
 
-### Manually
+### Manuell
 
-1. Clone or download the repository
-2. Head to the main directory of the cloned repository
-3. Execute the install command
+1. Klone das Repostory oder lade es herunter
+2. Wechsel in das Hauptverzeichnis des geklonten Repositories
+3. Führe den Installationsbefehl aus
 
 ```
 pip install .
 ```
 
-### With PyPI
+### Mit PyPI
 
 {% hint style="info" %}
-Currently the package is not published on PyPi and cannot be installed via pip with the package name.
+Derzeit ist das Paket nicht auf PyPi veröffentlicht und kann nicht über pip mit dem Paketnamen installiert werden.
 {% endhint %}
 
