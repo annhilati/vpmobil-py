@@ -1,20 +1,7 @@
 # vpmobile-py
 
-## How to install manually (as the package isnt on pip rn)
-- Clone the repository
-- Head to the main directory (as displayed on the main page of this repository)
-- Execute `pip install .`
-
-## List of features
-- Stundenplan
-    - fetch()
-- vpDay
-    - getxml()
-
-## List of future features
-- Stundenplan
-    - list of teachers sick today
-    - ...more
+> [!NOTE]  
+> Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, the package and the wiki are formulated in German
  
 ---
-We are not affiliated with Indiware, VpMobil, or stundenplan24.de. All trademarks, service marks, and company names are the property of their respective owners.
+Das Paket und seine zugehörigen Dienste und Projekte sind eigenständig und stehen in keiner Verbindung zu Indiware, der VpMobil24 App oder stundenplan24.de. Die Nutzung obliegt der Verantwortung des Nutzers. Die Entwickler übernimmt keine Haftung für Schäden, die durch die Nutzung der App entstehen.

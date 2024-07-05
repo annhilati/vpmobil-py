@@ -11,6 +11,6 @@
   * [.fetch()](classes/stundenplan/.fetch.md)
 * [VpDay](classes/vpday/README.md)
   * [.getxml()](classes/vpday/.getxml.md)
-  * [.get\_substitution()](classes/vpday/.get\_substitution.md)
+  * [.klasse()](classes/vpday/.klasse.md)
   * [.zeitstempel()](classes/vpday/.zeitstempel.md)
   * [.zusatzInfo()](classes/vpday/.zusatzinfo.md)
