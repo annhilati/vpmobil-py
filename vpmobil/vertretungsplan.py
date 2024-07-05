@@ -3,6 +3,9 @@ from datetime import datetime, date
 import xml.etree.ElementTree as XML 
 import requests as REQ 
 
+# ╭────────────────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                         Vertretungsplan                                            │ 
+# ╰────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Vertretungsplan():
     """
@@ -31,7 +34,9 @@ class Vertretungsplan():
 
         return VpDay(xmldata=response.content)
     
-
+# ╭────────────────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                              VpDay                                                 │ 
+# ╰────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 class VpDay():
     """
@@ -70,6 +75,9 @@ class VpDay():
         return self.datatree.find("ZusatzInfo/ZiZeile").text
 
     def freieTage(self) -> list[date]:
+        """
+        Gibt eine Liste der im Plan als frei markierten Tage zurück
+        """
         vpMobil = self.datatree.getroot()
         freieTageElement = vpMobil.find("FreieTage")
         if freieTageElement is None:
