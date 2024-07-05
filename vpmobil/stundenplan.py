@@ -3,7 +3,7 @@ from datetime import datetime as datetime
 import xml.etree.ElementTree as XML 
 import requests as REQ 
 
-class Stundenplan():
+class Vertretungsplan():
     """
     Enthält die notwendigen Daten um auf einen stundenplan24.de-Vertretungsplan zuzugreifen
     """
@@ -19,7 +19,7 @@ class Stundenplan():
         Ruft alle Daten für einen bestimmten Tag ab und schreibt sie in ein VpDay-Objekt
         Ein Error wird erhoben, wenn für den angegebenen Tag keine Daten verfügbar sind.
 
-        - date: Bestimmter Tag im Format jjjjmmtt. Leer lassen, um das heutige Datum abzurufen
+        - date: Bestimmter Tag im Format yyyymmdd. Leer lassen, um das heutige Datum abzurufen
         """
 
         uri = f"{self.webpath}PlanKl{date}.xml"
