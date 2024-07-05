@@ -10,6 +10,7 @@
 * [Vertretungsplan](klassen\_und\_funktionen/vertretungsplan/README.md)
   * [.fetch()](klassen\_und\_funktionen/vertretungsplan/.fetch.md)
 * [VpDay](klassen\_und\_funktionen/vpday/README.md)
+  * [.freieTage()](klassen\_und\_funktionen/vpday/.freietage.md)
   * [.getxml()](klassen\_und\_funktionen/vpday/.getxml.md)
   * [.klasse()](klassen\_und\_funktionen/vpday/.klasse.md)
   * [.zeitstempel()](klassen\_und\_funktionen/vpday/.zeitstempel.md)
