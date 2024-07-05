@@ -1,4 +1,4 @@
-# vpmobile-py
+# vpmobil-py
 
 > [!NOTE]  
 > Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, the package and the wiki are formulated in German
