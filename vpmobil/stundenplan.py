@@ -1,4 +1,5 @@
 from datetime import datetime as datetime
+#Modules shall be imported as a 3-letter code
 import xml.etree.ElementTree as XML 
 import requests as REQ 
 
@@ -58,6 +59,12 @@ class VpDay():
         """
         zeitstempel = self.datatree.find('Kopf/zeitstempel').text
         return datetime.strptime(zeitstempel, "%d.%m.%Y, %H:%M")
+    
+    def zusatzInfo(self) -> str:
+        """
+        Returns the additional info of the day
+        """
+        return self.datatree.find("ZusatzInfo/ZiZeile").text
             
     def get_substitution(self, class_short):
         # """
