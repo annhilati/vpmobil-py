@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from vpmobil import Vertretungsplan
+from vpmobil import *
 
 vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
@@ -7,4 +7,4 @@ vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 tag = vertretungsplan.fetch(date=20240619)
 
 print(tag.getxml())
-print(tag.zeitstempel())
+print(tag.freieTage())
