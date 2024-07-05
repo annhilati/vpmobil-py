@@ -1,4 +1,4 @@
-from datetime import datetime as datetime
+from datetime import datetime, date
 #Modules shall be imported as a 3-letter code
 import xml.etree.ElementTree as XML 
 import requests as REQ 
@@ -65,6 +65,18 @@ class VpDay():
         Gibt die Zusatzinformationen des Tages zurück
         """
         return self.datatree.find("ZusatzInfo/ZiZeile").text
+
+    def freieTage(self) -> list[date]:
+        vpmobil = self.datatree.getroot()
+        freieTageElement = vpmobil.find("FreieTage")
+        if freieTageElement is None:
+            raise ValueError("Element 'FreieTage' nicht in den XML-Daten gefunden")
+        
+        freieTage: list[date] = []
+        for ft in freieTageElement.findall("ft"):
+            if ft.text is not None:
+                freieTage.append(datetime.strptime(ft.text, "%y%m%d").date())
+        return freieTage
             
     def klasse(self, class_short: str) -> XML.Element:
         """
