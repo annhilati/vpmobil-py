@@ -1,7 +1,7 @@
 from datetime import datetime, date
 #Modules shall be imported as a 3-letter code
 import xml.etree.ElementTree as XML 
-import requests as REQ 
+import requests as WEB 
 
 # ╭────────────────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Vertretungsplan                                            │ 
@@ -23,12 +23,12 @@ class Vertretungsplan():
         Ruft alle Daten für einen bestimmten Tag ab und schreibt sie in ein VpDay-Objekt
         Ein Error wird erhoben, wenn für den angegebenen Tag keine Daten verfügbar sind.
 
-        - date: Bestimmter Tag im yyyymmdd-Format oder date-Objekt. Leer lassen, um das heutige Datum abzurufen
+        - date: Bestimmter Tag; Integer im yyyymmdd-Format oder date-Objekt. Leer lassen, um das heutige Datum abzurufen
         """
 
         date = date if isinstance(date, int) else date.strftime('%Y%m%d')
         uri = f"{self.webpath}PlanKl{date}.xml"  
-        response = REQ.get(uri)
+        response = WEB.get(uri)
 
         if response.status_code != 200:
             raise ValueError(f"Die Daten für das Datum {date} konnten nicht abgerufen werden. Statuscode: {response.status_code}")
