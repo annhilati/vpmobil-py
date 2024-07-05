@@ -1,6 +1,6 @@
-from datetime import datetime as DT # mach zu datetime
-import xml.etree.ElementTree as ET # mach zu XML
-import requests as RQ # mach zu REQ
+from datetime import datetime as datetime
+import xml.etree.ElementTree as XML 
+import requests as REQ 
 
 class Stundenplan():
     """
@@ -13,7 +13,7 @@ class Stundenplan():
         self.passwort = passwort
         self.webpath = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
 
-    def fetch(self, date: int = DT.today().strftime('%Y%m%d')):
+    def fetch(self, date: int = datetime.today().strftime('%Y%m%d')):
         """
         Retrieves all data for a specific day and writes it to a VpDay object.
         An error is raised if no data is available for the specified day
@@ -22,7 +22,7 @@ class Stundenplan():
         """
 
         uri = f"{self.webpath}PlanKl{date}.xml"
-        response = RQ.get(uri)
+        response = REQ.get(uri)
 
         if response.status_code != 200:
             raise ValueError(f"Failed to fetch data for date {date}. Status code: {response.status_code}")
@@ -34,10 +34,10 @@ class VpDay():
     Contains all data for a specific day 
     """
 
-    def __init__(self, xmldata: ET.ElementTree | bytes | str):
-        self.datatree: ET.ElementTree = xmldata if isinstance(xmldata, ET.ElementTree) else ET.ElementTree(ET.fromstring(xmldata))
+    def __init__(self, xmldata: XML.ElementTree | bytes | str):
+        self.datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
 
-    def getxml(self, format: str = "ElementTree") -> (ET.ElementTree | str):
+    def getxml(self, format: str = "ElementTree") -> (XML.ElementTree | str):
         """
         Returns all data for the day in a specific format
 
@@ -46,18 +46,18 @@ class VpDay():
         
         match format:
             case "str":
-                return ET.tostring(self.datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
+                return XML.tostring(self.datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
             case "ElementTree":
                 return self.datatree
             case _:
                 raise ValueError(f"Unsupported type: {format}")
 
-    def zeitstempel(self) -> DT:
+    def zeitstempel(self) -> datetime:
         """
         Returns the time at which the substitution plan was published
         """
         zeitstempel = self.datatree.find('Kopf/zeitstempel').text
-        return DT.strptime(zeitstempel, "%d.%m.%Y, %H:%M")
+        return datetime.strptime(zeitstempel, "%d.%m.%Y, %H:%M")
             
     def get_substitution(self, class_short):
         # """
