@@ -5,7 +5,7 @@ from datetime import date
 vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
 #tag = vertretungsplan.fetch(date=20240619)
-tag = vertretungsplan.fetch()
+tag = vertretungsplan.fetch(20240619)
 
-print(tag.getxml())
+print(tag.klasse("9a"))
 print(tag.freieTage())

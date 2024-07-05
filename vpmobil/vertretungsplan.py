@@ -46,6 +46,7 @@ class VpDay():
 
     def __init__(self, xmldata: XML.ElementTree | bytes | str):
         self.datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
+        self.rootVpMobil: XML.Element = self.datatree.getroot()
 
     def getxml(self, format: str = "ElementTree") -> (XML.ElementTree | str):
         """
@@ -53,7 +54,7 @@ class VpDay():
 
         - format: Das Format, in dem die Daten ausgegeben werden sollen. Eines von "str" oder "ElementTree".
         """
-        
+
         match format:
             case "str":
                 return XML.tostring(self.datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
@@ -66,6 +67,7 @@ class VpDay():
         """
         Gibt den Zeitpunkt zurück, zu dem der Vertretungsplan veröffentlicht wurde
         """
+
         zeitstempel = self.datatree.find('Kopf/zeitstempel').text
         return datetime.strptime(zeitstempel, "%d.%m.%Y, %H:%M")
     
@@ -73,22 +75,23 @@ class VpDay():
         """
         Gibt die Zusatzinformationen des Tages zurück
         """
+
         return self.datatree.find("ZusatzInfo/ZiZeile").text
 
     def freieTage(self) -> list[date]:
         """
         Gibt eine Liste der im Plan als frei markierten Tage zurück
         """
-        vpMobil = self.datatree.getroot()
-        freieTageElement = vpMobil.find("FreieTage")
-        if freieTageElement is None:
+
+        freieTage = self.rootVpMobil.find("FreieTage")
+        if freieTage is None:
             raise ValueError("Element 'FreieTage' nicht in den XML-Daten gefunden")
         
-        freieTage: list[date] = []
-        for ft in freieTageElement.findall("ft"):
+        freieTageList: list[date] = []
+        for ft in freieTage.findall("ft"):
             if ft.text is not None:
-                freieTage.append(datetime.strptime(ft.text, "%y%m%d").date())
-        return freieTage
+                freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
+        return freieTageList
             
     def klasse(self, class_short: str) -> XML.Element:
         """
@@ -97,8 +100,8 @@ class VpDay():
 
         - class_short: Kürzel der zu suchenden Klasse (z.B. "8b")
         """
-        vpmobil = self.datatree.getroot()
-        for kl in vpmobil.findall('.//Kl'):
+
+        for kl in self.rootVpMobil.findall('.//Kl'):
             kurz = kl.find('Kurz')
             if kurz is not None and kurz.text == class_short:
                 return kl
