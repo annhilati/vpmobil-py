@@ -66,17 +66,17 @@ class VpDay():
         """
         return self.datatree.find("ZusatzInfo/ZiZeile").text
             
-    def get_substitution(self, class_short):
-        # """
-        # Returns a list of the substitution planned for a class
+    def klasse(self, class_short: str) -> XML.Element:
+        """
+        Returns the XML element of the specified class.
 
-        # - class_short: Short name of the class to find
-        # """
-        # vpmobil = self.data.getroot()
-        # for kl in vpmobil.findall('.//Kl'):
-        #     kurz = kl.find('Kurz')
-        #     if kurz is not None and kurz.text == class_short:
-        #         return kl
-        #     else:
-        #         print(f"No class {class_short} found")
-        pass
+        - class_short: Short name of the class to find (e.g. "8b")
+        An error is raised if the specified class can't be found.
+        """
+        vpmobil = self.datatree.getroot()
+        for kl in vpmobil.findall('.//Kl'):
+            kurz = kl.find('Kurz')
+            if kurz is not None and kurz.text == class_short:
+                return kl
+        raise ValueError(f"No class {class_short} found")
+        
