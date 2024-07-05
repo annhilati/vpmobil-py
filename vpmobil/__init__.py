@@ -1,5 +1,5 @@
 """
-A python package for interacting with a stundenplan24.de substitution plan
+A python module for interacting with a stundenplan24.de substitution plan
 """
 
 from .vertretungsplan import Vertretungsplan, VpDay
