@@ -17,6 +17,6 @@
 * Softwarearchitektur
 {% endhint %}
 
-### Verwendete Bibliotheken und Pakete
+## Verwendete Bibliotheken und Pakete
 
 * [requests](https://pypi.org/project/requests/)
