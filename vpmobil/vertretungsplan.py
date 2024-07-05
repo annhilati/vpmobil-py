@@ -69,9 +69,9 @@ class VpDay():
     def klasse(self, class_short: str) -> XML.Element:
         """
         Gibt das XML-Element der angegebenen Klasse zurück.
-        Ein Error wird erhoben, wenn die angegebene Klasse nicht gefunden werden kann.
+        Ein Fehler wird ausgegeben, wenn die angegebene Klasse nicht gefunden werden kann. 
 
-        - class_short: Kurzer Name der zu suchenden Klasse (z.B. "8b")
+        - class_short: Kürzel der zu suchenden Klasse (z.B. "8b")
         """
         vpmobil = self.datatree.getroot()
         for kl in vpmobil.findall('.//Kl'):
