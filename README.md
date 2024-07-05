@@ -15,3 +15,6 @@
 - Stundenplan
     - list of teachers sick today
     - ...more
+ 
+---
+We are not affiliated with Indiware, VpMobil, or stundenplan24.de. All trademarks, service marks, and company names are the property of their respective owners.

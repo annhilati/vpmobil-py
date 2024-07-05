@@ -10,6 +10,7 @@
 * [Stundenplan](classes/stundenplan/README.md)
   * [.fetch()](classes/stundenplan/.fetch.md)
 * [VpDay](classes/vpday/README.md)
-  * [.zeitstempel()](classes/vpday/.zeitstempel.md)
   * [.getxml()](classes/vpday/.getxml.md)
   * [.get\_substitution()](classes/vpday/.get\_substitution.md)
+  * [.zeitstempel()](classes/vpday/.zeitstempel.md)
+  * [.zusatzInfo()](classes/vpday/.zusatzinfo.md)
