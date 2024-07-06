@@ -63,7 +63,7 @@ class VpDay():
             case "ElementTree":
                 return self.datatree
             case _:
-                raise ValueError(f"Nicht unterstütztes Format: {format}")
+                raise SyntaxError(f"Nicht unterstütztes Format: {format}")
             
     def klasse(self, class_short: str) -> XML.Element:
         """

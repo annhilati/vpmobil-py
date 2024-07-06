@@ -6,3 +6,4 @@ from .Vertretungsplan import Vertretungsplan, VpDay
 
 __all__ = ['Vertretungsplan', "VpDay"]
     # Enthält alle Symbole, die bei "from vpmobil import" verfügbar sind
+    # Enthält alle Symbole, die bei "from vpmobil import *" importiert werden
