@@ -77,6 +77,10 @@ class VpDay():
                 freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
         return freieTageList
 
+# ╭──────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                         Stunde                                           │ 
+# ╰──────────────────────────────────────────────────────────────────────────────────────────╯
+
 class Stunde():
     """
     Enthält Informationen über eine bestimmte Stunde
@@ -147,5 +151,3 @@ class Stunde():
         Gibt eine optionale vom Planer verfasste Information zu dieser Stunde.
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
         """
-
-...
