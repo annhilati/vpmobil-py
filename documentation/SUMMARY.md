@@ -15,6 +15,7 @@
   * [.klasse()](klassen\_und\_funktionen/vpday/.klasse.md)
   * [.zeitstempel()](klassen\_und\_funktionen/vpday/.zeitstempel.md)
   * [.zusatzInfo()](klassen\_und\_funktionen/vpday/.zusatzinfo.md)
+* [Stunde](klassen\_und\_funktionen/.stunde.md)
 
 ## Anderes
 
