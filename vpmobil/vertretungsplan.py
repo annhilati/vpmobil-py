@@ -102,7 +102,7 @@ class VpDay():
 
         freieTage = self.rootVpMobil.find("FreieTage")
         if freieTage is None:
-            raise ValueError("Element 'FreieTage' nicht in den XML-Daten gefunden")
+            raise XMLError("Element 'FreieTage' nicht in den XML-Daten gefunden")
         
         freieTageList: list[date] = []
         for ft in freieTage.findall("ft"):
