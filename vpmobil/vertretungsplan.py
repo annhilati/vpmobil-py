@@ -3,7 +3,7 @@ from datetime import datetime, date
 import xml.etree.ElementTree as XML 
 import requests as WEB
 
-from .errors import FetchingError, XMLError
+from .Exceptions import FetchingError, XMLError
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    Vertretungsplan                                       │ 
