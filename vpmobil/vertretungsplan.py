@@ -109,3 +109,74 @@ class VpDay():
             if ft.text is not None:
                 freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
         return freieTageList
+
+class Stunde():
+    """
+    Enthält Informationen über eine bestimmte Stunde
+    """
+
+    def __init__(self, elem: XML.Element | bytes | str):
+        self.std = elem if isinstance(elem, XML.Element) else XML.Element(XML.fromstring(elem))
+        self.nr : int = int(self.std.find("St").text)
+        """
+        Nummer der Stunde
+        """
+
+        self.beginn : str = str(self.std.find("Beginn").text)
+        """
+        Beginn der Stunde als str()
+        """
+
+        self.ende : str = str(self.std.find("Ende").text)
+        """
+        Ende der Stunde als str()
+        """
+
+        if "FaAe" in self.std.find("Fa").attrib or "RaAe" in self.std.find("Ra").attrib or "LeAe" in self.std.find("Le").attrib:
+            anders = True
+        else:
+            anders = False
+        self.anders : bool = anders
+        """
+        Gibt an, ob irgendeine Eigenschaft dieser Stunde geändert ist
+        """
+
+        if self.std.find("Fa").text == "---":
+            ausfall = True
+        else:
+            ausfall = False
+        self.entfaellt : bool = ausfall
+        """
+        Gibt an, ob die Stunde entfällt. 
+        Wenn ja, werden 'lehrer', 'fach' und 'raum' leere Strings zurückgeben
+        """
+
+        self.fach : str = self.std.find("Fa").text if self.entfaellt == False else ""
+        """
+        Gibt das Fach, welches in dieser Stunde stattfindet zurück.
+        Gibt einen leeren String zurück, wenn die Stunde entfällt
+        """
+
+        self.lehrer : str = self.std.find("Le").text if self.entfaellt == False else ""
+        """
+        Gibt den Lehrer, welcher diese Stunde hält zurück.
+        Gibt einen leeren String zurück, wenn die Stunde entfällt
+        """
+
+        self.raum : str = self.std.find("Ra").text if self.entfaellt == False else ""
+        """
+        Gibt den Raum, in dem diese Stunde stattfindet zurück.
+        Gibt einen leeren String zurück, wenn die Stunde entfällt
+        """
+
+        self.kursnummer : str = self.std.find("Nr").text
+        """
+        Gibt die Nummer des Kurses zurück.
+        Nützlich für das Kurs() Objekt
+        """
+
+        self.info : str = self.std.find("If").text
+        """
+        Gibt eine optionale vom Planer verfasste Information zu dieser Stunde.
+        Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
+        """
