@@ -1,7 +1,9 @@
 from datetime import datetime, date
 #Modules shall be imported as a 3-letter code
 import xml.etree.ElementTree as XML 
-import requests as WEB 
+import requests as WEB
+
+from .errors import FetchingError, XMLError
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    Vertretungsplan                                       │ 
@@ -31,7 +33,7 @@ class Vertretungsplan():
         response = WEB.get(uri)
 
         if response.status_code != 200:
-            raise ValueError(f"Die Daten für das Datum {date} konnten nicht abgerufen werden. Statuscode: {response.status_code}")
+            raise FetchingError(f"Die Daten für das Datum {date} konnten nicht abgerufen werden. Statuscode: {response.status_code}")
 
         return VpDay(xmldata=response.content)
     
@@ -75,7 +77,7 @@ class VpDay():
             kurz = kl.find('Kurz')
             if kurz is not None and kurz.text == class_short:
                 return kl
-        raise ValueError(f"Keine Klasse {class_short} gefunden")
+        raise XMLError(f"Keine Klasse {class_short} gefunden")
         
 
     def zeitstempel(self) -> datetime:
