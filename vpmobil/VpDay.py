@@ -92,11 +92,54 @@ class Klasse():
             case _:
                 raise SyntaxError(f"Nicht unterstütztes Format: {format}")
 
-    def stunde(self, nr: int): # oderso
+    def stunde(self, nr: int):
         """
-        HIER NOCH WAS EINTRAGEN
+        Gibt die erste Stunde mit der angegebenen Nummer zurück.
+        Gibt einen Fehler aus, wenn die Stunde nicht existiert
         """
-        pass
+
+        plan = self.data.find("Pl")
+        for std in plan.findall("Std"):
+            stElem = std.find("St")
+            if stElem is not None and stElem.text == str(nr):
+                return Stunde(std)
+        raise NameError("Stunde wurde nicht gefunden!")
+
+    def stunden(self, nr: int):
+        """
+        Gibt alle Stunden zurück, die in der angegebenen Stunde stattfinden.
+        Hilfreich, wenn mehrere Fächer zur selben Zeit stattfinden.
+        Gibt einen Fehler zurück, wenn die angegebene(n) Stunde(n) nicht existieren
+        """
+
+        fin = [Stunde] # Dadurch weiß VS Code, dass es sich um eine Liste mit Stunden handelt
+        fin.clear() # Leere Stunde wieder entfernen
+        plan = self.data.find("Pl")
+        for std in plan.findall("Std"):
+            stElem = std.find("St")
+            if stElem is not None and stElem.text == str(nr):
+                fin.append(Stunde(std))
+        if len(fin) != 0:
+            return fin
+        else:
+            raise NameError("Keine Stunden mit dieser Nummer gefunden!")
+    
+    def alleStunden(self):
+        """
+        Gibt alle Stunden, welche die Klasse an diesem Tag hat zurück.
+        """
+
+        fin = [Stunde] # Dadurch weiß VS Code, dass es sich um eine Liste mit Stunden handelt
+        fin.clear() # Leere Stunde wieder entfernen
+        plan = self.data.find("Pl")
+        for std in plan.findall("Std"):
+            stElem = std.find("St")
+            if stElem is not None:
+                fin.append(Stunde(std))
+        if len(fin) != 0:
+            return fin
+        else:
+            raise NameError("Keine Stunden bei dieser Klasse gefunden!")
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 
