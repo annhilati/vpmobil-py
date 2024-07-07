@@ -7,4 +7,6 @@ vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
 tag = vertretungsplan.fetch(date=20240618)
 
-print(tag.zusatzInfo)
+stunden = tag.klasse("9a").alleStunden()
+for stunde in stunden:
+    print(stunde.nr, stunde.fach, stunde.lehrer, stunde.raum)
