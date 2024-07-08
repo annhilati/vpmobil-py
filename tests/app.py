@@ -5,11 +5,8 @@ from datetime import date
 
 vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
-#tag = vertretungsplan.fetch(date=20240619)
-for day in range(20240614, 20240619):
-    try:
-        tag = vertretungsplan.fetch(day)
-        print(f"{day}: \n{tag.zusatzInfo}")
-    except:
-        print(f"{day}: nix plan")
+tag = vertretungsplan.fetch(date=20240618)
 
+stunden = tag.klasse("9a").alleStunden()
+for stunde in stunden:
+    print(stunde.nr, stunde.fach, stunde.lehrer, stunde.raum)

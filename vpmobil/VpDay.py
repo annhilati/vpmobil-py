@@ -9,7 +9,16 @@ from .Exceptions import XMLError
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class VpDay():
-    "Enthält alle Daten für einen bestimmten Tag"
+    """
+    Enthält alle Daten für einen bestimmten Tag
+    
+    #### Attribute & Methoden
+    - .zeitstempel
+    - .zusatzInfo
+    - .getxml()
+    - .klasse()
+    - .freieTage()
+    """
 
     def __init__(self, xmldata: XML.ElementTree | bytes | str):
         self.datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
@@ -72,7 +81,15 @@ class VpDay():
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Klasse():
-    "Enthält alle Daten für eine bestimmte Klasse"
+    """
+    Enthält alle Daten für eine bestimmte Klasse
+
+    #### Attribute & Methoden
+    - .getxml()
+    - .stunde()
+    - .stunden()
+    - .alleStunden()
+    """
 
     def __init__(self, xmldata: XML.Element):
         self.data: XML.Element = xmldata
@@ -92,7 +109,7 @@ class Klasse():
             case _:
                 raise SyntaxError(f"Nicht unterstütztes Format: {format}")
 
-    def stunde(self, nr: int):
+    def stunde(self, nr: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
         """
         Gibt die erste Stunde mit der angegebenen Nummer zurück.
         Gibt einen Fehler aus, wenn die Stunde nicht existiert
@@ -100,10 +117,10 @@ class Klasse():
 
         plan = self.data.find("Pl")
         for std in plan.findall("Std"):
-            stElem = std.find("St")
-            if stElem is not None and stElem.text == str(nr):
+            st = std.find("St")
+            if st is not None and st.text == str(nr):
                 return Stunde(std)
-        raise NameError("Stunde wurde nicht gefunden!")
+        raise XMLError("Stunde wurde nicht gefunden!")
 
     def stunden(self, nr: int):
         """
@@ -112,34 +129,32 @@ class Klasse():
         Gibt einen Fehler zurück, wenn die angegebene(n) Stunde(n) nicht existieren
         """
 
-        fin = [Stunde] # Dadurch weiß VS Code, dass es sich um eine Liste mit Stunden handelt
-        fin.clear() # Leere Stunde wieder entfernen
+        fin: list[Stunde] = []
         plan = self.data.find("Pl")
         for std in plan.findall("Std"):
-            stElem = std.find("St")
-            if stElem is not None and stElem.text == str(nr):
-                fin.append(Stunde(std))
+            st = std.find("St")
+            if st is not None and st.text == str(nr):
+                fin.append(Stunde(xmldata=std))
         if len(fin) != 0:
             return fin
         else:
-            raise NameError("Keine Stunden mit dieser Nummer gefunden!")
+            raise XMLError("Keine Stunden mit dieser Nummer gefunden!")
     
     def alleStunden(self):
         """
         Gibt alle Stunden, welche die Klasse an diesem Tag hat zurück.
         """
 
-        fin = [Stunde] # Dadurch weiß VS Code, dass es sich um eine Liste mit Stunden handelt
-        fin.clear() # Leere Stunde wieder entfernen
+        fin: list[Stunde] = []
         plan = self.data.find("Pl")
         for std in plan.findall("Std"):
-            stElem = std.find("St")
-            if stElem is not None:
+            st = std.find("St")
+            if st is not None:
                 fin.append(Stunde(std))
         if len(fin) != 0:
             return fin
         else:
-            raise NameError("Keine Stunden bei dieser Klasse gefunden!")
+            raise XMLError("Keine Stunden bei dieser Klasse gefunden!")
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 
@@ -149,37 +164,38 @@ class Stunde():
     """
     Enthält Informationen über eine bestimmte Stunde
 
-    - .nr: int
-    - .beginn: str
-    - .ende: str
-    - .anders: bool
-    - .ausfall: bool
-    - .fach: str
-    - .lehrer: str
-    - .raum: str
-    - .info: str
-    - .kursnummer: int
+    #### Attribute & Methoden
+    - .nr
+    - .beginn
+    - .ende
+    - .anders
+    - .ausfall
+    - .fach
+    - .lehrer
+    - .raum
+    - .info
+    - .kursnummer
     """
 
     def __init__(self, xmldata: XML.Element | bytes | str):
-        self.std: XML.Element = xmldata if isinstance(xmldata, XML.Element) else XML.Element(XML.fromstring(xmldata))
-        self.nr: int = int(self.std.find("St").text)
+        self.data: XML.Element = xmldata if isinstance(xmldata, XML.Element) else XML.Element(XML.fromstring(xmldata))
+        self.nr: int = int(self.data.find("St").text)
         "Nummer der Stunde"
 
-        self.beginn: str = str(self.std.find("Beginn").text)
+        self.beginn: str = str(self.data.find("Beginn").text)
         "Beginn der Stunde als str"
 
-        self.ende: str = str(self.std.find("Ende").text)
+        self.ende: str = str(self.data.find("Ende").text)
         "Ende der Stunde als str"
 
-        if "FaAe" in self.std.find("Fa").attrib or "RaAe" in self.std.find("Ra").attrib or "LeAe" in self.std.find("Le").attrib:
+        if "FaAe" in self.data.find("Fa").attrib or "RaAe" in self.data.find("Ra").attrib or "LeAe" in self.data.find("Le").attrib:
             anders = True
         else:
             anders = False
         self.anders: bool = anders
         "Gibt an, ob irgendeine Eigenschaft dieser Stunde vom Regelplan abgeändert wurde"
 
-        if self.std.find("Fa").text == "---":
+        if self.data.find("Fa").text == "---":
             ausfall = True
         else:
             ausfall = False
@@ -189,31 +205,31 @@ class Stunde():
         Wenn ja, werden 'lehrer', 'fach' und 'raum' leere Strings zurückgeben
         """
 
-        self.fach: str = self.std.find("Fa").text if self.ausfall == False else ""
+        self.fach: str = self.data.find("Fa").text if self.ausfall == False else ""
         """
         Gibt das Fach, welches in dieser Stunde stattfindet zurück.
         Gibt einen leeren String zurück, wenn die Stunde entfällt
         """
 
-        self.lehrer: str = self.std.find("Le").text if self.ausfall == False else ""
+        self.lehrer: str = self.data.find("Le").text if self.ausfall == False else ""
         """
         Gibt den Lehrer, welcher diese Stunde hält zurück.
         Gibt einen leeren String zurück, wenn die Stunde entfällt
         """
 
-        self.raum: str = self.std.find("Ra").text if self.ausfall == False else ""
+        self.raum: str = self.data.find("Ra").text if self.ausfall == False else ""
         """
         Gibt den Raum, in dem diese Stunde stattfindet zurück.
         Gibt einen leeren String zurück, wenn die Stunde entfällt
         """
 
-        self.info: str = self.std.find("If").text
+        self.info: str = self.data.find("If").text
         """
         Gibt eine optionale vom Planer verfasste Information zu dieser Stunde.
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
         """
 
-        self.kursnummer: int = int(self.std.find("Nr").text)
+        self.kursnummer: int = int(self.data.find("Nr").text)
         """
         Gibt die Nummer des Kurses zurück.
         Nützlich für das Kurs() Objekt

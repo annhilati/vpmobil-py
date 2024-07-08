@@ -10,7 +10,17 @@ from .VpDay import VpDay
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Vertretungsplan():
-    "Enthält die notwendigen Daten um auf einen stundenplan24.de-Vertretungsplan zuzugreifen"
+    """
+    Enthält die notwendigen Daten um auf einen stundenplan24.de-Vertretungsplan zuzugreifen
+
+    #### Argumente
+    - schulnummer (int)
+    - benutzername (str)
+    - passwort (str)
+
+    #### Attribute & Methoden
+    - .fetch()
+    """
 
     def __init__(self, schulnummer: int, benutzername: str, passwort: str):
         self.schulnummer = schulnummer
