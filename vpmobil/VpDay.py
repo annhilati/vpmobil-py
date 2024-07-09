@@ -51,7 +51,7 @@ class VpDay():
             
     def klasse(self, kürzel: str):
         """
-        Gibt ein Klassen-Objekt zurück, dass alle Daten über die Klasse enthält
+        Gibt ein Klassen-Objekt zurück, dass alle Daten über die Klasse enthält\n
         Ein Fehler wird ausgegeben, wenn die angegebene Klasse nicht gefunden werden kann. 
 
         - kürzel: Kürzel der zu suchenden Klasse (z.B. "8b")
@@ -111,7 +111,7 @@ class Klasse():
 
     def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
         """
-        Gibt die erste Stunde der angegebenen Stundenplanperiode zurück.
+        Gibt die erste Stunde der angegebenen Stundenplanperiode zurück.\n
         Ein Fehler wird ausgegeben, wenn die gesuchte Stunde nicht existiert
         """
 
@@ -124,7 +124,7 @@ class Klasse():
 
     def stundenInPeriode(self, periode: int):
         """
-        Gibt alle Stunden zurück, die in der angegebenen Stundenplanperiode stattfinden.
+        Gibt alle Stunden zurück, die in der angegebenen Stundenplanperiode stattfinden.\n
         Ein Fehler wird ausgegeben, wenn die gesuchten Stunden nicht existieren
         """
 
@@ -137,11 +137,12 @@ class Klasse():
         if len(fin) != 0:
             return fin
         else:
-            raise XMLNotFound("Keine Stunden mit dieser Nummer gefunden!")
+            raise XMLNotFound("Keine Stunden zu dieser Stundenplanperiode gefunden!")
     
     def alleStunden(self):
         """
-        Gibt alle Stunden, welche die Klasse an diesem Tag hat zurück.
+        Gibt alle Stunden zurück, die die Klasse an diesem Tag hat.
+        Ein Fehler wird ausgegeben, wenn keine Stunden existieren
         """
 
         fin: list[Stunde] = []
@@ -153,7 +154,7 @@ class Klasse():
         if len(fin) != 0:
             return fin
         else:
-            raise XMLNotFound("Keine Stunden bei dieser Klasse gefunden!")
+            raise XMLNotFound("Keine Stunden für diese Klasse gefunden!")
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 
@@ -182,17 +183,17 @@ class Stunde():
         "Nummer der Stunde"
 
         self.beginn: str = str(self.data.find("Beginn").text)
-        "Beginn der Stunde als str"
+        "Beginn der Stunde im Format \"07:45\""
 
         self.ende: str = str(self.data.find("Ende").text)
-        "Ende der Stunde als str"
+        "Ende der Stunde im Format \"08:30\""
 
         if "FaAe" in self.data.find("Fa").attrib or "RaAe" in self.data.find("Ra").attrib or "LeAe" in self.data.find("Le").attrib:
             anders = True
         else:
             anders = False
         self.anders: bool = anders
-        "Gibt an, ob irgendeine Eigenschaft dieser Stunde vom Regelplan abgeändert wurde"
+        "Gibt an, ob eine Änderung vorliegt"
 
         if self.data.find("Fa").text == "---":
             ausfall = True
@@ -200,36 +201,36 @@ class Stunde():
             ausfall = False
         self.ausfall: bool = ausfall
         """
-        Gibt an, ob die Stunde entfällt. 
+        Gibt an, ob die Stunde entfällt\n
         Wenn ja, werden 'lehrer', 'fach' und 'raum' leere Strings zurückgeben
         """
 
         self.fach: str = self.data.find("Fa").text if self.ausfall == False else ""
         """
-        Gibt das Fach, welches in dieser Stunde stattfindet zurück.
+        Unterichtsfach der Stunde\n
         Gibt einen leeren String zurück, wenn die Stunde entfällt
         """
 
         self.lehrer: str = self.data.find("Le").text if self.ausfall == False else ""
         """
-        Gibt den Lehrer, welcher diese Stunde hält zurück.
+        Lehrer der Stunde\n
         Gibt einen leeren String zurück, wenn die Stunde entfällt
         """
 
         self.raum: str = self.data.find("Ra").text if self.ausfall == False else ""
         """
-        Gibt den Raum, in dem diese Stunde stattfindet zurück.
+        Raum der Stunde\n
         Gibt einen leeren String zurück, wenn die Stunde entfällt
         """
 
         self.info: str = self.data.find("If").text
         """
-        Gibt eine optionale vom Planer verfasste Information zu dieser Stunde.
+        Optionale Information zu dieser Stunde\n
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
         """
 
         self.kursnummer: int = int(self.data.find("Nr").text)
         """
-        Gibt die Nummer des Kurses zurück.
+        Nummer des Kurses der Stunde\n
         Nützlich für das Kurs() Objekt
         """

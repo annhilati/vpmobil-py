@@ -9,4 +9,4 @@ tag = vertretungsplan.fetch(date=20240619)
 
 stunden = tag.klasse("9a").stundenInPeriode(1)
 for stunde in stunden:
-    print(stunde.nr, stunde.fach, stunde.lehrer, stunde.raum)
+    print(stunde.beginn, stunde.fach, stunde.lehrer, stunde.raum)
