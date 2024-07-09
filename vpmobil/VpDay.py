@@ -79,7 +79,8 @@ class VpDay():
     
     def lehrerKrank(self) -> list[str]:
         """
-        Gibt eine Liste mit den Kürzeln aller Lehrer zurück, die an diesem Tag nicht da / krank sind
+        Gibt eine Liste mit den Kürzeln aller Lehrer zurück, die außerplanmäßig keinen Untericht halten.\n
+        Dies umfasst auch Lehrer, die schulische Veranstaltung beaufischtigen, zu denen Stunden vom Planer als ausgefallen markiert wurden.
         """
 
         leKrank: list[str] = []
