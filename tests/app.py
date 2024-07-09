@@ -5,8 +5,12 @@ from datetime import date
 
 vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
-tag = vertretungsplan.fetch(date=20240619)
-
-stunden = tag.klasse("9a").stundenInPeriode(1)
-for stunde in stunden:
-    print(stunde.beginn, stunde.fach, stunde.lehrer, stunde.raum)
+for d in range(20240612, 20240620):
+    try:
+        day = vertretungsplan.fetch(d)
+        try:
+            print(day.lehrerKrank())
+        except:
+            print(f"Error der Lehrer an {d}")
+    except:
+        print(f"Kein Plan für {d}")
