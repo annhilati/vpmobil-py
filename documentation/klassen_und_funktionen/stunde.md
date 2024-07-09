@@ -21,5 +21,7 @@ Nimmt ein `XML.Element`, welches ein `<Std>` - Element im XML Tree ist.
 * `.raum: str` - Gibt den Raum, in dem diese Stunde stattfindet zurück. Gibt einen leeren String zurück, wenn die Stunde entfällt
 * `.kursnummer: str` - Gibt die Nummer des Kurses zurück. Nützlich für das Kurs() Objekt (kommt noch)
 * `.info: str` - Gibt eine optionale vom Planer verfasste Information zu dieser Stunde. Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
+* `.besonders: bool` - Gibt an, ob die Stunde besonders ist. Gibt True zurück, wenn es sich z.B. um eine Exkursion handelt.<br>**Achtung:** Besondere Stunden haben keine Kursnummer! Prüfe immer erst, ob eine Stunde besonders ist, bevor du die Kursnummer abrufst.<br>
+.kursnummer gibt -1 zurück, wenn die Stunde besonders ist.
 
 ## Funktionen
