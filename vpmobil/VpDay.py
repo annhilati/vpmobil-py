@@ -2,7 +2,7 @@ from datetime import datetime, date
 #Modules shall be imported as a 3-letter code
 import xml.etree.ElementTree as XML 
 
-from .Exceptions import XMLError
+from .Exceptions import XMLNotFound
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         VpDay                                            │ 
@@ -61,14 +61,14 @@ class VpDay():
             kurz = kl.find('Kurz')
             if kurz is not None and kurz.text == kürzel:
                 return Klasse(xmldata=kl)
-        raise XMLError(f"Keine Klasse {kürzel} gefunden")
+        raise XMLNotFound(f"Keine Klasse {kürzel} gefunden")
 
     def freieTage(self) -> list[date]:
         "Gibt eine Liste der im Plan als frei markierten Tage zurück"
 
         freieTage = self.rootVpMobil.find("FreieTage")
         if freieTage is None:
-            raise XMLError("Element 'FreieTage' nicht in den XML-Daten gefunden")
+            raise XMLNotFound("Element 'FreieTage' nicht in den XML-Daten gefunden")
         
         freieTageList: list[date] = []
         for ft in freieTage.findall("ft"):
@@ -109,36 +109,35 @@ class Klasse():
             case _:
                 raise SyntaxError(f"Nicht unterstütztes Format: {format}")
 
-    def stunde(self, nr: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
+    def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
         """
-        Gibt die erste Stunde mit der angegebenen Nummer zurück.
-        Gibt einen Fehler aus, wenn die Stunde nicht existiert
+        Gibt die erste Stunde der angegebenen Stundenplanperiode zurück.
+        Ein Fehler wird ausgegeben, wenn die gesuchte Stunde nicht existiert
         """
 
-        plan = self.data.find("Pl")
-        for std in plan.findall("Std"):
+        pl = self.data.find("Pl")
+        for std in pl.findall("Std"):
             st = std.find("St")
-            if st is not None and st.text == str(nr):
+            if st is not None and st.text == str(periode):
                 return Stunde(std)
-        raise XMLError("Stunde wurde nicht gefunden!")
+        raise XMLNotFound("Stunde wurde nicht gefunden!")
 
-    def stunden(self, nr: int):
+    def stundenInPeriode(self, periode: int):
         """
-        Gibt alle Stunden zurück, die in der angegebenen Stunde stattfinden.
-        Hilfreich, wenn mehrere Fächer zur selben Zeit stattfinden.
-        Gibt einen Fehler zurück, wenn die angegebene(n) Stunde(n) nicht existieren
+        Gibt alle Stunden zurück, die in der angegebenen Stundenplanperiode stattfinden.
+        Ein Fehler wird ausgegeben, wenn die gesuchten Stunden nicht existieren
         """
 
         fin: list[Stunde] = []
-        plan = self.data.find("Pl")
-        for std in plan.findall("Std"):
+        pl = self.data.find("Pl")
+        for std in pl.findall("Std"):
             st = std.find("St")
-            if st is not None and st.text == str(nr):
+            if st is not None and st.text == str(periode):
                 fin.append(Stunde(xmldata=std))
         if len(fin) != 0:
             return fin
         else:
-            raise XMLError("Keine Stunden mit dieser Nummer gefunden!")
+            raise XMLNotFound("Keine Stunden mit dieser Nummer gefunden!")
     
     def alleStunden(self):
         """
@@ -146,15 +145,15 @@ class Klasse():
         """
 
         fin: list[Stunde] = []
-        plan = self.data.find("Pl")
-        for std in plan.findall("Std"):
+        pl = self.data.find("Pl")
+        for std in pl.findall("Std"):
             st = std.find("St")
             if st is not None:
                 fin.append(Stunde(std))
         if len(fin) != 0:
             return fin
         else:
-            raise XMLError("Keine Stunden bei dieser Klasse gefunden!")
+            raise XMLNotFound("Keine Stunden bei dieser Klasse gefunden!")
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 

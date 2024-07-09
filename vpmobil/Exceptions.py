@@ -3,7 +3,12 @@ class FetchingError(Exception):
         self.message = message
         super().__init__(self.message)
 
-class XMLError(Exception):
+class XMLParsingError(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+class XMLNotFound(XMLParsingError):
     def __init__(self, message):
         self.message = message
         super().__init__(self.message)

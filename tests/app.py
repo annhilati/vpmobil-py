@@ -5,8 +5,8 @@ from datetime import date
 
 vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
-tag = vertretungsplan.fetch(date=20240618)
+tag = vertretungsplan.fetch(date=20240619)
 
-stunden = tag.klasse("9a").alleStunden()
+stunden = tag.klasse("9a").stundenInPeriode(1)
 for stunde in stunden:
     print(stunde.nr, stunde.fach, stunde.lehrer, stunde.raum)
