@@ -18,6 +18,7 @@ class VpDay():
     - .getxml()
     - .klasse()
     - .freieTage()
+    - .lehrerKrank()
     """
 
     def __init__(self, xmldata: XML.ElementTree | bytes | str):
