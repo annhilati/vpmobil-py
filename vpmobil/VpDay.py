@@ -75,6 +75,35 @@ class VpDay():
             if ft.text is not None:
                 freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
         return freieTageList
+    
+    def lehrerKrank(self) -> list[str]:
+        """
+        Gibt eine Liste mit den Kürzeln aller Lehrer zurück, die an diesem Tag nicht da / krank sind
+        """
+
+        leKrank: list[str] = []
+        leNichtKrank: list[str] = []
+
+        for kl in self.rootVpMobil.find('Klassen').findall("Kl"):
+            lehrerInfo: list[dict] = []
+            for ue in kl.find("Unterricht").findall("Ue"): # Wir sammeln für alle Kurse dieser Klasse die Nummer und das Lehrerkürzel
+                lehrerInfo.append({
+                    "nr": ue.find("UeNr").text, 
+                    "kurz": ue.find("UeNr").attrib["UeLe"]
+                })
+            for std in kl.find("Pl").findall("Std"): # Jetzt gehen wir durch alle Stunden und schauen, ob sie geändert sind
+                if len(std.find("Le").attrib) == 0: # Wenn nicht fügen wir die Lehrer, welche die Stunde halten zu den nicht kranken Lehrern hinzu
+                    for sr in std.find("Le").text.split(" "):
+                        leNichtKrank.append(sr)
+                        if sr in leKrank:
+                            leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
+                else:
+                    le = next(item for item in lehrerInfo if item["nr"] in std.find("Nr").text)
+                    if not (le["kurz"] in leNichtKrank): # Wenn die Stunde geändert ist schauen wir, ob der lehrer schon in der nicht kranken Liste ist.
+                        if not le["kurz"] in leKrank:
+                            leKrank.append(le["kurz"]) # Wenn nicht, muss er krank sein
+        return leKrank
+
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Klasse                                           │ 
