@@ -1,8 +1,6 @@
-import VpDay as vp
-import Vertretungsplan as vt
+from vpmobil import Vertretungsplan
 
-vertretPlan = vt.Vertretungsplan(10126582, "schueler", "s361o97")
+vertretPlan = Vertretungsplan(10126582, "schueler", "s361o97")
 
-tag = vertretPlan.fetch(20240619)
-
+tag = vertretPlan.fetch(20240612)
 print(tag.lehrerKrank())
