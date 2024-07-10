@@ -93,30 +93,35 @@ class VpDay():
                     "nr": ue.find("UeNr").text, 
                     "kurz": ue.find("UeNr").attrib["UeLe"]
                 })
-            for std in Klasse(kl).alleStunden(): # Jetzt gehen wir durch alle Stunden und schauen, ob sie geändert sind
-                if not std.anders and not std.ausfall and not std.besonders: # Wenn nicht fügen wir die Lehrer, welche die Stunde halten zu den nicht kranken Lehrern hinzu
-                    for sr in std.lehrer.split(" "):
-                        leNichtKrank.append(sr)
-                        if sr in leKrank:
-                            leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
-                elif std.anders and not std.ausfall and not std.besonders:
-                    for sr in std.lehrer.split(" "):
-                        leNichtKrank.append(sr)
-                        if sr in leKrank:
-                            leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
-                elif std.anders and std.ausfall and not std.besonders:
-                    le = next(item for item in lehrerInfo if item["nr"] == str(std.kursnummer))
-                    if not (le["kurz"] in leNichtKrank): # Wenn die Stunde geändert ist schauen wir, ob der lehrer schon in der nicht kranken Liste ist.
-                        if not le["kurz"] in leKrank:
-                            leKrank.append(le["kurz"]) # Wenn nicht, muss er krank sein
-                elif std.besonders:
-                    try:
-                        splitLe = std.lehrer.split(" ")
-                    except TypeError:
-                        continue
-                    else:
-                        for sr in splitLe:
-                            leNichtKrank.append(splitLe)
+            try:
+                alleStd = Klasse(kl).alleStunden()
+            except:
+                continue
+            else:
+                for std in alleStd: # Jetzt gehen wir durch alle Stunden und schauen, ob sie geändert sind
+                    if not std.anders and not std.ausfall and not std.besonders: # Wenn nicht fügen wir die Lehrer, welche die Stunde halten zu den nicht kranken Lehrern hinzu
+                        for sr in std.lehrer.split(" "):
+                            leNichtKrank.append(sr)
+                            if sr in leKrank:
+                                leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
+                    elif std.anders and not std.ausfall and not std.besonders:
+                        for sr in std.lehrer.split(" "):
+                            leNichtKrank.append(sr)
+                            if sr in leKrank:
+                                leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
+                    elif std.anders and std.ausfall and not std.besonders:
+                        le = next(item for item in lehrerInfo if item["nr"] == str(std.kursnummer))
+                        if not (le["kurz"] in leNichtKrank): # Wenn die Stunde geändert ist schauen wir, ob der lehrer schon in der nicht kranken Liste ist.
+                            if not le["kurz"] in leKrank:
+                                leKrank.append(le["kurz"]) # Wenn nicht, muss er krank sein
+                    elif std.besonders:
+                        try:
+                            splitLe = std.lehrer.split(" ")
+                        except TypeError:
+                            continue
+                        else:
+                            for sr in splitLe:
+                                leNichtKrank.append(splitLe)
         return leKrank # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
 
 
@@ -249,35 +254,12 @@ class Stunde():
         Wenn ja, werden 'lehrer', 'fach' und 'raum' leere Strings zurückgeben
         """
 
-        self.fach: str = self.data.find("Fa").text if self.ausfall == False else ""
-        """
-        Unterichtsfach der Stunde\n
-        Gibt einen leeren String zurück, wenn die Stunde entfällt
-        """
-
-        self.lehrer: str = self.data.find("Le").text if self.ausfall == False else ""
-        """
-        Lehrer der Stunde\n
-        Gibt einen leeren String zurück, wenn die Stunde entfällt
-        """
-
-        self.raum: str = self.data.find("Ra").text if self.ausfall == False else ""
-        """
-        Raum der Stunde\n
-        Gibt einen leeren String zurück, wenn die Stunde entfällt
-        """
-
-        self.info: str = self.data.find("If").text
-        """
-        Optionale Information zu dieser Stunde\n
-        Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
-        """
-
         self.besonders: bool = False
         """
         Gibt an, ob die Stunde besonders ist. Gibt True zurück, wenn es sich z.B. um eine Exkursion handelt.\n
         Achtung: Besondere Stunden haben keine Kursnummer! Prüfe immer erst, ob eine Stunde besonders ist, bevor du die Kursnummer abrufst.\n
-        .kursnummer gibt -1 zurück, wenn die Stunde besonders ist.
+        .kursnummer gibt -1 zurück, wenn die Stunde besonders ist.\n
+        Wenn trotzdem ein Lehrer, Fach oder Raum eingetragen ist, wird dieser normal zurückgegeben
         """
         try:
             self.kursnummer: int = int(self.data.find("Nr").text)
@@ -288,3 +270,38 @@ class Stunde():
         except:
             self.besonders = True
             self.kursnummer: int = -1
+
+        if self.data.find("Fa") is not None and self.data.find("Fa").text is not None:
+            tmpFa = self.data.find("Fa").text
+        else:
+            tmpFa = ""
+        self.fach: str = tmpFa if self.ausfall == False and self.besonders == False else ""
+        """
+        Unterichtsfach der Stunde\n
+        Gibt einen leeren String zurück, wenn die Stunde entfällt oder besonders ist
+        """
+        if self.data.find("Le") is not None and self.data.find("Le").text is not None:
+            tmpLe = self.data.find("Le").text
+        else:
+            tmpLe = ""
+        self.lehrer: str = tmpLe if self.ausfall == False else ""
+        """
+        Lehrer der Stunde\n
+        Gibt einen leeren String zurück, wenn die Stunde entfällt oder besonders ist
+        """
+
+        if self.data.find("Ra") is not None and self.data.find("Ra").text is not None:
+            tmpRa = self.data.find("Ra").text
+        else:
+            tmpRa = ""
+        self.raum: str = tmpRa if self.ausfall == False else ""
+        """
+        Raum der Stunde\n
+        Gibt einen leeren String zurück, wenn die Stunde entfällt oder besonders ist
+        """
+
+        self.info: str = self.data.find("If").text
+        """
+        Optionale Information zu dieser Stunde\n
+        Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
+        """

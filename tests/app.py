@@ -5,7 +5,7 @@ from datetime import date
 
 vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
-# for d in range(20240612, 20240620):
+#for d in range(20240612, 20240620):
 #     try:
 #         day = vertretungsplan.fetch(d)
 #         try:
