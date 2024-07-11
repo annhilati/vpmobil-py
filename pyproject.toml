@@ -1,1 +1,6 @@
 [project]
+
+[project.urls]
+"Wiki" = "https://annhilati.gitbook.com/vpmobil"
+"Source" = "https://github.com/annhilati/vpmobil"
+"Bug Tracker" = "https://github.com/annhilati/vpmobil/issues"
