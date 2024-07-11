@@ -1,7 +1,11 @@
-[project]
+# Die pyproject.toml kann nicht benutzt werden, wenn kein adequater [project]-Abschnitt definiert wurde
 
-[project.urls]
-"Documentation" = "https://annhilati.gitbook.com/vpmobil"
-"Repository" = "https://github.com/annhilati/vpmobil"
-"Bug Tracker" = "https://github.com/annhilati/vpmobil/issues"
-"Download" = "https://pypi.org/project/vpmobil/"
+#[project]
+#name = "vpmobil"
+#version = "0.1.2"
+
+#[project.urls]
+#"Documentation" = "https://annhilati.gitbook.com/vpmobil"
+#"Repository" = "https://github.com/annhilati/vpmobil"
+#"Bug Tracker" = "https://github.com/annhilati/vpmobil/issues"
+#"Download" = "https://pypi.org/project/vpmobil/"
