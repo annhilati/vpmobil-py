@@ -1,7 +1,6 @@
 <h1 align="center">vpmobil-py</h1>
 <p align="center">
-   <a href="#"><img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/vpmobil?style=for-the-badge&logo=python&label=Downloads&color=5865F2"></a>
-
+  <a href="https://pypi.org/project/vpmobil/"><img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/vpmobil?style=for-the-badge&logo=python&logoColor=white&label=Downloads&color=5865F2"></a>
   <a href="#"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/annhilati/vpmobil-py?style=for-the-badge&logo=github&label=Letzter%20Commit&color=23A55A"></a>
   <a href="#"><img alt="GitHub License" src="https://img.shields.io/github/license/annhilati/vpmobil-py?style=for-the-badge&label=Lizenz&color=F23F42"></a>
 
