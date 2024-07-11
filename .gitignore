@@ -1,4 +1,6 @@
+# Environment
 *.env
-temp.py
+
+# Python Build
 vpmobil.egg-info/
 build/

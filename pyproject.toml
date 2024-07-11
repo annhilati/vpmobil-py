@@ -1,6 +1,7 @@
 [project]
 
 [project.urls]
-"Wiki" = "https://annhilati.gitbook.com/vpmobil"
-"Source" = "https://github.com/annhilati/vpmobil"
+"Documentation" = "https://annhilati.gitbook.com/vpmobil"
+"Repository" = "https://github.com/annhilati/vpmobil"
 "Bug Tracker" = "https://github.com/annhilati/vpmobil/issues"
+"Download" = "https://pypi.org/project/vpmobil/"
