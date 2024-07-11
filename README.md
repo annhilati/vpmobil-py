@@ -11,3 +11,5 @@
 <p align="center">
   Das Paket und seine zugehörigen Dienste und Projekte sind eigenständig und stehen in keiner Verbindung zu Indiware, der VpMobil24 App oder stundenplan24.de. Die Nutzung obliegt der Verantwortung des Nutzers. Die   Entwickler übernimmt keine Haftung für Schäden, die durch die Nutzung der App entstehen.
 </p>
+
+<!-- https://annhilati.gitbook.io/db/pypi-upload>
