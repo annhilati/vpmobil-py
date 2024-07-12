@@ -10,7 +10,7 @@
   <a href="https://annhilati.gitbook.io/vpmobil">
     <img alt="Static Badge" src="https://img.shields.io/badge/Gitbook-Documentation?style=for-the-badge&logo=gitbook&logoColor=white&label=Documentation&color=23A55A"></a>
   <a href="https://github.com/annhilati/vpmobil-py?tab=GPL-3.0-1-ov-file">
-    <img alt="GitHub License" src="https://img.shields.io/github/license/annhilati/vpmobil-py?style=for-the-badge&label=Lizenz&color=F23F42"></a>
+    <img alt="GitHub License" src="https://img.shields.io/github/license/annhilati/vpmobil-py?style=for-the-badge&label=Lizenz&color=F23F42"></a
   
   
   <p align="center">Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, the package and the wiki are formulated in German</p>
