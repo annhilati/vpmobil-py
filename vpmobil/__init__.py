@@ -3,8 +3,23 @@ A python module for interacting with a stundenplan24.de substitution plan
 """
 
 from .Vertretungsplan import Vertretungsplan
-from .VpDay import VpDay, Klasse, Stunde 
+from .VpDay import VpDay, Klasse, Stunde
+from .workflow import Exceptions
 
-__all__ = ['Vertretungsplan', "VpDay", "Stunde", "Klasse"]
+class VpMobil:
+    """
+    Enthält nützliche Funktionen für den Arbeitsablauf
+
+    #### Exceptions
+    - FetchingError
+    - XMLParsingError
+        - XMLNotFound
+    """
+    FetchingError = Exceptions.FetchingError
+    XMLNotFound = Exceptions.XMLNotFound
+    XMLParsingError = Exceptions.XMLParsingError
+
+__all__ = ['Vertretungsplan', 'VpDay', 'Klasse', 'Stunde', 'VpMobil']
+
     # Enthält alle Symbole, die bei "from vpmobil import" verfügbar sind
     # Enthält alle Symbole, die bei "from vpmobil import *" importiert werden

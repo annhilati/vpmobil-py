@@ -2,7 +2,7 @@ from datetime import datetime, date
 #Modules shall be imported as a 3-letter code
 import xml.etree.ElementTree as XML 
 
-from .Exceptions import XMLNotFound
+from .workflow import Exceptions
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         VpDay                                            │ 
@@ -53,7 +53,7 @@ class VpDay():
     def klasse(self, kürzel: str):
         """
         Gibt ein Klassen-Objekt zurück, dass alle Daten über die Klasse enthält\n
-        Ein Fehler wird ausgegeben, wenn die angegebene Klasse nicht gefunden werden kann. 
+        Ein Fehler (XMLNotFound) wird ausgegeben, wenn die angegebene Klasse nicht gefunden werden kann. 
 
         - kürzel: Kürzel der zu suchenden Klasse (z.B. "8b")
         """
@@ -62,14 +62,14 @@ class VpDay():
             kurz = kl.find('Kurz')
             if kurz is not None and kurz.text == kürzel:
                 return Klasse(xmldata=kl)
-        raise XMLNotFound(f"Keine Klasse {kürzel} gefunden")
+        raise Exceptions.XMLNotFound(f"Keine Klasse {kürzel} gefunden")
 
     def freieTage(self) -> list[date]:
         "Gibt eine Liste der im Plan als frei markierten Tage zurück"
 
         freieTage = self.rootVpMobil.find("FreieTage")
         if freieTage is None:
-            raise XMLNotFound("Element 'FreieTage' nicht in den XML-Daten gefunden")
+            raise Exceptions.XMLNotFound("Element 'FreieTage' nicht in den XML-Daten gefunden")
         
         freieTageList: list[date] = []
         for ft in freieTage.findall("ft"):
@@ -161,7 +161,7 @@ class Klasse():
     def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
         """
         Gibt die erste Stunde der angegebenen Stundenplanperiode zurück.\n
-        Ein Fehler wird ausgegeben, wenn die gesuchte Stunde nicht existiert
+        Ein Fehler (XMLNotFound) wird ausgegeben, wenn die gesuchte Stunde nicht existiert
         """
 
         pl = self.data.find("Pl")
@@ -169,12 +169,12 @@ class Klasse():
             st = std.find("St")
             if st is not None and st.text == str(periode):
                 return Stunde(std)
-        raise XMLNotFound("Stunde wurde nicht gefunden!")
+        raise Exceptions.XMLNotFound("Stunde wurde nicht gefunden!")
 
     def stundenInPeriode(self, periode: int):
         """
         Gibt alle Stunden zurück, die in der angegebenen Stundenplanperiode stattfinden.\n
-        Ein Fehler wird ausgegeben, wenn die gesuchten Stunden nicht existieren
+        Ein Fehler (XMLNotFound) wird ausgegeben, wenn die gesuchten Stunden nicht existieren
         """
 
         fin: list[Stunde] = []
@@ -186,12 +186,12 @@ class Klasse():
         if len(fin) != 0:
             return fin
         else:
-            raise XMLNotFound("Keine Stunden zu dieser Stundenplanperiode gefunden!")
+            raise Exceptions.XMLNotFound("Keine Stunden zu dieser Stundenplanperiode gefunden!")
     
     def alleStunden(self):
         """
         Gibt alle Stunden zurück, die die Klasse an diesem Tag hat.
-        Ein Fehler wird ausgegeben, wenn keine Stunden existieren
+        Ein Fehler (XMLNotFound) wird ausgegeben, wenn keine Stunden existieren
         """
 
         fin: list[Stunde] = []
@@ -203,7 +203,7 @@ class Klasse():
         if len(fin) != 0:
             return fin
         else:
-            raise XMLNotFound("Keine Stunden für diese Klasse gefunden!")
+            raise Exceptions.XMLNotFound("Keine Stunden für diese Klasse gefunden!")
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 

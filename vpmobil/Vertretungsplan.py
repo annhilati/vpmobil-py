@@ -2,7 +2,7 @@ from datetime import datetime, date
 #Modules shall be imported as a 3-letter code
 import requests as WEB
 
-from .Exceptions import FetchingError
+from .workflow import Exceptions
 from .VpDay import VpDay
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -30,8 +30,8 @@ class Vertretungsplan():
 
     def fetch(self, date: int | date = datetime.today().date()):
         """
-        Ruft alle Daten für einen bestimmten Tag ab und schreibt sie in ein VpDay-Objekt
-        Ein Error wird erhoben, wenn für den angegebenen Tag keine Daten verfügbar sind.
+        Ruft alle Daten für einen bestimmten Tag ab und schreibt sie in ein VpDay-Objekt\n
+        Ein Error (FetchingError) wird ausgegeben, wenn für den angegebenen Tag keine Daten verfügbar sind.
 
         - date: Bestimmter Tag; Integer im yyyymmdd-Format oder date-Objekt. Leer lassen, um das heutige Datum abzurufen
         """
@@ -41,6 +41,6 @@ class Vertretungsplan():
         response = WEB.get(uri)
 
         if response.status_code != 200:
-            raise FetchingError(f"Die Daten für das Datum {date} konnten nicht abgerufen werden. Statuscode: {response.status_code}")
+            raise Exceptions.FetchingError(f"Die Daten für das Datum {date} konnten nicht abgerufen werden. Statuscode: {response.status_code}")
 
         return VpDay(xmldata=response.content)
