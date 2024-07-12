@@ -11,5 +11,3 @@ for d in range(20240612, 20240620):
             print(f"Error der Lehrer an {d}")
     except:
         print(f"Kein Plan für {d}")
-
-print(vertretungsplan.fetch(20240614).lehrerKrank())

@@ -1,8 +1,17 @@
 <h1 align="center">vpmobil-py</h1>
 <p align="center">
-  <a href="https://pypi.org/project/vpmobil/"><img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dw/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Downloads&color=5865F2"></a>
-  <a href="#"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/annhilati/vpmobil-py?style=for-the-badge&logo=github&label=Letzter%20Commit&color=23A55A"></a>
-  <a href="#"><img alt="GitHub License" src="https://img.shields.io/github/license/annhilati/vpmobil-py?style=for-the-badge&label=Lizenz&color=F23F42"></a>
+  <a href="https://pypi.org/project/vpmobil/">
+    <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dw/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Downloads&color=5865F2">
+  </a>
+  <a href="https://annhilati.gitbook.io/vpmobil">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Gitbook-Documentation?style=for-the-badge&logo=gitbook&logoColor=white&label=Documentation&color=23A55A">
+  </a>
+  <a href="#">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/annhilati/vpmobil-py?style=for-the-badge&logo=github&label=Letzter%20Commit&color=23A55A">
+  </a>
+  <a href="#">
+    <img alt="GitHub License" src="https://img.shields.io/github/license/annhilati/vpmobil-py?style=for-the-badge&label=Lizenz&color=F23F42">
+  </a>
 
   <p align="center">Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, the package and the wiki are formulated in German</p>
 </p>
