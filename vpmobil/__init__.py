@@ -19,7 +19,7 @@ class VpMobil:
     XMLNotFound = Exceptions.XMLNotFound
     XMLParsingError = Exceptions.XMLParsingError
 
-__all__ = ['Vertretungsplan', 'VpDay', 'Klasse', 'Stunde', 'VpMobil']
+__all__ = ['VpMobil', 'Vertretungsplan', 'VpDay', 'Klasse', 'Stunde']
 
     # Enthält alle Symbole, die bei "from vpmobil import" verfügbar sind
     # Enthält alle Symbole, die bei "from vpmobil import *" importiert werden
