@@ -136,7 +136,7 @@ class Klasse():
     #### Attribute & Methoden
     - .getxml()
     - .stunde()
-    - .stunden()
+    - .stundenInPeriode()
     - .alleStunden()
     """
 
