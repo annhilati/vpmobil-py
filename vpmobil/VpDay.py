@@ -262,14 +262,15 @@ class Stunde():
         Wenn trotzdem ein Lehrer, Fach oder Raum eingetragen ist, wird dieser normal zurückgegeben
         """
         try:
-            self.kursnummer: int = int(self.data.find("Nr").text)
-            """
-            Nummer des Kurses der Stunde\n
-            Nützlich für das Kurs() Objekt
-            """
+            kursnummer: int = int(self.data.find("Nr").text) 
         except:
             self.besonders = True
-            self.kursnummer: int = -1
+            kursnummer: int = -1
+        self.kursnummer: int = kursnummer
+        """
+        Nummer des Kurses der Stunde, Nützlich für das Kurs() Objekt\n
+        Ist -1, wenn die Stunde nicht Teil eines Kurses ist
+        """
 
         if self.data.find("Fa") is not None and self.data.find("Fa").text is not None:
             tmpFa = self.data.find("Fa").text
@@ -280,6 +281,7 @@ class Stunde():
         Unterichtsfach der Stunde\n
         Gibt einen leeren String zurück, wenn die Stunde entfällt oder besonders ist
         """
+        
         if self.data.find("Le") is not None and self.data.find("Le").text is not None:
             tmpLe = self.data.find("Le").text
         else:
