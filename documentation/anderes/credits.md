@@ -14,6 +14,7 @@
 ## [Joshi](https://github.com/Joshi1531)
 
 * Softwareentwicklung
+  * Datenverarbeitung
 * Softwarearchitektur
 {% endhint %}
 
