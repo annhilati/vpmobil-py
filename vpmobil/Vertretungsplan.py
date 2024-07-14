@@ -27,7 +27,7 @@ class Vertretungsplan():
         self.passwort = passwort
         self.webpath = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
 
-    def fetch(self, date: int | date = datetime.today().date()):
+    def fetch(self, datum: int | date = datetime.today().date()):
         """
         Ruft alle Daten für einen bestimmten Tag ab und schreibt sie in ein VpDay-Objekt\n
         Ein Error (FetchingError) wird ausgegeben, wenn für den angegebenen Tag keine Daten verfügbar sind.
@@ -35,11 +35,11 @@ class Vertretungsplan():
         - date: Bestimmter Tag; Integer im yyyymmdd-Format oder date-Objekt. Leer lassen, um das heutige Datum abzurufen
         """
 
-        date = date if isinstance(date, int) else date.strftime('%Y%m%d')
-        uri = f"{self.webpath}PlanKl{date}.xml"  
+        datum = datum if isinstance(datum, int) else datum.strftime('%Y%m%d')
+        uri = f"{self.webpath}PlanKl{datum}.xml"  
         response = WEB.get(uri)
 
         if response.status_code != 200:
-            raise Exceptions.FetchingError(f"Die Daten für das Datum {date} konnten nicht abgerufen werden. Statuscode: {response.status_code}", status_code=response.status_code)
+            raise Exceptions.FetchingError(f"Die Daten für das Datum {datum} konnten nicht abgerufen werden. Statuscode: {response.status_code}", status_code=response.status_code)
 
-        return VpDay(xmldata=response.content)
+        return VpDay(xmldata=response.content, datum=datetime.strptime(str(datum), "%Y%m%d").date())

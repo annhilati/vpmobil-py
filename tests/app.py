@@ -1,13 +1,11 @@
 from vpmobil import Vertretungsplan, VpMobil
+import os
 
 vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
-for d in range(20240612, 20240620):
-    try:
-        day = vertretungsplan.fetch(d)
-        try:
-            print(day.lehrerKrank())
-        except VpMobil.XMLParsingError:
-            print(f"Error der Lehrer an {d}")
-    except:
-        print(f"Kein Plan für {d}")
+day = vertretungsplan.fetch(20240619)
+
+day.saveasfile(pfad=f"./{day.datum}.xml")
+
+# absolute_path = os.path.abspath("./datei.xml")
+# xml.write(absolute_path, encoding="utf-8", xml_declaration=True)

@@ -1,5 +1,7 @@
 from datetime import datetime, date
-import xml.etree.ElementTree as XML 
+import xml.etree.ElementTree as XML
+import xml.dom.minidom
+import os as OS
 
 from .workflow import Exceptions
 
@@ -12,19 +14,25 @@ class VpDay():
     Enthält alle Daten für einen bestimmten Tag
     
     #### Attribute & Methoden
-    - .zeitstempel
+    - .datum
     - .zusatzInfo
+    - .zeitstempel
+    - .datei
     - .getxml()
     - .klasse()
     - .freieTage()
     - .lehrerKrank()
     """
 
-    def __init__(self, xmldata: XML.ElementTree | bytes | str):
+    def __init__(self, xmldata: XML.ElementTree | bytes | str, datum: date):
         self.datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
         self.rootVpMobil: XML.Element = self.datatree.getroot()
         self.zeitstempel: datetime = datetime.strptime(self.datatree.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
-        "Gibt den Zeitpunkt zurück, zu dem der Vertretungsplan veröffentlicht wurde"
+        "Zeitpunkt, zu dem der Vertretungsplan veröffentlicht wurde"
+        self.datei: str = self.datatree.find('Kopf/datei').text
+        "Dateiname der XML-Quelldatei"
+        self.datum = datum
+        "Datum für das der Vertretungsplan gilt"
 
         ziZeilen = []
         for zusatzInfo in self.rootVpMobil.findall('.//ZusatzInfo'):
@@ -48,6 +56,32 @@ class VpDay():
                 return self.datatree
             case _:
                 raise SyntaxError(f"Nicht unterstütztes Format: {format}")
+            
+    def saveasfile(self, pfad: str = "./", allowoverwrite = False):
+        """
+        Speichert alle Daten des Tages als XML-Datei an einen bestimmten Ort
+        
+        #### Argumente
+        - pfad: Zielpfad der zu erstellenden Datei. Muss den Dateinamen mit Endung enthalten
+        - allowoverwrite: Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
+        Gibt einen Fehler (FileExistsError) aus, wenn eine Datei entgegen dieser Angabe überschrieben werden soll 
+        #### Beispiele
+        - `.saveasfile("./datei.xml")`
+        - `.saveasfile(f"./{.datum}")`
+        """
+        string = XML.tostring(self.rootVpMobil, 'utf-8')
+        pretty = xml.dom.minidom.parseString(string).toprettyxml(indent="\t")
+
+        zielpfad = OS.path.abspath(pfad)
+        directory = OS.path.dirname(zielpfad)
+
+        if not OS.path.exists(directory): # Stellt sicher, dass das Verzeichnis existiert
+            OS.makedirs(directory)
+        if OS.path.exists(zielpfad) and allowoverwrite == False:
+            raise FileExistsError(f"Die Datei {zielpfad} existiert bereits.")
+        
+        with open(zielpfad, "w", encoding="utf-8") as f:
+            f.write(pretty)
             
     def klasse(self, kürzel: str):
         """
