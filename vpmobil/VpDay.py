@@ -1,5 +1,4 @@
 from datetime import datetime, date
-#Modules shall be imported as a 3-letter code
 import xml.etree.ElementTree as XML 
 
 from .workflow import Exceptions
@@ -122,7 +121,7 @@ class VpDay():
                         else:
                             for sr in splitLe:
                                 leNichtKrank.append(splitLe)
-        return leKrank # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
+        return sorted(leKrank) # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮

@@ -1,5 +1,4 @@
 from datetime import datetime, date
-#Modules shall be imported as a 3-letter code
 import requests as WEB
 
 from .workflow import Exceptions
