@@ -27,7 +27,7 @@ class Vertretungsplan():
         self.passwort = passwort
         self.webpath = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
 
-    def fetch(self, datum: int | date = datetime.today().date()):
+    def fetch(self, datum: int | date = date.today()):
         """
         Ruft alle Daten für einen bestimmten Tag ab und schreibt sie in ein VpDay-Objekt\n
         Ein Error (FetchingError) wird ausgegeben, wenn für den angegebenen Tag keine Daten verfügbar sind.
