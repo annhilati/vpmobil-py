@@ -25,41 +25,30 @@ class VpDay():
     """
 
     def __init__(self, xmldata: XML.ElementTree | bytes | str):
-        self.datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
+        self._datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
+        self._dataroot: XML.Element = self._datatree.getroot()
         
-        self.dataroot: XML.Element = self.datatree.getroot()
-        
-        self.zeitstempel: datetime = datetime.strptime(self.datatree.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
+        self.zeitstempel: datetime = datetime.strptime(self._datatree.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
         "Zeitpunkt, zu dem der Vertretungsplan veröffentlicht wurde"
         
-        self.datei: str = self.datatree.find('Kopf/datei').text
+        self.datei: str = self._datatree.find('Kopf/datei').text
         "Dateiname der XML-Quelldatei"
         
         self.datum = datetime.strptime(self.datei[6:14], "%Y%m%d").date()
         "Datum für das der Vertretungsplan gilt"
 
         ziZeilen = []
-        for zusatzInfo in self.dataroot.findall('.//ZusatzInfo'):
+        for zusatzInfo in self._dataroot.findall('.//ZusatzInfo'):
             for ziZeile in zusatzInfo.findall('.//ZiZeile'):
                 if ziZeile.text:
                     ziZeilen.append(ziZeile.text)
         self.zusatzInfo = '\n'.join(ziZeilen)
         "Gibt die Zusatzinformationen des Tages zurück"
 
-    def getxml(self, format: str = "ElementTree") -> (XML.ElementTree | str):
-        """
-        Gibt alle Daten für den Tag in einem bestimmten Format zurück
-
-        - format: Das Format, in dem die Daten ausgegeben werden sollen. Eines von "str" oder "ElementTree".
-        """
-
-        match format:
-            case "str":
-                return XML.tostring(self.datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
-            case "ElementTree":
-                return self.datatree
-            case _:
-                raise SyntaxError(f"Nicht unterstütztes Format: {format}")
+    def __format__(self, format_spec):
+        match format_spec:
+            case "str": return XML.tostring(self._datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
+            case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
             
     def saveasfile(self, pfad: str = "./", overwrite = False):
         """
@@ -74,7 +63,7 @@ class VpDay():
         - `.saveasfile(f"./{.datum}")`
         """
 
-        xmlstring = XML.tostring(self.dataroot, 'utf-8')
+        xmlstring = XML.tostring(self._dataroot, 'utf-8')
         xmlpretty = xml.dom.minidom.parseString(xmlstring).toprettyxml(indent="\t")
 
         zielpfad = OS.path.abspath(pfad)
@@ -96,7 +85,7 @@ class VpDay():
         - kürzel: Kürzel der zu suchenden Klasse (z.B. "8b")
         """
 
-        for kl in self.dataroot.findall('.//Kl'):
+        for kl in self._dataroot.findall('.//Kl'):
             kurz = kl.find('Kurz')
             if kurz is not None and kurz.text == kürzel:
                 return Klasse(xmldata=kl)
@@ -105,7 +94,7 @@ class VpDay():
     def freieTage(self) -> list[date]:
         "Gibt eine Liste der im Plan als frei markierten Tage zurück"
 
-        freieTage = self.dataroot.find("FreieTage")
+        freieTage = self._dataroot.find("FreieTage")
         if freieTage is None:
             raise Exceptions.XMLNotFound("Element 'FreieTage' nicht in den XML-Daten gefunden")
         
@@ -124,7 +113,7 @@ class VpDay():
         leKrank: list[str] = []
         leNichtKrank: list[str] = []
 
-        for kl in self.dataroot.find('Klassen').findall("Kl"):
+        for kl in self._dataroot.find('Klassen').findall("Kl"):
             lehrerInfo: list[dict] = []
             for ue in kl.find("Unterricht").findall("Ue"): # Wir sammeln für alle Kurse dieser Klasse die Nummer und das Lehrerkürzel
                 lehrerInfo.append({
@@ -179,22 +168,12 @@ class Klasse():
     """
 
     def __init__(self, xmldata: XML.Element):
-        self.data: XML.Element = xmldata
+        self._data: XML.Element = xmldata
 
-    def getxml(self, format: str = "Element") -> (XML.Element | str):
-        """
-        Gibt alle Daten der Klasse in einem bestimmten Format zurück
-
-        - format: Das Format, in dem die Daten ausgegeben werden sollen. Eines von "str" oder "ElementTree".
-        """
-
-        match format:
-            case "str":
-                return XML.tostring(self.data(), encoding="utf-8", method="xml").decode('utf-8')
-            case "Element":
-                return self.data
-            case _:
-                raise SyntaxError(f"Nicht unterstütztes Format: {format}")
+    def __format__(self, format_spec):
+        match format_spec:
+            case "str": return XML.tostring(self._data(), encoding="utf-8", method="xml").decode('utf-8')
+            case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
 
     def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
         """
@@ -202,7 +181,7 @@ class Klasse():
         Ein Fehler (XMLNotFound) wird ausgegeben, wenn die gesuchte Stunde nicht existiert
         """
 
-        pl = self.data.find("Pl")
+        pl = self._data.find("Pl")
         for std in pl.findall("Std"):
             st = std.find("St")
             if st is not None and st.text == str(periode):
@@ -216,7 +195,7 @@ class Klasse():
         """
 
         fin: list[Stunde] = []
-        pl = self.data.find("Pl")
+        pl = self._data.find("Pl")
         for std in pl.findall("Std"):
             st = std.find("St")
             if st is not None and st.text == str(periode):
@@ -233,7 +212,7 @@ class Klasse():
         """
 
         fin: list[Stunde] = []
-        pl = self.data.find("Pl")
+        pl = self._data.find("Pl")
         for std in pl.findall("Std"):
             st = std.find("St")
             if st is not None:
@@ -266,24 +245,25 @@ class Stunde():
     """
 
     def __init__(self, xmldata: XML.Element | bytes | str):
-        self.data: XML.Element = xmldata if isinstance(xmldata, XML.Element) else XML.Element(XML.fromstring(xmldata))
-        self.nr: int = int(self.data.find("St").text)
+        self._data: XML.Element = xmldata if isinstance(xmldata, XML.Element) else XML.Element(XML.fromstring(xmldata))
+        
+        self.nr: int = int(self._data.find("St").text)
         "Nummer der Stunde"
 
-        self.beginn: str = str(self.data.find("Beginn").text)
+        self.beginn: str = str(self._data.find("Beginn").text)
         "Beginn der Stunde im Format \"07:45\""
 
-        self.ende: str = str(self.data.find("Ende").text)
+        self.ende: str = str(self._data.find("Ende").text)
         "Ende der Stunde im Format \"08:30\""
 
-        if "FaAe" in self.data.find("Fa").attrib or "RaAe" in self.data.find("Ra").attrib or "LeAe" in self.data.find("Le").attrib:
+        if "FaAe" in self._data.find("Fa").attrib or "RaAe" in self._data.find("Ra").attrib or "LeAe" in self._data.find("Le").attrib:
             anders = True
         else:
             anders = False
         self.anders: bool = anders
         "Gibt an, ob eine Änderung vorliegt"
 
-        if self.data.find("Fa").text == "---":
+        if self._data.find("Fa").text == "---":
             ausfall = True
         else:
             ausfall = False
@@ -300,7 +280,7 @@ class Stunde():
         Wenn trotzdem ein Lehrer, Fach oder Raum eingetragen ist, wird dieser normal zurückgegeben
         """
         try:
-            kursnummer: int = int(self.data.find("Nr").text) 
+            kursnummer: int = int(self._data.find("Nr").text) 
         except:
             self.besonders = True
             kursnummer: int = -1
@@ -310,8 +290,8 @@ class Stunde():
         Ist -1, wenn die Stunde nicht Teil eines Kurses ist
         """
 
-        if self.data.find("Fa") is not None and self.data.find("Fa").text is not None:
-            fach = self.data.find("Fa").text
+        if self._data.find("Fa") is not None and self._data.find("Fa").text is not None:
+            fach = self._data.find("Fa").text
         else:
             fach = ""
         self.fach: str = fach if self.ausfall == False and self.besonders == False else ""
@@ -320,8 +300,8 @@ class Stunde():
         Gibt einen leeren String zurück, wenn die Stunde entfällt oder besonders ist
         """
         
-        if self.data.find("Le") is not None and self.data.find("Le").text is not None:
-            tmpLe = self.data.find("Le").text
+        if self._data.find("Le") is not None and self._data.find("Le").text is not None:
+            tmpLe = self._data.find("Le").text
         else:
             tmpLe = ""
         self.lehrer: str = tmpLe if self.ausfall == False else ""
@@ -330,8 +310,8 @@ class Stunde():
         Gibt einen leeren String zurück, wenn die Stunde entfällt oder besonders ist
         """
 
-        if self.data.find("Ra") is not None and self.data.find("Ra").text is not None:
-            tmpRa = self.data.find("Ra").text
+        if self._data.find("Ra") is not None and self._data.find("Ra").text is not None:
+            tmpRa = self._data.find("Ra").text
         else:
             tmpRa = ""
         self.raum: str = tmpRa if self.ausfall == False else ""
@@ -340,7 +320,7 @@ class Stunde():
         Gibt einen leeren String zurück, wenn die Stunde entfällt oder besonders ist
         """
 
-        self.info: str = self.data.find("If").text
+        self.info: str = self._data.find("If").text
         """
         Optionale Information zu dieser Stunde\n
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden

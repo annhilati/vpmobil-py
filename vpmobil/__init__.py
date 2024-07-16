@@ -4,7 +4,7 @@ A python module for interacting with a stundenplan24.de substitution plan
 
 from .Vertretungsplan import Vertretungsplan
 from .VpDay import VpDay, Klasse, Stunde
-from .workflow import Exceptions
+from .workflow import Exceptions, getxml
 
 __all__ = ['VpMobil', 'Vertretungsplan', 'VpDay', 'Klasse', 'Stunde']
     # Enthält alle Symbole, die bei "from vpmobil import" verfügbar sind
@@ -14,11 +14,15 @@ class VpMobil:
     """
     Enthält nützliche Funktionen für den Arbeitsablauf
 
+    #### Funktionen
+    - getxml()
     #### Exceptions
     - .FetchingError
     - .XMLParsingError
         - .XMLNotFound
     """
+    getxml = getxml
+    
     FetchingError = Exceptions.FetchingError
     XMLNotFound = Exceptions.XMLNotFound
     XMLParsingError = Exceptions.XMLParsingError

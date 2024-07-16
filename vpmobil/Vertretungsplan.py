@@ -25,7 +25,7 @@ class Vertretungsplan():
         self.schulnummer = schulnummer
         self.benutzername = benutzername
         self.passwort = passwort
-        self.webpath = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
+        self._webpath = f"http://{benutzername}:{passwort}@stundenplan24.de/{schulnummer}/mobil/mobdaten/"
 
     def fetch(self, datum: int | date = date.today()):
         """
@@ -36,7 +36,7 @@ class Vertretungsplan():
         """
 
         datum = datum if isinstance(datum, int) else datum.strftime('%Y%m%d')
-        uri = f"{self.webpath}PlanKl{datum}.xml"  
+        uri = f"{self._webpath}PlanKl{datum}.xml"  
         response = WEB.get(uri)
 
         if response.status_code != 200:
