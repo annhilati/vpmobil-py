@@ -47,7 +47,7 @@ class VpDay():
 
     def __format__(self, format_spec):
         match format_spec:
-            case "str": return XML.tostring(self._datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
+            case "xml": return XML.tostring(self._datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
             
     def saveasfile(self, pfad: str = "./", overwrite = False):
@@ -165,6 +165,7 @@ class Klasse():
     - .stunde()
     - .stundenInPeriode()
     - .alleStunden()
+    - :xml
     """
 
     def __init__(self, xmldata: XML.Element):
@@ -172,7 +173,7 @@ class Klasse():
 
     def __format__(self, format_spec):
         match format_spec:
-            case "str": return XML.tostring(self._data(), encoding="utf-8", method="xml").decode('utf-8')
+            case "xml": return XML.tostring(self._data, encoding="utf-8", method="xml").decode('utf-8')
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
 
     def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
