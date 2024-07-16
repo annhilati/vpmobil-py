@@ -61,31 +61,32 @@ class VpDay():
             case _:
                 raise SyntaxError(f"Nicht unterstütztes Format: {format}")
             
-    def saveasfile(self, pfad: str = "./", allowoverwrite = False):
+    def saveasfile(self, pfad: str = "./", overwrite = False):
         """
         Speichert alle Daten des Tages als XML-Datei an einen bestimmten Ort
         
         #### Argumente
         - pfad: Zielpfad der zu erstellenden Datei. Muss den Dateinamen mit Endung enthalten
-        - allowoverwrite: Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
+        - overwrite: Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
         Gibt einen Fehler (FileExistsError) aus, wenn eine Datei entgegen dieser Angabe überschrieben werden soll 
         #### Beispiele
         - `.saveasfile("./datei.xml")`
         - `.saveasfile(f"./{.datum}")`
         """
-        string = XML.tostring(self.dataroot, 'utf-8')
-        pretty = xml.dom.minidom.parseString(string).toprettyxml(indent="\t")
+
+        xmlstring = XML.tostring(self.dataroot, 'utf-8')
+        xmlpretty = xml.dom.minidom.parseString(xmlstring).toprettyxml(indent="\t")
 
         zielpfad = OS.path.abspath(pfad)
         directory = OS.path.dirname(zielpfad)
 
         if not OS.path.exists(directory): # Stellt sicher, dass das Verzeichnis existiert
             OS.makedirs(directory)
-        if OS.path.exists(zielpfad) and allowoverwrite == False:
+        if OS.path.exists(zielpfad) and overwrite == False:
             raise FileExistsError(f"Die Datei {zielpfad} existiert bereits.")
         
         with open(zielpfad, "w", encoding="utf-8") as f:
-            f.write(pretty)
+            f.write(xmlpretty)
             
     def klasse(self, kürzel: str):
         """
@@ -255,6 +256,7 @@ class Stunde():
     - .beginn
     - .ende
     - .anders
+    - .besonders
     - .ausfall
     - .fach
     - .lehrer
@@ -288,14 +290,13 @@ class Stunde():
         self.ausfall: bool = ausfall
         """
         Gibt an, ob die Stunde entfällt\n
-        Wenn ja, werden 'lehrer', 'fach' und 'raum' leere Strings zurückgeben
+        Wenn ja, geben '.lehrer', '.fach' und '.raum' leere Strings zurück
         """
 
         self.besonders: bool = False
         """
-        Gibt an, ob die Stunde besonders ist. Gibt True zurück, wenn es sich z.B. um eine Exkursion handelt.\n
-        Achtung: Besondere Stunden haben keine Kursnummer! Prüfe immer erst, ob eine Stunde besonders ist, bevor du die Kursnummer abrufst.\n
-        .kursnummer gibt -1 zurück, wenn die Stunde besonders ist.\n
+        Gibt an, ob die Stunde besonders ist. (Z.B. True, wenn es sich um eine Exkursion handelt.)\n
+        Besondere Stunden haben keine Kursnummer! Prüfe immer erst, ob eine Stunde besonders ist, bevor du die Kursnummer abrufst. .kursnummer gibt dann -1 zurück, wenn die Stunde besonders ist.\n
         Wenn trotzdem ein Lehrer, Fach oder Raum eingetragen ist, wird dieser normal zurückgegeben
         """
         try:
@@ -310,10 +311,10 @@ class Stunde():
         """
 
         if self.data.find("Fa") is not None and self.data.find("Fa").text is not None:
-            tmpFa = self.data.find("Fa").text
+            fach = self.data.find("Fa").text
         else:
-            tmpFa = ""
-        self.fach: str = tmpFa if self.ausfall == False and self.besonders == False else ""
+            fach = ""
+        self.fach: str = fach if self.ausfall == False and self.besonders == False else ""
         """
         Unterichtsfach der Stunde\n
         Gibt einen leeren String zurück, wenn die Stunde entfällt oder besonders ist
