@@ -1,6 +1,3 @@
-import xml.etree.ElementTree as XML
-from .VpDay import VpDay, Klasse, Stunde
-
 class Exceptions():
     """
     Enthält verschiedene Exceptions
