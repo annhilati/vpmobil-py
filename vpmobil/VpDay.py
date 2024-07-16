@@ -42,11 +42,20 @@ class VpDay():
         self.zusatzInfo = '\n'.join(ziZeilen)
         "Gibt die Zusatzinformationen des Tages zurück"
 
-    def __format__(self, format):
+    def getxml(self, format: str = "ElementTree") -> (XML.ElementTree | str):
+        """
+        Gibt alle Daten für den Tag in einem bestimmten Format zurück
+
+        - format: Das Format, in dem die Daten ausgegeben werden sollen. Eines von "str" oder "ElementTree".
+        """
+
         match format:
-            case "str": return XML.tostring(self.datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
-            case "ElementTree": return self.datatree
-            case _: raise SyntaxError(f"Nicht unterstütztes Format: {format}")
+            case "str":
+                return XML.tostring(self.datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
+            case "ElementTree":
+                return self.datatree
+            case _:
+                raise SyntaxError(f"Nicht unterstütztes Format: {format}")
             
     def saveasfile(self, pfad: str = "./", allowoverwrite = False):
         """
@@ -167,11 +176,20 @@ class Klasse():
     def __init__(self, xmldata: XML.Element):
         self.data: XML.Element = xmldata
 
-    def __format__(self, format):
+    def getxml(self, format: str = "Element") -> (XML.Element | str):
+        """
+        Gibt alle Daten der Klasse in einem bestimmten Format zurück
+
+        - format: Das Format, in dem die Daten ausgegeben werden sollen. Eines von "str" oder "ElementTree".
+        """
+
         match format:
-            case "str": return XML.tostring(self.data(), encoding="utf-8", method="xml").decode('utf-8')
-            case "Element": return self.data
-            case _: raise SyntaxError(f"Nicht unterstütztes Format: {format}")
+            case "str":
+                return XML.tostring(self.data(), encoding="utf-8", method="xml").decode('utf-8')
+            case "Element":
+                return self.data
+            case _:
+                raise SyntaxError(f"Nicht unterstütztes Format: {format}")
 
     def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
         """
