@@ -42,4 +42,4 @@ class Vertretungsplan():
         if response.status_code != 200:
             raise Exceptions.FetchingError(f"Die Daten für das Datum {datum} konnten nicht abgerufen werden. Statuscode: {response.status_code}", status_code=response.status_code)
 
-        return VpDay(xmldata=response.content, datum=datetime.strptime(str(datum), "%Y%m%d").date())
+        return VpDay(xmldata=response.content)

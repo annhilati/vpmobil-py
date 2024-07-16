@@ -1,7 +1,7 @@
-from datetime import datetime, date
-import xml.etree.ElementTree as XML
 import xml.dom.minidom
+import xml.etree.ElementTree as XML
 import os as OS
+from datetime import datetime, date
 
 from .workflow import Exceptions
 
@@ -24,14 +24,18 @@ class VpDay():
     - .lehrerKrank()
     """
 
-    def __init__(self, xmldata: XML.ElementTree | bytes | str, datum: date):
+    def __init__(self, xmldata: XML.ElementTree | bytes | str):
         self.datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
+        
         self.rootVpMobil: XML.Element = self.datatree.getroot()
+        
         self.zeitstempel: datetime = datetime.strptime(self.datatree.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
         "Zeitpunkt, zu dem der Vertretungsplan veröffentlicht wurde"
+        
         self.datei: str = self.datatree.find('Kopf/datei').text
         "Dateiname der XML-Quelldatei"
-        self.datum = datum
+        
+        self.datum = datetime.strptime(self.datei[6:14], "%Y%m%d").date()
         "Datum für das der Vertretungsplan gilt"
 
         ziZeilen = []
