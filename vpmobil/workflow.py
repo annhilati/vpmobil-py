@@ -21,16 +21,3 @@ class Exceptions():
         def __init__(self, message):
             self.message = message
             super().__init__(self.message)
-
-def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
-    """
-    Gibt die XML Daten eines Objekts als Klasse des xml-Moduls zurück
-
-    - object: VpDay -> ElementTree
-    - object: Klasse -> Element
-    - object: Stunde -> Element
-    """
-    if isinstance(object, VpDay): return object._datatree
-    elif isinstance(object, Klasse): return object._data
-    elif isinstance(object, Stunde): return object._data
-    else: raise TypeError("object muss einer der Typen VpDay & Klasse sein") # Der Code ist ereichbar lol habs getestet

@@ -6,4 +6,4 @@ vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
 
 day = vertretungsplan.fetch(20240619)
 klasse = day.klasse("9a")
-sfnj = "cjny"
+print(f"{klasse:str}")

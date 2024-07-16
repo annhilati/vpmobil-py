@@ -325,3 +325,16 @@ class Stunde():
         Optionale Information zu dieser Stunde\n
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
         """
+
+def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
+    """
+    Gibt die XML Daten eines Objekts als Klasse des xml-Moduls zurück
+
+    - object: VpDay -> ElementTree
+    - object: Klasse -> Element
+    - object: Stunde -> Element
+    """
+    if isinstance(object, VpDay): return object._datatree
+    elif isinstance(object, Klasse): return object._data
+    elif isinstance(object, Stunde): return object._data
+    else: raise TypeError("object muss einer der Typen VpDay, Klasse & Stunde sein") # Der Code ist ereichbar lol habs getestet
