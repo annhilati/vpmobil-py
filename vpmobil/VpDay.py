@@ -27,7 +27,7 @@ class VpDay():
     def __init__(self, xmldata: XML.ElementTree | bytes | str):
         self.datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
         
-        self.rootVpMobil: XML.Element = self.datatree.getroot()
+        self.dataroot: XML.Element = self.datatree.getroot()
         
         self.zeitstempel: datetime = datetime.strptime(self.datatree.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
         "Zeitpunkt, zu dem der Vertretungsplan veröffentlicht wurde"
@@ -39,7 +39,7 @@ class VpDay():
         "Datum für das der Vertretungsplan gilt"
 
         ziZeilen = []
-        for zusatzInfo in self.rootVpMobil.findall('.//ZusatzInfo'):
+        for zusatzInfo in self.dataroot.findall('.//ZusatzInfo'):
             for ziZeile in zusatzInfo.findall('.//ZiZeile'):
                 if ziZeile.text:
                     ziZeilen.append(ziZeile.text)
@@ -73,7 +73,7 @@ class VpDay():
         - `.saveasfile("./datei.xml")`
         - `.saveasfile(f"./{.datum}")`
         """
-        string = XML.tostring(self.rootVpMobil, 'utf-8')
+        string = XML.tostring(self.dataroot, 'utf-8')
         pretty = xml.dom.minidom.parseString(string).toprettyxml(indent="\t")
 
         zielpfad = OS.path.abspath(pfad)
@@ -95,7 +95,7 @@ class VpDay():
         - kürzel: Kürzel der zu suchenden Klasse (z.B. "8b")
         """
 
-        for kl in self.rootVpMobil.findall('.//Kl'):
+        for kl in self.dataroot.findall('.//Kl'):
             kurz = kl.find('Kurz')
             if kurz is not None and kurz.text == kürzel:
                 return Klasse(xmldata=kl)
@@ -104,7 +104,7 @@ class VpDay():
     def freieTage(self) -> list[date]:
         "Gibt eine Liste der im Plan als frei markierten Tage zurück"
 
-        freieTage = self.rootVpMobil.find("FreieTage")
+        freieTage = self.dataroot.find("FreieTage")
         if freieTage is None:
             raise Exceptions.XMLNotFound("Element 'FreieTage' nicht in den XML-Daten gefunden")
         
@@ -123,7 +123,7 @@ class VpDay():
         leKrank: list[str] = []
         leNichtKrank: list[str] = []
 
-        for kl in self.rootVpMobil.find('Klassen').findall("Kl"):
+        for kl in self.dataroot.find('Klassen').findall("Kl"):
             lehrerInfo: list[dict] = []
             for ue in kl.find("Unterricht").findall("Ue"): # Wir sammeln für alle Kurse dieser Klasse die Nummer und das Lehrerkürzel
                 lehrerInfo.append({
