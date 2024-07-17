@@ -2,7 +2,7 @@
 <p align="center">
   <a href="#"><img alt="CodeSnap" height="150" src="https://github.com/user-attachments/assets/27152a55-aa5e-4d80-bbd3-7dc64b35e77e"></a>
   <br>
-  <a href="https://pypi.org/projects/vpmobil"></a>
+  <a href="https://pypi.org/project/vpmobil">
     <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/v/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Version&color=5865F2"></a>
   <a href="https://pypi.org/project/vpmobil/">
     <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dw/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Downloads&color=5865F2"></a>
