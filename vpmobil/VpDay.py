@@ -13,15 +13,19 @@ class VpDay():
     """
     Enthält alle Daten für einen bestimmten Tag
     
-    #### Attribute & Methoden
-    - .datum
-    - .zusatzInfo
-    - .zeitstempel
-    - .datei
-    - :xml
-    - .klasse()
-    - .freieTage()
-    - .lehrerKrank()
+    #### Attribute
+        datum (date): Datum, für das der Plan gilt
+        zusatzInfo (str): Vom Planer eingetragene Zusatzinformation zum Tag
+        zeitstempel (datetime): Veröffentlichungszeitpunkt des Vertretungsplans
+        datei (str): Dateiname der Quelldatei
+
+    #### Methoden
+        klasse(): Isoliert die Daten einer Klasse
+        freieTage(): Liefert eine Liste der als frei markierten Tage
+        lehrerKrank(): Liefert eine Liste der Lehrer die unplanmäßig keinen Untericht haben
+
+    #### Formate
+        xml: Gibt die XML-Daten als String zurück
     """
 
     def __init__(self, xmldata: XML.ElementTree | bytes | str):
@@ -29,10 +33,10 @@ class VpDay():
         self._dataroot: XML.Element = self._datatree.getroot()
         
         self.zeitstempel: datetime = datetime.strptime(self._datatree.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
-        "Zeitpunkt, zu dem der Vertretungsplan veröffentlicht wurde"
+        "Veröffentlichungszeitpunkt des Vertretungsplans"
         
         self.datei: str = self._datatree.find('Kopf/datei').text
-        "Dateiname der XML-Quelldatei"
+        "Dateiname der Quelldatei"
         
         self.datum = datetime.strptime(self.datei[6:14], "%Y%m%d").date()
         "Datum für das der Vertretungsplan gilt"
@@ -43,24 +47,24 @@ class VpDay():
                 if ziZeile.text:
                     ziZeilen.append(ziZeile.text)
         self.zusatzInfo = '\n'.join(ziZeilen)
-        "Gibt die Zusatzinformationen des Tages zurück"
+        "Vom Planer eingetragene Zusatzinformation zum Tag"
 
     def __format__(self, format_spec):
         match format_spec:
             case "xml": return XML.tostring(self._datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
             
-    def saveasfile(self, pfad: str = "./", overwrite = False):
+    def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
         """
         Speichert alle Daten des Tages als XML-Datei an einen bestimmten Ort
         
         #### Argumente
-        - pfad: Zielpfad der zu erstellenden Datei. Muss den Dateinamen mit Endung enthalten
-        - overwrite: Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
-        Gibt einen Fehler (FileExistsError) aus, wenn eine Datei entgegen dieser Angabe überschrieben werden soll 
-        #### Beispiele
-        - `.saveasfile("./datei.xml")`
-        - `.saveasfile(f"./{.datum}")`
+            pfad (str): Zielpfad der zu erstellenden Datei.
+                Muss den Dateinamen mit Endung enthalten. z.B.: `"./ein/realtiver/ordner/datei.xml"`
+            overwrite (bool): Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
+        
+        #### Raises
+            FileExistsError: Wenn die Datei am Zielpfad entgegen der overwrite-Bestimmung überschrieben werden soll 
         """
 
         xmlstring = XML.tostring(self._dataroot, 'utf-8')
@@ -79,10 +83,16 @@ class VpDay():
             
     def klasse(self, kürzel: str):
         """
-        Gibt ein Klassen-Objekt zurück, dass alle Daten über die Klasse enthält\n
-        Ein Fehler (XMLNotFound) wird ausgegeben, wenn die angegebene Klasse nicht gefunden werden kann. 
+        Isoliert die Daten einer Klasse
+        
+        #### Argumente:
+            kürzel (str): Kürzel der zu suchenden Klasse (z.B. `"8b"`)
 
-        - kürzel: Kürzel der zu suchenden Klasse (z.B. "8b")
+        #### Returns
+            Klasse: Klassenobjekt, dass die XML-Daten der Klasse enthält
+
+        #### Raises
+            XMLNotFound: Wenn die angegebene Klasse nicht gefunden werden kann. 
         """
 
         for kl in self._dataroot.findall('.//Kl'):
@@ -160,12 +170,13 @@ class Klasse():
     """
     Enthält alle Daten für eine bestimmte Klasse
 
-    #### Attribute & Methoden
-    - .getxml()
-    - .stunde()
-    - .stundenInPeriode()
-    - .alleStunden()
-    - :xml
+    #### Methoden
+        stunde(): Gibt die erste Stunde zur angegebenen Stundenplanperiode
+        stundenInPeriode(): Gibt eine Liste aller Stunden zur angegebenen Stundenplanperiode zurück
+        alleStunden(): Gibt eine Liste aller Stunden der Klasse zurück
+    
+    #### Formate
+        xml: Gibt die XML-Daten als String zurück
     """
 
     def __init__(self, xmldata: XML.Element):
@@ -179,7 +190,15 @@ class Klasse():
     def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
         """
         Gibt die erste Stunde der angegebenen Stundenplanperiode zurück.\n
-        Ein Fehler (XMLNotFound) wird ausgegeben, wenn die gesuchte Stunde nicht existiert
+
+        #### Argumente:
+            periode (int): Stundenplanperiode, zur der die Stunde gesucht wird
+
+        #### Returns:
+            Stunde: angefragtes Stunden-Objekt, dass alle Informationen über die Stunde enthält
+
+        #### Raises:
+            XMLNotFound: Wenn die gesuchte Stunde nicht existiert
         """
 
         pl = self._data.find("Pl")
@@ -191,8 +210,16 @@ class Klasse():
 
     def stundenInPeriode(self, periode: int):
         """
-        Gibt alle Stunden zurück, die in der angegebenen Stundenplanperiode stattfinden.\n
-        Ein Fehler (XMLNotFound) wird ausgegeben, wenn die gesuchten Stunden nicht existieren
+        Gibt eine Liste der Stunden in der angegebenen Stundenplanperiode zurück.\n
+
+        #### Argumente:
+            periode (int): Stundenplanperiode, zur der die Stunden gesucht werden
+
+        #### Returns:
+            list[Stunde]: Liste von Stunden-Objekten, die alle Informationen über die Stunde enthalten
+
+        #### Raises:
+            XMLNotFound: Wenn die gesuchten Stunden nicht existieren
         """
 
         fin: list[Stunde] = []
@@ -208,8 +235,13 @@ class Klasse():
     
     def alleStunden(self):
         """
-        Gibt alle Stunden zurück, die die Klasse an diesem Tag hat.
-        Ein Fehler (XMLNotFound) wird ausgegeben, wenn keine Stunden existieren
+        Gibt alle Stunden des Tages zurück.\n
+
+        #### Returns:
+            list[Stunde]: Liste von Stunden-Objekten in der richtigen Reihenfolge, die alle Informationen über die Stunden enthalten
+
+        #### Raises:
+            XMLNotFound: Wenn die gesuchte Stunde nicht existiert
         """
 
         fin: list[Stunde] = []
@@ -231,31 +263,31 @@ class Stunde():
     """
     Enthält Informationen über eine bestimmte Stunde
 
-    #### Attribute & Methoden
-    - .nr
-    - .beginn
-    - .ende
-    - .anders
-    - .besonders
-    - .ausfall
-    - .fach
-    - .lehrer
-    - .raum
-    - .info
-    - .kursnummer
+    #### Attribute
+        nr (int): Stundenplanperiode in der die Stunde stattfindet
+        beginn (str): Beginn der Stunde im Schema \"07:45\"
+        ende (str): Beginn der Stunde im Schema \"07:45\"
+        anders (bool): Gibt an, ob eine Änderung vorliegt
+        besonders (bool): Gibt an, ob die Stunde kein normaler Kursuntericht ist
+        ausfall (bool): Gibt an, ob die Stunde entfällt
+        fach (str): Unterichtsfach der Stunde
+        lehrer (str): Lehrer der Stunde
+        raum (str): Raum der Stunde
+        info (str): Zusätzliche Information zu dieser Stunde
+        kursnummer (int): Nummer des Kurses der Stunde
     """
 
     def __init__(self, xmldata: XML.Element | bytes | str):
         self._data: XML.Element = xmldata if isinstance(xmldata, XML.Element) else XML.Element(XML.fromstring(xmldata))
         
         self.nr: int = int(self._data.find("St").text)
-        "Nummer der Stunde"
+        "Stundenplanperiode in der die Stunde stattfindet"
 
         self.beginn: str = str(self._data.find("Beginn").text)
-        "Beginn der Stunde im Format \"07:45\""
+        "Beginn der Stunde im Schema \"07:45\""
 
         self.ende: str = str(self._data.find("Ende").text)
-        "Ende der Stunde im Format \"08:30\""
+        "Ende der Stunde im Schema \"08:30\""
 
         if "FaAe" in self._data.find("Fa").attrib or "RaAe" in self._data.find("Ra").attrib or "LeAe" in self._data.find("Le").attrib:
             anders = True
@@ -323,7 +355,7 @@ class Stunde():
 
         self.info: str = self._data.find("If").text
         """
-        Optionale Information zu dieser Stunde\n
+        Zusätzliche Information zu dieser Stunde\n
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
         """
 
@@ -331,9 +363,13 @@ def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     """
     Gibt die XML Daten eines Objekts als Klasse des xml-Moduls zurück
 
-    - object: VpDay -> ElementTree
-    - object: Klasse -> Element
-    - object: Stunde -> Element
+    #### Argumente
+        object (VpDay | Klasse | Stunde): Vertretungsplan-Objekt, aus dem die XML-Daten isoliert werden sollen
+
+    #### Returns
+        ElementTree: Wenn object einen VpDay-Objekt ist
+        Element: Wenn object einen Klassen-Objekt ist
+        Element: Wenn object einen Stunden-Objekt ist
     """
     if isinstance(object, VpDay): return object._datatree
     elif isinstance(object, Klasse): return object._data

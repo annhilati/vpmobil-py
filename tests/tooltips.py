@@ -42,22 +42,7 @@ class Test():
         url (str): URL und Verzeichnispfad, an dem die Quelldateien gespeichert werden
         dateinamensschema (str): Schema der Namen der Quelldateien
             z.B. `PlanKl%Y%m%d.xml`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
-    """
-svbbc
-    """
-    
 
-    #### Argumente
-    - 
-    - benutzer (str)
-    - passwort (str)
-    - url (str): Pfad des Speicherorts der XML-Quelldateien. Platzhalter:
-        - {schulnummer}
-    - dateinamensschema (str): z.B `PlanKl%Y%m%d.xml`. Nutze Zeitplatzhalter des datetime-Moduls: 
-        - %Y: Jahr (24)
-        - %m: Monat (05)
-        - %d: Tag (07)
-
-    #### Attribute & Methoden
-    - .fetch()
+    ### Methode:
+        .fetch(): Ruft die Daten eines Tages ab
     """
