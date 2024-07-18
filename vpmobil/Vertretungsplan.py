@@ -8,38 +8,32 @@ class Vertretungsplan():
     """
     Enthält die notwendigen Daten um auf einen stundenplan24.de-Vertretungsplan zuzugreifen
 
-    #### Argumente
-    - schulnummer (int)
-    - benutzername (str)
-    - passwort (str)
-    - url (str): Pfad des Speicherorts der XML-Quelldateien. Platzhalter:
-        - {schulnummer}
-    - dateinamensschema (str): z.B `PlanKl%Y%m%d.xml`. Nutze Zeitplatzhalter des datetime-Moduls: 
-        - %Y: Jahr (24)
-        - %m: Monat (05)
-        - %d: Tag (07)
+    #### Argumente:
+        schulnummer (int): Schulnummer des Vertretungsplans
+        benutzer (str): Benutzername des Benutzers über den zugegriffen werden soll
+        passwort (str): Passwort des Benutzers über den zugegriffen werden soll
+        url (str): URL und Verzeichnispfad, an dem die Quelldateien gespeichert werden
+        dateinamensschema (str): Schema der Namen der Quelldateien
+            z.B. `PlanKl%Y%m%d.xml`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
 
-    #### Attribute & Methoden
-    - .fetch()
+    #### Methode:
+        .fetch(): Ruft die Daten eines Tages ab
     """
 
     def __init__(self,
                  schulnummer: int,
                  benutzername: str,
                  passwort: str,
-                 url: str = "stundenplan24.de/{schulnummer}/mobil/mobdaten",
+                 url: str = 'stundenplan24.de/{schulnummer}/mobil/mobdaten',
                  dateinamensschema: str = "PlanKl%Y%m%d.xml"):
         """
-        #### Argumente
-        - schulnummer (int)
-        - benutzername (str)
-        - passwort (str)
-        - url (str): Pfad des Speicherorts der XML-Quelldateien. Platzhalter:
-            - {schulnummer}
-        - dateinamensschema (str): z.B `PlanKl%Y%m%d.xml`. Nutze Zeitplatzhalter des datetime-Moduls: 
-            - %Y: Jahr (24)
-            - %m: Monat (05)
-            - %d: Tag (07)
+        #### Argumente:
+            schulnummer (int): Schulnummer des Vertretungsplans
+            benutzer (str): Benutzername des Benutzers über den zugegriffen werden soll
+            passwort (str): Passwort des Benutzers über den zugegriffen werden soll
+            url (str): URL und Verzeichnispfad, an dem die Quelldateien gespeichert werden
+            dateinamensschema (str): Schema der Namen der Quelldateien
+                z.B. `PlanKl%Y%m%d.xml`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
         """
         self.schulnummer = schulnummer
         self.benutzername = benutzername
@@ -54,15 +48,19 @@ class Vertretungsplan():
         
         self._dateischema = dateinamensschema
 
-    def fetch(self, datum: date | int = date.today()):
+    def fetch(self, datum: date | int | str = date.today()):
         """
-        Ruft alle Daten für einen bestimmten Tag ab und schreibt sie in ein VpDay-Objekt\n
-        Ein Error (FetchingError) wird ausgegeben, wenn für den angegebenen Tag keine Daten verfügbar sind.
+        Ruft die Daten eines Tages ab
 
-        - datum: Bestimmter Tag als date-Objekt oder yymmdd-String. Leer lassen, um das heutige Datum abzurufen
+        #### Argumente:
+            datum (date | int | str) Abzurufender Tag
+                int oder str muss im Schema yymmdd sein (z.B. 240609)
+
+        #### Raised:
+            FetchingError: Wenn für den Tag keine Daten verfügbar sind
         """
 
-        datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) else datum
+        datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) or isinstance(datum, str) else datum
 
         datei: str = datum.strftime(f"{self._dateischema}")
         uri = f"{self._webpath}/{datei}"  
