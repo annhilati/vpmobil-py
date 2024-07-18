@@ -18,7 +18,7 @@ class VpDay():
     - .zusatzInfo
     - .zeitstempel
     - .datei
-    - .getxml()
+    - :xml
     - .klasse()
     - .freieTage()
     - .lehrerKrank()
