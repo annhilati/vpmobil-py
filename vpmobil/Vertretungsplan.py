@@ -56,7 +56,7 @@ class Vertretungsplan():
             datum (date | int | str) Abzurufender Tag
                 int oder str muss im Schema yymmdd sein (z.B. 240609)
 
-        #### Raised:
+        #### Raises:
             FetchingError: Wenn für den Tag keine Daten verfügbar sind
         """
 
