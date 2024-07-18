@@ -4,10 +4,6 @@ import requests as WEB
 from .workflow import Exceptions
 from .VpDay import VpDay
 
-# ╭──────────────────────────────────────────────────────────────────────────────────────────╮
-# │                                    Vertretungsplan                                       │ 
-# ╰──────────────────────────────────────────────────────────────────────────────────────────╯
-
 class Vertretungsplan():
     """
     Enthält die notwendigen Daten um auf einen stundenplan24.de-Vertretungsplan zuzugreifen
