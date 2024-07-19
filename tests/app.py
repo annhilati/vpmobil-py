@@ -2,8 +2,14 @@ from vpmobil import Vertretungsplan, VpMobil, VpDay, Klasse
 import xml.etree.ElementTree as XML
 import os
 
-vertretungsplan = Vertretungsplan(10126582, "schueler", "s361o97")
+from vpmobil import Vertretungsplan
 
-day = vertretungsplan.fetch(20240619)
-klasse = day.klasse("9a")
-print(f"{klasse:xml}")
+vp = Vertretungsplan(10126582, "schueler", "s361o97")
+
+tag = vp.fetch(20240618)
+klasse = tag.klasse("10a")
+
+stunden = klasse.alleStunden()
+
+for stunde in stunden:
+  print(f"{stunde.nr}: {stunde.fach} bei {stunde.lehrer} in {stunde.raum}")

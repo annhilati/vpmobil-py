@@ -15,6 +15,7 @@ class VpDay():
     
     #### Attribute
         datum (date): Datum, für das der Plan gilt
+        wochentag (int): Wochentag für den der Vertretungsplan gilt
         zusatzInfo (str): Vom Planer eingetragene Zusatzinformation zum Tag
         zeitstempel (datetime): Veröffentlichungszeitpunkt des Vertretungsplans
         datei (str): Dateiname der Quelldatei
@@ -41,6 +42,9 @@ class VpDay():
         
         self.datum = datetime.strptime(self.datei[6:14], "%Y%m%d").date()
         "Datum für das der Vertretungsplan gilt"
+
+        self.wochentag: int = self.datum.weekday()
+        "Wochentag für den der Vertretungsplan gilt als Index: 0 == Montag, 1 == Dienstag, etc."
 
         ziZeilen = []
         for zusatzInfo in self._dataroot.findall('.//ZusatzInfo'):
