@@ -275,6 +275,9 @@ class Stunde():
         raum (str): Raum der Stunde
         info (str): Zusätzliche Information zu dieser Stunde
         kursnummer (int): Nummer des Kurses der Stunde
+
+    #### Formate
+        xml: Gibt die XML-Daten als String zurück
     """
 
     def __init__(self, xmldata: XML.Element | bytes | str):
@@ -359,18 +362,13 @@ class Stunde():
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
         """
 
+    def __format__(self, format_spec):
+        match format_spec:
+            case "xml": return XML.tostring(self._data, encoding="utf-8", method="xml").decode('utf-8')
+            case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
+
 def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
-    """
-    Gibt die XML Daten eines Objekts als Klasse des xml-Moduls zurück
-
-    #### Argumente
-        object (VpDay | Klasse | Stunde): Vertretungsplan-Objekt, aus dem die XML-Daten isoliert werden sollen
-
-    #### Returns
-        ElementTree: Wenn object einen VpDay-Objekt ist
-        Element: Wenn object einen Klassen-Objekt ist
-        Element: Wenn object einen Stunden-Objekt ist
-    """
+    # Der Docstring befindet sich in __init__.py
     if isinstance(object, VpDay): return object._datatree
     elif isinstance(object, Klasse): return object._data
     elif isinstance(object, Stunde): return object._data

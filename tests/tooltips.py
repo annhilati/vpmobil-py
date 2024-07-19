@@ -1,16 +1,16 @@
 # In dieser Datei können Tooltips, Docstrings und Typehints getestet werden
 
-from vpmobil import Vertretungsplan, VpDay, Klasse, Stunde
+from vpmobil import Vertretungsplan, VpDay, Klasse, Stunde, VpMobil
 
 vp = Vertretungsplan()
 day = VpDay()
 klasse = Klasse()
 stunde = Stunde()
 
+VpMobil.getxml()
 
 vp.fetch()
 
-day.getxml()
 day.klasse()
 day.freieTage()
 day.zusatzInfo

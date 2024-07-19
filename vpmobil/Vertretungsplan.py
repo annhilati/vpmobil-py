@@ -53,8 +53,10 @@ class Vertretungsplan():
         Ruft die Daten eines Tages ab
 
         #### Argumente:
-            datum (date | int | str) Abzurufender Tag
-                int oder str muss im Schema yymmdd sein (z.B. 240609)
+            datum (date | int | str): Abzurufender Tag
+                int oder str muss im Schema yymmdd sein (z.B. `240609`)
+            datei (str): Abzurufende Datei mit Dateipfad
+                Ignoriert datum bei Angabe 
 
         #### Raises:
             FetchingError: Wenn für den Tag keine Daten verfügbar sind
@@ -62,7 +64,7 @@ class Vertretungsplan():
 
         datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) or isinstance(datum, str) else datum
 
-        datei: str = datum.strftime(f"{self._dateischema}") if datei is None else datei
+        datei: str = datum.strftime(self._dateischema) if datei is None else datei
         uri = f"{self._webpath}/{datei}"  
         response = WEB.get(uri)
 
