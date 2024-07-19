@@ -11,5 +11,5 @@ klasse = tag.klasse("10a")
 
 stunden = klasse.alleStunden()
 
-for stunde in stunden:
-  print(f"{stunde.nr}: {stunde.fach} bei {stunde.lehrer} in {stunde.raum}")
+print(tag)
+#print(str(klasse))

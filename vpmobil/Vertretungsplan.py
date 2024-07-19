@@ -32,6 +32,7 @@ class Vertretungsplan():
             benutzer (str): Benutzername des Benutzers über den zugegriffen werden soll
             passwort (str): Passwort des Benutzers über den zugegriffen werden soll
             url (str): URL und Verzeichnispfad, an dem die Quelldateien gespeichert werden
+                Muss angegeben werden, wenn der Vertretungsplan selbst gehostet wird
             dateinamensschema (str): Schema der Namen der Quelldateien
                 z.B. `"PlanKl%Y%m%d.xml"`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
         """
@@ -47,6 +48,8 @@ class Vertretungsplan():
         self._webpath = f"http://{benutzername}:{passwort}@{url.format(schulnummer=schulnummer)}"
         
         self._dateischema = dateinamensschema
+
+    def __repr__(self): return f"Vertretungsplan {self.benutzername}@{self.schulnummer}"
 
     def fetch(self, datum: date | int = date.today(), datei: str = None):
         """

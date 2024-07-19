@@ -4,6 +4,7 @@ import os as OS
 from datetime import datetime, date
 
 from .workflow import Exceptions
+from .lib import prettyxml
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         VpDay                                            │ 
@@ -58,6 +59,9 @@ class VpDay():
         match format_spec:
             case "xml": return XML.tostring(self._datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
+
+    def __repr__(self): return f"Vertretungsplan vom {self.datum.strftime("%d.%m.%Y")}"
+    #def __str__(self): return prettyxml(self._datatree)
             
     def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
         """
@@ -72,8 +76,9 @@ class VpDay():
             FileExistsError: Wenn die Datei am Zielpfad entgegen der overwrite-Bestimmung überschrieben werden soll 
         """
 
-        xmlstring = XML.tostring(self._dataroot, 'utf-8')
-        xmlpretty = xml.dom.minidom.parseString(xmlstring).toprettyxml(indent="\t")
+        #xmlstring = XML.tostring(self._dataroot, 'utf-8')
+        #xmlpretty = xml.dom.minidom.parseString(xmlstring).toprettyxml(indent="\t")
+        xmlpretty = prettyxml(self._datatree)
 
         zielpfad = OS.path.abspath(pfad)
         directory = OS.path.dirname(zielpfad)
@@ -175,6 +180,9 @@ class Klasse():
     """
     Enthält alle Daten für eine bestimmte Klasse
 
+    #### Attribute
+        kürzel (str): Kürzel der Klasse
+
     #### Methoden
         stunde(): Gibt die erste Stunde zur angegebenen Stundenplanperiode
         stundenInPeriode(): Gibt eine Liste aller Stunden zur angegebenen Stundenplanperiode zurück
@@ -186,11 +194,16 @@ class Klasse():
 
     def __init__(self, xmldata: XML.Element):
         self._data: XML.Element = xmldata
+        self.kürzel: str = self._data.find('Kurz').text
+        "Kürzel der Klasse"
 
     def __format__(self, format_spec):
         match format_spec:
             case "xml": return XML.tostring(self._data, encoding="utf-8", method="xml").decode('utf-8')
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
+
+    def __repr__(self): return f"Vertretungsplan der Klasse {self.kürzel}"
+    #def __str__(self): return prettyxml(self._data)
 
     def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
         """
@@ -371,6 +384,9 @@ class Stunde():
         match format_spec:
             case "xml": return XML.tostring(self._data, encoding="utf-8", method="xml").decode('utf-8')
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
+
+    def __repr__(self): return f"Stundenobjekt der {self.nr}. Periode bei {self.lehrer}"
+    #def __str__(self): prettyxml(self._data)
 
 def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     # Der Docstring befindet sich in __init__.py
