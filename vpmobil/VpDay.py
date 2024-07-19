@@ -23,6 +23,7 @@ class VpDay():
         klasse(): Isoliert die Daten einer Klasse
         freieTage(): Liefert eine Liste der als frei markierten Tage
         lehrerKrank(): Liefert eine Liste der Lehrer die unplanmäßig keinen Untericht haben
+        saveasfile(): Speichert alle Daten des Tages als XML-Datei
 
     #### Formate
         xml: Gibt die XML-Daten als String zurück
@@ -369,6 +370,7 @@ class Stunde():
 
 def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     # Der Docstring befindet sich in __init__.py
+
     if isinstance(object, VpDay): return object._datatree
     elif isinstance(object, Klasse): return object._data
     elif isinstance(object, Stunde): return object._data

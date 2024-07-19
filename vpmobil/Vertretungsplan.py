@@ -48,7 +48,7 @@ class Vertretungsplan():
         
         self._dateischema = dateinamensschema
 
-    def fetch(self, datum: date | int | str = date.today(), datei: str = None):
+    def fetch(self, datum: date | int = date.today(), datei: str = None):
         """
         Ruft die Daten eines Tages ab
 
@@ -62,7 +62,7 @@ class Vertretungsplan():
             FetchingError: Wenn für den Tag keine Daten verfügbar sind
         """
 
-        datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) or isinstance(datum, str) else datum
+        datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) else datum
 
         datei: str = datum.strftime(self._dateischema) if datei is None else datei
         uri = f"{self._webpath}/{datei}"  
