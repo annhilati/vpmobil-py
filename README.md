@@ -14,7 +14,19 @@
   <br>
   <a href="https://github.com/annhilati/vpmobil-py">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/annhilati/vpmobil-py?style=for-the-badge&logo=github&label=Letzter%20Commit&color=23A55A"></a>  
-  
+
+```python
+from vpmobil import Vertretungsplan
+
+vp = Vertretungsplan(39563772, "schueler", "j39jjs6")
+
+klasse = vp.fetch(20240619)
+stunden = klasse.alleStunden()
+
+for stunde in stunden:
+  print(f"{stunde.nr}: {stunde.fach} bei {stunde.lehrer} in {stunde.raum}")
+```
+
   <p align="center">Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, the package and the wiki are formulated in German</p>
 </p>
 
