@@ -33,7 +33,7 @@ class Vertretungsplan():
             passwort (str): Passwort des Benutzers über den zugegriffen werden soll
             url (str): URL und Verzeichnispfad, an dem die Quelldateien gespeichert werden
             dateinamensschema (str): Schema der Namen der Quelldateien
-                z.B. `PlanKl%Y%m%d.xml`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
+                z.B. `"PlanKl%Y%m%d.xml"`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
         """
         self.schulnummer = schulnummer
         self.benutzername = benutzername
