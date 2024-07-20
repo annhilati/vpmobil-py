@@ -22,6 +22,7 @@
   * [.stundenInPeriode()](klassen\_und\_funktionen/klasse/.stundeninperiode.md)
   * [.alleStunden()](klassen\_und\_funktionen/klasse/.allestunden.md)
 * [Stunde](klassen\_und\_funktionen/stunde.md)
+* [Kurs](klassen\_und\_funktionen/kurs.md)
 
 ## Anderes
 
