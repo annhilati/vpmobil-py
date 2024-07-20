@@ -60,7 +60,7 @@ class VpDay():
             case "xml": return XML.tostring(self._datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
 
-    def __repr__(self): return f"Vertretungsplan vom {self.datum.strftime("%d.%m.%Y")}"
+    def __repr__(self): return f"Vertretungsplan vom {self.datum.strftime('%d.%m.%Y')}"
     #def __str__(self): return prettyxml(self._datatree)
             
     def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
@@ -272,6 +272,80 @@ class Klasse():
             return fin
         else:
             raise Exceptions.XMLNotFound("Keine Stunden für diese Klasse gefunden!")
+        
+    def kurseInPeriode(self, periode: int):
+        """
+        Gibt alle Kurse zurück, welche in dieser Periode planmäßig stattfinden würden\n
+        Bei besonderen Stunden (z.B. Exkursion an diesem Tag) kann es zu Fehlern kommen
+
+        #### Returns:
+            list[Kurs]: Eine Liste von Kurs-Objecten, die in dieser Periode planmäßig stattfinden würden
+        
+        #### Raises:
+            XMLNotFound: Wenn wegen einer besonderen Situation (z.B. Exkursion) kein passender Kurs gefunden werden konnte
+        """
+
+        stdList = self.stundenInPeriode(periode)
+        fin: list[Kurs] = []
+        alleKurse: list[Kurs] = []
+        for i, elemn in enumerate(self._data.find("Unterricht").findall("Ue")):
+            alleKurse.append(Kurs(elemn))
+        for i, elem in enumerate(stdList):
+            try:
+                fin.append(list(filter(lambda x: x.kursnummer == str(elem.kursnummer), alleKurse))[0])
+            except:
+                raise Exceptions.XMLNotFound("Keinen passenden Kurs gefunden!")
+        return fin
+
+    def alleKurse(self):
+        """
+        Gibt alle Kurse zurück, welche die Klasse an beliebigen Tagen hat.
+
+        #### Returns:
+            list[Kurs]: Eine Liste von Kurs-Objecten, die alle Informationen enthalten
+        """
+        
+        fin: list[Kurs] = []
+        for i, elem in enumerate(self._data.find("Unterricht").findall("Ue")):
+            fin.append(Kurs(elem))
+        return fin
+    
+    
+    def alleKurseHeute(self):
+        """
+        Gibt alle Kurse zurück, welche die Klasse an diesem Tag planmäßig hätte.
+
+        #### Returns:
+            list[Kurs]: Eine Liste von Kurs-Objecten, die an diesem Tag planmäßig stattfinden würden
+        
+        #### Raises:
+            XMlNotFound: In besonderen Situationen (z.B. Exkursion) ist manchmal kein Kurs angegeben
+        """
+
+        alleKurse: list[Kurs] = self.alleKurse()
+        stdHeut: list[Stunde] = self.alleStunden()
+        fin: list[Kurs] = []
+        for i, elem in enumerate(stdHeut):
+            try:
+                fin.append([x for x in alleKurse if x.kursnummer == str(elem.kursnummer)][0])
+            except:
+                raise Exceptions.XMLNotFound("Keine passenden Kurse gefunden!")
+        return fin
+    
+    def alleStundenRegulaer(self):
+        """
+        ## Nicht funktionsfähig!
+        Gibt alle Stunden des Tages zurück, wenn der Tag regulär stattfinden würde.
+
+        #### Returns:
+            list[Stunde]: Liste von Stunden-Objecten in der richtigen Reihenfolge, die alle Informationen über die Stunden enthalten
+        
+        #### Raises:
+            XMlNotFound: An besonderen Tagen kann es sein, dass sich nicht herausfinden lässt, welche Stunden regulär stattgefunden hätten. Eine Lösung gibt es nicht.
+        """
+
+        fin: list[Stunde] = []
+        # Es gibt sofort einen Fehler wenn man das versucht, da es werder Raum, noch Nummer, Zeit, Info und sonstiges gibt.
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 
@@ -387,6 +461,40 @@ class Stunde():
 
     def __repr__(self): return f"Stundenobjekt der {self.nr}. Periode bei {self.lehrer}"
     #def __str__(self): prettyxml(self._data)
+
+# ╭──────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                         Kurs                                             │ 
+# ╰──────────────────────────────────────────────────────────────────────────────────────────╯
+
+class Kurs():
+    """
+    Enthält alle Informationen zu einem bestimmten Kurs
+
+    #### Attribute
+        lehrer (str): Der Lehrer, welcher diesen Kurs hält
+        fach (str): Das Fach, welches dieser Kurs hat
+        zusatz (str): Manche Kurse haben eine Zusatzinformation, wie z.B. Fördern
+        kursnummer (int): Die Nummer dieses Kurses.
+    """
+
+    def __init__(self, xmldata: XML.Element | bytes | str):
+        self._data: XML.Element = xmldata.find("UeNr") if isinstance(xmldata, XML.Element) else XML.Element(XML.fromstring(xmldata)).find("UeNr")
+        # Ich nehme direkt das UeNr-Element, da das Ue Element nichts brauchbares enthält
+
+        self.lehrer: str = self._data.attrib["UeLe"]
+        "Lehrer des Kurses"
+
+        self.fach: str = self._data.attrib["UeFa"]
+        "Fach des Kurses"
+
+        self.zusatz: str = self._data.attrib.get("UeGr", "")
+        """
+        Zusatzfach des Kurses.\n
+        Gibt einen leeren String zurück, wenn es kein Zusatzfach gibt
+        """
+
+        self.kursnummer: int = self._data.text
+        "Kursnummer des Kurses"
 
 def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     # Der Docstring befindet sich in __init__.py
