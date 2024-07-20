@@ -4,6 +4,7 @@
 # Python Build
 vpmobil.egg-info/
 build/
+dist/
 
 # Dev
 tests/temp/*
