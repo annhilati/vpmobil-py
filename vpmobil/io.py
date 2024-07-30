@@ -6,10 +6,10 @@ def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     """
     Gibt die XML Daten eines Objekts als XML-Objekt zurück
 
-    #### Argumente
+    #### Argumente:
         object (VpDay | Klasse | Stunde): Vertretungsplan-Objekt, aus dem die XML-Daten isoliert werden sollen
 
-    #### Returns
+    #### Returns:
         ElementTree: Wenn object einen VpDay-Objekt ist
         Element: Wenn object einen Klassen-Objekt ist
         Element: Wenn object einen Stunden-Objekt ist

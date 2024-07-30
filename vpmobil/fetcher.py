@@ -15,12 +15,12 @@ class Vertretungsplan():
         serverurl (str): URL und Verzeichnispfad
             - Muss angegeben werden, wenn der Vertretungsplan selbst gehostet wird
         vezeichnis (str): Pfad an dem die Quelldateien gespeichert werden
-            - z.B. `"{schulnummer}/mobil/mobdaten"`. Es kann `{schulnummer}` als Platzhalter verwendet werden
+            - z.B. `'{schulnummer}/mobil/mobdaten'`. Es kann `{schulnummer}` als Platzhalter verwendet werden
         dateinamenschema (str): Schema der Quelldateinamen
-            - z.B. `"PlanKl%Y%m%d.xml"`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
+            - z.B. `'PlanKl%Y%m%d.xml'`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
 
     #### Methoden:
-        .fetch(): Ruft die Daten eines Tages ab
+        fetch(): Ruft die Daten eines Tages ab
     """
 
     def __init__(self,
@@ -58,8 +58,7 @@ class Vertretungsplan():
             serverurl = serverurl[1:]
 
         self._webpath = f"{benutzername}:{passwort}@{serverurl}/{verzeichnis.format(schulnummer=schulnummer)}"
-        
-        self._dateischema = dateinamenschema
+        self._dateinamenschema = dateinamenschema
 
     def __repr__(self): return f"Vertretungsplan {self.benutzername}@{self.schulnummer}"
 
@@ -79,9 +78,9 @@ class Vertretungsplan():
 
         datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) else datum
 
-        datei: str = datum.strftime(self._dateischema) if datei is None else datei.format(schulnummer=self.schulnummer)
-        uri = f"http://{self._webpath}/{datei}"
+        datei: str = datum.strftime(self._dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
         
+        uri = f"http://{self._webpath}/{datei}"
         response = WEB.get(uri)
 
         if response.status_code != 200:
