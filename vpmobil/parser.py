@@ -83,6 +83,17 @@ class VpDay():
         with open(zielpfad, "w", encoding="utf-8") as f:
             f.write(xmlpretty)
             
+    def klassen(self):
+        klassen = []
+        klassen_elemente = self._dataroot.findall('.//Kl')
+        if klassen_elemente is not []:
+            for kl in klassen_elemente:
+                kurz = kl.find('Kurz')
+                if kurz is not None:
+                    klassen.append(Klasse(xmldata=kl))
+            return klassen
+        raise Exceptions.XMLNotFound(f"Keine Klassen gefunden")
+
     def klasse(self, kürzel: str):
         """
         Isoliert die Daten einer Klasse
