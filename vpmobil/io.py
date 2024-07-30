@@ -1,6 +1,6 @@
 from .parser import VpDay, Klasse, Stunde
-import xml.etree.ElementTree as XML
 from acemeta import fileToStr
+import xml.etree.ElementTree as XML
 
 def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     """

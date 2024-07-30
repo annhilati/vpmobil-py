@@ -64,6 +64,7 @@ class VpDay():
     #def __str__(self): return prettyxml(self._mobdaten)
             
     def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
+        # Es ist noch strittig ob diese Funktion eher zu io gehört
         """
         Speichert alle Daten des Tages als XML-Datei an einen bestimmten Ort
         
