@@ -16,7 +16,22 @@ class Exceptions():
             self.status_code = status_code
         def __str__(self):
             return f"{self.message} (Statuscode: {self.status_code})"
+        
+    class SchulnummerNotFoundError(FetchingError):
+        """
+        Wenn die angegebene Schulnummer nicht registriert ist
 
+        #### Attribute:
+            message (str): Die Fehlermeldung
+        """
+
+    class InvalidCredentialsError(FetchingError):
+        """
+        Wenn die angegebene Anmeldedaten ungültig sind
+
+        #### Attribute:
+            message (str): Die Fehlermeldung
+        """
 
     class XMLParsingError(Exception):
         """

@@ -39,4 +39,7 @@ class VpMobil:
     FetchingError = Exceptions.FetchingError
     XMLNotFound = Exceptions.XMLNotFound
     XMLParsingError = Exceptions.XMLParsingError
+    InvalidCredentialsError = Exceptions.InvalidCredentialsError
+    SchulnummerNotFoundError = Exceptions.SchulnummerNotFoundError
+    
 
