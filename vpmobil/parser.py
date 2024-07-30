@@ -65,9 +65,9 @@ class VpDay():
             list[Klasse]: Liste an Klassenobjekten, die die XML-Daten der Klassen enthalten
 
         #### Raises
-            XMLNotFound: Wenn keine Klasse gefunden werden kann
+            XMLNotFound: Wenn keine Klassen gefunden werden können
         """
-        klassen = []
+        klassen: list[Klasse] = []
         klassen_elemente = self._dataroot.findall('.//Kl')
         if klassen_elemente is not []:
             for kl in klassen_elemente:
@@ -91,10 +91,10 @@ class VpDay():
             XMLNotFound: Wenn die angegebene Klasse nicht gefunden werden kann. 
         """
 
-        for kl in self._dataroot.findall('.//Kl'):
-            kurz = kl.find('Kurz')
-            if kurz is not None and kurz.text == kürzel:
-                return Klasse(xmldata=kl)
+        klassen = self.klassen()
+        for kl in klassen:
+            if kl.kürzel == kürzel:
+                return kl
         raise Exceptions.XMLNotFound(f"Keine Klasse {kürzel} gefunden")
 
     def freieTage(self) -> list[date]:
