@@ -19,6 +19,8 @@ class VpMobil:
 
     #### Exceptions
         FetchingError: Wenn Daten nicht abgerufen werden können
+            InvalidCredentialsError: Wenn die angegebene Anmeldedaten ungültig sind
+            SchulnummerNotFoundError: Wenn die angegebene Schulnummer nicht registriert ist
         XMLParsingError: Wenn XML-Daten nicht richtig ausgewertet werden können
             XMLNotFound: Wenn ein Element der XML-Daten nicht gefunden werden kann
     """
@@ -41,5 +43,5 @@ class VpMobil:
     XMLParsingError = Exceptions.XMLParsingError
     InvalidCredentialsError = Exceptions.InvalidCredentialsError
     SchulnummerNotFoundError = Exceptions.SchulnummerNotFoundError
-    
+
 
