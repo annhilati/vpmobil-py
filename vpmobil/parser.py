@@ -3,7 +3,7 @@ import os as OS
 from datetime import datetime, date
 from acemeta import fileToStr
 
-from .workflow import Exceptions
+from .exceptions import Exceptions
 from .lib import prettyxml
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -33,19 +33,6 @@ class VpDay():
     #### Formate
         xml: Gibt die XML-Daten als String zurück
     """
-
-    def parsefromfile(pfad: str):
-        """
-        Erstellt ein VpDay-Objekt aus den XML-Daten einer Datei
-
-        #### Argumente:
-            pfad: Dateipfad der XML-Datei
-
-        #### Raises:
-            FileNotFoundError: Wenn die Datei nicht existiert
-            Exception: Wenn die DAtei nicht gelesen werden oder in ein XML-Element umgewandelt werden konnte
-        """
-        return VpDay(mobdaten=fileToStr(file=pfad))
 
     def __init__(self, mobdaten: XML.ElementTree | bytes | str):
         self._mobdaten: XML.ElementTree = mobdaten if isinstance(mobdaten, XML.ElementTree) else XML.ElementTree(XML.fromstring(mobdaten))
@@ -511,11 +498,3 @@ class Kurs():
 
         self.kursnummer: int = self._data.text
         "Kursnummer des Kurses"
-
-def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
-    # Der Docstring befindet sich in __init__.py
-
-    if isinstance(object, VpDay): return object._mobdaten
-    elif isinstance(object, Klasse): return object._data
-    elif isinstance(object, Stunde): return object._data
-    else: raise TypeError("object muss einer der Typen VpDay, Klasse & Stunde sein") # Der Code ist ereichbar lol habs getestet

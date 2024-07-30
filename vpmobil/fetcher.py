@@ -1,7 +1,7 @@
 from datetime import datetime, date
 import requests as WEB
 
-from .workflow import Exceptions
+from .exceptions import Exceptions
 from .parser import VpDay
 
 class Vertretungsplan():
