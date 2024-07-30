@@ -21,6 +21,7 @@ class VpDay():
         datei (str): Dateiname der Quelldatei
 
     #### Methoden
+        klassen(): Liefert eine Liste der im Plan vorhandenen Klassen mitsamt Daten
         klasse(): Isoliert die Daten einer Klasse
         freieTage(): Liefert eine Liste der als frei markierten Tage
         lehrerKrank(): Liefert eine Liste der Lehrer die unplanmäßig keinen Untericht haben
@@ -56,34 +57,16 @@ class VpDay():
 
     def __repr__(self): return f"Vertretungsplan vom {self.datum.strftime('%d.%m.%Y')}"
             
-    def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
-        # Es ist noch strittig ob diese Funktion eher zu io gehört
-        """
-        Speichert alle Daten des Tages als XML-Datei an einen bestimmten Ort
-        
-        #### Argumente
-            pfad (str): Zielpfad der zu erstellenden Datei.
-                - Muss den Dateinamen mit Endung enthalten. z.B.: `"./ein/realtiver/ordner/datei.xml"`
-            overwrite (bool): Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
-        
-        #### Raises
-            FileExistsError: Wenn die Datei am Zielpfad entgegen der overwrite-Bestimmung überschrieben werden soll 
-        """
-
-        xmlpretty = prettyxml(self._mobdaten)
-
-        zielpfad = OS.path.abspath(pfad)
-        directory = OS.path.dirname(zielpfad)
-
-        if not OS.path.exists(directory): # Stellt sicher, dass das Verzeichnis existiert
-            OS.makedirs(directory)
-        if OS.path.exists(zielpfad) and overwrite == False:
-            raise FileExistsError(f"Die Datei {zielpfad} existiert bereits.")
-        
-        with open(zielpfad, "w", encoding="utf-8") as f:
-            f.write(xmlpretty)
-            
     def klassen(self):
+        """
+        Liefert eine Liste der im Plan vorhandenen Klassen mitsamt Daten
+
+        #### Returns
+            list[Klasse]: Liste an Klassenobjekten, die die XML-Daten der Klassen enthalten
+
+        #### Raises
+            XMLNotFound: Wenn keine Klasse gefunden werden kann
+        """
         klassen = []
         klassen_elemente = self._dataroot.findall('.//Kl')
         if klassen_elemente is not []:
@@ -174,6 +157,32 @@ class VpDay():
                                 leNichtKrank.append(splitLe)
         return sorted(leKrank) # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
 
+    def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
+        # Es ist noch strittig ob diese Funktion eher zu io gehört
+        """
+        Speichert alle Daten des Tages als XML-Datei an einen bestimmten Ort
+        
+        #### Argumente
+            pfad (str): Zielpfad der zu erstellenden Datei.
+                - Muss den Dateinamen mit Endung enthalten. z.B.: `"./ein/realtiver/ordner/datei.xml"`
+            overwrite (bool): Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
+        
+        #### Raises
+            FileExistsError: Wenn die Datei am Zielpfad entgegen der overwrite-Bestimmung überschrieben werden soll 
+        """
+
+        xmlpretty = prettyxml(self._mobdaten)
+
+        zielpfad = OS.path.abspath(pfad)
+        directory = OS.path.dirname(zielpfad)
+
+        if not OS.path.exists(directory): # Stellt sicher, dass das Verzeichnis existiert
+            OS.makedirs(directory)
+        if OS.path.exists(zielpfad) and overwrite == False:
+            raise FileExistsError(f"Die Datei {zielpfad} existiert bereits.")
+        
+        with open(zielpfad, "w", encoding="utf-8") as f:
+            f.write(xmlpretty)
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Klasse                                           │ 
