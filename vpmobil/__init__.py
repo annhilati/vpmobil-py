@@ -1,5 +1,5 @@
 """
-A python module for interacting with a stundenplan24.de substitution plan
+A python wrapper package for interacting with a stundenplan24.de substitution plan
 """
 
 from .fetcher import Vertretungsplan
