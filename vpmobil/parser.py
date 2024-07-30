@@ -1,7 +1,7 @@
-import xml.dom.minidom
 import xml.etree.ElementTree as XML
 import os as OS
 from datetime import datetime, date
+from acemeta import fileToStr
 
 from .workflow import Exceptions
 from .lib import prettyxml
@@ -27,9 +27,25 @@ class VpDay():
         lehrerKrank(): Liefert eine Liste der Lehrer die unplanmäßig keinen Untericht haben
         saveasfile(): Speichert alle Daten des Tages als XML-Datei
 
+    #### Funktionen
+        parsefromfile(): Erstellt ein VpDay-Objekt aus den XML-Daten einer Datei
+
     #### Formate
         xml: Gibt die XML-Daten als String zurück
     """
+
+    def parsefromfile(pfad: str):
+        """
+        Erstellt ein VpDay-Objekt aus den XML-Daten einer Datei
+
+        #### Argumente:
+            pfad: Dateipfad der XML-Datei
+
+        #### Raises:
+            FileNotFoundError: Wenn die Datei nicht existiert
+            Exception: Wenn die DAtei nicht gelesen werden oder in ein XML-Element umgewandelt werden konnte
+        """
+        return VpDay(mobdaten=fileToStr(file=pfad))
 
     def __init__(self, mobdaten: XML.ElementTree | bytes | str):
         self._mobdaten: XML.ElementTree = mobdaten if isinstance(mobdaten, XML.ElementTree) else XML.ElementTree(XML.fromstring(mobdaten))

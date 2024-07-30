@@ -54,7 +54,7 @@ class Vertretungsplan():
         if verzeichnis.startswith("/"):
             serverurl = serverurl[1:]
 
-        self._webpath = f"http://{benutzername}:{passwort}@{serverurl}/{verzeichnis.format(schulnummer=schulnummer)}"
+        self._webpath = f"{benutzername}:{passwort}@{serverurl}/{verzeichnis.format(schulnummer=schulnummer)}"
         
         self._dateischema = dateinamenschema
 
@@ -77,7 +77,7 @@ class Vertretungsplan():
         datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) else datum
 
         datei: str = datum.strftime(self._dateischema) if datei is None else datei.format(schulnummer=self.schulnummer)
-        uri = f"{self._webpath}/{datei}"
+        uri = f"http://{self._webpath}/{datei}"
         
         response = WEB.get(uri)
 
