@@ -9,6 +9,6 @@ def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     else:
         element = object
     
-    rough_string = ET.tostring(element, 'utf-8')
-    reparsed = MD.parseString(rough_string)
+    string = ET.tostring(element, 'utf-8')
+    reparsed = MD.parseString(string)
     return reparsed.toprettyxml(indent="\t")

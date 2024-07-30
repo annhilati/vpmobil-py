@@ -1,7 +1,6 @@
 import xml.etree.ElementTree as XML
 import os as OS
 from datetime import datetime, date
-from acemeta import fileToStr
 
 from .exceptions import Exceptions
 from .lib import prettyxml
@@ -55,13 +54,7 @@ class VpDay():
         self.zusatzInfo = '\n'.join(ziZeilen)
         "Vom Planer eingetragene Zusatzinformation zum Tag"
 
-    def __format__(self, format_spec):
-        match format_spec:
-            case "xml": return prettyxml(self._mobdaten)
-            case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
-
     def __repr__(self): return f"Vertretungsplan vom {self.datum.strftime('%d.%m.%Y')}"
-    #def __str__(self): return prettyxml(self._mobdaten)
             
     def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
         # Es ist noch strittig ob diese Funktion eher zu io gehört
@@ -77,8 +70,6 @@ class VpDay():
             FileExistsError: Wenn die Datei am Zielpfad entgegen der overwrite-Bestimmung überschrieben werden soll 
         """
 
-        #xmlstring = XML.tostring(self._dataroot, 'utf-8')
-        #xmlpretty = xml.dom.minidom.parseString(xmlstring).toprettyxml(indent="\t")
         xmlpretty = prettyxml(self._mobdaten)
 
         zielpfad = OS.path.abspath(pfad)
@@ -142,7 +133,7 @@ class VpDay():
                     "kurz": ue.find("UeNr").attrib["UeLe"]
                 })
             try:
-                alleStd = Klasse(kl).alleStunden()
+                alleStd = Klasse(kl).stunden()
             except:
                 continue
             else:
@@ -185,9 +176,8 @@ class Klasse():
         kürzel (str): Kürzel der Klasse
 
     #### Methoden
-        stunde(): Gibt die erste Stunde zur angegebenen Stundenplanperiode
         stundenInPeriode(): Gibt eine Liste aller Stunden zur angegebenen Stundenplanperiode zurück
-        alleStunden(): Gibt eine Liste aller Stunden der Klasse zurück
+        stunden(): Gibt eine Liste aller Stunden der Klasse zurück
     
     #### Formate
         xml: Gibt die XML-Daten als String zurück
@@ -198,34 +188,28 @@ class Klasse():
         self.kürzel: str = self._data.find('Kurz').text
         "Kürzel der Klasse"
 
-    def __format__(self, format_spec):
-        match format_spec:
-            case "xml": return prettyxml(self._data)
-            case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
-
     def __repr__(self): return f"Vertretungsplan der Klasse {self.kürzel}"
-    #def __str__(self): return prettyxml(self._data)
 
-    def stunde(self, periode: int): # macht diese Funktion Sinn? Wer braucht denn random nur den ersten Kurs?
-        """
-        Gibt die erste Stunde der angegebenen Stundenplanperiode zurück.\n
+    # def stunde(self, periode: int):
+    #     """
+    #     Gibt die erste Stunde der angegebenen Stundenplanperiode zurück.\n
 
-        #### Argumente:
-            periode (int): Stundenplanperiode, zur der die Stunde gesucht wird
+    #     #### Argumente:
+    #         periode (int): Stundenplanperiode, zur der die Stunde gesucht wird
 
-        #### Returns:
-            Stunde: angefragtes Stunden-Objekt, dass alle Informationen über die Stunde enthält
+    #     #### Returns:
+    #         Stunde: angefragtes Stunden-Objekt, dass alle Informationen über die Stunde enthält
 
-        #### Raises:
-            XMLNotFound: Wenn die gesuchte Stunde nicht existiert
-        """
+    #     #### Raises:
+    #         XMLNotFound: Wenn die gesuchte Stunde nicht existiert
+    #     """
 
-        pl = self._data.find("Pl")
-        for std in pl.findall("Std"):
-            st = std.find("St")
-            if st is not None and st.text == str(periode):
-                return Stunde(std)
-        raise Exceptions.XMLNotFound("Stunde wurde nicht gefunden!")
+    #     pl = self._data.find("Pl")
+    #     for std in pl.findall("Std"):
+    #         st = std.find("St")
+    #         if st is not None and st.text == str(periode):
+    #             return Stunde(std)
+    #     raise Exceptions.XMLNotFound("Stunde wurde nicht gefunden!")
 
     def stundenInPeriode(self, periode: int):
         """
@@ -252,9 +236,9 @@ class Klasse():
         else:
             raise Exceptions.XMLNotFound("Keine Stunden zu dieser Stundenplanperiode gefunden!")
     
-    def alleStunden(self):
+    def stunden(self):
         """
-        Gibt alle Stunden des Tages zurück.\n
+        Gibt alle Stunden des Tages zurück.
 
         #### Returns:
             list[Stunde]: Liste von Stunden-Objekten in der richtigen Reihenfolge, die alle Informationen über die Stunden enthalten
@@ -300,10 +284,10 @@ class Klasse():
 
     def alleKurse(self):
         """
-        Gibt alle Kurse zurück, welche die Klasse an beliebigen Tagen hat.
+        Gibt eine Liste aller Kurse zurück, die die Klasse am Tag hat.
 
         #### Returns:
-            list[Kurs]: Eine Liste von Kurs-Objecten, die alle Informationen enthalten
+            list[Kurs]: Eine Liste von Kurs-Objekten, die alle Informationen enthalten
         """
         
         fin: list[Kurs] = []
@@ -324,7 +308,7 @@ class Klasse():
         """
 
         alleKurse: list[Kurs] = self.alleKurse()
-        stdHeut: list[Stunde] = self.alleStunden()
+        stdHeut: list[Stunde] = self.stunden()
         fin: list[Kurs] = []
         for i, elem in enumerate(stdHeut):
             try:
@@ -332,21 +316,6 @@ class Klasse():
             except:
                 raise Exceptions.XMLNotFound("Keine passenden Kurse gefunden!")
         return fin
-    
-    def alleStundenRegulaer(self):
-        """
-        ## Nicht funktionsfähig!
-        Gibt alle Stunden des Tages zurück, wenn der Tag regulär stattfinden würde.
-
-        #### Returns:
-            list[Stunde]: Liste von Stunden-Objecten in der richtigen Reihenfolge, die alle Informationen über die Stunden enthalten
-        
-        #### Raises:
-            XMlNotFound: An besonderen Tagen kann es sein, dass sich nicht herausfinden lässt, welche Stunden regulär stattgefunden hätten. Eine Lösung gibt es nicht.
-        """
-
-        fin: list[Stunde] = []
-        # Es gibt sofort einen Fehler wenn man das versucht, da es werder Raum, noch Nummer, Zeit, Info und sonstiges gibt.
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 
@@ -455,13 +424,7 @@ class Stunde():
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
         """
 
-    def __format__(self, format_spec):
-        match format_spec:
-            case "xml": return prettyxml(self._data)
-            case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
-
     def __repr__(self): return f"Stundenobjekt der {self.nr}. Periode bei {self.lehrer}"
-    #def __str__(self): prettyxml(self._data)
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Kurs                                             │ 

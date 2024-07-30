@@ -11,7 +11,7 @@ setup(
         "requests"
         ],
     author="Annhilati & Joshi",
-    description="A python package for interacting with a stundenplan24.de substitution plan",
+    description="A python wrapper package for interacting with a stundenplan24.de substitution plan",
     long_description=description,
     long_description_content_type="text/markdown",
     url="https://github.com/annhilati/vpmobil-py"

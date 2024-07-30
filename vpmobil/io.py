@@ -20,7 +20,7 @@ def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     elif isinstance(object, Stunde): return object._data
     else: raise TypeError("object muss einer der Typen VpDay, Klasse & Stunde sein") # Der Code ist ereichbar lol habs getestet
 
-def parsefromfile(pfad: str):
+def parsefromfile(pfad: str) -> VpDay:
     """
     Erstellt ein VpDay-Objekt aus den XML-Daten einer Datei
 
