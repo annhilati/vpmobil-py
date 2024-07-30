@@ -4,7 +4,7 @@ from acemeta import fileToStr
 
 def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     """
-    Gibt die XML Daten eines Objekts als Klasse des xml-Moduls zurück
+    Gibt die XML Daten eines Objekts als XML-Objekt zurück
 
     #### Argumente
         object (VpDay | Klasse | Stunde): Vertretungsplan-Objekt, aus dem die XML-Daten isoliert werden sollen

@@ -12,9 +12,12 @@ class Vertretungsplan():
         schulnummer (int): Schulnummer des Vertretungsplans
         benutzer (str): Benutzername des Benutzers über den zugegriffen werden soll
         passwort (str): Passwort des Benutzers über den zugegriffen werden soll
-        serverurl (str): URL und Verzeichnispfad, an dem die Quelldateien gespeichert werden
-        dateipfadschema (str): Schema des Pfads der Quelldateien
-            z.B. `PlanKl%Y%m%d.xml`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
+        serverurl (str): URL und Verzeichnispfad
+            - Muss angegeben werden, wenn der Vertretungsplan selbst gehostet wird
+        vezeichnis (str): Pfad an dem die Quelldateien gespeichert werden
+            - z.B. `"{schulnummer}/mobil/mobdaten"`. Es kann `{schulnummer}` als Platzhalter verwendet werden
+        dateinamenschema (str): Schema der Quelldateinamen
+            - z.B. `"PlanKl%Y%m%d.xml"`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
 
     #### Methoden:
         .fetch(): Ruft die Daten eines Tages ab
@@ -33,11 +36,11 @@ class Vertretungsplan():
             benutzer (str): Benutzername des Benutzers über den zugegriffen werden soll
             passwort (str): Passwort des Benutzers über den zugegriffen werden soll
             serverurl (str): URL und Verzeichnispfad
-                Muss angegeben werden, wenn der Vertretungsplan selbst gehostet wird
+                - Muss angegeben werden, wenn der Vertretungsplan selbst gehostet wird
             vezeichnis (str): Pfad an dem die Quelldateien gespeichert werden
-                z.B. `"{schulnummer}/mobil/mobdaten"`. Es kann `{schulnummer}` als Platzhalter verwendet werden
+                - z.B. `"{schulnummer}/mobil/mobdaten"`. Es kann `{schulnummer}` als Platzhalter verwendet werden
             dateinamenschema (str): Schema der Quelldateinamen
-                z.B. `"PlanKl%Y%m%d.xml"`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
+                - z.B. `"PlanKl%Y%m%d.xml"`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
         """
         self.schulnummer = schulnummer
         self.benutzername = benutzername

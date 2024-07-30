@@ -27,9 +27,6 @@ class VpDay():
         lehrerKrank(): Liefert eine Liste der Lehrer die unplanmäßig keinen Untericht haben
         saveasfile(): Speichert alle Daten des Tages als XML-Datei
 
-    #### Funktionen
-        parsefromfile(): Erstellt ein VpDay-Objekt aus den XML-Daten einer Datei
-
     #### Formate
         xml: Gibt die XML-Daten als String zurück
     """
@@ -72,7 +69,7 @@ class VpDay():
         
         #### Argumente
             pfad (str): Zielpfad der zu erstellenden Datei.
-                Muss den Dateinamen mit Endung enthalten. z.B.: `"./ein/realtiver/ordner/datei.xml"`
+                - Muss den Dateinamen mit Endung enthalten. z.B.: `"./ein/realtiver/ordner/datei.xml"`
             overwrite (bool): Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
         
         #### Raises
