@@ -4,17 +4,36 @@ class Exceptions():
     """
 
     class FetchingError(Exception):
-        def __init__(self, message, status_code = None):
+        """
+        Wenn angeforderte Daten nicht abgerufen werden können
+
+        #### Attribute:
+            message (str): Die Fehlermeldung
+            status_code (int): Der HTTPS-Fehlercode
+        """
+        def __init__(self, message: str, status_code: int = None):
             self.message = message
             self.status_code = status_code
-            super().__init__(self.message)
+        def __str__(self):
+            return f"{self.message} (Statuscode: {self.status_code})"
+
 
     class XMLParsingError(Exception):
-        def __init__(self, message):
+        """
+        Wenn XML-Daten nicht richtig geparst werden können
+
+        #### Attribute:
+            message (str): Die Fehlermeldung
+        """
+        def __init__(self, message: str):
             self.message = message
-            super().__init__(self.message)
 
     class XMLNotFound(XMLParsingError):
-        def __init__(self, message):
+        """
+        Wenn ein XML-Element nicht gefunden werden kann
+
+        #### Attribute:
+            message (str): Die Fehlermeldung
+        """
+        def __init__(self, message: str):
             self.message = message
-            super().__init__(self.message)

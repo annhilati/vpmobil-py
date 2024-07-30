@@ -2,8 +2,8 @@
 A python module for interacting with a stundenplan24.de substitution plan
 """
 
-from .Vertretungsplan import Vertretungsplan
-from .VpDay import VpDay, Klasse, Stunde, getxml
+from .fetcher import Vertretungsplan
+from .parser import VpDay, Klasse, Stunde, getxml
 from .workflow import Exceptions
 
 __all__ = ['VpMobil', 'Vertretungsplan', 'VpDay', 'Klasse', 'Stunde']

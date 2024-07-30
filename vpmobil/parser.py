@@ -31,14 +31,14 @@ class VpDay():
         xml: Gibt die XML-Daten als String zurück
     """
 
-    def __init__(self, xmldata: XML.ElementTree | bytes | str):
-        self._datatree: XML.ElementTree = xmldata if isinstance(xmldata, XML.ElementTree) else XML.ElementTree(XML.fromstring(xmldata))
-        self._dataroot: XML.Element = self._datatree.getroot()
+    def __init__(self, mobdaten: XML.ElementTree | bytes | str):
+        self._mobdaten: XML.ElementTree = mobdaten if isinstance(mobdaten, XML.ElementTree) else XML.ElementTree(XML.fromstring(mobdaten))
+        self._dataroot: XML.Element = self._mobdaten.getroot()
         
-        self.zeitstempel: datetime = datetime.strptime(self._datatree.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
+        self.zeitstempel: datetime = datetime.strptime(self._mobdaten.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
         "Veröffentlichungszeitpunkt des Vertretungsplans"
         
-        self.datei: str = self._datatree.find('Kopf/datei').text
+        self.datei: str = self._mobdaten.find('Kopf/datei').text
         "Dateiname der Quelldatei"
         
         self.datum = datetime.strptime(self.datei[6:14], "%Y%m%d").date()
@@ -57,11 +57,11 @@ class VpDay():
 
     def __format__(self, format_spec):
         match format_spec:
-            case "xml": return XML.tostring(self._datatree.getroot(), encoding="utf-8", method="xml").decode('utf-8')
+            case "xml": return prettyxml(self._mobdaten)
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
 
     def __repr__(self): return f"Vertretungsplan vom {self.datum.strftime('%d.%m.%Y')}"
-    #def __str__(self): return prettyxml(self._datatree)
+    #def __str__(self): return prettyxml(self._mobdaten)
             
     def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
         """
@@ -78,7 +78,7 @@ class VpDay():
 
         #xmlstring = XML.tostring(self._dataroot, 'utf-8')
         #xmlpretty = xml.dom.minidom.parseString(xmlstring).toprettyxml(indent="\t")
-        xmlpretty = prettyxml(self._datatree)
+        xmlpretty = prettyxml(self._mobdaten)
 
         zielpfad = OS.path.abspath(pfad)
         directory = OS.path.dirname(zielpfad)
@@ -199,7 +199,7 @@ class Klasse():
 
     def __format__(self, format_spec):
         match format_spec:
-            case "xml": return XML.tostring(self._data, encoding="utf-8", method="xml").decode('utf-8')
+            case "xml": return prettyxml(self._data)
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
 
     def __repr__(self): return f"Vertretungsplan der Klasse {self.kürzel}"
@@ -456,7 +456,7 @@ class Stunde():
 
     def __format__(self, format_spec):
         match format_spec:
-            case "xml": return XML.tostring(self._data, encoding="utf-8", method="xml").decode('utf-8')
+            case "xml": return prettyxml(self._data)
             case _: raise SyntaxError(f"Unbekanntes Format: {format_spec}")
 
     def __repr__(self): return f"Stundenobjekt der {self.nr}. Periode bei {self.lehrer}"
@@ -499,7 +499,7 @@ class Kurs():
 def getxml(object: VpDay | Klasse | Stunde) -> XML.ElementTree | XML.Element:
     # Der Docstring befindet sich in __init__.py
 
-    if isinstance(object, VpDay): return object._datatree
+    if isinstance(object, VpDay): return object._mobdaten
     elif isinstance(object, Klasse): return object._data
     elif isinstance(object, Stunde): return object._data
     else: raise TypeError("object muss einer der Typen VpDay, Klasse & Stunde sein") # Der Code ist ereichbar lol habs getestet
