@@ -78,22 +78,24 @@ class Vertretungsplan():
 
         datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) else datum
 
-        datei: str = datum.strftime(self._dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
+        file: str = datum.strftime(self._dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
         
-        uri = f"http://{self._webpath}/{datei}"
+        uri = f"http://{self._webpath}/{file}"
         response = WEB.get(uri)
 
+
+        if "Die eingegebene Schulnummer wurde nicht gefunden." in str(response.content):
+            raise Exceptions.SchulnummerNotFoundError(message=f"Die Schulnummer {self.schulnummer} ist nicht registriert",
+                                                      status_code=response.status_code)
+        if "This server could not verify" in str(response.content):
+            raise Exceptions.InvalidCredentialsError(message=f"Passwort oder Benutzername ist falsch.",
+                                                     status_code=response.status_code)
         if response.status_code != 200:
             if datei is not None:
-                if "Die eingegebene Schulnummer wurde nicht gefunden." in str(response.content):
-                    errormsg = f"Die eingegebene Schulnummer wurde nicht gefunden. Statuscode: {response.status_code}"
-                elif "This server could not verify" in str(response.content):
-                    errormsg = f"Passwort oder Benutzername ist falsch. Statuscode: {response.status_code}"
-                else:
-                    errormsg = f"Die Datei {datei} konnten nicht abgerufen werden. Statuscode: {response.status_code}"
-            else: 
-                errormsg = f"Die Daten für das Datum {datum} konnten nicht abgerufen werden. Statuscode: {response.status_code}"
-
-            raise Exceptions.FetchingError(message=errormsg, status_code=response.status_code)
+                raise Exceptions.FetchingError(message=f"Die Datei {datei} konnten nicht abgerufen werden.",
+                                               status_code=response.status_code)
+            elif datei is None:
+                raise Exceptions.FetchingError(message=f"Die Daten für das Datum {datum} konnten nicht abgerufen werden.",
+                                               status_code=response.status_code)
 
         return VpDay(mobdaten=response.content)

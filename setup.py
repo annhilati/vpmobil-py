@@ -8,7 +8,8 @@ setup(
     version="0.4",
     packages=find_packages(),
     install_requires=[
-        "requests"
+        "requests",
+        "acemeta"
         ],
     author="Annhilati & Joshi",
     description="A python wrapper package for interacting with a stundenplan24.de substitution plan",

@@ -20,10 +20,11 @@ class Exceptions:
         #### Attribute:
             message (str): Die Fehlermeldung
         """
-        def __init__(self, message: str):
+        def __init__(self, message: str, status_code: int = None):
             self.message = message
+            self.status_code = status_code
         def __str__(self):
-            return self.message
+            return f"{self.message} (Statuscode: {self.status_code})"
 
     class InvalidCredentialsError(FetchingError):
         """
@@ -32,10 +33,11 @@ class Exceptions:
         #### Attribute:
             message (str): Die Fehlermeldung
         """
-        def __init__(self, message: str):
+        def __init__(self, message: str, status_code: int = None):
             self.message = message
+            self.status_code = status_code
         def __str__(self):
-            return self.message
+            return f"{self.message} (Statuscode: {self.status_code})"
 
     class XMLParsingError(Exception):
         """
