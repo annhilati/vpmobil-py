@@ -90,7 +90,7 @@ class Vertretungsplan():
                 elif "This server could not verify" in str(response.content):
                     errormsg = f"Passwort oder Benutzername ist falsch. Statuscode: {response.status_code}"
                 else:
-                    errormsg = f"Die Datei {datei} konnten nicht abgerufen werden. Statuscode: {response.status_code}, {str(response.content)}"
+                    errormsg = f"Die Datei {datei} konnten nicht abgerufen werden. Statuscode: {response.status_code}"
             else: 
                 errormsg = f"Die Daten für das Datum {datum} konnten nicht abgerufen werden. Statuscode: {response.status_code}"
 
