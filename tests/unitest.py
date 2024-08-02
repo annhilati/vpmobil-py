@@ -26,11 +26,12 @@ gesStd = 0
 okStd = 0
 day = 1
 month = 1
-dat = "20240614"
+dat = "20240612"
 testVar = ""
 while 7==7:
+    print("UNITEST - Check " + dat, end="\r")
     try:
-        tag = vertretPlan.fetch(dat)
+        tag = vertretPlan.fetch(int(dat))
     except:
         keinPln += 1
     else:
@@ -85,5 +86,6 @@ print("   Davon nicht Verfügbar: " + str(keinPln))
 print("Insgesamt geprüfte Stunden: " + str(gesStd))
 print("   Davon Fehler: " + str(gesErr))
 print("   Davon Ok: " + str(okStd))
+print("Alle Funktionen geprüft bei " + str(pln) + " Tagen Ok")
 print(33*"-")
 print("UNITEST - END")

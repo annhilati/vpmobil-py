@@ -1,8 +1,8 @@
 from vpmobil import Vertretungsplan
 
-#vertretPlan = Vertretungsplan(10126582, "schueler", "s361o97")
+vertretPlan = Vertretungsplan(10126582, "schueler", "s361o97")
 
-vertretPlan = Vertretungsplan(10161728, "schueler", "23LgS24")
+#vertretPlan = Vertretungsplan(10161782, "schueler", "23LgS24")
 
 tag = vertretPlan.fetch(20240612)
 print(tag.lehrerKrank())
