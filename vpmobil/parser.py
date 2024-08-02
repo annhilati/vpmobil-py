@@ -444,7 +444,7 @@ class Stunde():
         Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
         """
 
-    def __repr__(self): return f"Stundenobjekt der {self.nr}. Periode bei {self.lehrer}"
+    def __repr__(self): return f"Stundenobjekt der {self.nr}. Stunde bei {self.lehrer}"
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Kurs                                             │ 
@@ -454,7 +454,7 @@ class Kurs():
     """
     Enthält alle Informationen zu einem bestimmten Kurs
 
-    #### Attribute
+    #### Attribute:
         lehrer (str): Der Lehrer, welcher diesen Kurs hält
         fach (str): Das Fach, welches dieser Kurs hat
         zusatz (str): Manche Kurse haben eine Zusatzinformation, wie z.B. Fördern
