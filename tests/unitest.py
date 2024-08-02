@@ -23,7 +23,7 @@ keinPln = 0
 klOk = 0
 gesErr = 0
 gesStd = 0
-OkStd = 0
+okStd = 0
 day = 1
 month = 1
 dat = "20240614"
@@ -44,7 +44,19 @@ while 7==7:
                     print("UNITEST - FEHLER - " + "Klasse " + kl + ", Stunde " + str(std.nr) + " am Tag " + dat)
                     gesErr += 1
                 else:
-                    OkStd += 1
+                    okStd += 1
+        try:
+            testVar = str(tag.freieTage())
+        except:
+            print("UNITEST - FEHLER - tag.freieTage() am Tag " + dat)
+        try:
+            testVar = str(tag.lehrerKrank())
+        except:
+            print("UNITEST - FEHLER - tag.lehrerKrank am Tag " + dat)
+        try:
+            testVar = tag.datei + " " + str(tag.datum) + " " + str(tag.wochentag) + " " + str(tag.zeitstempel) + " " + tag.zusatzInfo
+        except:
+            print("UNITEST - FEHLER - einer von .datei, .datum, .wochentag, .zeitstempel, .zusatzinfo am Tag " + dat)
     finally:
         if day == 31:
             day = 1
@@ -72,6 +84,6 @@ print("   Davon Verfügbar: " + str(pln))
 print("   Davon nicht Verfügbar: " + str(keinPln))
 print("Insgesamt geprüfte Stunden: " + str(gesStd))
 print("   Davon Fehler: " + str(gesErr))
-print("   Davon Ok: " + str(OkStd))
+print("   Davon Ok: " + str(okStd))
 print(33*"-")
 print("UNITEST - END")
