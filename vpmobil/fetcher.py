@@ -85,7 +85,12 @@ class Vertretungsplan():
 
         if response.status_code != 200:
             if datei is not None:
-                errormsg = f"Die Datei {datei} konnten nicht abgerufen werden. Statuscode: {response.status_code}"
+                if "Die eingegebene Schulnummer wurde nicht gefunden." in str(response.content):
+                    errormsg = f"Die eingegebene Schulnummer wurde nicht gefunden. Statuscode: {response.status_code}"
+                elif "This server could not verify" in str(response.content):
+                    errormsg = f"Passwort oder Benutzername ist falsch. Statuscode: {response.status_code}"
+                else:
+                    errormsg = f"Die Datei {datei} konnten nicht abgerufen werden. Statuscode: {response.status_code}, {str(response.content)}"
             else: 
                 errormsg = f"Die Daten für das Datum {datum} konnten nicht abgerufen werden. Statuscode: {response.status_code}"
 
