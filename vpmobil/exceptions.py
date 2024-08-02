@@ -1,4 +1,9 @@
 class Exceptions:
+
+    # ╭────────────────────────────────────────────────────────────────────────────────╮
+    # │                                FetchingError                                   │ 
+    # ╰────────────────────────────────────────────────────────────────────────────────╯
+
     class FetchingError(Exception):
         """
         Wenn angeforderte Daten nicht abgerufen werden können
@@ -20,11 +25,7 @@ class Exceptions:
         #### Attribute:
             message (str): Die Fehlermeldung
         """
-        def __init__(self, message: str, status_code: int = None):
-            self.message = message
-            self.status_code = status_code
-        def __str__(self):
-            return f"{self.message} (Statuscode: {self.status_code})"
+        pass # erbt FetchingError
 
     class InvalidCredentialsError(FetchingError):
         """
@@ -33,11 +34,11 @@ class Exceptions:
         #### Attribute:
             message (str): Die Fehlermeldung
         """
-        def __init__(self, message: str, status_code: int = None):
-            self.message = message
-            self.status_code = status_code
-        def __str__(self):
-            return f"{self.message} (Statuscode: {self.status_code})"
+        pass # erbt FetchingError
+
+    # ╭────────────────────────────────────────────────────────────────────────────────╮
+    # │                               XMLParsingError                                  │ 
+    # ╰────────────────────────────────────────────────────────────────────────────────╯
 
     class XMLParsingError(Exception):
         """
@@ -48,6 +49,8 @@ class Exceptions:
         """
         def __init__(self, message: str):
             self.message = message
+        def __str__(self):
+            return self.message
 
     class XMLNotFound(XMLParsingError):
         """
@@ -56,7 +59,4 @@ class Exceptions:
         #### Attribute:
             message (str): Die Fehlermeldung
         """
-        def __init__(self, message: str):
-            self.message = message
-        def __str__(self):
-            return self.message
+        pass # erbt XMLParsingError
