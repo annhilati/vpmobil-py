@@ -33,7 +33,7 @@ for stunde in stunden:
 
 <h2>Features</h2>
 <h6>Dies ist eine grobe Übersicht über die Features und ist nicht unbedingt aktuell</h6>
-<h4>Symbole</h4>
+<h3>Symbole</h4>
 <ul>
   <li>Vertretungsplan
     <ul>

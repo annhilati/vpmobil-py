@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 import requests as WEB
 
 from .exceptions import Exceptions
@@ -20,7 +20,8 @@ class Vertretungsplan():
             - z.B. `'PlanKl%Y%m%d.xml'`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
 
     #### Methoden:
-        fetch(): Ruft die Daten eines Tages ab
+        fetch(): Ruft die Daten eines Tages oder einer Datei ab
+        fetchall(): Ruft alle Tage in einem 2 monatigem Zeitraum ab
     """
 
     def __init__(self,
@@ -64,7 +65,7 @@ class Vertretungsplan():
 
     def fetch(self, datum: date | int = date.today(), datei: str = None):
         """
-        Ruft die Daten eines Tages ab
+        Ruft die Daten eines Tages oder einer Datei ab
 
         #### Argumente:
             datum (date | int): Abzurufender Tag.
@@ -97,4 +98,37 @@ class Vertretungsplan():
         else:
             response.raise_for_status()
 
+    def fetchall(self):
+        """
+        Gibt alle Pläne in einem Zeitraum von 2 Monaten als Liste zurück
+
+        #### Returns
+            list[VpDay]: Die Liste an angeforderten Plänen
         
+        #### Raises
+            FetchingError: Wenn keine Pläne gefunden werden konnten
+        """
+        #raise NotImplementedError
+        today = datetime.today().date()#.strftime("%Y%m%d")
+
+        def date_range(start_date: date, end_date: date):
+            delta = timedelta(days=1)
+            current_date = start_date
+            while current_date <= end_date:
+                yield current_date
+                current_date += delta
+
+        pläne: list[VpDay] = []
+        for tag in date_range(today - timedelta(days=30), today + timedelta(days=30)):
+            if tag.weekday() > 4:
+                continue
+            else:
+                try:
+                    plan = self.fetch(tag)
+                    pläne.append(plan)
+                except Exceptions.FetchingError:
+                    continue
+        if pläne == []:
+            raise Exceptions.FetchingError("Es konnten in einem zweimonatigen")
+        else:
+            return pläne
