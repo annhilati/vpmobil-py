@@ -17,15 +17,6 @@ class Exceptions:
             self.status_code = status_code
         def __str__(self):
             return f"{self.message} (Statuscode: {self.status_code})"
-            
-    class PlanOrSchulnummerNotFoundError(FetchingError):
-        """
-        Wenn die angegebene Schulnummer nicht registriert ist oder für den angegebenen Tag kein Plan verfügbar ist
-
-        #### Attribute:
-            message (str): Die Fehlermeldung
-        """
-        pass # erbt FetchingError
 
     class InvalidCredentialsError(FetchingError):
         """
