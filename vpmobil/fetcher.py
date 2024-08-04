@@ -52,7 +52,7 @@ class Vertretungsplan():
             parts = serverurl.split("://", 1)
             serverurl = parts[1] if len(parts) > 1 else parts[0]
 
-        if verzeichnis.startswith('/'):
+        if verzeichnis.endswith('/'):
             serverurl = serverurl[:-1]
         if verzeichnis.startswith("/"):
             serverurl = serverurl[1:]
@@ -67,13 +67,17 @@ class Vertretungsplan():
         Ruft die Daten eines Tages ab
 
         #### Argumente:
-            datum (date | int): Abzurufender Tag
+            datum (date | int): Abzurufender Tag.
                 int muss im Schema yyyymmdd sein (z.B. `20240609`)
-            datei (str): Abzurufende Datei mit Dateipfad
+            datei (str): Abzurufende Datei mit Dateipfad.
                 z.B. `"{schulnummer}/mobil/mobdaten/Klassen.xml"`. Ignoriert datum bei Angabe
 
+        #### Retunrs:
+            VpDay: Die angeforderten Daten
+
         #### Raises:
-            FetchingError: Wenn für den Tag keine Daten verfügbar sind
+            FetchingError: Wenn für den Tag keine Daten verfügbar sind oder die verwednete Schulnummer nicht registriert ist.
+            InvalidCredentialsError: Wenn Benutzername oder Passwort falsch sind.
         """
 
         datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) else datum
@@ -83,19 +87,14 @@ class Vertretungsplan():
         uri = f"http://{self._webpath}/{file}"
         response = WEB.get(uri)
 
+        http = response.status_code
+        if http == 200:
+            return VpDay(mobdaten=response.content)
+        elif http == 401:
+            raise Exceptions.InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", status_code=http)
+        elif http == 404:
+            raise Exceptions.FetchingError(message=f"Datei {datei} konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer {self.schulnummer} ist nicht registriert.", status_code=http)
+        else:
+            response.raise_for_status()
 
-        if "Die eingegebene Schulnummer wurde nicht gefunden." in str(response.content):
-            raise Exceptions.SchulnummerNotFoundError(message=f"Die Schulnummer {self.schulnummer} ist nicht registriert",
-                                                      status_code=response.status_code)
-        if "This server could not verify" in str(response.content):
-            raise Exceptions.InvalidCredentialsError(message=f"Passwort oder Benutzername ist falsch.",
-                                                     status_code=response.status_code)
-        if response.status_code != 200:
-            if datei is not None:
-                raise Exceptions.FetchingError(message=f"Die Datei {datei} konnten nicht abgerufen werden.",
-                                               status_code=response.status_code)
-            elif datei is None:
-                raise Exceptions.FetchingError(message=f"Die Daten für das Datum {datum} konnten nicht abgerufen werden.",
-                                               status_code=response.status_code)
-
-        return VpDay(mobdaten=response.content)
+        
