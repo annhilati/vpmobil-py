@@ -85,7 +85,7 @@ class Vertretungsplan():
 
 
         if "Die eingegebene Schulnummer wurde nicht gefunden." in str(response.content):
-            raise Exceptions.SchulnummerNotFoundError(message=f"Die Schulnummer {self.schulnummer} ist nicht registriert",
+            raise Exceptions.PlanOrSchulnummerNotFoundError(message=f"Die Schulnummer {self.schulnummer} ist nicht registriert oder für das Datum {datum.strftime('%d.%m.%Y')} gibt es keinen Plan.",
                                                       status_code=response.status_code)
         if "This server could not verify" in str(response.content):
             raise Exceptions.InvalidCredentialsError(message=f"Passwort oder Benutzername ist falsch.",

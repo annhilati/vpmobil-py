@@ -18,9 +18,9 @@ class Exceptions:
         def __str__(self):
             return f"{self.message} (Statuscode: {self.status_code})"
             
-    class SchulnummerNotFoundError(FetchingError):
+    class PlanOrSchulnummerNotFoundError(FetchingError):
         """
-        Wenn die angegebene Schulnummer nicht registriert ist
+        Wenn die angegebene Schulnummer nicht registriert ist oder für den angegebenen Tag kein Plan verfügbar ist
 
         #### Attribute:
             message (str): Die Fehlermeldung

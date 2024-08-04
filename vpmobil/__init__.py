@@ -42,6 +42,6 @@ class VpMobil:
     XMLNotFound = Exceptions.XMLNotFound
     XMLParsingError = Exceptions.XMLParsingError
     InvalidCredentialsError = Exceptions.InvalidCredentialsError
-    SchulnummerNotFoundError = Exceptions.SchulnummerNotFoundError
+    PlanOrSchulnummerNotFoundError = Exceptions.PlanOrSchulnummerNotFoundError
 
 
