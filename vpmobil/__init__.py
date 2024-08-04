@@ -26,11 +26,10 @@ class VpMobil:
         parsefromfile(): Läd die XML-Daten einer Datei in ein VpDay-Objekt
 
     #### Exceptions
-        FetchingError: Wenn Daten nicht abgerufen werden können
-            - InvalidCredentialsError: Wenn die angegebene Anmeldedaten ungültig sind
-            - SchulnummerNotFoundError: Wenn die angegebene Schulnummer nicht registriert ist
-        XMLParsingError: Wenn XML-Daten nicht richtig ausgewertet werden können
-            - XMLNotFound: Wenn ein Element der XML-Daten nicht gefunden werden kann
+        FetchingError: Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
+        InvalidCredentialsError: Wenn die angegebene Anmeldedaten ungültig sind.
+        XMLParsingError: Wenn XML-Daten nicht richtig ausgewertet werden können.
+        XMLNotFound: Wenn ein Element der XML-Daten nicht gefunden werden kann.
     """
 
     from .io import getxml, parsefromfile
