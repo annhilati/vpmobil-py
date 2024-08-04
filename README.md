@@ -38,6 +38,7 @@ for stunde in stunden:
   <li>Vertretungsplan
     <ul>
       <li>.fetch()</li>
+      <li>.fetchall()</li>
     </ul>
   </li>
   <li>VpDay</li>
