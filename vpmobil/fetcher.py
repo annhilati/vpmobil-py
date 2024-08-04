@@ -72,11 +72,11 @@ class Vertretungsplan():
             datei (str): Abzurufende Datei mit Dateipfad.
                 z.B. `"{schulnummer}/mobil/mobdaten/Klassen.xml"`. Ignoriert datum bei Angabe
 
-        #### Retunrs:
+        #### Returns:
             VpDay: Die angeforderten Daten
 
         #### Raises:
-            FetchingError: Wenn für den Tag keine Daten verfügbar sind oder die verwednete Schulnummer nicht registriert ist.
+            FetchingError: Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
             InvalidCredentialsError: Wenn Benutzername oder Passwort falsch sind.
         """
 

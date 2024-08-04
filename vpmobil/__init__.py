@@ -39,9 +39,6 @@ class VpMobil:
     
     from .exceptions import Exceptions
     FetchingError = Exceptions.FetchingError
-    XMLNotFound = Exceptions.XMLNotFound
-    XMLParsingError = Exceptions.XMLParsingError
     InvalidCredentialsError = Exceptions.InvalidCredentialsError
-    PlanOrSchulnummerNotFoundError = Exceptions.PlanOrSchulnummerNotFoundError
-
-
+    XMLParsingError = Exceptions.XMLParsingError
+    XMLNotFound = Exceptions.XMLNotFound

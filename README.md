@@ -31,9 +31,72 @@ for stunde in stunden:
   <p align="center">Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, the package and the wiki are formulated in German</p>
 </p>
 
+<h2>Features</h2>
+<h6>Dies ist eine grobe Übersicht über die Features und ist nicht unbedingt aktuell</h6>
+<h4>Symbole</h4>
+<ul>
+  <li>Vertretungsplan
+    <ul>
+      <li>.fetch()</li>
+    </ul>
+  </li>
+  <li>VpDay</li>
+    <ul>
+      <li>.datum</li>
+      <li>.wochentag</li>
+      <li>.zusatzInfo</li>
+      <li>.zeitstempel</li>
+      <li>.datei</li>
+      <li>.klassen()</li>
+      <li>.freieTage()</li>
+      <li>.lehrerKrank</li>
+      <li>.saveasfile()</li>
+      <li>:xml</li>
+    </ul>
+  <li>Klasse</li>
+    <ul>
+      <li>.kürzel</li>
+      <li>.stundenInPeriode()</li>
+      <li>.stunden()</li>
+      <li>:xml</li>
+    </ul>
+  <li>Stunde</li>
+    <ul>
+      <li>.nr</li>
+      <li>.beginn()</li>
+      <li>.ende</li>
+      <li>.anders</li>
+      <li>.besonders</li>
+      <li>.ausfall</li>
+      <li>.fach</li>
+      <li>.lehrer</li>
+      <li>.raum</li>
+      <li>.info()</li>
+      <li>.kursnummer</li>
+      <li>:xml</li>
+    </ul>
+  <li>Kurs (WiP)</li>
+    <ul>
+      <li>.lehrer</li>
+      <li>.fach</li>
+      <li>.zusatz</li>
+      <li>.kursnummer</li>
+    </ul>
+  <li>VpMobil</li>
+    <ul>
+      <li>.getxml()</li>
+      <li>.parsefromfile()</li>
+      <li>.FetchingError</li>
+      <li>.InvalidCredentialsError</li>
+      <li>.XMLParsingError</li>
+      <li>.XMLNotFound</li>
+    </ul>
+  </li>
+</ul>
 
 
-<h3 align="center">────────────────── DISCLAIMER ──────────────────</h3>
+
+<h3 align="center"> DISCLAIMER </h3>
 <p align="center">
   Das Paket und seine zugehörigen Dienste und Projekte sind eigenständig und stehen in keiner Verbindung zu Indiware, der VpMobil24 App oder stundenplan24.de. Die Nutzung obliegt der Verantwortung des Nutzers. Die   Entwickler übernimmt keine Haftung für Schäden, die durch die Nutzung der App entstehen.
 </p>
