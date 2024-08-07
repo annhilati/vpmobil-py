@@ -10,4 +10,5 @@ vp1 = Vertretungsplan(10161728, "schueler", "23LgS24")
 
 pläne = vp.fetchall()
 
-print(pläne)
+for plan in pläne:
+    plan.saveasfile(f"./tests/{plan.datum}.xml")
