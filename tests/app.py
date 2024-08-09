@@ -11,4 +11,4 @@ vp1 = Vertretungsplan(10161728, "schueler", "23LgS24")
 pläne = vp.fetchall()
 
 for plan in pläne:
-    plan.saveasfile(f"./tests/{plan.datum}.xml")
+    plan.saveasfile(f"./tests/mobdaten/{plan.datum}.xml")

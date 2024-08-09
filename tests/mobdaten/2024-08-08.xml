@@ -1,0 +1,5884 @@
+<?xml version="1.0" ?>
+<VpMobil>
+	<Kopf>
+		<planart>K</planart>
+		<zeitstempel>08.08.2024, 08:51</zeitstempel>
+		<DatumPlan>Donnerstag, 08. August 2024</DatumPlan>
+		<datei>PlanKl20240808.xml</datei>
+		<nativ>1</nativ>
+		<woche>1</woche>
+		<tageprowoche>5</tageprowoche>
+		<schulnummer/>
+	</Kopf>
+	<FreieTage>
+		<ft>240801</ft>
+		<ft>240802</ft>
+		<ft>241003</ft>
+		<ft>241007</ft>
+		<ft>241008</ft>
+		<ft>241009</ft>
+		<ft>241010</ft>
+		<ft>241011</ft>
+		<ft>241014</ft>
+		<ft>241015</ft>
+		<ft>241016</ft>
+		<ft>241017</ft>
+		<ft>241018</ft>
+		<ft>241031</ft>
+		<ft>241120</ft>
+		<ft>241223</ft>
+		<ft>241224</ft>
+		<ft>241225</ft>
+		<ft>241226</ft>
+		<ft>241227</ft>
+		<ft>241230</ft>
+		<ft>241231</ft>
+		<ft>250101</ft>
+		<ft>250102</ft>
+		<ft>250103</ft>
+		<ft>250217</ft>
+		<ft>250218</ft>
+		<ft>250219</ft>
+		<ft>250220</ft>
+		<ft>250221</ft>
+		<ft>250224</ft>
+		<ft>250225</ft>
+		<ft>250226</ft>
+		<ft>250227</ft>
+		<ft>250228</ft>
+		<ft>250418</ft>
+		<ft>250421</ft>
+		<ft>250422</ft>
+		<ft>250423</ft>
+		<ft>250424</ft>
+		<ft>250425</ft>
+		<ft>250501</ft>
+		<ft>250529</ft>
+		<ft>250530</ft>
+		<ft>250609</ft>
+		<ft>250630</ft>
+		<ft>250701</ft>
+		<ft>250702</ft>
+		<ft>250703</ft>
+		<ft>250704</ft>
+		<ft>250707</ft>
+		<ft>250708</ft>
+		<ft>250709</ft>
+		<ft>250710</ft>
+		<ft>250711</ft>
+		<ft>250714</ft>
+		<ft>250715</ft>
+		<ft>250716</ft>
+		<ft>250717</ft>
+		<ft>250718</ft>
+		<ft>250721</ft>
+		<ft>250722</ft>
+		<ft>250723</ft>
+		<ft>250724</ft>
+		<ft>250725</ft>
+		<ft>250728</ft>
+		<ft>250729</ft>
+		<ft>250730</ft>
+		<ft>250731</ft>
+	</FreieTage>
+	<Klassen>
+		<Kl>
+			<Kurz>5a</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Gö">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Hau">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klü">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Shc">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sky">GE</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">LRS-Fö</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ka">WE</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">199</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Shc" UeFa="DE" UeGr="Fördern">200</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Shc" UeFa="DE">201</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="EN">202</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="EN" UeGr="Fördern">203</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="GE" UeGr="GE">204</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hep" UeFa="GEO">205</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="KU">206</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA" UeGr="Fördern">207</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">208</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klü" UeFa="MA">209</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klü" UeFa="MA" UeGr="Fördern">210</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Shc" UeFa="MK">211</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">212</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="REk">214</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO">215</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ka" UeFa="WE" UeGr="WE">216</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ka" UeFa="WE" UeGr="WE">217</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">231</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="DE" UeGr="LRS-Fö">832</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>BIO</Fa>
+					<Le>Sma</Le>
+					<Ra>E04</Ra>
+					<Nr>199</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>MA</Fa>
+					<Le>Klü</Le>
+					<Ra>210</Ra>
+					<Nr>209</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>SPO</Fa>
+					<Le>Lk</Le>
+					<Ra>Th1</Ra>
+					<Nr>215</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>SPO</Fa>
+					<Le>Lk</Le>
+					<Ra>Th1</Ra>
+					<Nr>215</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>LA</Fa>
+					<Le>Hau</Le>
+					<Ra>210</Ra>
+					<Nr>208</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>LA</Fa>
+					<Le>Hau</Le>
+					<Ra>210</Ra>
+					<Nr>208</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>5b</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Brt">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gö">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gw">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kie">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sky">GE</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">LRS-Fö</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ka">WE</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="GE" UeGr="GE">204</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe">213</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">218</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kie" UeFa="DE">219</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kie" UeFa="DE" UeGr="Fördern">220</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="EN" UeGr="Fördern">221</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="EN">222</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="GEO">223</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kri" UeFa="KU">224</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Brt" UeFa="LA">225</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Brt" UeFa="LA" UeGr="Fördern">226</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gw" UeFa="MA" UeGr="Fördern">227</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gw" UeFa="MA">228</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kie" UeFa="MK">229</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kie" UeFa="MU">230</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">231</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Me" UeFa="REk">232</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO">233</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ka" UeFa="WE" UeGr="WE">234</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ka" UeFa="WE" UeGr="WE">235</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="DE" UeGr="LRS-Fö">832</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>LA</Fa>
+					<Le>Brt</Le>
+					<Ra>216</Ra>
+					<Nr>225</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>DE</Fa>
+					<Le>Kie</Le>
+					<Ra>216</Ra>
+					<Nr>219</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>MA</Fa>
+					<Le>Gw</Le>
+					<Ra>216</Ra>
+					<Nr>228</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>EN</Fa>
+					<Le>Gö</Le>
+					<Ra>216</Ra>
+					<Nr>222</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>MU</Fa>
+					<Le>Kie</Le>
+					<Ra>102</Ra>
+					<Nr>230</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>GEO</Fa>
+					<Le>Kla</Le>
+					<Ra>E25</Ra>
+					<Nr>223</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>5c</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Bs">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Pk">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sku">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="To">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sky">GE</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">LRS-Fö</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ka">WE</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="GE" UeGr="GE">204</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe">213</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">236</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="DE">237</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="DE" UeGr="Fördern">238</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN">239</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN" UeGr="Fördern">240</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hep" UeFa="GEO">241</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="KU">242</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA" UeGr="Fördern">243</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA">244</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="MA" UeGr="Fördern">245</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="MA">246</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="MK">247</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hei" UeFa="MU">248</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hei" UeFa="REk">249</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO">250</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ka" UeFa="WE" UeGr="WE">251</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ka" UeFa="WE" UeGr="WE">252</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="DE" UeGr="LRS-Fö">832</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>LA</Fa>
+					<Le>Bs</Le>
+					<Ra>204</Ra>
+					<Nr>244</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>LA</Fa>
+					<Le>Bs</Le>
+					<Ra>204</Ra>
+					<Nr>244</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>MA</Fa>
+					<Le>Sku</Le>
+					<Ra>204</Ra>
+					<Nr>246</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>DE</Fa>
+					<Le>Pk</Le>
+					<Ra>204</Ra>
+					<Nr>237</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>EN</Fa>
+					<Le>To</Le>
+					<Ra>204</Ra>
+					<Nr>239</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>MU</Fa>
+					<Le>Hei</Le>
+					<Ra>103</Ra>
+					<Nr>248</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>6a</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Loi">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gt">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Her">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sky">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="To">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ri">GE</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">INF</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPs</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gt">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPs">764</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">253</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="DE" UeGr="Fördern">255</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="DE">256</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="DE">257</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN">258</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN" UeGr="Fördern">259</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN">260</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ri" UeFa="GE" UeGr="GE">261</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="GEO">262</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="INF" UeGr="INF">263</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="KU">264</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="LA">265</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="LA" UeGr="Fördern">266</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">267</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="MA">268</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="MA" UeGr="Fördern">269</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="" UeFa="MA">270</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="MK">271</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">272</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe">273</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ri" UeFa="REk">275</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="SPO" UeGr="SPw">276</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">761</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Loi" UeFa="DE" UeGr="DaZ">836</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Loi" UeFa="DE" UeGr="DaZ">842</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>INF</Fa>
+					<Ku2>INF</Ku2>
+					<Le>Jur</Le>
+					<Ra>E27</Ra>
+					<Nr>263</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>INF</Fa>
+					<Ku2>INF</Ku2>
+					<Le>Jur</Le>
+					<Ra>E27</Ra>
+					<Nr>263</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>EN</Fa>
+					<Le>To</Le>
+					<Ra>208</Ra>
+					<Nr>260</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>LA</Fa>
+					<Le>Gt</Le>
+					<Ra>208</Ra>
+					<Nr>265</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Loi</Le>
+					<Ra>101</Ra>
+					<Nr>836</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>REe</Fa>
+					<Le>Blt</Le>
+					<Ra>216</Ra>
+					<Nr>273</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>REk</Fa>
+					<Le>Ri</Le>
+					<Ra>208</Ra>
+					<Nr>275</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>REe</Fa>
+					<Le>Blt</Le>
+					<Ra>216</Ra>
+					<Nr>273</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>REk</Fa>
+					<Le>Ri</Le>
+					<Ra>208</Ra>
+					<Nr>275</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>6b</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Loi">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bs">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Dr">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gw">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Le">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ri">GE</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">INF</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">LRS-Fö</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPs</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gt">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPs">764</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="DE">256</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN">258</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ri" UeFa="GE" UeGr="GE">261</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">267</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="" UeFa="MA">270</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe">273</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">274</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="SPO" UeGr="SPw">276</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">277</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="DE">278</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="DE" UeGr="Fördern">279</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Dr" UeFa="EN">280</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Dr" UeFa="EN" UeGr="Fördern">281</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="GEO">282</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="INF" UeGr="INF">283</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="KU">284</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA">285</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA" UeGr="Fördern">286</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gw" UeFa="MA">287</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gw" UeFa="MA" UeGr="Fördern">288</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="MK">289</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kie" UeFa="MU">290</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="REk">291</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">761</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="DE" UeGr="LRS-Fö">833</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Loi" UeFa="DE" UeGr="DaZ">837</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Loi" UeFa="DE" UeGr="DaZ">842</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>BIO</Fa>
+					<Le>Srz</Le>
+					<Ra>E01</Ra>
+					<Nr>277</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>BIO</Fa>
+					<Le>Srz</Le>
+					<Ra>E01</Ra>
+					<Nr>277</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>LA</Fa>
+					<Le>Bs</Le>
+					<Ra>202</Ra>
+					<Nr>285</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Loi</Le>
+					<Ra>101</Ra>
+					<Nr>837</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>MA</Fa>
+					<Le>Gw</Le>
+					<Ra>202</Ra>
+					<Nr>287</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>REe</Fa>
+					<Le>Blt</Le>
+					<Ra>216</Ra>
+					<Nr>273</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>REe</Fa>
+					<Le>Oe</Le>
+					<Ra>219</Ra>
+					<Nr>274</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>REk</Fa>
+					<Le>Gö</Le>
+					<Ra>202</Ra>
+					<Nr>291</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>REe</Fa>
+					<Le>Blt</Le>
+					<Ra>216</Ra>
+					<Nr>273</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>REe</Fa>
+					<Le>Oe</Le>
+					<Ra>219</Ra>
+					<Nr>274</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>REk</Fa>
+					<Le>Gö</Le>
+					<Ra>202</Ra>
+					<Nr>291</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>6c</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Cyr">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kri">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mb">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Pa">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ri">GE</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">INF</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPs</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gt">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPs">764</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="DE">256</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN">258</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ri" UeFa="GE" UeGr="GE">261</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">267</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="" UeFa="MA">270</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">274</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="SPO" UeGr="SPw">276</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">293</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kri" UeFa="DE">294</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kri" UeFa="DE" UeGr="Fördern">295</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mb" UeFa="EN" UeGr="Fördern">296</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mb" UeFa="EN">297</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="GEO">298</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="INF" UeGr="INF">299</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU">300</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pa" UeFa="LA">301</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pa" UeFa="LA" UeGr="Fördern">302</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Cyr" UeFa="MA">303</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Cyr" UeFa="MA" UeGr="Fördern">304</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mb" UeFa="MK">305</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slf" UeFa="MU">306</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pa" UeFa="REk">307</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">761</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>KU</Fa>
+					<Le>Sob</Le>
+					<Ra>E09</Ra>
+					<Nr>300</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>KU</Fa>
+					<Le>Sob</Le>
+					<Ra>E09</Ra>
+					<Nr>300</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>MA</Fa>
+					<Le>Cyr</Le>
+					<Ra>211</Ra>
+					<Nr>303</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>MA</Fa>
+					<Le>Cyr</Le>
+					<Ra>211</Ra>
+					<Nr>303</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>REe</Fa>
+					<Le>Oe</Le>
+					<Ra>219</Ra>
+					<Nr>274</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>REk</Fa>
+					<Le>Pa</Le>
+					<Ra>211</Ra>
+					<Nr>307</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>REe</Fa>
+					<Le>Oe</Le>
+					<Ra>219</Ra>
+					<Nr>274</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>REk</Fa>
+					<Le>Pa</Le>
+					<Ra>211</Ra>
+					<Nr>307</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>Fördern</Fa>
+					<Ku2>Fördern</Ku2>
+					<Le>Pa</Le>
+					<Ra>211</Ra>
+					<Nr>302</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>7a</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Loi">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Her">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Pa">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="To">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">LRS-Fö</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="DE">256</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN">258</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="" UeFa="MA">270</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">309</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hk" UeFa="BIO">310</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sch" UeFa="CH">311</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="DE" UeGr="Fördern">312</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="DE">313</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN" UeGr="Fördern">314</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN">315</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="GE">316</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="GEO">317</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hö" UeFa="INF">318</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU">319</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pa" UeFa="LA" UeGr="Fördern">320</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pa" UeFa="LA">321</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="MA" UeGr="Fördern">322</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="MA">323</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hk" UeFa="MK">324</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slf" UeFa="MU">325</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Boe" UeFa="PH">326</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="PH">327</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="REe">328</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hei" UeFa="REk">330</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPw">331</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">332</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">831</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="DE" UeGr="LRS-Fö">833</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Loi" UeFa="DE" UeGr="DaZ">834</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Loi" UeFa="DE" UeGr="DaZ">843</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>LA</Fa>
+					<Le>Pa</Le>
+					<Ra>303</Ra>
+					<Nr>321</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Loi</Le>
+					<Ra>319</Ra>
+					<Nr>834</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>LA</Fa>
+					<Le>Pa</Le>
+					<Ra>303</Ra>
+					<Nr>321</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Loi</Le>
+					<Ra>319</Ra>
+					<Nr>834</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>DE</Fa>
+					<Le>Sob</Le>
+					<Ra>303</Ra>
+					<Nr>313</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>DE</Fa>
+					<Le>Sob</Le>
+					<Ra>303</Ra>
+					<Nr>313</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>MA</Fa>
+					<Le>Her</Le>
+					<Ra>303</Ra>
+					<Nr>323</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa FaAe="FaGeaendert">EN</Fa>
+					<Le LeAe="LeGeaendert">To</Le>
+					<Ra RaAe="RaGeaendert">303</Ra>
+					<Nr>315</Nr>
+					<If>statt Mi (07.08.) St.6; MA Frau Herold gehalten am Mo (05.08.) St.4</If>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>Fördern</Fa>
+					<Ku2>Fördern</Ku2>
+					<Le>Sob</Le>
+					<Ra>303</Ra>
+					<Nr>312</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Loi</Le>
+					<Ra>101</Ra>
+					<Nr>834</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>7b</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Loi">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bo">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Dr">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gt">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sky">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">LRS-Fö</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="LA" UeGr="Fördern">343</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="MA" UeGr="Fördern">344</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="MA">345</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="MK">346</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">347</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="PH">348</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="REk">349</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="SPO">619</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="DE">256</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN">258</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="" UeFa="MA">270</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">309</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sch" UeFa="CH">311</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="PH">327</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="REe">328</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">329</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="BIO">333</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="DE" UeGr="Fördern">334</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="DE">335</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Dr" UeFa="EN">336</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Dr" UeFa="EN" UeGr="Fördern">337</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="GE">338</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="GEO">339</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hö" UeFa="INF">340</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="KU">341</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gt" UeFa="LA">342</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">831</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="DE" UeGr="LRS-Fö">833</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Loi" UeFa="DE" UeGr="DaZ">835</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Loi" UeFa="DE" UeGr="DaZ">843</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>PH</Fa>
+					<Le>Bey</Le>
+					<Ra>E22</Ra>
+					<Nr>348</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>BIO</Fa>
+					<Le>Bu</Le>
+					<Ra>E04</Ra>
+					<Nr>333</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>KU</Fa>
+					<Le>Sta</Le>
+					<Ra>E09</Ra>
+					<Nr>341</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>MA</Fa>
+					<Le>Bo</Le>
+					<Ra>310</Ra>
+					<Nr>345</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>LA</Fa>
+					<Le>Gt</Le>
+					<Ra>310</Ra>
+					<Nr>342</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Loi</Le>
+					<Ra>101</Ra>
+					<Nr>835</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>GE</Fa>
+					<Le>Sky</Le>
+					<Ra>310</Ra>
+					<Nr>338</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>GE</Fa>
+					<Le>Sky</Le>
+					<Ra>310</Ra>
+					<Nr>338</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>7c</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Bac">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Boe">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bs">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klc">Fördern</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="BIO">350</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bac" UeFa="DE">351</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bac" UeFa="DE" UeGr="Fördern">352</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN">353</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN" UeGr="Fördern">354</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sky" UeFa="GE">355</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="GEO">356</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hö" UeFa="INF">357</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="KU">358</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA" UeGr="Fördern">359</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA">360</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Boe" UeFa="MA">361</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Boe" UeFa="MA" UeGr="Fördern">362</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="MK">363</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kie" UeFa="MU">364</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klü" UeFa="PH">365</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ri" UeFa="REk">366</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="DE">256</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN">258</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="" UeFa="MA">270</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">309</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sch" UeFa="CH">311</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="PH">327</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">329</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPw">331</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">332</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">831</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>DE</Fa>
+					<Le>Bac</Le>
+					<Ra>308</Ra>
+					<Nr>351</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>DE</Fa>
+					<Le>Bac</Le>
+					<Ra>308</Ra>
+					<Nr>351</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>EN</Fa>
+					<Le>Klc</Le>
+					<Ra>308</Ra>
+					<Nr>353</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>PH</Fa>
+					<Le>Klü</Le>
+					<Ra>E22</Ra>
+					<Nr>365</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>GEO</Fa>
+					<Le>Krt</Le>
+					<Ra>E25</Ra>
+					<Nr>356</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>MA</Fa>
+					<Le>Boe</Le>
+					<Ra>308</Ra>
+					<Nr>361</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>8a</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Lk">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPs</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="SPw">762</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">369</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">370</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="CH">371</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="En" UeFa="DE">372</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="EN">373</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">374</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">375</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">376</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">377</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="De" UeFa="GE">378</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="GEO">379</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF">380</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF">381</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Brt" UeFa="KU">382</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU">383</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Brt" UeFa="LA">384</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="MA">385</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">386</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">387</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="PH">388</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="PH">389</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe">391</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Me" UeFa="REk">392</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPm">393</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="ZFU">395</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPs">763</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>DE</Fa>
+					<Le>En</Le>
+					<Ra>309</Ra>
+					<Nr>372</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>KU</Fa>
+					<Le>Brt</Le>
+					<Ra>401</Ra>
+					<Nr>382</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>EN</Fa>
+					<Le>Gö</Le>
+					<Ra>309</Ra>
+					<Nr>373</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>MA</Fa>
+					<Le>Bey</Le>
+					<Ra>309</Ra>
+					<Nr>385</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>PH</Fa>
+					<Le>Srz</Le>
+					<Ra>E22</Ra>
+					<Nr>389</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>GE</Fa>
+					<Le>De</Le>
+					<Ra>309</Ra>
+					<Nr>378</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>GE</Fa>
+					<Le>De</Le>
+					<Ra>309</Ra>
+					<Nr>378</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>8b</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Tu">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPs</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="SPw">762</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">369</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">374</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">375</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">376</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">377</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF">380</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF">381</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU">383</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">386</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="PH">388</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="REe">390</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe">391</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPm">393</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">396</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="CH">397</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="De" UeFa="DE">398</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müo" UeFa="EN">399</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="De" UeFa="GE">400</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hep" UeFa="GEO">401</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU">402</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">403</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hö" UeFa="MA">404</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">405</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="PH">406</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Maw" UeFa="REk">407</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müo" UeFa="ZFU">408</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPs">763</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Tu" UeFa="DE" UeGr="DaZ">841</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>MA</Fa>
+					<Le>Hö</Le>
+					<Ra>302</Ra>
+					<Nr>404</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>MA</Fa>
+					<Le>Hö</Le>
+					<Ra>302</Ra>
+					<Nr>404</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>EN</Fa>
+					<Le>Müo</Le>
+					<Ra>302</Ra>
+					<Nr>399</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>BIO</Fa>
+					<Le>Sma</Le>
+					<Ra>E04</Ra>
+					<Nr>396</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>DE</Fa>
+					<Le>De</Le>
+					<Ra>302</Ra>
+					<Nr>398</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>PH</Fa>
+					<Le>Srz</Le>
+					<Ra>E22</Ra>
+					<Nr>406</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>8c</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Tu">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPs</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="SPw">762</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">369</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">374</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">375</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">376</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">377</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF">380</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF">381</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU">383</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">386</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="PH">388</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="REe">390</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPm">393</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">409</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="CH">410</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="De" UeFa="DE">411</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="EN">412</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GE">413</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GEO">414</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU">415</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA">416</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hö" UeFa="MA">417</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">418</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="PH">419</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hei" UeFa="REk">420</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="ZFU">421</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPs">763</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Tu" UeFa="DE" UeGr="DaZ">841</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>DE</Fa>
+					<Le>De</Le>
+					<Ra>218</Ra>
+					<Nr>411</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa FaAe="FaGeaendert">GEO</Fa>
+					<Le LeAe="LeGeaendert">Klr</Le>
+					<Ra RaAe="RaGeaendert">218</Ra>
+					<Nr>414</Nr>
+					<If>statt Fr (09.08.) St.7; DE Frau Dehnert fällt aus</If>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>BIO</Fa>
+					<Le>Sma</Le>
+					<Ra>E04</Ra>
+					<Nr>409</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>LA</Fa>
+					<Le>Bs</Le>
+					<Ra>218</Ra>
+					<Nr>416</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>MA</Fa>
+					<Le>Hö</Le>
+					<Ra>218</Ra>
+					<Nr>417</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>KU</Fa>
+					<Le>Sob</Le>
+					<Ra>E09</Ra>
+					<Nr>415</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>PH</Fa>
+					<Le>Srz</Le>
+					<Ra>E22</Ra>
+					<Nr>419</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>9a</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Tu">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="BIO">422</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">423</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="CH">424</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="CH">425</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kri" UeFa="DE">426</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müo" UeFa="EN">427</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">428</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">429</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">430</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">431</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="GE">432</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="GEO">433</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GRW">434</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="INF">435</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="INF">436</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="KU">437</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gr" UeFa="KüPDS">438</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jk" UeFa="KüPDS">439</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüPME">440</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüPME">441</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA">442</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="MA">443</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hei" UeFa="MU">444</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="PH">445</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">447</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hei" UeFa="REk">448</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPw">449</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">450</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="ZFU">451</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Tu" UeFa="DE" UeGr="DaZ">839</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>REe</Fa>
+					<Le>Oe</Le>
+					<Ra>201</Ra>
+					<Nr>447</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>REk</Fa>
+					<Le>Hei</Le>
+					<Ra>217</Ra>
+					<Nr>448</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>REe</Fa>
+					<Le>Oe</Le>
+					<Ra>201</Ra>
+					<Nr>447</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>REk</Fa>
+					<Le>Hei</Le>
+					<Ra>217</Ra>
+					<Nr>448</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>MA</Fa>
+					<Le>Bey</Le>
+					<Ra>217</Ra>
+					<Nr>443</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>BIO</Fa>
+					<Le>Bu</Le>
+					<Ra>E01</Ra>
+					<Nr>422</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>CH</Fa>
+					<Le>La</Le>
+					<Ra>E33</Ra>
+					<Nr>424</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>CH</Fa>
+					<Le>La</Le>
+					<Ra>E33</Ra>
+					<Nr>424</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>9b</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Slz">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">423</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="CH">425</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">428</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">429</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">430</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">431</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="INF">435</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="INF">436</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gr" UeFa="KüPDS">438</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jk" UeFa="KüPDS">439</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüPME">440</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüPME">441</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="REe">446</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">447</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPw">449</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">450</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="BIO">452</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Heu" UeFa="CH">453</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müa" UeFa="DE">454</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Dr" UeFa="EN">455</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hep" UeFa="GE">456</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="GEO">457</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GRW">458</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="KU">459</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Brt" UeFa="LA">460</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="MA">461</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU">462</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="PH">463</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ri" UeFa="REk">464</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müa" UeFa="ZFU">465</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slz" UeFa="DE" UeGr="DaZ">838</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>REe</Fa>
+					<Le>Her</Le>
+					<Ra>119</Ra>
+					<Nr>446</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>REe</Fa>
+					<Le>Oe</Le>
+					<Ra>201</Ra>
+					<Nr>447</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>REk</Fa>
+					<Le>Ri</Le>
+					<Ra>209</Ra>
+					<Nr>464</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>REe</Fa>
+					<Le>Her</Le>
+					<Ra>119</Ra>
+					<Nr>446</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>REe</Fa>
+					<Le>Oe</Le>
+					<Ra>201</Ra>
+					<Nr>447</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>REk</Fa>
+					<Le>Ri</Le>
+					<Ra>209</Ra>
+					<Nr>464</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>MA</Fa>
+					<Le>Bo</Le>
+					<Ra>209</Ra>
+					<Nr>461</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>LA</Fa>
+					<Le>Brt</Le>
+					<Ra>209</Ra>
+					<Nr>460</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Slz</Le>
+					<Ra>320</Ra>
+					<Nr>838</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>LA</Fa>
+					<Le>Brt</Le>
+					<Ra>209</Ra>
+					<Nr>460</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Slz</Le>
+					<Ra>320</Ra>
+					<Nr>838</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>DE</Fa>
+					<Le>Müa</Le>
+					<Ra>209</Ra>
+					<Nr>454</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>BIO</Fa>
+					<Le>Bu</Le>
+					<Ra>E01</Ra>
+					<Nr>452</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>9c</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Jur">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Klü" UeFa="PH">477</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="SPm">30</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Maw" UeFa="REk">478</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Srz" UeFa="BIO">423</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="CH">425</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">428</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">429</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR">430</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">431</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="INF">435</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="INF">436</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gr" UeFa="KüPDS">438</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jk" UeFa="KüPDS">439</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüPME">440</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüPME">441</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="REe">446</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Heu" UeFa="BIO">466</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Heu" UeFa="CH">467</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="DE">468</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mb" UeFa="EN">469</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hep" UeFa="GE">470</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="GEO">471</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GRW">472</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="KU">473</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA">474</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hö" UeFa="MA">475</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slf" UeFa="MU">476</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPw">481</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Heu" UeFa="ZFU">479</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>REe</Fa>
+					<Le>Her</Le>
+					<Ra>119</Ra>
+					<Nr>446</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>REk</Fa>
+					<Le>Maw</Le>
+					<Ra>203</Ra>
+					<Nr>478</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>REe</Fa>
+					<Le>Her</Le>
+					<Ra>119</Ra>
+					<Nr>446</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>REk</Fa>
+					<Le>Maw</Le>
+					<Ra>203</Ra>
+					<Nr>478</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>BIO</Fa>
+					<Le>Heu</Le>
+					<Ra>E01</Ra>
+					<Nr>466</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>EN</Fa>
+					<Le>Mb</Le>
+					<Ra>203</Ra>
+					<Nr>469</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>GE</Fa>
+					<Le>Hep</Le>
+					<Ra>203</Ra>
+					<Nr>470</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>GE</Fa>
+					<Le>Hep</Le>
+					<Ra>203</Ra>
+					<Nr>470</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>GRW</Fa>
+					<Le>Klr</Le>
+					<Ra>203</Ra>
+					<Nr>472</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>8</St>
+					<Beginn>14:30</Beginn>
+					<Ende>15:15</Ende>
+					<Fa>GRW</Fa>
+					<Le>Klr</Le>
+					<Ra>203</Ra>
+					<Nr>472</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>10a</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Jur">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">1</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="CH">2</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="CH">3</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bu" UeFa="DE">4</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="EN">5</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="FR">6</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">7</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">8</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="FR">9</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="GE">10</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="GEO">11</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="GRW">12</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="INF">13</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="INF">14</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KU">15</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Go" UeFa="KüP10">16</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Go" UeFa="KüP10">17</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüP10">18</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüP10">19</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hep" UeFa="LA">20</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="MA">21</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slf" UeFa="MU">22</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="PH">23</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="PH">24</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slz" UeFa="PO">25</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="REe">27</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Me" UeFa="REk">28</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="SPm">30</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="ZFU">31</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPw">481</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>CH</Fa>
+					<Le>Mn</Le>
+					<Ra>E35</Ra>
+					<Nr>2</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>FR</Fa>
+					<Le>Man</Le>
+					<Ra>311</Ra>
+					<Nr>7</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>FR</Fa>
+					<Le>Pk</Le>
+					<Ra>304</Ra>
+					<Nr>9</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>INF</Fa>
+					<Le>Sku</Le>
+					<Ra>E28</Ra>
+					<Nr>13</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Go</Le>
+					<Ra/>
+					<Nr>16</Nr>
+					<If>Alle Schüler des Künsterlischen Profils treffen sich in der Aula</If>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Kly</Le>
+					<Ra/>
+					<Nr>18</Nr>
+					<If>Alle Schüler des Künsterlischen Profils treffen sich in der Aula</If>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>CH</Fa>
+					<Le>Mn</Le>
+					<Ra>E35</Ra>
+					<Nr>2</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>FR</Fa>
+					<Le>Man</Le>
+					<Ra>311</Ra>
+					<Nr>7</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>FR</Fa>
+					<Le>Pk</Le>
+					<Ra>304</Ra>
+					<Nr>9</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>INF</Fa>
+					<Le>Sku</Le>
+					<Ra>E28</Ra>
+					<Nr>13</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Go</Le>
+					<Ra>101</Ra>
+					<Nr>16</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Kly</Le>
+					<Ra>105</Ra>
+					<Nr>18</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>ZFU</Fa>
+					<Le>Std Kly</Le>
+					<Ra>201</Ra>
+					<Nr>31</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>GE</Fa>
+					<Le>Kly</Le>
+					<Ra>201</Ra>
+					<Nr>10</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>MA</Fa>
+					<Le>Bo</Le>
+					<Ra>201</Ra>
+					<Nr>21</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>DE</Fa>
+					<Le>Bu</Le>
+					<Ra>201</Ra>
+					<Nr>4</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>LA</Fa>
+					<Le>Hep</Le>
+					<Ra>209</Ra>
+					<Nr>20</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>PO</Fa>
+					<Le>Slz</Le>
+					<Ra>201</Ra>
+					<Nr>25</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>10AU</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse/>
+			<Unterricht/>
+			<Pl/>
+		</Kl>
+		<Kl>
+			<Kurz>10b</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Tu">DaZ</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="CH">2</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="FR">6</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">7</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">8</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="FR">9</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="INF">13</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="INF">14</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Go" UeFa="KüP10">16</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Go" UeFa="KüP10">17</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüP10">18</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüP10">19</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="PH">24</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slz" UeFa="PO">25</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe">26</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">32</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="CH">33</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sk" UeFa="DE">34</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN">35</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Maw" UeFa="GE">36</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="GEO">37</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="GRW">38</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sk" UeFa="KU">39</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bs" UeFa="LA">40</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="MA">41</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slf" UeFa="MU">42</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="PH">43</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Maw" UeFa="REk">45</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">46</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPw">47</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="ZFU">48</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Tu" UeFa="DE" UeGr="DaZ">840</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>CH</Fa>
+					<Le>Mn</Le>
+					<Ra>E35</Ra>
+					<Nr>2</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>FR</Fa>
+					<Le>Man</Le>
+					<Ra>311</Ra>
+					<Nr>7</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>FR</Fa>
+					<Le>Pk</Le>
+					<Ra>304</Ra>
+					<Nr>9</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>INF</Fa>
+					<Le>Sku</Le>
+					<Ra>E28</Ra>
+					<Nr>13</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Go</Le>
+					<Ra/>
+					<Nr>16</Nr>
+					<If>Alle Schüler des Künsterlischen Profils treffen sich in der Aula</If>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Kly</Le>
+					<Ra/>
+					<Nr>18</Nr>
+					<If>Alle Schüler des Künsterlischen Profils treffen sich in der Aula</If>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>CH</Fa>
+					<Le>Mn</Le>
+					<Ra>E35</Ra>
+					<Nr>2</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>FR</Fa>
+					<Le>Man</Le>
+					<Ra>311</Ra>
+					<Nr>7</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>FR</Fa>
+					<Le>Pk</Le>
+					<Ra>304</Ra>
+					<Nr>9</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>INF</Fa>
+					<Le>Sku</Le>
+					<Ra>E28</Ra>
+					<Nr>13</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Go</Le>
+					<Ra>101</Ra>
+					<Nr>16</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Kly</Le>
+					<Ra>105</Ra>
+					<Nr>18</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>GE</Fa>
+					<Le>Maw</Le>
+					<Ra>311</Ra>
+					<Nr>36</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>GE</Fa>
+					<Le>Maw</Le>
+					<Ra>311</Ra>
+					<Nr>36</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>EN</Fa>
+					<Le>Klc</Le>
+					<Ra>311</Ra>
+					<Nr>35</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>EN</Fa>
+					<Le>Klc</Le>
+					<Ra>311</Ra>
+					<Nr>35</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>PO</Fa>
+					<Le>Slz</Le>
+					<Ra>201</Ra>
+					<Nr>25</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>LA</Fa>
+					<Le>Bs</Le>
+					<Ra>311</Ra>
+					<Nr>40</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Tu</Le>
+					<Ra>218</Ra>
+					<Nr>840</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>8</St>
+					<Beginn>14:30</Beginn>
+					<Ende>15:15</Ende>
+					<Fa>DaZ</Fa>
+					<Ku2>DaZ</Ku2>
+					<Le>Tu</Le>
+					<Ra>218</Ra>
+					<Nr>840</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>10c</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Kla">SPm</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">SPw</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="CH">2</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="FR">6</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">7</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="FR">8</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="FR">9</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="INF">13</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="INF">14</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Go" UeFa="KüP10">16</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Go" UeFa="KüP10">17</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüP10">18</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KüP10">19</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="PH">24</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slz" UeFa="PO">25</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="REe">27</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="SPm">46</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="SPw">47</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO">49</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="CH">50</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bac" UeFa="DE">51</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN">52</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="En" UeFa="GE">53</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="GEO">54</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="GRW">55</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU">56</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Brt" UeFa="LA">57</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hö" UeFa="MA">58</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slf" UeFa="MU">59</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="PH">60</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="REk">61</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="ZFU">62</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>CH</Fa>
+					<Le>Mn</Le>
+					<Ra>E35</Ra>
+					<Nr>2</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>FR</Fa>
+					<Le>Man</Le>
+					<Ra>311</Ra>
+					<Nr>7</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>FR</Fa>
+					<Le>Pk</Le>
+					<Ra>304</Ra>
+					<Nr>9</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>INF</Fa>
+					<Le>Sku</Le>
+					<Ra>E28</Ra>
+					<Nr>13</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Go</Le>
+					<Ra/>
+					<Nr>16</Nr>
+					<If>Alle Schüler des Künsterlischen Profils treffen sich in der Aula</If>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Kly</Le>
+					<Ra/>
+					<Nr>18</Nr>
+					<If>Alle Schüler des Künsterlischen Profils treffen sich in der Aula</If>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>CH</Fa>
+					<Le>Mn</Le>
+					<Ra>E35</Ra>
+					<Nr>2</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>FR</Fa>
+					<Le>Man</Le>
+					<Ra>311</Ra>
+					<Nr>7</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>FR</Fa>
+					<Le>Pk</Le>
+					<Ra>304</Ra>
+					<Nr>9</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>INF</Fa>
+					<Le>Sku</Le>
+					<Ra>E28</Ra>
+					<Nr>13</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Go</Le>
+					<Ra>101</Ra>
+					<Nr>16</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>KüP10</Fa>
+					<Le>Kly</Le>
+					<Ra>105</Ra>
+					<Nr>18</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>GE</Fa>
+					<Le>En</Le>
+					<Ra>304</Ra>
+					<Nr>53</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>PH</Fa>
+					<Le>Std</Le>
+					<Ra>E24</Ra>
+					<Nr>60</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>DE</Fa>
+					<Le>Bac</Le>
+					<Ra>304</Ra>
+					<Nr>51</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>DE</Fa>
+					<Le>Bac</Le>
+					<Ra>304</Ra>
+					<Nr>51</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>PO</Fa>
+					<Le>Slz</Le>
+					<Ra>201</Ra>
+					<Nr>25</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>LA</Fa>
+					<Le>Brt</Le>
+					<Ra>304</Ra>
+					<Nr>57</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>11</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Rud">ast1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Rud">ast2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mn">BIO1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sma">bio1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sma">bio2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mn">bio3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mn">bio4</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Heu">ch1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="La">CH1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="La">ch2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Heu">ch3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Le">de1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Müa">DE1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Man">DE2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Slf">de2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="De">DE3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sku">de3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="En">de4</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Dr">EN1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Müo">en1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gö">en2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mb">EN2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="To">en21</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klc">en3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Rd">fr1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Rd">FR1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Shc">ge1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Shc">GE1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klr">ge2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="En">ge3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kly">ge4</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klr">ge5</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">geo1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Hep">geo2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sta">geo3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Std">grw1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Std">grw2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Krt">grw3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Krt">grw4</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Rud">inf1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Rud">inf2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sk">KU1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">ku1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Le">ku2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kly">ku3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Hep">la1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="">la21</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ah">MA1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bey">ma1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bo">ma2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Boe">MA2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Hö">MA3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Fk">mu1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Slf">MU1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mi">muens1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Boe">ph1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klü">PH1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bey">ph2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Boe">ph3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Pa">phi1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Maw">phi2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Slz">pol1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Slz">pol2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Blt">ree1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Blt">ree2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gö">rek1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ri">rek2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bac">rek3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">spo1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">spo2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">spo3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">spo4</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">spo5</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Slz" UeFa="POL" UeGr="pol2">760</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Boe" UeFa="PH" UeGr="ph1">759</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="BIO" UeGr="BIO1">688</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="CH" UeGr="CH1">689</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Dr" UeFa="EN" UeGr="EN1">690</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mb" UeFa="EN" UeGr="EN2">691</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR" UeGr="FR1">692</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Shc" UeFa="GE" UeGr="GE1">693</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sk" UeFa="KU" UeGr="KU1">694</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slf" UeFa="MU" UeGr="MU1">695</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klü" UeFa="PH" UeGr="PH1">696</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müa" UeFa="DE" UeGr="DE1">697</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="DE" UeGr="DE2">698</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="De" UeFa="DE" UeGr="DE3">699</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ah" UeFa="MA" UeGr="MA1">700</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Boe" UeFa="MA" UeGr="MA2">701</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hö" UeFa="MA" UeGr="MA3">702</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="DE" UeGr="de1">703</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slf" UeFa="DE" UeGr="de2">704</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sku" UeFa="DE" UeGr="de3">705</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="En" UeFa="DE" UeGr="de4">706</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="MA" UeGr="ma1">707</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="MA" UeGr="ma2">708</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="BIO" UeGr="bio3">709</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mi" UeFa="MuEns" UeGr="muens1">710</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ri" UeFa="REk" UeGr="rek2">711</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="spo1">712</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="spo2">713</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="GEO" UeGr="geo1">714</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="GRW" UeGr="grw4">715</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe" UeGr="ree2">716</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="spo3">717</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="spo4">718</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="BIO" UeGr="bio4">719</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Heu" UeFa="CH" UeGr="ch1">720</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="GE" UeGr="ge4">721</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF" UeGr="inf2">722</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="spo5">723</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO" UeGr="bio2">724</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GE" UeGr="ge2">725</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="GRW" UeGr="grw3">726</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU" UeGr="ku1">727</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pa" UeFa="PHI" UeGr="phi1">728</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Maw" UeFa="PHI" UeGr="phi2">729</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN2" UeGr="en21">730</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Shc" UeFa="GE" UeGr="ge1">731</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="GRW" UeGr="grw1">732</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="KU" UeGr="ku3">733</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="PH" UeGr="ph2">734</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sma" UeFa="BIO" UeGr="bio1">735</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="GRW" UeGr="grw2">736</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF" UeGr="inf1">737</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Le" UeFa="KU" UeGr="ku2">738</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU" UeGr="mu1">739</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hep" UeFa="GEO" UeGr="geo2">740</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="GEO" UeGr="geo3">741</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Boe" UeFa="PH" UeGr="ph3">742</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe" UeGr="ree1">743</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="REk" UeGr="rek1">744</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="AST" UeGr="ast2">745</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="CH" UeGr="ch2">746</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GE" UeGr="ge5">747</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hep" UeFa="LA" UeGr="la1">748</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="" UeFa="LA2" UeGr="la21">749</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bac" UeFa="REk" UeGr="rek3">750</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="AST" UeGr="ast1">751</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gö" UeFa="EN" UeGr="en2">752</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rd" UeFa="FR" UeGr="fr1">753</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="En" UeFa="GE" UeGr="ge3">754</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slz" UeFa="POL" UeGr="pol1">755</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Heu" UeFa="CH" UeGr="ch3">756</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müo" UeFa="EN" UeGr="en1">757</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN" UeGr="en3">758</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>geo2</Fa>
+					<Ku2>geo2</Ku2>
+					<Le>Hep</Le>
+					<Ra>E25</Ra>
+					<Nr>740</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>geo3</Fa>
+					<Ku2>geo3</Ku2>
+					<Le>Sta</Le>
+					<Ra>117</Ra>
+					<Nr>741</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>ph3</Fa>
+					<Ku2>ph3</Ku2>
+					<Le>Boe</Le>
+					<Ra>E24</Ra>
+					<Nr>742</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>ree1</Fa>
+					<Ku2>ree1</Ku2>
+					<Le>Blt</Le>
+					<Ra>219</Ra>
+					<Nr>743</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>rek1</Fa>
+					<Ku2>rek1</Ku2>
+					<Le>Gö</Le>
+					<Ra>118</Ra>
+					<Nr>744</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>geo2</Fa>
+					<Ku2>geo2</Ku2>
+					<Le>Hep</Le>
+					<Ra>E25</Ra>
+					<Nr>740</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>geo3</Fa>
+					<Ku2>geo3</Ku2>
+					<Le>Sta</Le>
+					<Ra>117</Ra>
+					<Nr>741</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>ph3</Fa>
+					<Ku2>ph3</Ku2>
+					<Le>Boe</Le>
+					<Ra>E24</Ra>
+					<Nr>742</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>ree1</Fa>
+					<Ku2>ree1</Ku2>
+					<Le>Blt</Le>
+					<Ra>219</Ra>
+					<Nr>743</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>rek1</Fa>
+					<Ku2>rek1</Ku2>
+					<Le>Gö</Le>
+					<Ra>118</Ra>
+					<Nr>744</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>DE2</Fa>
+					<Ku2>DE2</Ku2>
+					<Le>Man</Le>
+					<Ra>317</Ra>
+					<Nr>698</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>MA1</Fa>
+					<Ku2>MA1</Ku2>
+					<Le>Ah</Le>
+					<Ra>219</Ra>
+					<Nr>700</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>MA2</Fa>
+					<Ku2>MA2</Ku2>
+					<Le>Boe</Le>
+					<Ra>117</Ra>
+					<Nr>701</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>MA3</Fa>
+					<Ku2>MA3</Ku2>
+					<Le>Hö</Le>
+					<Ra>118</Ra>
+					<Nr>702</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa FaAe="FaGeaendert">---</Fa>
+					<Ku2>DE3</Ku2>
+					<Le LeAe="LeGeaendert"/>
+					<Ra RaAe="RaGeaendert"/>
+					<Nr>699</Nr>
+					<If>DE3 Frau Dehnert fällt aus</If>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa FaAe="FaGeaendert">---</Fa>
+					<Ku2>DE1</Ku2>
+					<Le LeAe="LeGeaendert"/>
+					<Ra RaAe="RaGeaendert"/>
+					<Nr>697</Nr>
+					<If>DE1 Frau Müller fällt aus</If>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>DE1</Fa>
+					<Ku2>DE1</Ku2>
+					<Le>Müa</Le>
+					<Ra>316</Ra>
+					<Nr>697</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>DE2</Fa>
+					<Ku2>DE2</Ku2>
+					<Le>Man</Le>
+					<Ra>317</Ra>
+					<Nr>698</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>DE3</Fa>
+					<Ku2>DE3</Ku2>
+					<Le>De</Le>
+					<Ra>119</Ra>
+					<Nr>699</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>MA1</Fa>
+					<Ku2>MA1</Ku2>
+					<Le>Ah</Le>
+					<Ra>219</Ra>
+					<Nr>700</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>MA2</Fa>
+					<Ku2>MA2</Ku2>
+					<Le>Boe</Le>
+					<Ra>117</Ra>
+					<Nr>701</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>MA3</Fa>
+					<Ku2>MA3</Ku2>
+					<Le>Hö</Le>
+					<Ra>118</Ra>
+					<Nr>702</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>bio4</Fa>
+					<Ku2>bio4</Ku2>
+					<Le>Mn</Le>
+					<Ra>E04</Ra>
+					<Nr>719</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>ch1</Fa>
+					<Ku2>ch1</Ku2>
+					<Le>Heu</Le>
+					<Ra>E35</Ra>
+					<Nr>720</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>ge4</Fa>
+					<Ku2>ge4</Ku2>
+					<Le>Kly</Le>
+					<Ra>118</Ra>
+					<Nr>721</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>inf2</Fa>
+					<Ku2>inf2</Ku2>
+					<Le>Rud</Le>
+					<Ra>E28</Ra>
+					<Nr>722</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>spo5</Fa>
+					<Ku2>spo5</Ku2>
+					<Le>Jur</Le>
+					<Ra>Th1</Ra>
+					<Nr>723</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>bio4</Fa>
+					<Ku2>bio4</Ku2>
+					<Le>Mn</Le>
+					<Ra>E04</Ra>
+					<Nr>719</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>ch1</Fa>
+					<Ku2>ch1</Ku2>
+					<Le>Heu</Le>
+					<Ra>E35</Ra>
+					<Nr>720</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>ge4</Fa>
+					<Ku2>ge4</Ku2>
+					<Le>Kly</Le>
+					<Ra>118</Ra>
+					<Nr>721</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>inf2</Fa>
+					<Ku2>inf2</Ku2>
+					<Le>Rud</Le>
+					<Ra>E28</Ra>
+					<Nr>722</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>spo5</Fa>
+					<Ku2>spo5</Ku2>
+					<Le>Jur</Le>
+					<Ra>Th1</Ra>
+					<Nr>723</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>geo1</Fa>
+					<Ku2>geo1</Ku2>
+					<Le>Kla</Le>
+					<Ra>E25</Ra>
+					<Nr>714</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>grw4</Fa>
+					<Ku2>grw4</Ku2>
+					<Le>Krt</Le>
+					<Ra>301</Ra>
+					<Nr>715</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>ree2</Fa>
+					<Ku2>ree2</Ku2>
+					<Le>Blt</Le>
+					<Ra>219</Ra>
+					<Nr>716</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>spo3</Fa>
+					<Ku2>spo3</Ku2>
+					<Le>Jur</Le>
+					<Ra>Th1</Ra>
+					<Nr>717</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>spo4</Fa>
+					<Ku2>spo4</Ku2>
+					<Le>Lk</Le>
+					<Ra>Th2</Ra>
+					<Nr>718</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>8</St>
+					<Beginn>14:30</Beginn>
+					<Ende>15:15</Ende>
+					<Fa>geo1</Fa>
+					<Ku2>geo1</Ku2>
+					<Le>Kla</Le>
+					<Ra>E25</Ra>
+					<Nr>714</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>8</St>
+					<Beginn>14:30</Beginn>
+					<Ende>15:15</Ende>
+					<Fa>grw4</Fa>
+					<Ku2>grw4</Ku2>
+					<Le>Krt</Le>
+					<Ra>301</Ra>
+					<Nr>715</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>8</St>
+					<Beginn>14:30</Beginn>
+					<Ende>15:15</Ende>
+					<Fa>ree2</Fa>
+					<Ku2>ree2</Ku2>
+					<Le>Blt</Le>
+					<Ra>219</Ra>
+					<Nr>716</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>8</St>
+					<Beginn>14:30</Beginn>
+					<Ende>15:15</Ende>
+					<Fa>spo3</Fa>
+					<Ku2>spo3</Ku2>
+					<Le>Jur</Le>
+					<Ra>Th1</Ra>
+					<Nr>717</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>8</St>
+					<Beginn>14:30</Beginn>
+					<Ende>15:15</Ende>
+					<Fa>spo4</Fa>
+					<Ku2>spo4</Ku2>
+					<Le>Lk</Le>
+					<Ra>Th2</Ra>
+					<Nr>718</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>12</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse>
+				<Ku>
+					<KKz KLe="Rud">ast1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Rud">ast2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Hk">BIO1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mn">bio1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mn">bio2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mn">bio3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Heu">ch1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Heu">CH1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="La">ch2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mn">ch3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Hau">de1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Me">DE1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Man">de2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Müo">DE2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Pk">DE3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klc">EN1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mb">en1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Dr">en2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Müo">en21</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Müo">en22</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="To">en3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gw">fr1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Pk">FR1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Blt">ge1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Blt">GE1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klr">ge2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klr">ge3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kly">ge4</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sta">geo1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klr">geo2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Std">grw1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Krt">grw2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Krt">grw3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mrt">inf1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Rud">inf2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mrt">inf3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sk">KU1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Sob">ku1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kri">ku2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Hau">la1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="">la21</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bo">ma1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Klü">MA1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ah">MA2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Her">ma2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Gw">ma3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Fk">mu1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Mi">MU1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kie">muens1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Boe">PH1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Std">ph1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bey">ph2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Maw">phi1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Pa">phi2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Slz">pol1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Oe">ree1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Blt">ree2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Bac">rek1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Hei">REK1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Ri">rek2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Pa">rek3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">spo1</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">spo2</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Kla">spo3</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Lk">spo4</KKz>
+				</Ku>
+				<Ku>
+					<KKz KLe="Jur">spo5</KKz>
+				</Ku>
+			</Kurse>
+			<Unterricht>
+				<Ue>
+					<UeNr UeLe="Kri" UeFa="KU" UeGr="ku2">830</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pa" UeFa="PHI" UeGr="phi2">820</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="BIO" UeGr="bio3">818</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bey" UeFa="PH" UeGr="ph2">819</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="INF" UeGr="inf3">785</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bac" UeFa="REk" UeGr="rek1">786</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ri" UeFa="REk" UeGr="rek2">817</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="PH" UeGr="ph1">816</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mb" UeFa="EN" UeGr="en1">789</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="spo1">787</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="spo2">788</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Maw" UeFa="PHI" UeGr="phi1">826</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kly" UeFa="GE" UeGr="ge4">823</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="BIO" UeGr="bio2">814</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="GE" UeGr="ge1">809</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Fk" UeFa="MU" UeGr="mu1">806</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="AST" UeGr="ast2">794</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Heu" UeFa="CH" UeGr="ch1">784</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mi" UeFa="MU" UeGr="MU1">781</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Her" UeFa="MA" UeGr="ma2">773</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="INF" UeGr="inf2">824</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Oe" UeFa="REe" UeGr="ree1">797</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Man" UeFa="DE" UeGr="de2">771</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klü" UeFa="MA" UeGr="MA1">768</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Me" UeFa="DE" UeGr="DE1">765</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="" UeFa="LA2" UeGr="la21">813</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="LA" UeGr="la1">812</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="La" UeFa="CH" UeGr="ch2">808</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="DE" UeGr="DE3">767</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Ah" UeFa="MA" UeGr="MA2">769</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GE" UeGr="ge3">828</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Heu" UeFa="CH" UeGr="CH1">776</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hk" UeFa="BIO" UeGr="BIO1">775</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müo" UeFa="DE" UeGr="DE2">766</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sob" UeFa="KU" UeGr="ku1">829</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GE" UeGr="ge2">805</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Jur" UeFa="SPO" UeGr="spo5">798</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="BIO" UeGr="bio1">795</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="REe" UeGr="ree2">821</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="GRW" UeGr="grw3">811</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pa" UeFa="REk" UeGr="rek3">807</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hei" UeFa="REk" UeGr="REK1">783</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Hau" UeFa="DE" UeGr="de1">770</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müo" UeFa="EN2" UeGr="en22">822</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mrt" UeFa="INF" UeGr="inf1">802</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Std" UeFa="GRW" UeGr="grw1">801</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Rud" UeFa="AST" UeGr="ast1">799</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="To" UeFa="EN" UeGr="en3">790</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gw" UeFa="FR" UeGr="fr1">791</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kie" UeFa="MuEns" UeGr="muens1">825</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sta" UeFa="GEO" UeGr="geo1">800</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Blt" UeFa="GE" UeGr="GE1">779</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Bo" UeFa="MA" UeGr="ma1">772</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Dr" UeFa="EN" UeGr="en2">827</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Sk" UeFa="KU" UeGr="KU1">780</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Pk" UeFa="FR" UeGr="FR1">778</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Gw" UeFa="MA" UeGr="ma3">774</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klr" UeFa="GEO" UeGr="geo2">810</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Müo" UeFa="EN2" UeGr="en21">804</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Slz" UeFa="POL" UeGr="pol1">796</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Boe" UeFa="PH" UeGr="PH1">782</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Klc" UeFa="EN" UeGr="EN1">777</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Krt" UeFa="GRW" UeGr="grw2">815</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Mn" UeFa="CH" UeGr="ch3">803</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Lk" UeFa="SPO" UeGr="spo4">793</UeNr>
+				</Ue>
+				<Ue>
+					<UeNr UeLe="Kla" UeFa="SPO" UeGr="spo3">792</UeNr>
+				</Ue>
+			</Unterricht>
+			<Pl>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>en1</Fa>
+					<Ku2>en1</Ku2>
+					<Le>Mb</Le>
+					<Ra>316</Ra>
+					<Nr>789</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>en3</Fa>
+					<Ku2>en3</Ku2>
+					<Le>To</Le>
+					<Ra>301</Ra>
+					<Nr>790</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>fr1</Fa>
+					<Ku2>fr1</Ku2>
+					<Le>Gw</Le>
+					<Ra>317</Ra>
+					<Nr>791</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>spo3</Fa>
+					<Ku2>spo3</Ku2>
+					<Le>Kla</Le>
+					<Ra>Th2</Ra>
+					<Nr>792</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>1</St>
+					<Beginn>07:45</Beginn>
+					<Ende>08:30</Ende>
+					<Fa>spo4</Fa>
+					<Ku2>spo4</Ku2>
+					<Le>Lk</Le>
+					<Ra>Th1</Ra>
+					<Nr>793</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>en1</Fa>
+					<Ku2>en1</Ku2>
+					<Le>Mb</Le>
+					<Ra>316</Ra>
+					<Nr>789</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>en3</Fa>
+					<Ku2>en3</Ku2>
+					<Le>To</Le>
+					<Ra>301</Ra>
+					<Nr>790</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>fr1</Fa>
+					<Ku2>fr1</Ku2>
+					<Le>Gw</Le>
+					<Ra>317</Ra>
+					<Nr>791</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>spo3</Fa>
+					<Ku2>spo3</Ku2>
+					<Le>Kla</Le>
+					<Ra>Th2</Ra>
+					<Nr>792</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>2</St>
+					<Beginn>08:35</Beginn>
+					<Ende>09:20</Ende>
+					<Fa>spo4</Fa>
+					<Ku2>spo4</Ku2>
+					<Le>Lk</Le>
+					<Ra>Th1</Ra>
+					<Nr>793</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>ch2</Fa>
+					<Ku2>ch2</Ku2>
+					<Le>La</Le>
+					<Ra>E35</Ra>
+					<Nr>808</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>ge1</Fa>
+					<Ku2>ge1</Ku2>
+					<Le>Blt</Le>
+					<Ra>319</Ra>
+					<Nr>809</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>geo2</Fa>
+					<Ku2>geo2</Ku2>
+					<Le>Klr</Le>
+					<Ra>E25</Ra>
+					<Nr>810</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>grw3</Fa>
+					<Ku2>grw3</Ku2>
+					<Le>Krt</Le>
+					<Ra>301</Ra>
+					<Nr>811</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>la1</Fa>
+					<Ku2>la1</Ku2>
+					<Le>Hau</Le>
+					<Ra>318</Ra>
+					<Nr>812</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>3</St>
+					<Beginn>09:45</Beginn>
+					<Ende>10:30</Ende>
+					<Fa>la21</Fa>
+					<Ku2>la21</Ku2>
+					<Le/>
+					<Ra/>
+					<Nr>813</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>ch2</Fa>
+					<Ku2>ch2</Ku2>
+					<Le>La</Le>
+					<Ra>E35</Ra>
+					<Nr>808</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>ge1</Fa>
+					<Ku2>ge1</Ku2>
+					<Le>Blt</Le>
+					<Ra>319</Ra>
+					<Nr>809</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>geo2</Fa>
+					<Ku2>geo2</Ku2>
+					<Le>Klr</Le>
+					<Ra>E25</Ra>
+					<Nr>810</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>grw3</Fa>
+					<Ku2>grw3</Ku2>
+					<Le>Krt</Le>
+					<Ra>301</Ra>
+					<Nr>811</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>la1</Fa>
+					<Ku2>la1</Ku2>
+					<Le>Hau</Le>
+					<Ra>318</Ra>
+					<Nr>812</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>4</St>
+					<Beginn>10:35</Beginn>
+					<Ende>11:20</Ende>
+					<Fa>la21</Fa>
+					<Ku2>la21</Ku2>
+					<Le/>
+					<Ra/>
+					<Nr>813</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>DE1</Fa>
+					<Ku2>DE1</Ku2>
+					<Le>Me</Le>
+					<Ra>317</Ra>
+					<Nr>765</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>DE2</Fa>
+					<Ku2>DE2</Ku2>
+					<Le>Müo</Le>
+					<Ra>318</Ra>
+					<Nr>766</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>DE3</Fa>
+					<Ku2>DE3</Ku2>
+					<Le>Pk</Le>
+					<Ra>319</Ra>
+					<Nr>767</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>MA1</Fa>
+					<Ku2>MA1</Ku2>
+					<Le>Klü</Le>
+					<Ra>316</Ra>
+					<Nr>768</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>5</St>
+					<Beginn>11:30</Beginn>
+					<Ende>12:15</Ende>
+					<Fa>MA2</Fa>
+					<Ku2>MA2</Ku2>
+					<Le>Ah</Le>
+					<Ra>117</Ra>
+					<Nr>769</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>DE1</Fa>
+					<Ku2>DE1</Ku2>
+					<Le>Me</Le>
+					<Ra>317</Ra>
+					<Nr>765</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>DE2</Fa>
+					<Ku2>DE2</Ku2>
+					<Le>Müo</Le>
+					<Ra>318</Ra>
+					<Nr>766</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>DE3</Fa>
+					<Ku2>DE3</Ku2>
+					<Le>Pk</Le>
+					<Ra>319</Ra>
+					<Nr>767</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>MA1</Fa>
+					<Ku2>MA1</Ku2>
+					<Le>Klü</Le>
+					<Ra>316</Ra>
+					<Nr>768</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>6</St>
+					<Beginn>12:20</Beginn>
+					<Ende>13:05</Ende>
+					<Fa>MA2</Fa>
+					<Ku2>MA2</Ku2>
+					<Le>Ah</Le>
+					<Ra>117</Ra>
+					<Nr>769</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>BIO1</Fa>
+					<Ku2>BIO1</Ku2>
+					<Le>Hk</Le>
+					<Ra>E04</Ra>
+					<Nr>775</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>CH1</Fa>
+					<Ku2>CH1</Ku2>
+					<Le>Heu</Le>
+					<Ra>E33</Ra>
+					<Nr>776</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>EN1</Fa>
+					<Ku2>EN1</Ku2>
+					<Le>Klc</Le>
+					<Ra>316</Ra>
+					<Nr>777</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>FR1</Fa>
+					<Ku2>FR1</Ku2>
+					<Le>Pk</Le>
+					<Ra>319</Ra>
+					<Nr>778</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>MU1</Fa>
+					<Ku2>MU1</Ku2>
+					<Le>Mi</Le>
+					<Ra>103</Ra>
+					<Nr>781</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>PH1</Fa>
+					<Ku2>PH1</Ku2>
+					<Le>Boe</Le>
+					<Ra>E24</Ra>
+					<Nr>782</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>7</St>
+					<Beginn>13:45</Beginn>
+					<Ende>14:30</Ende>
+					<Fa>REK1</Fa>
+					<Ku2>REK1</Ku2>
+					<Le>Hei</Le>
+					<Ra>318</Ra>
+					<Nr>783</Nr>
+					<If/>
+				</Std>
+				<Std>
+					<St>8</St>
+					<Beginn>14:30</Beginn>
+					<Ende>15:15</Ende>
+					<Fa>pol1</Fa>
+					<Ku2>pol1</Ku2>
+					<Le>Slz</Le>
+					<Ra>318</Ra>
+					<Nr>796</Nr>
+					<If/>
+				</Std>
+			</Pl>
+		</Kl>
+		<Kl>
+			<Kurz>DAZ</Kurz>
+			<Hash/>
+			<KlStunden>
+				<KlSt ZeitVon="07:00" ZeitBis="07:45">0</KlSt>
+				<KlSt ZeitVon="07:45" ZeitBis="08:30">1</KlSt>
+				<KlSt ZeitVon="08:35" ZeitBis="09:20">2</KlSt>
+				<KlSt ZeitVon="09:45" ZeitBis="10:30">3</KlSt>
+				<KlSt ZeitVon="10:35" ZeitBis="11:20">4</KlSt>
+				<KlSt ZeitVon="11:30" ZeitBis="12:15">5</KlSt>
+				<KlSt ZeitVon="12:20" ZeitBis="13:05">6</KlSt>
+				<KlSt ZeitVon="13:45" ZeitBis="14:30">7</KlSt>
+				<KlSt ZeitVon="14:30" ZeitBis="15:15">8</KlSt>
+				<KlSt ZeitVon="15:15" ZeitBis="16:00">9</KlSt>
+				<KlSt ZeitVon="16:00" ZeitBis="16:45">10</KlSt>
+			</KlStunden>
+			<Kurse/>
+			<Unterricht/>
+			<Pl/>
+		</Kl>
+	</Klassen>
+	<ZusatzInfo>
+		<ZiZeile>Diese Woche bleibt euer Schulkiosk noch geschlossen. Treff von Interessenten für die Kiosk-AG am Freitag 9.20 Uhr am Kiosk.</ZiZeile>
+		<ZiZeile>Stufenversammliungen in der TH: 2.h 6./ 7. Kl., 3. h Kl. 8-10, 4.h Oberstufe</ZiZeile>
+	</ZusatzInfo>
+</VpMobil>
