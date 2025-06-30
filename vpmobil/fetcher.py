@@ -94,7 +94,7 @@ class Vertretungsplan():
         elif http == 401:
             raise Exceptions.InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", status_code=http)
         elif http == 404:
-            raise Exceptions.FetchingError(message=f"Datei {datei} konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer {self.schulnummer} ist nicht registriert.", status_code=http)
+            raise Exceptions.FetchingError(message=f"Datei {file} konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer {self.schulnummer} ist nicht registriert.", status_code=http)
         else:
             response.raise_for_status()
 
