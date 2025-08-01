@@ -1,9 +1,13 @@
 from datetime import datetime, date, timedelta
 import requests as WEB
+import xml.etree.ElementTree as XML
+from yarl import URL
+from dataclasses import dataclass
 
-from .exceptions import Exceptions
+from .exceptions import FetchingError, InvalidCredentialsError
 from .parser import VpDay
 
+@dataclass
 class Vertretungsplan():
     """
     Enthält die notwendigen Daten um auf einen stundenplan24.de-Vertretungsplan zuzugreifen
@@ -23,47 +27,40 @@ class Vertretungsplan():
         fetch(): Ruft die Daten eines Tages oder einer Datei ab
         fetchall(): Ruft alle Tage in einem 2 monatigem Zeitraum ab
     """
+    
+    schulnummer:        int
+    benutzername:       str
+    passwort:           str
+    serverdomain:       str = 'stundenplan24.de'
+    verzeichnis:        str = "{schulnummer}/mobil/mobdaten"
+    dateinamenschema:   str = "PlanKl%Y%m%d.xml"
+        
+    def __post_init__(self):
 
-    def __init__(self,
-                 schulnummer: int,
-                 benutzername: str,
-                 passwort: str,
-                 serverurl: str = 'stundenplan24.de',
-                 verzeichnis: str = "{schulnummer}/mobil/mobdaten",
-                 dateinamenschema: str = "PlanKl%Y%m%d.xml"):
-        """
-        #### Argumente:
-            schulnummer (int): Schulnummer des Vertretungsplans
-            benutzer (str): Benutzername des Benutzers über den zugegriffen werden soll
-            passwort (str): Passwort des Benutzers über den zugegriffen werden soll
-            serverurl (str): URL und Verzeichnispfad
-                - Muss angegeben werden, wenn der Vertretungsplan selbst gehostet wird
-            vezeichnis (str): Pfad an dem die Quelldateien gespeichert werden
-                - z.B. `"{schulnummer}/mobil/mobdaten"`. Es kann `{schulnummer}` als Platzhalter verwendet werden
-            dateinamenschema (str): Schema der Quelldateinamen
-                - z.B. `"PlanKl%Y%m%d.xml"`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
-        """
-        self.schulnummer = schulnummer
-        self.benutzername = benutzername
-        self.passwort = passwort
+        if self.serverdomain.endswith('/'):
+            self.serverdomain= self.serverdomain[:-1]
+        if self.serverdomain.startswith("http://") or self.serverdomain.startswith("https://"):
+            parts = self.serverdomain.split("://", 1)
+            self.serverdomain = parts[1] if len(parts) > 1 else parts[0]
 
-        if serverurl.endswith('/'):
-            serverurl= serverurl[:-1]
-        if serverurl.startswith("http://") or serverurl.startswith("https://"):
-            parts = serverurl.split("://", 1)
-            serverurl = parts[1] if len(parts) > 1 else parts[0]
+        if self.verzeichnis.endswith('/'):
+            self.verzeichnis = self.verzeichnis[:-1]
+        if self.verzeichnis.startswith("/"):
+            self.verzeichnis = self.verzeichnis[1:]
 
-        if verzeichnis.endswith('/'):
-            serverurl = serverurl[:-1]
-        if verzeichnis.startswith("/"):
-            serverurl = serverurl[1:]
+    @property
+    def webpath(self) -> URL:
+        return URL.build(
+            user=self.benutzername,
+            password=self.passwort,
+            host=self.serverdomain,
+            path=self.verzeichnis.format(schulnummer=self.schulnummer)
+        )
 
-        self._webpath = f"{benutzername}:{passwort}@{serverurl}/{verzeichnis.format(schulnummer=schulnummer)}"
-        self._dateinamenschema = dateinamenschema
+    def __repr__(self):
+        return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def __repr__(self): return f"Vertretungsplan {self.benutzername}@{self.schulnummer}"
-
-    def fetch(self, datum: date | int = date.today(), datei: str = None):
+    def fetch(self, datum: date = date.today(), datei: str = None) -> VpDay:
         """
         Ruft die Daten eines Tages oder einer Datei ab
 
@@ -81,24 +78,22 @@ class Vertretungsplan():
             InvalidCredentialsError: Wenn Benutzername oder Passwort falsch sind.
         """
 
-        datum: date = datetime.strptime(str(datum), "%Y%m%d").date() if isinstance(datum, int) else datum
-
-        file: str = datum.strftime(self._dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
+        file_name: str = datum.strftime(self.dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
         
-        uri = f"http://{self._webpath}/{file}"
-        response = WEB.get(uri)
+        file_uri = self.webpath / file_name
+        response = WEB.get(str(file_uri))
 
-        http = response.status_code
-        if http == 200:
-            return VpDay(mobdaten=response.content)
-        elif http == 401:
-            raise Exceptions.InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", status_code=http)
-        elif http == 404:
-            raise Exceptions.FetchingError(message=f"Datei {file} konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer {self.schulnummer} ist nicht registriert.", status_code=http)
+        status = response.status_code
+        if status == 200:
+            return VpDay(mobdaten=XML.fromstring(response.content))
+        elif status == 401:
+            raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", status_code=status)
+        elif status == 404:
+            raise FetchingError(message=f"Datei '{file_name}' konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer {self.schulnummer} ist nicht registriert.", status_code=status)
         else:
             response.raise_for_status()
 
-    def fetchall(self):
+    def fetchall(self) -> list[VpDay]:
         """
         Gibt alle Pläne in einem Zeitraum von 2 Monaten als Liste zurück
 
@@ -126,9 +121,9 @@ class Vertretungsplan():
                 try:
                     plan = self.fetch(tag)
                     pläne.append(plan)
-                except Exceptions.FetchingError:
+                except FetchingError:
                     continue
         if pläne == []:
-            raise Exceptions.FetchingError("Es konnten in einem zweimonatigen")
+            raise FetchingError("Es konnten in einem zweimonatigen Zeitraum keine Vertretungspläne gefunden werden.")
         else:
             return pläne

@@ -1,11 +1,26 @@
-# Die pyproject.toml kann nicht benutzt werden, wenn kein adequater [project]-Abschnitt definiert wurde
+[project]
+name = "vpmobil"
+version = "0.4.3"
+description = "A python API wrapper package for interacting with a stundenplan24.de substitution plan"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "GPL-3.0" }
+authors = [
+  { name = "Annhilati"},
+  { name = "Joshi"}
+]
+dependencies = [
+  "requests",
+  "yarl"
+]
 
-#[project]
-#name = "vpmobil"
-#version = "0.1.2"
+[project.urls]
+"Homepage" = "https://github.com/annhilati/vpmobil"
+"Documentation" = "https://annhilati.gitbook.com/vpmobil"
+"Repository" = "https://github.com/annhilati/vpmobil"
+"Bug Tracker" = "https://github.com/annhilati/vpmobil/issues"
+"Download" = "https://pypi.org/project/vpmobil/"
 
-#[project.urls]
-#"Documentation" = "https://annhilati.gitbook.com/vpmobil"
-#"Repository" = "https://github.com/annhilati/vpmobil"
-#"Bug Tracker" = "https://github.com/annhilati/vpmobil/issues"
-#"Download" = "https://pypi.org/project/vpmobil/"
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

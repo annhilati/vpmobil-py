@@ -12,32 +12,15 @@ A python wrapper package for interacting with a stundenplan24.de substitution pl
 
 from .fetcher import Vertretungsplan
 from .parser import VpDay, Klasse, Stunde
+from .io import getxml, parsefromfile
+from .exceptions import FetchingError, InvalidCredentialsError, XMLParsingError, XMLNotFound
 
-__all__ = ['workflow', 'Vertretungsplan', 'VpDay', 'Klasse', 'Stunde']
-    # Enthält alle Symbole, die bei "from vpmobil import" verfügbar sind
-    # Enthält alle Symbole, die bei "from vpmobil import *" importiert werden
+_symbols = [Vertretungsplan,
+            VpDay,
+            Klasse, Stunde,
+            getxml,
+            parsefromfile,
+            FetchingError, InvalidCredentialsError, XMLParsingError, XMLNotFound]
+_constants = []
 
-class workflow:
-    """
-    Enthält nützliche Funktionen für den Arbeitsablauf
-
-    #### Funktionen
-        getxml(): Isoliert die XML-Datenobjekte eines VpMobil-Objekts
-        parsefromfile(): Läd die XML-Daten einer Datei in ein VpDay-Objekt
-
-    #### Exceptions
-        FetchingError: Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
-        InvalidCredentialsError: Wenn die angegebene Anmeldedaten ungültig sind.
-        XMLParsingError: Wenn XML-Daten nicht richtig ausgewertet werden können.
-        XMLNotFound: Wenn ein Element der XML-Daten nicht gefunden werden kann.
-    """
-
-    from .io import getxml, parsefromfile
-    getxml = getxml
-    parsefromfile = parsefromfile
-    
-    from .exceptions import Exceptions
-    FetchingError = Exceptions.FetchingError
-    InvalidCredentialsError = Exceptions.InvalidCredentialsError
-    XMLParsingError = Exceptions.XMLParsingError
-    XMLNotFound = Exceptions.XMLNotFound
+__all__ = [obj.__name__ for obj in _symbols].extend(_constants)
