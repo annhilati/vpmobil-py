@@ -4,14 +4,7 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        "**/Thumbs.db": true,
-        "build": true,
-        ".vscode": true,
-        "vpmobil.egg-info": true
+        "**/Thumbs.db": true
     },
-    "hide-files.files": [
-        "build",
-        ".vscode",
-        "vpmobil.egg-info"
-    ]
+    "hide-files.files": []
 }
