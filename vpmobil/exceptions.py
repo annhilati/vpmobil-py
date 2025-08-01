@@ -14,6 +14,7 @@ class FetchingError(Exception):
     def __init__(self, message: str, status_code: int = None):
         self.message = message
         self.status_code = status_code
+
     def __str__(self):
         return f"{self.message} (Statuscode: {self.status_code})"
 
@@ -39,6 +40,7 @@ class XMLParsingError(Exception):
     """
     def __init__(self, message: str):
         self.message = message
+
     def __str__(self):
         return self.message
 
@@ -49,4 +51,4 @@ class XMLNotFound(XMLParsingError):
     #### Attribute:
         message (str): Die Fehlermeldung
     """
-    pass # erbt XMLParsingError
+    ...

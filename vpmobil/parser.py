@@ -1,9 +1,9 @@
+from __future__ import annotations
 import xml.etree.ElementTree as XML
 import os as OS
 
 from datetime import datetime, date, time
 from dataclasses import dataclass
-from __future__ import annotations
 
 from .exceptions import XMLNotFound
 from .lib import prettyxml
@@ -36,9 +36,6 @@ class VpDay():
     """
 
     _data: XML.ElementTree
-
-    def __post_init__(self):
-        self._dataroot: XML.Element = self._data.getroot()
         
     @property
     def zeitstempel(self) -> datetime:
@@ -59,7 +56,7 @@ class VpDay():
     def zusatzInfo(self) -> str:
         "Vom Planer eingetragene Zusatzinformation zum Tag"
         ziZeilen = []
-        for zusatzInfo in self._dataroot.findall('.//ZusatzInfo'):
+        for zusatzInfo in self._data.findall('.//ZusatzInfo'):
             for ziZeile in zusatzInfo.findall('.//ZiZeile'):
                 if ziZeile.text:
                     ziZeilen.append(ziZeile.text)
@@ -79,7 +76,7 @@ class VpDay():
             XMLNotFound: Wenn keine Klassen gefunden werden können
         """
         klassen: list[Klasse] = []
-        klassen_elemente = self._dataroot.findall('.//Kl')
+        klassen_elemente = self._data.findall('.//Kl')
         if klassen_elemente is not []:
             for kl in klassen_elemente:
                 kurz = kl.find('Kurz')
@@ -102,7 +99,7 @@ class VpDay():
             XMLNotFound: Wenn die angegebene Klasse nicht gefunden werden kann. 
         """
 
-        klassen = self.klassen()
+        klassen = self.klassen
         for kl in klassen:
             if kl.kürzel == kürzel:
                 return kl
@@ -112,7 +109,7 @@ class VpDay():
     def freieTage(self) -> list[date]:
         "Gibt eine Liste der im Plan als frei markierten Tage zurück"
 
-        freieTage = self._dataroot.find("FreieTage")
+        freieTage = self._data.find("FreieTage")
         if freieTage is None:
             raise XMLNotFound("Element 'FreieTage' nicht in den XML-Daten gefunden")
         
@@ -132,7 +129,7 @@ class VpDay():
         leKrank: list[str] = []
         leNichtKrank: list[str] = []
 
-        for kl in self._dataroot.find('Klassen').findall("Kl"):
+        for kl in self._data.find('Klassen').findall("Kl"):
             lehrerInfo: list[dict] = []
             for ue in kl.find("Unterricht").findall("Ue"): # Wir sammeln für alle Kurse dieser Klasse die Nummer und das Lehrerkürzel
                 lehrerInfo.append({
@@ -295,29 +292,29 @@ class Klasse():
         else:
             raise XMLNotFound("Keine Stunden für diese Klasse gefunden!")
         
-    def kurseInPeriode(self, periode: int):
-        """
-        Gibt alle Kurse zurück, welche in dieser Periode planmäßig stattfinden würden\n
-        Bei besonderen Stunden (z.B. Exkursion an diesem Tag) kann es zu Fehlern kommen
+    # def kurseInPeriode(self, periode: int):
+    #     """
+    #     Gibt alle Kurse zurück, welche in dieser Periode planmäßig stattfinden würden\n
+    #     Bei besonderen Stunden (z.B. Exkursion an diesem Tag) kann es zu Fehlern kommen
 
-        #### Returns:
-            list[Kurs]: Eine Liste von Kurs-Objecten, die in dieser Periode planmäßig stattfinden würden
+    #     #### Returns:
+    #         list[Kurs]: Eine Liste von Kurs-Objecten, die in dieser Periode planmäßig stattfinden würden
         
-        #### Raises:
-            XMLNotFound: Wenn wegen einer besonderen Situation (z.B. Exkursion) kein passender Kurs gefunden werden konnte
-        """
+    #     #### Raises:
+    #         XMLNotFound: Wenn wegen einer besonderen Situation (z.B. Exkursion) kein passender Kurs gefunden werden konnte
+    #     """
 
-        stdList = self.stundenInPeriode(periode)
-        fin: list[Kurs] = []
-        alleKurse: list[Kurs] = []
-        for i, elemn in enumerate(self._data.find("Unterricht").findall("Ue")):
-            alleKurse.append(Kurs(elemn))
-        for i, elem in enumerate(stdList):
-            try:
-                fin.append(list(filter(lambda x: x.kursnummer == str(elem.kursnummer), alleKurse))[0])
-            except:
-                raise XMLNotFound("Keinen passenden Kurs gefunden!")
-        return fin
+    #     stdList = self.stundenInPeriode(periode)
+    #     fin: list[Kurs] = []
+    #     alleKurse: list[Kurs] = []
+    #     for i, elemn in enumerate(self._data.find("Unterricht").findall("Ue")):
+    #         alleKurse.append(Kurs(elemn))
+    #     for i, elem in enumerate(stdList):
+    #         try:
+    #             fin.append(list(filter(lambda x: x.kursnummer == str(elem.kursnummer), alleKurse))[0])
+    #         except:
+    #             raise XMLNotFound("Keinen passenden Kurs gefunden!")
+    #     return fin
 
     def alleKurse(self):
         """

@@ -12,13 +12,12 @@ A python wrapper package for interacting with a stundenplan24.de substitution pl
 
 from .fetcher import Vertretungsplan
 from .parser import VpDay, Klasse, Stunde
-from .io import getxml, parsefromfile
+from .io import parsefromfile
 from .exceptions import FetchingError, InvalidCredentialsError, XMLParsingError, XMLNotFound
 
 _symbols = [Vertretungsplan,
             VpDay,
             Klasse, Stunde,
-            getxml,
             parsefromfile,
             FetchingError, InvalidCredentialsError, XMLParsingError, XMLNotFound]
 _constants = []

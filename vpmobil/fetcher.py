@@ -32,25 +32,28 @@ class Vertretungsplan():
     benutzername:       str
     passwort:           str
     serverdomain:       str = 'stundenplan24.de'
-    verzeichnis:        str = "{schulnummer}/mobil/mobdaten"
+    verzeichnis:        str = "/{schulnummer}/mobil/mobdaten"
     dateinamenschema:   str = "PlanKl%Y%m%d.xml"
         
     def __post_init__(self):
 
         if self.serverdomain.endswith('/'):
             self.serverdomain= self.serverdomain[:-1]
+
         if self.serverdomain.startswith("http://") or self.serverdomain.startswith("https://"):
             parts = self.serverdomain.split("://", 1)
             self.serverdomain = parts[1] if len(parts) > 1 else parts[0]
 
         if self.verzeichnis.endswith('/'):
             self.verzeichnis = self.verzeichnis[:-1]
-        if self.verzeichnis.startswith("/"):
-            self.verzeichnis = self.verzeichnis[1:]
+            
+        if not self.verzeichnis.startswith("/"):
+            self.verzeichnis = "/" + self.verzeichnis
 
     @property
     def webpath(self) -> URL:
         return URL.build(
+            scheme="http",
             user=self.benutzername,
             password=self.passwort,
             host=self.serverdomain,
@@ -85,7 +88,7 @@ class Vertretungsplan():
 
         status = response.status_code
         if status == 200:
-            return VpDay(mobdaten=XML.fromstring(response.content))
+            return VpDay(_data=XML.fromstring(response.content))
         elif status == 401:
             raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", status_code=status)
         elif status == 404:

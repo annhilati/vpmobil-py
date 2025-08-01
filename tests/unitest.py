@@ -1,6 +1,6 @@
 from vpmobil import Vertretungsplan
 
-vertretPlan = Vertretungsplan(10126582, "schueler", "s361o97")
+vertretPlan = Vertretungsplan(..., "schueler", ...)
 
 #vertretPlan = Vertretungsplan(10161728, "schueler", "23LgS24")
 
