@@ -1,10 +1,15 @@
 ## [1.0.0](https://pypi.org/project/vpmobil/1.0.0/) (2025-08)
 
+### 🚀 Neue Funktionen
+
+* Ein bestimmter Kurs kann per Kursnummer mit `Klasse.kurs()` erhalten werden
+
 ### 🔧 Änderungen
 
 * Neustrukturierung der gesammten Kernfunktionalität durch die Verwendung modernerer Syntax
 * Die Werkzeugklasse `workflow` wurde aufgelöst. Alle Klassen, Funktionen und Exceptions können einfach aus `vpmobil` importiert werden
 * Die meisten Funktionen und Eigenschaften gegeben nun `None` zurück statt einen Fehler zu werfen, wenn in den XML-Daten nichts gefunden wird
+* Einige unhandliche und unnötige Methoden von `Klasse` wurden entfernt
 
 ### 🪲 Bug Fixes
 
