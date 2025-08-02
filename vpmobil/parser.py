@@ -136,30 +136,31 @@ class VpDay():
             except:
                 continue
             else:
-                for std in alleStd: # Jetzt gehen wir durch alle Stunden und schauen, ob sie geändert sind
-                    if not std.anders and not std.ausfall and not std.besonders: # Wenn nicht fügen wir die Lehrer, welche die Stunde halten zu den nicht kranken Lehrern hinzu
-                        for sr in std.lehrer.split(" "):
-                            leNichtKrank.append(sr)
-                            if sr in leKrank:
-                                leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
-                    elif std.anders and not std.ausfall and not std.besonders:
-                        for sr in std.lehrer.split(" "):
-                            leNichtKrank.append(sr)
-                            if sr in leKrank:
-                                leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
-                    elif std.anders and std.ausfall and not std.besonders:
-                        le = next(item for item in lehrerInfo if item["nr"] == str(std.kursnummer))
-                        if not (le["kurz"] in leNichtKrank): # Wenn die Stunde geändert ist schauen wir, ob der lehrer schon in der nicht kranken Liste ist.
-                            if not le["kurz"] in leKrank:
-                                leKrank.append(le["kurz"]) # Wenn nicht, muss er krank sein
-                    elif std.besonders:
-                        try:
-                            splitLe = std.lehrer.split(" ")
-                        except TypeError:
-                            continue
-                        else:
-                            for sr in splitLe:
-                                leNichtKrank.append(splitLe)
+                for st in alleStd: # Jetzt gehen wir durch alle Stunden und schauen, ob sie geändert sind
+                    for std in alleStd[st]:
+                        if not std.anders and not std.ausfall and not std.besonders: # Wenn nicht fügen wir die Lehrer, welche die Stunde halten zu den nicht kranken Lehrern hinzu
+                            for sr in std.lehrer.split(" "):
+                                leNichtKrank.append(sr)
+                                if sr in leKrank:
+                                    leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
+                        elif std.anders and not std.ausfall and not std.besonders:
+                            for sr in std.lehrer.split(" "):
+                                leNichtKrank.append(sr)
+                                if sr in leKrank:
+                                    leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
+                        elif std.anders and std.ausfall and not std.besonders:
+                            le = next(item for item in lehrerInfo if item["nr"] == str(std.kursnummer))
+                            if not (le["kurz"] in leNichtKrank): # Wenn die Stunde geändert ist schauen wir, ob der lehrer schon in der nicht kranken Liste ist.
+                                if not le["kurz"] in leKrank:
+                                    leKrank.append(le["kurz"]) # Wenn nicht, muss er krank sein
+                        elif std.besonders:
+                            try:
+                                splitLe = std.lehrer.split(" ")
+                            except TypeError:
+                                continue
+                            else:
+                                for sr in splitLe:
+                                    leNichtKrank.append(splitLe)
         return sorted(leKrank) # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
 
     
