@@ -16,8 +16,7 @@ from .io import parsefromfile
 from .exceptions import FetchingError, InvalidCredentialsError, XMLParsingError, XMLNotFound
 
 _symbols = [Vertretungsplan,
-            VpDay,
-            Klasse, Stunde,
+            VpDay, Klasse, Stunde,
             parsefromfile,
             FetchingError, InvalidCredentialsError, XMLParsingError, XMLNotFound]
 _constants = []

@@ -17,4 +17,5 @@ def parsefromfile(pfad: Path) -> VpDay:
         Exception: Wenn die DAtei nicht gelesen werden oder in ein XML-Element umgewandelt werden konnte
     """
     with open(pfad) as f:
-        return VpDay(_data=XML.parse(f))
+        vpday = VpDay(_data=XML.parse(f))
+    return vpday
