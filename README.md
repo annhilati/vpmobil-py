@@ -25,7 +25,7 @@ klasse = tag.klasse("9b")
 stunden = klasse.stunden()
 
 for stunde in stunden:
-  print(f"{stunde.nr}: {stunde.fach} bei {stunde.lehrer} in {stunde.raum}")
+  print(f"{stunde.periode}: {stunde.fach} bei {stunde.lehrer} in {stunde.raum}")
 ```
 
   <p align="center">Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, the package and the wiki are formulated in German</p>

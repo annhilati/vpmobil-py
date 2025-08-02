@@ -26,7 +26,7 @@ stunde.fach
 stunde.info
 stunde.kursnummer
 stunde.lehrer
-stunde.nr
+stunde.periode
 stunde.raum
 
 class Test():

@@ -1,8 +1,8 @@
 from __future__ import annotations
 import xml.etree.ElementTree as XML
-import os as OS
 import re
 
+from pathlib import Path
 from datetime import datetime, date, time
 from dataclasses import dataclass
 
@@ -30,17 +30,18 @@ class VpDay():
             return None
         return datetime.strptime(element.text, "%d.%m.%Y, %H:%M")
         
-
     @property
     def datei(self) -> str | None:
         "Dateiname der Quelldatei"
-        return self._data.find('Kopf/datei').text
+        element = self._data.find('Kopf/datei')
+        if element is None or not element.text:
+            return None
+        return element.text
 
     @property
     def datum(self) -> date | None:
         "Datum für das der Vertretungsplan gilt"
-        match = re.search(r"(\d{4})(\d{2})(\d{2})", self.datei)
-        if match:
+        if match := re.search(r"(\d{4})(\d{2})(\d{2})", self.datei):
             year, month, day = map(int, match.groups())
             return date(year, month, day)
         return None
@@ -131,7 +132,7 @@ class VpDay():
                     "kurz": ue.find("UeNr").attrib["UeLe"]
                 })
             try:
-                alleStd = Klasse(kl).stundenHeute()
+                alleStd = Klasse(kl).stundenHeute
             except:
                 continue
             else:
@@ -161,32 +162,34 @@ class VpDay():
                                 leNichtKrank.append(splitLe)
         return sorted(leKrank) # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
 
-    def saveasfile(self, pfad: str = "./datei.xml", overwrite = False) -> None:
-        # Es ist noch strittig ob diese Funktion eher zu io gehört
+    
+
+    def saveasfile(self, pfad: Path = "./datei.xml", overwrite=False) -> None:
         """
         Speichert alle Daten des Tages als XML-Datei an einen bestimmten Ort
-        
+
         #### Argumente
             pfad (str): Zielpfad der zu erstellenden Datei.
-                - Muss den Dateinamen mit Endung enthalten. z.B.: `"./ein/realtiver/ordner/datei.xml"`
+                - Muss den Dateinamen mit Endung enthalten. z.B.: `"./ein/relativer/ordner/datei.xml"`
             overwrite (bool): Bestimmt, ob die Datei mit dem angegebenen Pfad überschrieben werden soll, wenn sie bereits existiert.
-        
+
         #### Raises
             FileExistsError: Wenn die Datei am Zielpfad entgegen der overwrite-Bestimmung überschrieben werden soll 
         """
 
         xmlpretty = prettyxml(self._data)
 
-        zielpfad = OS.path.abspath(pfad)
-        directory = OS.path.dirname(zielpfad)
+        zielpfad = Path(pfad).resolve()
+        zielverzeichnis = zielpfad.parent
 
-        if not OS.path.exists(directory): # Stellt sicher, dass das Verzeichnis existiert
-            OS.makedirs(directory)
-        if OS.path.exists(zielpfad) and overwrite == False:
+        if not zielverzeichnis.exists():
+            zielverzeichnis.mkdir(parents=True)
+
+        if zielpfad.exists() and not overwrite:
             raise FileExistsError(f"Die Datei {zielpfad} existiert bereits.")
-        
-        with open(zielpfad, "w", encoding="utf-8") as f:
-            f.write(xmlpretty)
+
+        zielpfad.write_text(xmlpretty, encoding="utf-8")
+
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Klasse                                           │ 
@@ -194,18 +197,7 @@ class VpDay():
 
 @dataclass
 class Klasse():
-    """
-    Enthält alle Daten für eine bestimmte Klasse
-
-    #### Attribute
-        kürzel (str): Kürzel der Klasse
-
-    #### Methoden
-        stundenInPeriode(): Gibt eine Liste aller Stunden zur angegebenen Stundenplanperiode zurück
-        stunden(): Gibt eine Liste aller Stunden der Klasse zurück
-    
-    #### Formate
-        xml: Gibt die XML-Daten als String zurück
+    """Klasse, die den Vertretungsplan für eine bestimmte Klasse an einem bestimmten Tag repräsentiert.
     """
 
     _data: XML.Element
@@ -235,12 +227,12 @@ class Klasse():
         pl = self._data.find("Pl")
         for std in pl.findall("Std"):
             stunde = Stunde(std)
-            nr = stunde.nr
+            nr = stunde.periode
             if nr is not None:
-                if fin.get(stunde.nr) is None:
-                    fin[stunde.nr] = [stunde]
+                if fin.get(stunde.periode) is None:
+                    fin[stunde.periode] = [stunde]
                 else:
-                    fin[stunde.nr].append(stunde)
+                    fin[stunde.periode].append(stunde)
         return fin
     
     @property
@@ -322,7 +314,7 @@ class Stunde():
     _data: XML.Element
 
     @property
-    def nr(self) -> int | None:
+    def periode(self) -> int | None:
         "Stundenplanperiode in der die Stunde stattfindet"
         return int(self._data.find("St").text)
 
@@ -427,14 +419,7 @@ class Stunde():
 
 @dataclass
 class Kurs():
-    """
-    Enthält alle Informationen zu einem bestimmten Kurs
-
-    #### Attribute:
-        lehrer (str): Der Lehrer, welcher diesen Kurs hält
-        fach (str): Das Fach, welches dieser Kurs hat
-        zusatz (str): Manche Kurse haben eine Zusatzinformation, wie z.B. Fördern
-        kursnummer (int): Die Nummer dieses Kurses.
+    """Klasse die einen bestimmten Kurs repräsentiert.
     """
 
     _data: XML.Element
