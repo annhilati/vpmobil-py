@@ -4,7 +4,16 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        "**/Thumbs.db": true
+        "**/Thumbs.db": true,
+        ".vscode": true,
+        "build": true,
+        "vpmobil.egg-info": true,
+        "vpmobil/__pycache__": true
     },
-    "hide-files.files": []
+    "hide-files.files": [
+        ".vscode",
+        "build",
+        "vpmobil.egg-info",
+        "vpmobil/__pycache__"
+    ]
 }

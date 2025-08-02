@@ -1,5 +1,6 @@
 # Environment
 *.env
+.vscode/*
 
 # Python Build
 **.egg-info/
@@ -9,3 +10,5 @@ dist/
 # Dev
 tests/temp/*
 analyse
+test.py
+/vpmobil/__pycache__

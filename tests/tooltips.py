@@ -16,7 +16,7 @@ day.zeitstempel
 
 klasse.alleStunden()
 klasse.stunde()
-klasse.stunden()
+klasse.stundenHeute()
 
 stunde.anders
 stunde.ausfall

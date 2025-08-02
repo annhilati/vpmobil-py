@@ -1,11 +1,11 @@
 from __future__ import annotations
 import xml.etree.ElementTree as XML
 import os as OS
+import re
 
 from datetime import datetime, date, time
 from dataclasses import dataclass
 
-from .exceptions import XMLNotFound
 from .lib import prettyxml
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -14,58 +14,52 @@ from .lib import prettyxml
 
 @dataclass
 class VpDay():
-    """
-    Enthält alle Daten für einen bestimmten Tag
-    
-    #### Attribute
-        datum (date): Datum, für das der Plan gilt
-        wochentag (int): Wochentag für den der Vertretungsplan gilt
-        zusatzInfo (str): Vom Planer eingetragene Zusatzinformation zum Tag
-        zeitstempel (datetime): Veröffentlichungszeitpunkt des Vertretungsplans
-        datei (str): Dateiname der Quelldatei
-
-    #### Methoden
-        klassen(): Liefert eine Liste der im Plan vorhandenen Klassen mitsamt Daten
-        klasse(): Isoliert die Daten einer Klasse
-        freieTage(): Liefert eine Liste der als frei markierten Tage
-        lehrerKrank(): Liefert eine Liste der Lehrer die unplanmäßig keinen Untericht haben
-        saveasfile(): Speichert alle Daten des Tages als XML-Datei
-
-    #### Formate
-        xml: Gibt die XML-Daten als String zurück
+    """Klasse die den Vertretungsplan an einem bestimmten Tag repräsentiert.
     """
 
     _data: XML.ElementTree
+
+    def __getitem__(self, v) -> Klasse:
+        return self.klasse(v)
         
     @property
-    def zeitstempel(self) -> datetime:
+    def zeitstempel(self) -> datetime | None:
         "Veröffentlichungszeitpunkt des Vertretungsplans"
-        return datetime.strptime(self._data.find('Kopf/zeitstempel').text, "%d.%m.%Y, %H:%M")
+        element = self._data.find('Kopf/zeitstempel')
+        if element is None or not element.text:
+            return None
+        return datetime.strptime(element.text, "%d.%m.%Y, %H:%M")
         
+
     @property
-    def datei(self) -> str:
+    def datei(self) -> str | None:
         "Dateiname der Quelldatei"
         return self._data.find('Kopf/datei').text
 
     @property
-    def datum(self) -> date:
+    def datum(self) -> date | None:
         "Datum für das der Vertretungsplan gilt"
-        return datetime.strptime(self.datei[6:14], "%Y%m%d").date()
+        match = re.search(r"(\d{4})(\d{2})(\d{2})", self.datei)
+        if match:
+            year, month, day = map(int, match.groups())
+            return date(year, month, day)
+        return None
 
     @property
-    def zusatzInfo(self) -> str:
+    def zusatzInfo(self) -> str | None:
         "Vom Planer eingetragene Zusatzinformation zum Tag"
         ziZeilen = []
         for zusatzInfo in self._data.findall('.//ZusatzInfo'):
             for ziZeile in zusatzInfo.findall('.//ZiZeile'):
                 if ziZeile.text:
                     ziZeilen.append(ziZeile.text)
-        return '\n'.join(ziZeilen)
+        return '\n'.join(ziZeilen) if ziZeilen else None
 
-    def __repr__(self): return f"<Vertretungsplan vom {self.datum.strftime('%d.%m.%Y')}>"
+    def __repr__(self):
+        return f"<Vertretungsplan vom {self.datum.strftime('%d.%m.%Y')}>"
 
     @property     
-    def klassen(self) -> list[Klasse]:
+    def klassen(self) -> list[Klasse] | None:
         """
         Liefert eine Liste der im Plan vorhandenen Klassen mitsamt Daten
 
@@ -83,9 +77,9 @@ class VpDay():
                 if kurz is not None:
                     klassen.append(Klasse(_data=kl))
             return klassen
-        raise XMLNotFound(f"Keine Klassen gefunden")
+        return None
 
-    def klasse(self, kürzel: str):
+    def klasse(self, kürzel: str) -> Klasse | None:
         """
         Isoliert die Daten einer Klasse
         
@@ -103,15 +97,15 @@ class VpDay():
         for kl in klassen:
             if kl.kürzel == kürzel:
                 return kl
-        raise XMLNotFound(f"Keine Klasse {kürzel} gefunden")
+        return None
 
     @property
-    def freieTage(self) -> list[date]:
+    def freieTage(self) -> list[date] | None:
         "Gibt eine Liste der im Plan als frei markierten Tage zurück"
 
         freieTage = self._data.find("FreieTage")
         if freieTage is None:
-            raise XMLNotFound("Element 'FreieTage' nicht in den XML-Daten gefunden")
+            return None
         
         freieTageList: list[date] = []
         for ft in freieTage.findall("ft"):
@@ -137,7 +131,7 @@ class VpDay():
                     "kurz": ue.find("UeNr").attrib["UeLe"]
                 })
             try:
-                alleStd = Klasse(kl).stunden()
+                alleStd = Klasse(kl).stundenHeute()
             except:
                 continue
             else:
@@ -223,74 +217,40 @@ class Klasse():
 
     def __repr__(self):
         return f"Vertretungsplan der Klasse {self.kürzel}"
-
-    # def stunde(self, periode: int):
-    #     """
-    #     Gibt die erste Stunde der angegebenen Stundenplanperiode zurück.\n
-
-    #     #### Argumente:
-    #         periode (int): Stundenplanperiode, zur der die Stunde gesucht wird
-
-    #     #### Returns:
-    #         Stunde: angefragtes Stunden-Objekt, dass alle Informationen über die Stunde enthält
-
-    #     #### Raises:
-    #         XMLNotFound: Wenn die gesuchte Stunde nicht existiert
-    #     """
-
-    #     pl = self._data.find("Pl")
-    #     for std in pl.findall("Std"):
-    #         st = std.find("St")
-    #         if st is not None and st.text == str(periode):
-    #             return Stunde(std)
-    #     raise Exceptions.XMLNotFound("Stunde wurde nicht gefunden!")
-
-    def stundenInPeriode(self, periode: int):
-        """
-        Gibt eine Liste der Stunden in der angegebenen Stundenplanperiode zurück.\n
-
-        #### Argumente:
-            periode (int): Stundenplanperiode, zur der die Stunden gesucht werden
-
-        #### Returns:
-            list[Stunde]: Liste von Stunden-Objekten, die alle Informationen über die Stunde enthalten
-
-        #### Raises:
-            XMLNotFound: Wenn die gesuchten Stunden nicht existieren
-        """
-
-        fin: list[Stunde] = []
-        pl = self._data.find("Pl")
-        for std in pl.findall("Std"):
-            st = std.find("St")
-            if st is not None and st.text == str(periode):
-                fin.append(Stunde(_data=std))
-        if len(fin) != 0:
-            return fin
-        else:
-            raise XMLNotFound("Keine Stunden zu dieser Stundenplanperiode gefunden!")
     
-    def stunden(self):
+    def __getitem__(self, v) -> list[Stunde]:
+        return self.stundenHeuteInPeriode(v)
+
+    def stundenHeuteInPeriode(self, periode: int) -> list[Stunde]:
         """
-        Gibt alle Stunden des Tages zurück.
-
-        #### Returns:
-            list[Stunde]: Liste von Stunden-Objekten in der richtigen Reihenfolge, die alle Informationen über die Stunden enthalten
-
-        #### Raises:
-            XMLNotFound: Wenn die gesuchte Stunde nicht existiert
         """
 
-        fin: list[Stunde] = []
+        return self.stundenHeute.get(periode)
+    
+    @property
+    def stundenHeute(self) -> dict[int, list[Stunde]] | None:
+        "Gibt alle Stunden des Tages zurück."
+
+        fin: dict[int, list[Stunde]] = {}
         pl = self._data.find("Pl")
         for std in pl.findall("Std"):
-            st = std.find("St")
-            if st is not None:
-                fin.append(Stunde(std))
-        if len(fin) != 0:
-            return fin
-        else:
-            raise XMLNotFound("Keine Stunden für diese Klasse gefunden!")
+            stunde = Stunde(std)
+            nr = stunde.nr
+            if nr is not None:
+                if fin.get(stunde.nr) is None:
+                    fin[stunde.nr] = [stunde]
+                else:
+                    fin[stunde.nr].append(stunde)
+        return fin
+    
+    @property
+    def kurse(self) -> list[Kurs]:
+        fin: list[Kurs] = []
+        unterricht = self._data.find("Unterricht")
+        for ue in unterricht.findall("Ue"):
+            fin.append(Kurs(ue.find("UeNr")))
+        return fin
+
         
     # def kurseInPeriode(self, periode: int):
     #     """
@@ -316,40 +276,40 @@ class Klasse():
     #             raise XMLNotFound("Keinen passenden Kurs gefunden!")
     #     return fin
 
-    def alleKurse(self):
-        """
-        Gibt eine Liste aller Kurse zurück, die die Klasse am Tag hat.
+    # def alleKurse(self):
+    #     """
+    #     Gibt eine Liste aller Kurse zurück, die die Klasse am Tag hat.
 
-        #### Returns:
-            list[Kurs]: Eine Liste von Kurs-Objekten, die alle Informationen enthalten
-        """
+    #     #### Returns:
+    #         list[Kurs]: Eine Liste von Kurs-Objekten, die alle Informationen enthalten
+    #     """
         
-        fin: list[Kurs] = []
-        for i, elem in enumerate(self._data.find("Unterricht").findall("Ue")):
-            fin.append(Kurs(elem))
-        return fin
+    #     fin: list[Kurs] = []
+    #     for i, elem in enumerate(self._data.find("Unterricht").findall("Ue")):
+    #         fin.append(Kurs(elem))
+    #     return fin
     
     
-    def alleKurseHeute(self):
-        """
-        Gibt alle Kurse zurück, welche die Klasse an diesem Tag planmäßig hätte.
+    # def alleKurseHeute(self) -> list[Kurs] | None:
+    #     """
+    #     Gibt alle Kurse zurück, welche die Klasse an diesem Tag planmäßig hätte.
 
-        #### Returns:
-            list[Kurs]: Eine Liste von Kurs-Objecten, die an diesem Tag planmäßig stattfinden würden
+    #     #### Returns:
+    #         list[Kurs]: Eine Liste von Kurs-Objecten, die an diesem Tag planmäßig stattfinden würden
         
-        #### Raises:
-            XMlNotFound: In besonderen Situationen (z.B. Exkursion) ist manchmal kein Kurs angegeben
-        """
+    #     #### Raises:
+    #         XMlNotFound: In besonderen Situationen (z.B. Exkursion) ist manchmal kein Kurs angegeben
+    #     """
 
-        alleKurse: list[Kurs] = self.alleKurse()
-        stdHeut: list[Stunde] = self.stunden()
-        fin: list[Kurs] = []
-        for i, elem in enumerate(stdHeut):
-            try:
-                fin.append([x for x in alleKurse if x.kursnummer == str(elem.kursnummer)][0])
-            except:
-                raise XMLNotFound("Keine passenden Kurse gefunden!")
-        return fin
+    #     alleKurse: list[Kurs] = self.alleKurse()
+    #     stdHeut: list[Stunde] = self.stunden()
+    #     fin: list[Kurs] = []
+    #     for i, elem in enumerate(stdHeut):
+    #         try:
+    #             fin.append([x for x in alleKurse if x.kursnummer == str(elem.kursnummer)][0])
+    #         except:
+    #             return None
+    #     return fin
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 
@@ -357,30 +317,12 @@ class Klasse():
 
 @dataclass
 class Stunde():
-    """
-    Enthält Informationen über eine bestimmte Stunde
-
-    #### Attribute
-        nr (int): Stundenplanperiode in der die Stunde stattfindet
-        beginn (str): Beginn der Stunde im Schema \"07:45\"
-        ende (str): Beginn der Stunde im Schema \"07:45\"
-        anders (bool): Gibt an, ob eine Änderung vorliegt
-        besonders (bool): Gibt an, ob die Stunde kein normaler Kursuntericht ist
-        ausfall (bool): Gibt an, ob die Stunde entfällt
-        fach (str): Unterichtsfach der Stunde
-        lehrer (str): Lehrer der Stunde
-        raum (str): Raum der Stunde
-        info (str): Zusätzliche Information zu dieser Stunde
-        kursnummer (int): Nummer des Kurses der Stunde
-
-    #### Formate
-        xml: Gibt die XML-Daten als String zurück
-    """
+    "Klasse, die eine bestimmte Unterrichtsstunde repräsentiert."
 
     _data: XML.Element
 
     @property
-    def nr(self) -> int:
+    def nr(self) -> int | None:
         "Stundenplanperiode in der die Stunde stattfindet"
         return int(self._data.find("St").text)
 
@@ -474,7 +416,10 @@ class Stunde():
         """
         return self._data.find("If").text
 
-    def __repr__(self): return f"Stundenobjekt der {self.nr}. Stunde bei {self.lehrer}"
+    def __repr__(self):
+        if self.ausfall:
+            return f"<Ausfall: '{self.info}'>"
+        return f"<'{self.fach}' bei '{self.lehrer}' in Raum '{self.raum}'>"
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Kurs                                             │ 
@@ -515,4 +460,7 @@ class Kurs():
     @property
     def kursnummer(self) -> int:
         "Kursnummer des Kurses"
-        self.kursnummer: int = self._data.text
+        return self._data.text
+
+    def __repr__(self) -> str:
+        return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or "-"}' (Kursnummer '{self.kursnummer}')>"

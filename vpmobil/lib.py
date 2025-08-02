@@ -4,7 +4,7 @@ import xml.dom.minidom as MD
 def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     if isinstance(object, ET.ElementTree):
         element = object.getroot()
-    elif isinstance(object, ET.ElementTree):
+    elif isinstance(object, ET.Element):
         element = object
     else:
         element = object

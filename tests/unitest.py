@@ -37,7 +37,7 @@ while 7==7:
     else:
         pln += 1
         for kl in klassen:
-            for std in tag.klasse(kl).stunden():
+            for std in tag.klasse(kl).stundenHeute():
                 gesStd += 1
                 try:
                     testVar = kl + std.beginn + std.ende + std.lehrer + std.fach + str(std.raum) + str(std.nr) + str(std.kursnummer)
