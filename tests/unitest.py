@@ -41,9 +41,9 @@ while endNow == False:
                 for std in tag.klasse(kl).stundenHeute[st]:
                     gesStd += 1
                     try:
-                        testVar = kl + str(std.beginn) + str(std.ende) + std.lehrer + std.fach + std.raum + str(std.nr) + str(std.kursnummer)
+                        testVar = kl + str(std.beginn) + str(std.ende) + std.lehrer + std.fach + std.raum + str(std.periode) + str(std.kursnummer)
                     except:
-                        print("UNITEST - FEHLER - " + "Klasse " + kl + ", Stunde " + str(std.nr) + " am Tag " + dat)
+                        print("UNITEST - FEHLER - " + "Klasse " + kl + ", Stunde " + str(std.periode) + " am Tag " + dat)
                         gesErr += 1
                     else:
                         okStd += 1
