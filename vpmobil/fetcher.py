@@ -1,7 +1,7 @@
 import requests as WEB
 import xml.etree.ElementTree as XML
-from dataclasses import dataclass
 
+from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from yarl import URL
 
@@ -37,7 +37,7 @@ class Vertretungsplan():
     serverdomain:       str = 'stundenplan24.de'
     verzeichnis:        str = "/{schulnummer}/mobil/mobdaten"
     dateinamenschema:   str = "PlanKl%Y%m%d.xml"
-        
+    
     def __post_init__(self):
 
         if self.serverdomain.endswith('/'):
@@ -86,8 +86,8 @@ class Vertretungsplan():
 
         file_name: str = datum.strftime(self.dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
         
-        file_uri = self.webpath / file_name
-        response = WEB.get(str(file_uri))
+        file_url = self.webpath / file_name
+        response = WEB.get(str(file_url))
 
         status = response.status_code
         if status == 200:

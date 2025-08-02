@@ -1,6 +1,7 @@
-from .parser import VpDay
 from pathlib import Path
 import xml.etree.ElementTree as XML
+
+from .parser import VpDay
 
 def parsefromfile(pfad: Path) -> VpDay:
     """

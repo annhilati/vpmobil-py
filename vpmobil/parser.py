@@ -213,7 +213,8 @@ class Klasse():
     @property
     def stundenHeute(self) -> dict[int, list[Stunde]] | None:
         """Alle Stunden der Klasse an dem Tag als Dictionary<br>
-        Die Schlüssel sind die Unterrichtsperioden, die Werte Listen von Unterrichsstunden"""
+        Die Schlüssel sind die Unterrichtsperioden, die Werte Listen von Unterrichsstunden
+        """
 
         fin: dict[int, list[Stunde]] = {}
         pl = self._data.find("Pl")
@@ -235,6 +236,13 @@ class Klasse():
         for ue in unterricht.findall("Ue"):
             fin.append(Kurs(ue.find("UeNr")))
         return fin
+    
+    def kurs(self, kursnummer: int) -> Kurs | None:
+        "Gibt den Kurs mit `kursnummer` der Klasse zurück"
+        for kurs in self.kurse:
+            if kurs.kursnummer == kursnummer:
+                return kurs
+        return None
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 
@@ -245,9 +253,9 @@ class Stunde():
     "Klasse, die eine bestimmte Unterrichtsstunde repräsentiert."
 
     _data: XML.Element
-
+        
     @property
-    def periode(self) -> int | None:
+    def periode(self) -> int:
         "Unterrichtsperiode der Stunde"
         return int(self._data.find("St").text)
 
@@ -282,63 +290,57 @@ class Stunde():
         except:
             return -1
 
-    @property
-    def besonders(self) -> bool:
-        """
-        Gibt an, ob die Stunde besonders ist. (Z.B. True, wenn es sich um eine Exkursion handelt.)\n
-        Besondere Stunden haben keine Kursnummer! Prüfe immer erst, ob eine Stunde besonders ist, bevor du die Kursnummer abrufst. .kursnummer gibt dann -1 zurück, wenn die Stunde besonders ist.\n
-        Wenn trotzdem ein Lehrer, Fach oder Raum eingetragen ist, wird dieser normal zurückgegeben
-        """
-        try:
-            kursnummer: int = int(self._data.find("Nr").text) 
-            return False
-        except:
-            return True
+    # @property
+    # def besonders(self) -> bool:
+    #     """
+    #     Gibt an, ob die Stunde besonders ist. (Z.B. True, wenn es sich um eine Exkursion handelt.)\n
+    #     Besondere Stunden haben keine Kursnummer! Prüfe immer erst, ob eine Stunde besonders ist, bevor du die Kursnummer abrufst. .kursnummer gibt dann -1 zurück, wenn die Stunde besonders ist.\n
+    #     Wenn trotzdem ein Lehrer, Fach oder Raum eingetragen ist, wird dieser normal zurückgegeben
+    #     """
+    #     try:
+    #         kursnummer: int = int(self._data.find("Nr").text) 
+    #         return False
+    #     except:
+    #         return True
 
     @property
     def fach(self) -> str | None:
         """Fach der Stunde<br>
-        Gibt einen leeren String zurück, wenn die Stunde entfällt<br>
-        Kann auch `None` zurückgeben
+        Gibt `None` zurück, wenn die Stunde entfällt
         """
-
         if self._data.find("Fa") is not None and self._data.find("Fa").text is not None:
-            fach = self._data.find("Fa").text
+            return self._data.find("Fa").text
         else:
-            fach = None
-        return fach
+            return None
         
     @property
     def lehrer(self) -> str | None:
         """Lehrer der Stunde<br>
-        Gibt einen leeren String zurück, wenn die Stunde entfällt<br>
-        Kann auch `None` zurückgeben
+        Gibt `None` zurück, wenn die Stunde entfällt
         """
         if self._data.find("Le") is not None and self._data.find("Le").text is not None:
-            tmpLe = self._data.find("Le").text
+            return self._data.find("Le").text
         else:
-            tmpLe = None
-        return tmpLe
+            return None
 
     @property
     def raum(self) -> str | None:
         """Raum der Stunde<br>
-        Gibt einen leeren String zurück, wenn die Stunde entfällt<br>
-        Kann auch `None` zurückgeben
+        Gibt `None` zurück, wenn die Stunde entfällt
         """
         if self._data.find("Ra") is not None and self._data.find("Ra").text is not None:
-            tmpRa = self._data.find("Ra").text
+            return self._data.find("Ra").text
         else:
-            tmpRa = None
-        return tmpRa
+            return None
+        
     
     @property
     def info(self) -> str | None:
-        """
-        Zusätzliche Information zu dieser Stunde\n
-        Ist nur in besonderen Situationen und bei entfallen der Stunde vorhanden
-        """
-        return self._data.find("If").text
+        "Zusätzliche Information der Stunde"
+        if self._data.find("If") is not None and self._data.find("If").text is not None:
+            return self._data.find("If").text
+        else:
+            return None
 
     def __repr__(self):
         if self.ausfall:
