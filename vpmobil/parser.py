@@ -448,4 +448,4 @@ class Kurs():
         return self._data.text
 
     def __repr__(self) -> str:
-        return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or "-"}' (Kursnummer '{self.kursnummer}')>"
+        return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or '-'}' (Kursnummer '{self.kursnummer}')>"
