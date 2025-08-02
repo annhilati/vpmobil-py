@@ -1,26 +1,35 @@
 # In dieser Datei können Tooltips, Docstrings und Typehints getestet werden
 
-from vpmobil import Vertretungsplan, VpDay, Klasse, Stunde
+from vpmobil import Vertretungsplan, VpDay, Klasse, Stunde, Kurs
 
 vp = Vertretungsplan()
 day = VpDay()
 klasse = Klasse()
 stunde = Stunde()
+kurs = Kurs()
 
 vp.fetch()
+vp.fetchall()
 
+day.datei
+day.datum
 day.klasse()
-day.freieTage()
+day.klassen
+day.saveasfile()
+day.lehrerKrank
+day.freieTage
 day.zusatzInfo
 day.zeitstempel
 
-klasse.alleStunden()
-klasse.stunde()
-klasse.stundenHeute()
+klasse.stundenHeute
+klasse.stundenHeuteInPeriode()
+klasse.kürzel
+klasse.kurse
 
 stunde.anders
 stunde.ausfall
 stunde.beginn
+stunde.besonders
 stunde.ende
 stunde.fach
 stunde.info
@@ -28,6 +37,11 @@ stunde.kursnummer
 stunde.lehrer
 stunde.periode
 stunde.raum
+
+kurs.fach
+kurs.gruppe
+kurs.kursnummer
+kurs.lehrer
 
 class Test():
     """

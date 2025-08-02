@@ -96,9 +96,9 @@ class Vertretungsplan():
             except Exception as e:
                 raise XMLParsingError(f"Die Daten sind kein gültiges XML ({e})")
         elif status == 401:
-            raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", status_code=status)
+            raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", response=response)
         elif status == 404:
-            raise FetchingError(message=f"Datei '{file_name}' konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer {self.schulnummer} ist nicht registriert.", status_code=status)
+            raise FetchingError(message=f"Datei '{file_name}' konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer '{self.schulnummer}' ist nicht registriert.", response=response)
         else:
             response.raise_for_status()
 
@@ -107,7 +107,9 @@ class Vertretungsplan():
 
         Raises
         ----------
-        FetchingError : Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
+        FetchingError : Wenn keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
+        InvalidCredentialsError : Wenn Benutzername oder Passwort falsch sind.
+        XMLParsingError : Falls eine Antwort vom Server kein gültiges XML enthält
         """
 
         today = datetime.today().date()

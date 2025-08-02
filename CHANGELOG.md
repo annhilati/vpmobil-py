@@ -4,7 +4,7 @@
 
 * Neustrukturierung der gesammten Kernfunktionalität durch die Verwendung modernerer Syntax
 * Die Werkzeugklasse `workflow` wurde aufgelöst. Alle Klassen, Funktionen und Exceptions können einfach aus `vpmobil` importiert werden
-* Die meisten Funktionen und Eigenschaften gegeben nun `None` zurück statt einen Fehler zu werfen, wenn in dem XML-Daten nicht gefunden wird
+* Die meisten Funktionen und Eigenschaften gegeben nun `None` zurück statt einen Fehler zu werfen, wenn in den XML-Daten nichts gefunden wird
 
 ### 🪲 Bug Fixes
 
