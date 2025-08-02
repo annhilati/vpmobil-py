@@ -4,7 +4,7 @@ version = "0.4.3"
 description = "A python API wrapper package for interacting with a stundenplan24.de substitution plan"
 readme = "README.md"
 requires-python = ">=3.8"
-license = { text = "GPL-3.0" }
+license = "GPL-3.0"
 authors = [
   { name = "Annhilati"},
   { name = "Joshi"}
@@ -24,3 +24,6 @@ dependencies = [
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["vpmobil"]
