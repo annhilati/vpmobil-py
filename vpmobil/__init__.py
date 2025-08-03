@@ -22,4 +22,4 @@ _symbols = [Vertretungsplan,
             IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound]
 _constants = []
 
-__all__ = [obj.__name__ for obj in _symbols].extend(_constants)
+__all__ = [obj.__name__ for obj in _symbols] + _constants

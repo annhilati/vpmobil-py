@@ -1,4 +1,10 @@
-## [1.0.0](https://pypi.org/project/vpmobil/1.0.0/) (2025-08)
+## [1.0.1](https://pypi.org/project/vpmobil/1.0.1/) (2025-08-03)
+
+### 🪲 Bug Fixes
+
+* Symbole können nicht aus `vpmobil` importiert werden
+
+## [1.0.0](https://pypi.org/project/vpmobil/1.0.0/) (2025-08-03)
 
 ### 🚀 Neue Funktionen
 
