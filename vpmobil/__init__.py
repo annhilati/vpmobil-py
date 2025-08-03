@@ -12,9 +12,9 @@ for periode, stunden in klasse8b.stundenHeute:
 ```
 """
 
+from .io import parsefromfile
 from .api import Vertretungsplan, IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound
 from .models import VpDay, Klasse, Stunde, Kurs
-from .io import parsefromfile
 
 _symbols = [Vertretungsplan,
             VpDay, Klasse, Stunde, Kurs,

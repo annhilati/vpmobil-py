@@ -42,19 +42,3 @@ kurs.fach
 kurs.gruppe
 kurs.kursnummer
 kurs.lehrer
-
-class Test():
-    """
-    Enthält die notwendigen Daten um auf einen stundenplan24.de-Vertretungsplan zuzugreifen
-
-    ### Argumente:
-        schulnummer (int): Schulnummer des Vertretungsplans
-        benutzer (str): Benutzername des Benutzers über den zugegriffen werden soll
-        passwort (str): Passwort des Benutzers über den zugegriffen werden soll
-        url (str): URL und Verzeichnispfad, an dem die Quelldateien gespeichert werden
-        dateinamensschema (str): Schema der Namen der Quelldateien
-            z.B. `PlanKl%Y%m%d.xml`. Es können [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden
-
-    ### Methode:
-        .fetch(): Ruft die Daten eines Tages ab
-    """

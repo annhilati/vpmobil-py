@@ -11,6 +11,7 @@
 * Die meisten Funktionen und Eigenschaften gegeben nun `None` zurück statt einen Fehler zu werfen, wenn in den XML-Daten nichts gefunden wird
 * Einige unhandliche und unnötige Methoden von `Klasse` wurden entfernt
 * Ein paar Exceptions wurden umbenannt, entfernt oder durch built-ins ersetzt
+* Einige Module wurden zusammengeführt und umbenannt
 
 ### 🪲 Bug Fixes
 

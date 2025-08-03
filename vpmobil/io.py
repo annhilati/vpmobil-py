@@ -1,5 +1,6 @@
-from pathlib import Path
 import xml.etree.ElementTree as XML
+
+from pathlib import Path
 
 from .models import VpDay
 

@@ -1,9 +1,9 @@
-import requests as WEB
 import xml.etree.ElementTree as XML
-
-from dataclasses import dataclass
-from datetime import datetime, date, timedelta
+import requests as WEB
 from yarl import URL
+
+from datetime import datetime, date, timedelta
+from dataclasses import dataclass
 
 from .models import VpDay
 
