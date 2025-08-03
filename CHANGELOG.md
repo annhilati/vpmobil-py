@@ -10,14 +10,15 @@
 * Die Werkzeugklasse `workflow` wurde aufgelöst. Alle Klassen, Funktionen und Exceptions können einfach aus `vpmobil` importiert werden
 * Die meisten Funktionen und Eigenschaften gegeben nun `None` zurück statt einen Fehler zu werfen, wenn in den XML-Daten nichts gefunden wird
 * Einige unhandliche und unnötige Methoden von `Klasse` wurden entfernt
+* Ein paar Exceptions wurden umbenannt, entfernt oder durch built-ins ersetzt
 
 ### 🪲 Bug Fixes
 
-* In der Nachricht des `FetchingError`s, der bei `Vertretungsplan.fetch()` geworfen wird, wird die Datei, die nicht abgerufen werden konnte, nicht richtig benannt. 
+* In der Nachricht des `FetchingError`s, der bei `Vertretungsplan.fetch()` geworfen wird, wird die Datei, die nicht abgerufen werden konnte, nicht richtig benannt
 
 ### ⚠️ Bekannte Probleme
 
-* `VpDay.lehrerKrank` behandelt multiple Lehrer in einem Kurs oder einer Stunde nicht mehr separat
+* `VpDay.lehrerKrank` behandelt mehrere in einem Kurs oder einer Stunde angeführte Lehrer nicht mehr separat
 
 ## [0.4.2](https://pypi.org/project/vpmobil/0.4.2/) (2024-12-28)
 

@@ -6,8 +6,7 @@ from pathlib import Path
 from datetime import datetime, date, time
 from dataclasses import dataclass
 
-from .lib import prettyxml
-from .exceptions import XMLParsingError
+from .utils import prettyxml
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         VpDay                                            │ 
@@ -28,7 +27,7 @@ class VpDay():
 
     def __post_init__(self):
         if self._data.find(".//planart") is None or self._data.find(".//planart").text != "K":
-            raise XMLParsingError("VpDay unterstützt nur Indiware-Vertretungspläne des Typs 'K'")
+            raise ValueError("VpDay unterstützt nur Indiware-Vertretungspläne des Typs 'K'")
 
     def __getitem__(self, v) -> Klasse:
         return self.klasse(v)

@@ -30,7 +30,6 @@ klasse.kurs()
 stunde.geändert
 stunde.ausfall
 stunde.beginn
-stunde.besonders
 stunde.ende
 stunde.fach
 stunde.info

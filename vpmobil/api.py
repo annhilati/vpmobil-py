@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from yarl import URL
 
-from .exceptions import FetchingError, InvalidCredentialsError, XMLParsingError
-from .parser import VpDay
+from .models import VpDay
 
 @dataclass
 class Vertretungsplan():
@@ -79,9 +78,9 @@ class Vertretungsplan():
 
         Raises
         ----------
-        FetchingError : Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
-        InvalidCredentialsError : Wenn Benutzername oder Passwort falsch sind.
-        XMLParsingError : Falls die Antwort vom Server kein gültiges XML enthält
+        ResourceNotFound : Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist
+        InvalidCredentialsError : Wenn Benutzername oder Passwort falsch sind
+        ValueError : Falls die Antwort vom Server kein gültiges XML enthält
         """
 
         file_name: str = datum.strftime(self.dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
@@ -95,7 +94,7 @@ class Vertretungsplan():
         elif status == 401:
             raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", response=response)
         elif status == 404:
-            raise FetchingError(message=f"Datei '{file_name}' konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer '{self.schulnummer}' ist nicht registriert.", response=response)
+            raise ResourceNotFound(message=f"Datei '{file_name}' konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer '{self.schulnummer}' ist nicht registriert.", response=response)
         else:
             response.raise_for_status()
 
@@ -104,9 +103,9 @@ class Vertretungsplan():
 
         Raises
         ----------
-        FetchingError : Wenn keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
+        ResourceNotFound : Wenn keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
         InvalidCredentialsError : Wenn Benutzername oder Passwort falsch sind.
-        XMLParsingError : Falls eine Antwort vom Server kein gültiges XML enthält
+        ValueError : Falls eine Antwort vom Server kein gültiges XML enthält
         """
 
         today = datetime.today().date()
@@ -126,9 +125,26 @@ class Vertretungsplan():
                 try:
                     plan = self.fetch(tag)
                     pläne.append(plan)
-                except FetchingError:
+                except IndiwareFetchingError:
                     continue
         if pläne == []:
-            raise FetchingError("Es konnten in einem zweimonatigen Zeitraum keine Vertretungspläne gefunden werden.")
+            raise IndiwareFetchingError("Es konnten in einem zweimonatigen Zeitraum keine Vertretungspläne gefunden werden.")
         else:
             return pläne
+        
+class IndiwareFetchingError(Exception):
+    "Wenn die angeforderten Daten nicht abgerufen werden können"
+    def __init__(self, message: str, response: WEB.Response = None):
+        self.message = message
+        self.response = response
+
+    def __str__(self):
+        return f"{self.message} ({self.response})"
+    
+class ResourceNotFound(IndiwareFetchingError):
+    "Wenn die angeforderten Daten nicht existieren"
+    ...
+
+class InvalidCredentialsError(IndiwareFetchingError):
+    "Wenn die Anmeldedaten ungültig sind"
+    ...

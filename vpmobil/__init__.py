@@ -1,24 +1,25 @@
 """
-A python wrapper package for interacting with a stundenplan24.de substitution plan
+A python wrapper package for interacting with stundenplan24.de substitution plans
 
-    >>> from vpmobil import Vertretungsplan
-    >>> vp = Vertretungsplan(39563772, "schueler", "j39jjs6")
-    >>> tag = vp.fetch(20240619)
-    >>> klasse = tag.klasse("9b")
-    >>> stunden = klasse.stunden()
-    >>> for stunde in stunden:
-    >>>     print(f"{stunde.periode}: {stunde.fach} bei {stunde.lehrer} in {stunde.raum}")
+```
+from vpmobil import Vertretungsplan
+plan = Vertretungsplan(10323955, "schueler", "h39gh23")
+heute = plan.fetch()
+klasse8b = heute.klasse("8b")
+for periode, stunden in klasse8b.stundenHeute:
+    for stunde in stunden:
+        print(f"{periode} | {stunde.fach} bei {stunde.lehrer}")
+```
 """
 
-from .fetcher import Vertretungsplan
-from .parser import VpDay, Klasse, Stunde, Kurs
+from .api import Vertretungsplan, IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound
+from .models import VpDay, Klasse, Stunde, Kurs
 from .io import parsefromfile
-from .exceptions import FetchingError, InvalidCredentialsError, XMLParsingError
 
 _symbols = [Vertretungsplan,
             VpDay, Klasse, Stunde, Kurs,
             parsefromfile,
-            FetchingError, InvalidCredentialsError, XMLParsingError]
+            IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound]
 _constants = []
 
 __all__ = [obj.__name__ for obj in _symbols].extend(_constants)
