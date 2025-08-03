@@ -21,3 +21,5 @@
 ## Verwendete Bibliotheken und Pakete
 
 * [requests](https://pypi.org/project/requests/)
+* [yarl](https://pypi.org/project/yarl)
+
