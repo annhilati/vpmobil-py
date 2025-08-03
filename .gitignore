@@ -1,6 +1,6 @@
 # Environment
 *.env
-.vscode/*
+/.vscode
 
 # Python Build
 **.egg-info/
