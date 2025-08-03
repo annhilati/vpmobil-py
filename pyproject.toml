@@ -1,10 +1,10 @@
 [project]
 name = "vpmobil"
 version = "1.0.0"
-description = "A python API wrapper package for interacting with a stundenplan24.de substitution plan"
+description = "A python API wrapper package for interacting with stundenplan24.de substitution plans"
 readme = "README.md"
 requires-python = ">=3.8"
-license = "GPL-3.0"
+license = "GPL-3.0-or-later"
 authors = [
   { name = "Annhilati"},
   { name = "Joshi"}
