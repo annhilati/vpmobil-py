@@ -7,7 +7,7 @@ A python wrapper package for interacting with a stundenplan24.de substitution pl
     >>> klasse = tag.klasse("9b")
     >>> stunden = klasse.stunden()
     >>> for stunde in stunden:
-    >>>     print(f"{stunde.nr}: {stunde.fach} bei {stunde.lehrer} in {stunde.raum}")
+    >>>     print(f"{stunde.periode}: {stunde.fach} bei {stunde.lehrer} in {stunde.raum}")
 """
 
 from .fetcher import Vertretungsplan

@@ -25,8 +25,9 @@ klasse.stundenHeute
 klasse.stundenHeuteInPeriode()
 klasse.kürzel
 klasse.kurse
+klasse.kurs()
 
-stunde.anders
+stunde.geändert
 stunde.ausfall
 stunde.beginn
 stunde.besonders

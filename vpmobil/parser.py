@@ -72,8 +72,7 @@ class VpDay():
         klassen_elemente = self._data.findall('.//Kl')
         if klassen_elemente is not []:
             for kl in klassen_elemente:
-                kurz = kl.find('Kurz')
-                if kurz is not None:
+                if kl.find('Kurz') is not None:
                     klassen.append(Klasse(_data=kl))
             return klassen
         return None
@@ -101,53 +100,81 @@ class VpDay():
                 freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
         return freieTageList
     
+    # @property
+    # def lehrerKrank(self) -> list[str]:
+    #     """Liste der Lehrer, die außerplanmäßig keinen Untericht halten<br>
+    #     Dies umfasst auch Lehrer, die schulische Veranstaltung beaufischtigen und deren Stunden deswegen als ausgefallen markiert wurden.
+    #     """
+
+    #     leKrank: list[str] = []
+    #     leNichtKrank: list[str] = []
+
+    #     for kl in self._data.find('Klassen').findall("Kl"):
+    #         lehrerInfo: list[dict] = []
+    #         for ue in kl.find("Unterricht").findall("Ue"): # Wir sammeln für alle Kurse dieser Klasse die Nummer und das Lehrerkürzel
+    #             lehrerInfo.append({
+    #                 "nr": ue.find("UeNr").text, 
+    #                 "kurz": ue.find("UeNr").attrib["UeLe"]
+    #             })
+    #         try:
+    #             alleStd = Klasse(kl).stundenHeute
+    #         except:
+    #             continue
+    #         else:
+    #             for st in alleStd: # Jetzt gehen wir durch alle Stunden und schauen, ob sie geändert sind
+    #                 for std in alleStd[st]:
+    #                     if not std.geändert and not std.ausfall and not std.besonders: # Wenn nicht fügen wir die Lehrer, welche die Stunde halten zu den nicht kranken Lehrern hinzu
+    #                         for sr in std.lehrer.split(" "):
+    #                             leNichtKrank.append(sr)
+    #                             if sr in leKrank:
+    #                                 leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
+                        
+    #                     elif std.geändert and not std.ausfall and not std.besonders:
+    #                         for sr in std.lehrer.split(" "):
+    #                             leNichtKrank.append(sr)
+    #                             if sr in leKrank:
+    #                                 leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
+                        
+    #                     elif std.geändert and std.ausfall and not std.besonders:
+    #                         le = next(item for item in lehrerInfo if item["nr"] == str(std.kursnummer))
+    #                         if not (le["kurz"] in leNichtKrank): # Wenn die Stunde geändert ist schauen wir, ob der lehrer schon in der nicht kranken Liste ist.
+    #                             if not le["kurz"] in leKrank:
+    #                                 leKrank.append(le["kurz"]) # Wenn nicht, muss er krank sein
+                        
+    #                     elif std.besonders:
+    #                         try:
+    #                             splitLe = std.lehrer.split(" ")
+    #                         except TypeError:
+    #                             continue
+    #                         else:
+    #                             for sr in splitLe:
+    #                                 leNichtKrank.extend(splitLe)
+    #     return sorted(leKrank) # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
+
     @property
-    def lehrerKrank(self) -> list[str]:
-        """Liste der Lehrer, die außerplanmäßig keinen Untericht halten<br>
-        Dies umfasst auch Lehrer, die schulische Veranstaltung beaufischtigen und deren Stunden deswegen als ausgefallen markiert wurden.
-        """
+    def lehrerKrank(self) -> set[str]:
 
-        leKrank: list[str] = []
-        leNichtKrank: list[str] = []
+        lehrerMitUnterricht: set[str] = set()
+        lehrerVielleichtKrank: set[str] = set()
 
-        for kl in self._data.find('Klassen').findall("Kl"):
-            lehrerInfo: list[dict] = []
-            for ue in kl.find("Unterricht").findall("Ue"): # Wir sammeln für alle Kurse dieser Klasse die Nummer und das Lehrerkürzel
-                lehrerInfo.append({
-                    "nr": ue.find("UeNr").text, 
-                    "kurz": ue.find("UeNr").attrib["UeLe"]
-                })
-            try:
-                alleStd = Klasse(kl).stundenHeute
-            except:
-                continue
-            else:
-                for st in alleStd: # Jetzt gehen wir durch alle Stunden und schauen, ob sie geändert sind
-                    for std in alleStd[st]:
-                        if not std.anders and not std.ausfall and not std.besonders: # Wenn nicht fügen wir die Lehrer, welche die Stunde halten zu den nicht kranken Lehrern hinzu
-                            for sr in std.lehrer.split(" "):
-                                leNichtKrank.append(sr)
-                                if sr in leKrank:
-                                    leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
-                        elif std.anders and not std.ausfall and not std.besonders:
-                            for sr in std.lehrer.split(" "):
-                                leNichtKrank.append(sr)
-                                if sr in leKrank:
-                                    leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
-                        elif std.anders and std.ausfall and not std.besonders:
-                            le = next(item for item in lehrerInfo if item["nr"] == str(std.kursnummer))
-                            if not (le["kurz"] in leNichtKrank): # Wenn die Stunde geändert ist schauen wir, ob der lehrer schon in der nicht kranken Liste ist.
-                                if not le["kurz"] in leKrank:
-                                    leKrank.append(le["kurz"]) # Wenn nicht, muss er krank sein
-                        elif std.besonders:
-                            try:
-                                splitLe = std.lehrer.split(" ")
-                            except TypeError:
-                                continue
-                            else:
-                                for sr in splitLe:
-                                    leNichtKrank.append(splitLe)
-        return sorted(leKrank) # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
+        for klasse in self.klassen:
+            for stunde in [stunde for stunden in klasse.stundenHeute.values() for stunde in stunden]:
+                if stunde.ausfall:
+                    lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
+                elif stunde.lehrergeändert:
+                    lehrerMitUnterricht.add(stunde.lehrer)
+                    lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
+                elif not stunde.ausfall and not stunde.lehrergeändert:
+                    lehrerMitUnterricht.add(stunde.lehrer)
+
+        return sorted(
+            {
+                lehrer for lehrer in lehrerVielleichtKrank
+                if lehrer not in lehrerMitUnterricht
+                and lehrer != ""
+                and lehrer is not None
+            }
+        )
 
     def saveasfile(self, pfad: Path = "./datei.xml", overwrite=False) -> None:
         """Speichert alle Daten des Tages als XML-Datei
@@ -268,40 +295,11 @@ class Stunde():
     def ende(self) -> time:
         "Ende der Stunde"
         return datetime.strptime(self._data.find("Ende").text, "%H:%M").time()
-
-    @property
-    def anders(self) -> bool:
-        "Ob eine Änderung im Plan vorliegt"
-        return "FaAe" in self._data.find("Fa").attrib or "RaAe" in self._data.find("Ra").attrib or "LeAe" in self._data.find("Le").attrib
-
+    
     @property
     def ausfall(self) -> bool:
         "Ob die Stunde entfällt"
         return self._data.find("Fa").text == "---"
-    
-    @property
-    def kursnummer(self) -> int:
-        """Nummer des Kurses der Stunde<br>
-        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.<br>
-        Ist `-1`, wenn die Stunde nicht Teil eines Kurses ist
-        """
-        try:
-            return int(self._data.find("Nr").text) 
-        except:
-            return -1
-
-    # @property
-    # def besonders(self) -> bool:
-    #     """
-    #     Gibt an, ob die Stunde besonders ist. (Z.B. True, wenn es sich um eine Exkursion handelt.)\n
-    #     Besondere Stunden haben keine Kursnummer! Prüfe immer erst, ob eine Stunde besonders ist, bevor du die Kursnummer abrufst. .kursnummer gibt dann -1 zurück, wenn die Stunde besonders ist.\n
-    #     Wenn trotzdem ein Lehrer, Fach oder Raum eingetragen ist, wird dieser normal zurückgegeben
-    #     """
-    #     try:
-    #         kursnummer: int = int(self._data.find("Nr").text) 
-    #         return False
-    #     except:
-    #         return True
 
     @property
     def fach(self) -> str | None:
@@ -333,6 +331,36 @@ class Stunde():
         else:
             return None
         
+    @property
+    def fachgeändert(self) -> bool:
+        "Ob eine Änderung des Fachs für die Stunde vorliegt"
+        return "FaAe" in self._data.find("Fa").attrib
+    
+    @property
+    def lehrergeändert(self) -> bool:
+        "Ob eine Änderung des Lehrers für die Stunde vorliegt"
+        return "LeAe" in self._data.find("Le").attrib
+    
+    @property
+    def raumgeändert(self) -> bool:
+        "Ob eine Änderung des Raums für die Stunde vorliegt"
+        return "RaAe" in self._data.find("Ra").attrib
+        
+    @property
+    def geändert(self) -> bool:
+        "Ob eine Änderung im Plan vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
+        return self.fachgeändert or self.lehrergeändert or self.raumgeändert
+
+    @property
+    def kursnummer(self) -> int | None:
+        """Nummer des Kurses der Stunde<br>
+        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.<br>
+        Kann `None` sein, beispielsweise wenn die Stunde eine Exkursion ist.
+        """
+        if self._data.find("Nr") is not None and self._data.find("Nr").text is not None:
+            return int(self._data.find("Nr").text)
+        else:
+            return None
     
     @property
     def info(self) -> str | None:
@@ -359,24 +387,33 @@ class Kurs():
     _data: XML.Element
 
     @property
-    def lehrer(self) -> str:
+    def lehrer(self) -> str | None:
         "Lehrer des Kurses"
-        return self._data.attrib["UeLe"]
+        if self._data.attrib.get("UeLe") is not None and self._data.attrib.get("UeLe") != "":
+            return self._data.attrib["UeLe"]
+        else:
+            return None
     
     @property
-    def fach(self) -> str:
-        "Fach des Kurses"
-        return self._data.attrib["UeFa"]
+    def fach(self) -> str | None:
+        "Lehrer des Kurses"
+        if self._data.attrib.get("UeFa") is not None and self._data.attrib.get("UeFa") != "":
+            return self._data.attrib["UeFa"]
+        else:
+            return None
     
     @property
     def gruppe(self) -> str | None:
-        "Gruppenbezeichnung des Kurses"
-        return self._data.attrib.get("UeGr")
+        "Lehrer des Kurses"
+        if self._data.attrib.get("UeGr") is not None and self._data.attrib.get("UeGr") != "":
+            return self._data.attrib["UeGr"]
+        else:
+            return None
 
     @property
     def kursnummer(self) -> int:
         "Kursnummer des Kurses"
-        return self._data.text
+        return int(self._data.text)
 
     def __repr__(self) -> str:
         return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or '-'}' (Kursnummer '{self.kursnummer}')>"
