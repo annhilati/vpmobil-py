@@ -1,6 +1,6 @@
 # vpmobil-py installieren
 
-### Mit PyPI
+### Mit pip
 
 ```batch
 pip install vpmobil
