@@ -15,6 +15,10 @@
 
 * In der Nachricht des `FetchingError`s, der bei `Vertretungsplan.fetch()` geworfen wird, wird die Datei, die nicht abgerufen werden konnte, nicht richtig benannt. 
 
+### ⚠️ Bekannte Probleme
+
+* `VpDay.lehrerKrank` behandelt multiple Lehrer in einem Kurs oder einer Stunde nicht mehr separat
+
 ## [0.4.2](https://pypi.org/project/vpmobil/0.4.2/) (2024-12-28)
 
 ### 🔧 Änderungen

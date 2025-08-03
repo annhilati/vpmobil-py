@@ -91,10 +91,7 @@ class Vertretungsplan():
 
         status = response.status_code
         if status == 200:
-            try:
-                return VpDay(_data=XML.fromstring(response.content))
-            except Exception as e:
-                raise XMLParsingError(f"Die Daten sind kein gültiges XML ({e})")
+            return VpDay(_data=XML.fromstring(response.content))
         elif status == 401:
             raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", response=response)
         elif status == 404:

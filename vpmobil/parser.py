@@ -7,6 +7,7 @@ from datetime import datetime, date, time
 from dataclasses import dataclass
 
 from .lib import prettyxml
+from .exceptions import XMLParsingError
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         VpDay                                            │ 
@@ -24,6 +25,10 @@ class VpDay():
     """
 
     _data: XML.ElementTree
+
+    def __post_init__(self):
+        if self._data.find(".//planart") is None or self._data.find(".//planart").text != "K":
+            raise XMLParsingError("VpDay unterstützt nur Indiware-Vertretungspläne des Typs 'K'")
 
     def __getitem__(self, v) -> Klasse:
         return self.klasse(v)
@@ -54,7 +59,9 @@ class VpDay():
 
     @property
     def zusatzInfo(self) -> str | None:
-        "Vom Planer eingetragene Zusatzinformationen zum Tag"
+        """Zusätzliche Informationen zum Tag<br>
+        Kann Multiline sein
+        """
         ziZeilen = []
         for zusatzInfo in self._data.findall('.//ZusatzInfo'):
             for ziZeile in zusatzInfo.findall('.//ZiZeile'):
@@ -99,61 +106,11 @@ class VpDay():
             if ft.text is not None:
                 freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
         return freieTageList
-    
-    # @property
-    # def lehrerKrank(self) -> list[str]:
-    #     """Liste der Lehrer, die außerplanmäßig keinen Untericht halten<br>
-    #     Dies umfasst auch Lehrer, die schulische Veranstaltung beaufischtigen und deren Stunden deswegen als ausgefallen markiert wurden.
-    #     """
-
-    #     leKrank: list[str] = []
-    #     leNichtKrank: list[str] = []
-
-    #     for kl in self._data.find('Klassen').findall("Kl"):
-    #         lehrerInfo: list[dict] = []
-    #         for ue in kl.find("Unterricht").findall("Ue"): # Wir sammeln für alle Kurse dieser Klasse die Nummer und das Lehrerkürzel
-    #             lehrerInfo.append({
-    #                 "nr": ue.find("UeNr").text, 
-    #                 "kurz": ue.find("UeNr").attrib["UeLe"]
-    #             })
-    #         try:
-    #             alleStd = Klasse(kl).stundenHeute
-    #         except:
-    #             continue
-    #         else:
-    #             for st in alleStd: # Jetzt gehen wir durch alle Stunden und schauen, ob sie geändert sind
-    #                 for std in alleStd[st]:
-    #                     if not std.geändert and not std.ausfall and not std.besonders: # Wenn nicht fügen wir die Lehrer, welche die Stunde halten zu den nicht kranken Lehrern hinzu
-    #                         for sr in std.lehrer.split(" "):
-    #                             leNichtKrank.append(sr)
-    #                             if sr in leKrank:
-    #                                 leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
-                        
-    #                     elif std.geändert and not std.ausfall and not std.besonders:
-    #                         for sr in std.lehrer.split(" "):
-    #                             leNichtKrank.append(sr)
-    #                             if sr in leKrank:
-    #                                 leKrank.remove(sr) # Wenn der Lehrer fälschlicherweise als krank eingeordnet wurde, löschen wir ihn aus der kranken Liste
-                        
-    #                     elif std.geändert and std.ausfall and not std.besonders:
-    #                         le = next(item for item in lehrerInfo if item["nr"] == str(std.kursnummer))
-    #                         if not (le["kurz"] in leNichtKrank): # Wenn die Stunde geändert ist schauen wir, ob der lehrer schon in der nicht kranken Liste ist.
-    #                             if not le["kurz"] in leKrank:
-    #                                 leKrank.append(le["kurz"]) # Wenn nicht, muss er krank sein
-                        
-    #                     elif std.besonders:
-    #                         try:
-    #                             splitLe = std.lehrer.split(" ")
-    #                         except TypeError:
-    #                             continue
-    #                         else:
-    #                             for sr in splitLe:
-    #                                 leNichtKrank.extend(splitLe)
-    #     return sorted(leKrank) # Sorry für den mess, aber es funktioniert und fast alles ist leider auch nötig
 
     @property
-    def lehrerKrank(self) -> set[str]:
-
+    def lehrerKrank(self) -> list[str]:
+        "Aller Lehrer, die unplanmäßig keinen Unterricht haben"
+        
         lehrerMitUnterricht: set[str] = set()
         lehrerVielleichtKrank: set[str] = set()
 
@@ -365,7 +322,7 @@ class Stunde():
     @property
     def info(self) -> str | None:
         "Zusätzliche Information der Stunde"
-        if self._data.find("If") is not None and self._data.find("If").text is not None:
+        if self._data.find("If") is not None and self._data.find("If").text is not None and self._data.find("If").text != "":
             return self._data.find("If").text
         else:
             return None
@@ -396,7 +353,7 @@ class Kurs():
     
     @property
     def fach(self) -> str | None:
-        "Lehrer des Kurses"
+        "Fach des Kurses"
         if self._data.attrib.get("UeFa") is not None and self._data.attrib.get("UeFa") != "":
             return self._data.attrib["UeFa"]
         else:
@@ -404,7 +361,7 @@ class Kurs():
     
     @property
     def gruppe(self) -> str | None:
-        "Lehrer des Kurses"
+        "Gruppenbezeichnung des Kurses"
         if self._data.attrib.get("UeGr") is not None and self._data.attrib.get("UeGr") != "":
             return self._data.attrib["UeGr"]
         else:

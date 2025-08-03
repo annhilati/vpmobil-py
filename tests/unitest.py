@@ -59,7 +59,7 @@ while endNow == False:
             print("UNITEST - FEHLER - tag.lehrerKrank am Tag " + dat)
             print(testVar)
         try:
-            testVar = tag.datei + " " + str(tag.datum) + " " + str(tag.zeitstempel) + " " + str(tag.zeitstempel) + " " + tag.zusatzInfo
+            testVar = tag.datei + " " + str(tag.datum) + " " + str(tag.zeitstempel) + " " + str(tag.zeitstempel) + " " + str(tag.zusatzInfo)
         except:
             print("UNITEST - FEHLER - einer von .datei, .datum, .wochentag, .zeitstempel, .zusatzinfo am Tag " + dat)
             print(testVar)
