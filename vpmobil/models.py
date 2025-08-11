@@ -262,6 +262,9 @@ class Stunde():
     def fach(self) -> str | None:
         """Fach der Stunde<br>
         Gibt `None` zurück, wenn die Stunde entfällt
+
+        Es kann sein, dass nicht das wirkliche Fach sondern die Kursbezeichnung zurückgegeben wird. Stattdessen `klasse.kurs(stunde.kursnummer)` verwenden.<br>
+        Bei Unsicherheit mit Fallback: `stunde.fach if klasse.kurs(stunde.kursnummer) is None else klasse.kurs(stunde.kursnummer).fach`
         """
         if self._data.find("Fa") is not None and self._data.find("Fa").text not in [None, "---"]:
             return self._data.find("Fa").text
