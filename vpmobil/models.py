@@ -263,7 +263,7 @@ class Stunde():
         """Fach der Stunde<br>
         Gibt `None` zurück, wenn die Stunde entfällt
         """
-        if self._data.find("Fa") is not None and self._data.find("Fa").text is not None:
+        if self._data.find("Fa") is not None and self._data.find("Fa").text not in [None, "---"]:
             return self._data.find("Fa").text
         else:
             return None
