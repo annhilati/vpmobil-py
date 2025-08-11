@@ -293,17 +293,17 @@ class Stunde():
         
     @property
     def fachgeändert(self) -> bool:
-        "Ob eine Änderung des Fachs für die Stunde vorliegt"
+        "Ob eine Änderung des Fachs für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
         return "FaAe" in self._data.find("Fa").attrib
     
     @property
     def lehrergeändert(self) -> bool:
-        "Ob eine Änderung des Lehrers für die Stunde vorliegt"
+        "Ob eine Änderung des Lehrers für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
         return "LeAe" in self._data.find("Le").attrib
     
     @property
     def raumgeändert(self) -> bool:
-        "Ob eine Änderung des Raums für die Stunde vorliegt"
+        "Ob eine Änderung des Raums für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
         return "RaAe" in self._data.find("Ra").attrib
         
     @property
@@ -314,8 +314,10 @@ class Stunde():
     @property
     def kursnummer(self) -> int | None:
         """Nummer des Kurses der Stunde<br>
-        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.<br>
+        Kann `None` sein, wenn das Fach der Stunde geändert wurde, jedoch nicht, wenn die Stunde entfällt.<br>
         Kann `None` sein, beispielsweise wenn die Stunde eine Exkursion ist.
+        
+        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.<br>
         """
         if self._data.find("Nr") is not None and self._data.find("Nr").text is not None:
             return int(self._data.find("Nr").text)
