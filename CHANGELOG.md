@@ -1,5 +1,10 @@
 ## Future
 
+### 🚀 Neue Funktionen
+
+* Weitere Funktionalität zum verarbeiten von von Indiware-Software bereitgestellter Daten ist nun im Submodul `extensions` verfügbar
+* Kurse und deren Schüler für Klassen können nun mit `vpmobil.extensions.einzpläne.kurse()` aus EinzPläne-PDF-Dateien gelesen werden 
+
 ### 🔧 Änderungen
 
 * Ein paar Docstrings wurden konkretisiert oder weisen nun auf mögliche Unstimmigkeiten hin
