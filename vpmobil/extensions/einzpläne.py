@@ -1,8 +1,10 @@
 from PyPDF2 import PdfReader
 from pathlib import Path
 
-def kurse(pfad: Path) -> dict[str, set[tuple]]:
-    """Extrahiert aus einem EinzPläne-PDF die Kurse und zugehörige Schüler
+def kurse(pfad: Path) -> dict[str, set[tuple[str, str]]]:
+    """Extrahiert aus einem EinzPläne-PDF die Kursekürzel und die Namen zugehöriger Schüler
+
+    Die Namen werden als 2-Tupeln aus Vorname (und Mittelnamen) und Nachname übergeben.
 
     Raises
     ----------
@@ -43,4 +45,40 @@ def kurse(pfad: Path) -> dict[str, set[tuple]]:
     return {
         key: sorted(value, key=lambda t: t[0])
         for key, value in sorted(kurse.items())
+    }
+
+def tutoren(pfad: Path) -> dict[str: set[tuple[str, str]]]:
+    """Extrahiert aus einem EinzPläne-PDF die Tutoren und die Namen zugehöriger Schüler
+
+    Die Namen werden als 2-Tupeln aus Vorname (und Mittelnamen) und Nachname übergeben.
+
+    Raises
+    ----------
+    ValueError : Wenn das PDF auf unbekannte Weise formatiert ist
+    """
+
+    reader = PdfReader(pfad)
+
+    seiten = [seite.extract_text() for seite in reader.pages]
+
+    tutoren: dict[str: set[tuple]] = {}
+
+    if not seiten[0].startswith("Schulname"):
+        raise ValueError("Das PDF ist auf unbekannte Weise formatiert. Wenn du denkst, dass dies funktionieren sollte, melde diesen Fehler bite im Issue-Tracker von vpmobil-py auf GitHub.")
+    
+    for seite in seiten:
+        for zeile in seite.splitlines():
+            if zeile.startswith("Plan für Schüler"):
+                tutor = zeile.split(": ")[-1]
+            elif zeile.startswith("Montag"):
+                name = zeile.split("Freitag")[1]
+                schüler = (name.split(", ")[1], name.split(", ")[0])
+                if tutor not in tutoren:
+                    tutoren[tutor] = {schüler}
+                else:
+                    tutoren[tutor].add(schüler)
+
+    return {
+        key: sorted(value, key=lambda t: t[0])
+        for key, value in sorted(tutoren.items())
     }

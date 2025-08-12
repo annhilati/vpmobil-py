@@ -3,7 +3,7 @@
 ### 🚀 Neue Funktionen
 
 * Weitere Funktionalität zum verarbeiten von von Indiware-Software bereitgestellter Daten ist nun im Submodul `extensions` verfügbar
-* Kurse und deren Schüler für Klassen können nun mit `vpmobil.extensions.einzpläne.kurse()` aus EinzPläne-PDF-Dateien gelesen werden 
+* Kurse und deren Schüler einer Klasse können nun mit `vpmobil.extensions.einzpläne.kurse()` aus EinzPläne-PDF-Dateien gelesen werden 
 
 ### 🔧 Änderungen
 
