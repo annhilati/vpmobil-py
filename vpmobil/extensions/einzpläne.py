@@ -1,0 +1,43 @@
+from PyPDF2 import PdfReader
+from pathlib import Path
+
+def kurse(pfad: Path) -> dict[str, set[tuple]]:
+    """Extrahiert aus einem EinzPläne-PDF die Kurse und zugehörige Schüler
+
+    Raises
+    ----------
+    ValueError : Wenn das PDF auf unbekannte Weise formatiert ist
+    """
+    
+    reader = PdfReader(pfad)
+
+    seiten = [seite.extract_text() for seite in reader.pages]
+
+    kurse: dict[str, set[tuple]] = {}
+
+    if not seiten[0].startswith("Schulname"):
+        raise ValueError("Das PDF ist auf unbekannte Weise formatiert. Wenn du denkst, dass dies funktionieren sollte, melde diesen Fehler bite im Issue-Tracker von vpmobil-py auf GitHub.")
+
+    for seite in seiten:
+        for zeile in seite.splitlines():
+            if "Montag" in zeile:
+                name = zeile.split("Freitag")[1]
+                schüler = (name.split(", ")[1], name.split(", ")[0])
+            elif zeile[0].isnumeric():
+                values = zeile[1:].split() # Erstes zeichen entfernen, weil es die Periode ist
+                
+                # Der extrahierte Text enthält pro Zeile immer konsektutiv 0-5 Kurse, dementsprechend viele Lehrer und so viele Räume. Allerdings is zwischen dem letzten Lehrer und dem ersten Raum manchmal kein Leerzeichen.
+                if len(values) % 3 == 0:
+                    magic = int(len(values) / 3)
+                elif (len(values) + 1) % 3 == 0:
+                    magic = int((len(values) + 1) / 3)
+                else:
+                    raise ValueError("Das PDF ist auf unbekannte Weise formatiert und kann nicht vollumfänglich ausgewertet werden. Bitte melde diesen Fehler unbedingt im Issue-Tracker von vpmobil-py auf GitHub.")
+
+                for value in values[:magic]: 
+                    if value not in kurse:
+                        kurse[value] = {schüler}
+                    else:
+                        kurse[value].add(schüler)
+
+    return dict(sorted(kurse.items()))
