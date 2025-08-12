@@ -11,7 +11,8 @@ authors = [
 ]
 dependencies = [
   "requests",
-  "yarl"
+  "yarl",
+  "PyPDF2"
 ]
 
 [project.urls]
