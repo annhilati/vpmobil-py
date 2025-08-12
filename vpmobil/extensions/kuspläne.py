@@ -3,12 +3,14 @@ from PyPDF2 import PdfReader
 from pathlib import Path
 
 def kurse(pfad: Path) -> dict[str, list[str]]:
-    reader = PdfReader("plaene.pdf")
+    reader = PdfReader(pfad)
 
-seiten : list[str] = []
+    seiten: list[str] = []
 
-for seite in reader.pages:
-    seiten.append(seite.extract_text())
+    for seite in reader.pages:
+        seiten.append(seite.extract_text())
+
+        
     
 def has_numbers(inputString):
     return any(char.isdigit() for char in inputString)
