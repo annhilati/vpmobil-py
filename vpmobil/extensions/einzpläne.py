@@ -40,4 +40,7 @@ def kurse(pfad: Path) -> dict[str, set[tuple]]:
                     else:
                         kurse[value].add(schüler)
 
-    return dict(sorted(kurse.items()))
+    return {
+        key: sorted(value, key=lambda t: t[0])
+        for key, value in sorted(kurse.items())
+    }
