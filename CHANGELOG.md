@@ -9,7 +9,7 @@
 ### 🔧 Änderungen
 
 * Das Projekt ist nun unter *European Union Public License 1.2* lizensiert
-* Ein paar Docstrings wurden konkretisiert oder weisen nun auf mögliche Unstimmigkeiten hin
+* Ein paar Docstrings wurden konkretisiert oder weisen nun auf mögliche Inkonsistenzen hin
 
 ## [1.0.1](https://pypi.org/project/vpmobil/1.0.1/) (2025-08-03)
 

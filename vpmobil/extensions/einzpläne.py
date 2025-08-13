@@ -6,6 +6,11 @@ def kurse(pfad: Path) -> dict[str, set[tuple[str, str]]]:
 
     Die Namen werden als 2-Tupeln aus Vorname (und Mittelnamen) und Nachname übergeben.
 
+    Parameter
+    ----------
+    pfad : Path
+        Pfad zu einer "EinzPläne"-PDF-Datei von Indiware
+
     Raises
     ----------
     ValueError : Wenn das PDF auf unbekannte Weise formatiert ist
@@ -51,6 +56,11 @@ def tutoren(pfad: Path) -> dict[str: set[tuple[str, str]]]:
     """Extrahiert aus einem EinzPläne-PDF die Tutoren und die Namen zugehöriger Schüler
 
     Die Namen werden als 2-Tupeln aus Vorname (und Mittelnamen) und Nachname übergeben.
+
+    Parameter
+    ----------
+    pfad : Path
+        Pfad zu einer "EinzPläne"-PDF-Datei von Indiware
 
     Raises
     ----------
