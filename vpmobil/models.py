@@ -7,7 +7,7 @@ from pathlib import Path
 from datetime import datetime, date, time
 from dataclasses import dataclass
 
-from .utils import prettyxml
+from vpmobil.utils import prettyxml
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         VpDay                                            │ 

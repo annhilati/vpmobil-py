@@ -5,7 +5,7 @@ from yarl import URL
 from datetime import datetime, date, timedelta
 from dataclasses import dataclass
 
-from .models import VpDay
+from vpmobil.models import VpDay
 
 @dataclass
 class Vertretungsplan():

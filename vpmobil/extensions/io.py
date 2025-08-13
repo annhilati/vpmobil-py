@@ -2,7 +2,7 @@ import xml.etree.ElementTree as XML
 
 from pathlib import Path
 
-from .models import VpDay
+from vpmobil.models import VpDay
 
 def parsefromfile(pfad: Path) -> VpDay:
     """

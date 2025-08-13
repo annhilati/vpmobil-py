@@ -10,6 +10,7 @@
 
 * Das Projekt ist nun unter *European Union Public License 1.2* lizensiert
 * Ein paar Docstrings wurden konkretisiert oder weisen nun auf mögliche Inkonsistenzen hin
+* `vpmobil.parsefromfile()` wurde nach `vpmobil.extensions.io.parsefromfile()` verschoben und kann nun nicht mehr direkt imporiert werden
 
 ## [1.0.1](https://pypi.org/project/vpmobil/1.0.1/) (2025-08-03)
 
