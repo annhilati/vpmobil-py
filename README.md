@@ -1,6 +1,7 @@
 <h1 align="center">vpmobil-py</h1>
 <p align="center">
-  <a href="#"><img alt="CodeSnap" height="150" src="https://github.com/user-attachments/assets/27152a55-aa5e-4d80-bbd3-7dc64b35e77e"></a>
+  <code>pip install vpmobil</code>
+  <br>
   <br>
   <a href="https://pypi.org/project/vpmobil">
     <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/v/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Version&color=5865F2"></a>
@@ -14,6 +15,7 @@
   <br>
   <a href="https://github.com/annhilati/vpmobil-py">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/annhilati/vpmobil-py?style=for-the-badge&logo=github&label=Letzter%20Commit&color=23A55A"></a>  
+
 
 ```python
 from vpmobil import Vertretungsplan

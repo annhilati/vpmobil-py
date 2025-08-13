@@ -11,4 +11,4 @@ dist/
 tests/temp/*
 analyse
 test.py
-/vpmobil/__pycache__
+__pycache__

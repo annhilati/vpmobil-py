@@ -1,7 +1,14 @@
 ## Future
 
+### 🚀 Neue Funktionen
+
+* Weitere Funktionalität zum verarbeiten von von Indiware-Software bereitgestellter Daten ist nun im Submodul `extensions` verfügbar
+* Kurse und deren Schüler einer Klasse können nun mit `vpmobil.extensions.einzpläne.kurse()` aus EinzPläne-PDF-Dateien gelesen werden 
+* Tutoren und deren Schüler einer Klasse können nun mit `vpmobil.extensions.einzpläne.tutoren()` aus EinzPläne-PDF-Dateien gelesen werden 
+
 ### 🔧 Änderungen
 
+* Das Projekt ist nun unter *European Union Public License 1.2* lizensiert
 * Ein paar Docstrings wurden konkretisiert oder weisen nun auf mögliche Unstimmigkeiten hin
 
 ## [1.0.1](https://pypi.org/project/vpmobil/1.0.1/) (2025-08-03)

@@ -4,7 +4,7 @@ version = "1.0.1"
 description = "A python API wrapper package for interacting with stundenplan24.de substitution plans"
 readme = "README.md"
 requires-python = ">=3.8"
-license = "GPL-3.0-or-later"
+license = "EUPL-1.2"
 authors = [
   { name = "Annhilati"},
   { name = "Joshi"}
