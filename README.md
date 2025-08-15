@@ -10,7 +10,7 @@
   <br>
   <a href="https://annhilati.gitbook.io/vpmobil">
     <img alt="Static Badge" src="https://img.shields.io/badge/Gitbook-Documentation?style=for-the-badge&logo=gitbook&logoColor=white&label=Dokumentation&color=23A55A"></a>
-  <a href="https://github.com/annhilati/vpmobil-py?tab=GPL-3.0-1-ov-file">
+  <a href="https://github.com/annhilati/vpmobil-py?tab=EUPL-1.2-1-ov-file">
     <img alt="GitHub License" src="https://img.shields.io/github/license/annhilati/vpmobil-py?style=for-the-badge&label=Lizenz&color=F23F42"></a>
   <br>
   <a href="https://github.com/annhilati/vpmobil-py">
