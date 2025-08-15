@@ -6,7 +6,7 @@ from vpmobil.models import VpDay
 
 def parsefromfile(pfad: Path) -> VpDay:
     """
-    Erstellt ein VpDay-Objekt aus den XML-Daten einer Datei
+    Erstellt ein VpDay-Objekt aus einer XML-Vertretungsplandatei vom Typ K
 
     Parameter
     ----------
