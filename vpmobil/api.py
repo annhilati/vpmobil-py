@@ -5,7 +5,7 @@ from yarl import URL
 from datetime import datetime, date, timedelta
 from dataclasses import dataclass
 
-from vpmobil.models import VpDay
+from vpmobil.models import VertretungsTag
 
 @dataclass
 class Vertretungsplan():
@@ -65,7 +65,7 @@ class Vertretungsplan():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def fetch(self, datum: date = date.today(), datei: str = None) -> VpDay:
+    def fetch(self, datum: date = date.today(), datei: str = None) -> VertretungsTag:
         """Ruft die Daten eines Tages ab.
 
         Parameter
@@ -90,7 +90,7 @@ class Vertretungsplan():
 
         status = response.status_code
         if status == 200:
-            return VpDay(_data=XML.fromstring(response.content))
+            return VertretungsTag(_data=XML.fromstring(response.content))
         elif status == 401:
             raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", response=response)
         elif status == 404:
@@ -98,7 +98,7 @@ class Vertretungsplan():
         else:
             response.raise_for_status()
 
-    def fetchall(self) -> list[VpDay]:
+    def fetchall(self) -> list[VertretungsTag]:
         """Ruft alle Pläne in einem Zeitraum von 2 Monaten ab.
 
         Raises
@@ -117,7 +117,7 @@ class Vertretungsplan():
                 yield current_date
                 current_date += delta
 
-        pläne: list[VpDay] = []
+        pläne: list[VertretungsTag] = []
         for tag in date_range(today - timedelta(days=30), today + timedelta(days=30)):
             if tag.weekday() > 4:
                 continue
@@ -127,8 +127,8 @@ class Vertretungsplan():
                     pläne.append(plan)
                 except IndiwareFetchingError:
                     continue
-        if pläne == []:
-            raise IndiwareFetchingError("Es konnten in einem zweimonatigen Zeitraum keine Vertretungspläne gefunden werden.")
+        if len(pläne) == 0:
+            raise ResourceNotFound("Es konnten in einem zweimonatigen Zeitraum keine Vertretungspläne gefunden werden.")
         else:
             return pläne
         

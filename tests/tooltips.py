@@ -1,9 +1,9 @@
 # In dieser Datei können Tooltips, Docstrings und Typehints getestet werden
 
-from vpmobil import Vertretungsplan, VpDay, Klasse, Stunde, Kurs
+from vpmobil import Vertretungsplan, VertretungsTag, Klasse, Stunde, Kurs
 
 vp = Vertretungsplan()
-day = VpDay()
+day = VertretungsTag()
 klasse = Klasse()
 stunde = Stunde()
 kurs = Kurs()

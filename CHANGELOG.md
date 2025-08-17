@@ -1,22 +1,28 @@
-## Future
+## Development
 
 ### 🚀 Neue Funktionen
 
 * Weitere Funktionalität zum verarbeiten von von Indiware-Software bereitgestellter Daten ist nun im Submodul `extensions` verfügbar
 * Kurse und deren Schüler einer Klasse können nun mit `vpmobil.extensions.einzpläne.kurse()` aus EinzPläne-PDF-Dateien gelesen werden 
 * Tutoren und deren Schüler einer Klasse können nun mit `vpmobil.extensions.einzpläne.tutoren()` aus EinzPläne-PDF-Dateien gelesen werden 
+* `Kurs`e und `Stunde`n können jetzt auf Gleichheit verglichen werden
 
 ### 🔧 Änderungen
 
+* `VpDay` wurde in `VertretungsTag` umbenannt
 * Das Projekt ist nun unter *European Union Public License 1.2* lizensiert
 * Ein paar Docstrings wurden konkretisiert oder weisen nun auf mögliche Inkonsistenzen hin
-* `vpmobil.parsefromfile()` wurde nach `vpmobil.extensions.io.parsefromfile()` verschoben und kann nun nicht mehr direkt imporiert werden
+* `vpmobil.parsefromfile()` wurde nach `vpmobil.extensions.io.parsefromfile()` verschoben und kann nun nicht mehr direkt importiert werden
+
+### 🪲 Bug Fixes
+
+* `Vertretungsplan.fetchall()` raised nicht `ResourceNotFound` sondern `IndiwareFetchingError`, wenn keine Pläne gefunden wurden
 
 ## [1.0.1](https://pypi.org/project/vpmobil/1.0.1/) (2025-08-03)
 
 ### 🪲 Bug Fixes
 
-* Symbole können nicht aus `vpmobil` importiert werden
+* `from vpmobil import *` importiert nichts
 
 ## [1.0.0](https://pypi.org/project/vpmobil/1.0.0/) (2025-08-03)
 

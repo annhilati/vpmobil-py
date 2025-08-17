@@ -2,9 +2,9 @@ import xml.etree.ElementTree as XML
 
 from pathlib import Path
 
-from vpmobil.models import VpDay
+from vpmobil.models import VertretungsTag
 
-def parsefromfile(pfad: Path) -> VpDay:
+def parsefromfile(pfad: Path) -> VertretungsTag:
     """
     Erstellt ein VpDay-Objekt aus einer XML-Vertretungsplandatei vom Typ K
 
@@ -19,5 +19,5 @@ def parsefromfile(pfad: Path) -> VpDay:
     ValueError : Wenn die Datei nicht gelesen werden kann
     """
     with open(pfad) as f:
-        vpday = VpDay(_data=XML.parse(f))
+        vpday = VertretungsTag(_data=XML.parse(f))
     return vpday

@@ -1,7 +1,10 @@
 """
 A python wrapper package for interacting with stundenplan24.de substitution plans
 
-```
+---
+
+### Beispiel für die Nutzung
+```python
 from vpmobil import Vertretungsplan
 plan = Vertretungsplan(10323955, "schueler", "h39gh23")
 heute = plan.fetch()
@@ -10,13 +13,17 @@ for periode, stunden in klasse8b.stundenHeute:
     for stunde in stunden:
         print(f"{periode} | {stunde.fach} bei {stunde.lehrer}")
 ```
+
+---
+
+Siehe auch das `extensions`-Submodul. Importe aus anderen Submodulen sind in der Regel nicht notwendig.
 """
 
 from vpmobil.api import Vertretungsplan, IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound
-from vpmobil.models import VpDay, Klasse, Stunde, Kurs
+from vpmobil.models import VertretungsTag, Klasse, Stunde, Kurs
 
 _symbols = [Vertretungsplan,
-            VpDay, Klasse, Stunde, Kurs,
+            VertretungsTag, Klasse, Stunde, Kurs,
             IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound]
 _constants = []
 
