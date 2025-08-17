@@ -30,9 +30,8 @@ for periode, stunden in klasse.stundenHeute:
         print(f"{periode} | {stunde.fach} bei {stunde.lehrer}")
 ```
 
-  <p align="center">Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, the package and the wiki are formulated in German</p>
-</p>
-
+> [!NOTE]
+> Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, most of the package's functions and classes, their docstrings and the wiki are phrased in German.
 
 
 <h3 align="center"> DISCLAIMER </h3>
