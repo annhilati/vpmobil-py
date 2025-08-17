@@ -1,5 +1,5 @@
 """
-A python wrapper package for interacting with stundenplan24.de substitution plans
+API wrapper module for interacting with vpmobil substitution plans
 
 ---
 

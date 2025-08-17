@@ -1,7 +1,7 @@
 [project]
 name = "vpmobil"
 version = "1.0.1"
-description = "A python API wrapper package for interacting with stundenplan24.de substitution plans"
+description = "API wrapper module for interacting with vpmobil substitution plans"
 readme = "README.md"
 requires-python = ">=3.8"
 license = "EUPL-1.2"
