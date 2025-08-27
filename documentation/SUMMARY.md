@@ -7,4 +7,5 @@
 
 ## Anderes
 
+* [Changelog](anderes/changelog.md)
 * [Credits](anderes/credits.md)
