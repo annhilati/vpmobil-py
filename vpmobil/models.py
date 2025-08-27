@@ -164,7 +164,7 @@ class VertretungsTag():
     @classmethod
     def fromfile(cls, pfad: Path) -> VertretungsTag:
         """
-        Erstellt ein VpDay-Objekt aus einer XML-Vertretungsplandatei vom Typ K
+        Erzeugt ein VpDay-Objekt aus einer XML-Vertretungsplandatei vom Typ K
 
         Parameter
         ----------
