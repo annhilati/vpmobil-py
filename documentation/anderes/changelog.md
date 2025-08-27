@@ -7,12 +7,11 @@
 * Weitere Funktionalität zum verarbeiten von von Indiware-Software bereitgestellter Daten ist nun im Submodul `extensions` verfügbar
 * Kurse und deren Schüler einer Klasse können nun mit `vpmobil.extensions.einzpläne.kurse()` aus EinzPläne-PDF-Dateien gelesen werden
 * Tutoren und deren Schüler einer Klasse können nun mit `vpmobil.extensions.einzpläne.tutoren()` aus EinzPläne-PDF-Dateien gelesen werden
-* `Kurs`e und `Stunde`n können jetzt auf Gleichheit verglichen werden
 
 #### 🔧 Änderungen
 
 * `VpDay` wurde in `VertretungsTag` umbenannt
-* `vpmobil.parsefromfile()` wurde nach `vpmobil.VertretungsTag.parsefromfile()` verschoben und kann nun nicht mehr direkt importiert werden
+* `vpmobil.parsefromfile()` wurde nach `vpmobil.VertretungsTag.fromfile()` verschoben und kann nun nicht mehr direkt importiert werden
 * Das Projekt ist nun unter _European Union Public License 1.2_ lizensiert
 * Ein paar Docstrings wurden konkretisiert oder weisen nun auf mögliche Inkonsistenzen hin
 * `Vertretungsplan.fetchall()` wurde in `Vertretungsplan.bulkfetch()` umbenannt
