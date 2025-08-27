@@ -1,6 +1,6 @@
 # Changelog
 
-### Development
+### [1.1.0](https://pypi.org/project/vpmobil/1.1.0/) (2025-08-27)
 
 #### 🚀 Neue Funktionen
 
