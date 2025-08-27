@@ -1,14 +1,14 @@
 from PyPDF2 import PdfReader
 from pathlib import Path
 
-def kurse(pfad: Path) -> dict[str, set[tuple[str, str]]]:
-    """Extrahiert aus einem EinzPläne-PDF die Kursekürzel und die Namen zugehöriger Schüler
+def kurse(pfad: Path | str) -> dict[str, set[tuple[str, str]]]:
+    """Extrahiert aus einem EinzPläne-PDF die Kurskürzel und die Namen zugehöriger Schüler
 
     Die Namen werden als 2-Tupeln aus Vorname (und Mittelnamen) und Nachname übergeben.
 
     Parameter
     ----------
-    pfad : Path
+    pfad : Path | str
         Pfad zu einer "EinzPläne"-PDF-Datei von Indiware
 
     Raises
@@ -52,14 +52,14 @@ def kurse(pfad: Path) -> dict[str, set[tuple[str, str]]]:
         for key, value in sorted(kurse.items())
     }
 
-def tutoren(pfad: Path) -> dict[str: set[tuple[str, str]]]:
+def tutoren(pfad: Path | str) -> dict[str: set[tuple[str, str]]]:
     """Extrahiert aus einem EinzPläne-PDF die Tutoren und die Namen zugehöriger Schüler
 
     Die Namen werden als 2-Tupeln aus Vorname (und Mittelnamen) und Nachname übergeben.
 
     Parameter
     ----------
-    pfad : Path
+    pfad : Path | str
         Pfad zu einer "EinzPläne"-PDF-Datei von Indiware
 
     Raises

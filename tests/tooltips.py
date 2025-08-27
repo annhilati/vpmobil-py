@@ -9,7 +9,7 @@ stunde = Stunde()
 kurs = Kurs()
 
 vp.fetch()
-vp.fetchall()
+vp.bulkfetch()
 
 day.datei
 day.datum

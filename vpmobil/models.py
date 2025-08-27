@@ -161,6 +161,25 @@ class VertretungsTag():
 
         zielpfad.write_text(xmlpretty, encoding="utf-8")
 
+    @classmethod
+    def fromfile(cls, pfad: Path) -> VertretungsTag:
+        """
+        Erstellt ein VpDay-Objekt aus einer XML-Vertretungsplandatei vom Typ K
+
+        Parameter
+        ----------
+        pfad: Path
+            Dateipfad einer XML-Datei vom Typ K
+
+        Raises
+        ----------
+        FileNotFoundError : Wenn die Datei nicht existiert
+        ValueError : Wenn die Datei nicht gelesen werden kann
+        """
+        with open(pfad) as f:
+            vpday = cls(_data=XML.parse(f))
+        return vpday
+
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Klasse                                           │ 
@@ -235,8 +254,7 @@ class Klasse():
 @dataclass
 class Stunde():
     """Klasse, die eine bestimmte Unterrichtsstunde repräsentiert.
-    
-    Unterstützt Gleichheitsvergleich"""
+    """
 
     _data: XML.Element
         
@@ -338,15 +356,6 @@ class Stunde():
         if self.ausfall:
             return f"<Ausfall: '{self.info}'>"
         return f"<'{self.fach}' bei '{self.lehrer}' in Raum '{self.raum}'>"
-    
-    def __eq__(self, other: Stunde):
-        return (
-            self.fach == other.fach and
-            self.lehrer == other.lehrer and
-            self.raum == other.raum and
-            self.periode == other.periode and
-            self.kursnummer == other.kursnummer
-        )
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Kurs                                             │ 
@@ -355,8 +364,6 @@ class Stunde():
 @dataclass
 class Kurs():
     """Klasse die einen bestimmten Kurs repräsentiert.
-
-    Unterstützt Gleichheitsvergleich
     """
 
     _data: XML.Element
@@ -392,6 +399,3 @@ class Kurs():
 
     def __repr__(self) -> str:
         return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or '-'}' (Kursnummer '{self.kursnummer}')>"
-    
-    def __eq__(self, other: Kurs):
-        return self.fach == other.fach and self.lehrer == other.lehrer and self.gruppe == other.gruppe and self.kursnummer == other.kursnummer

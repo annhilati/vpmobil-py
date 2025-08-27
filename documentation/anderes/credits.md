@@ -20,6 +20,7 @@
 
 ## Verwendete Bibliotheken und Pakete
 
+* [PyPDF2](https://pypi.org/project/PyPDF2)
 * [requests](https://pypi.org/project/requests/)
 * [yarl](https://pypi.org/project/yarl)
 

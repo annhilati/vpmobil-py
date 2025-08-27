@@ -12,9 +12,10 @@
 #### 🔧 Änderungen
 
 * `VpDay` wurde in `VertretungsTag` umbenannt
+* `vpmobil.parsefromfile()` wurde nach `vpmobil.VertretungsTag.parsefromfile()` verschoben und kann nun nicht mehr direkt importiert werden
 * Das Projekt ist nun unter _European Union Public License 1.2_ lizensiert
 * Ein paar Docstrings wurden konkretisiert oder weisen nun auf mögliche Inkonsistenzen hin
-* `vpmobil.parsefromfile()` wurde nach `vpmobil.extensions.io.parsefromfile()` verschoben und kann nun nicht mehr direkt importiert werden
+* `Vertretungsplan.fetchall()` wurde in `Vertretungsplan.bulkfetch()` umbenannt
 
 #### 🪲 Bug Fixes
 

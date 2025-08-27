@@ -33,7 +33,7 @@ class Vertretungsplan():
     schulnummer:        int
     benutzername:       str
     passwort:           str
-    serverdomain:       str = 'stundenplan24.de'
+    serverdomain:       str = "stundenplan24.de"
     verzeichnis:        str = "/{schulnummer}/mobil/mobdaten"
     dateinamenschema:   str = "PlanKl%Y%m%d.xml"
     
@@ -98,7 +98,7 @@ class Vertretungsplan():
         else:
             response.raise_for_status()
 
-    def fetchall(self) -> list[VertretungsTag]:
+    def bulkfetch(self) -> list[VertretungsTag]:
         """Ruft alle Pläne in einem Zeitraum von 2 Monaten ab.
 
         Raises
