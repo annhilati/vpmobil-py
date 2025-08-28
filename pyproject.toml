@@ -18,6 +18,7 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/annhilati/vpmobil"
 "Documentation" = "https://annhilati.gitbook.com/vpmobil"
+"Changelog" = "https://annhilati.gitbook.io/vpmobil/anderes/changelog"
 "Repository" = "https://github.com/annhilati/vpmobil"
 "Bug Tracker" = "https://github.com/annhilati/vpmobil/issues"
 "Download" = "https://pypi.org/project/vpmobil/"
