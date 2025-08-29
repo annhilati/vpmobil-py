@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Any
 
 import xml.etree.ElementTree as XML
 import re
@@ -116,11 +117,15 @@ class VertretungsTag():
 
         for klasse in self.klassen:
             for stunde in [stunde for stunden in klasse.stundenHeute.values() for stunde in stunden]:
-                if stunde.ausfall:
+
+                if stunde.ausfall and klasse.kurs(stunde.kursnummer) is not None:
                     lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
-                elif stunde.lehrergeändert:
+
+                elif stunde.lehrergeändert: 
                     lehrerMitUnterricht.add(stunde.lehrer)
-                    lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
+                    if klasse.kurs(stunde.kursnummer) is not None:
+                        lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
+
                 elif not stunde.ausfall and not stunde.lehrergeändert:
                     lehrerMitUnterricht.add(stunde.lehrer)
 
@@ -179,6 +184,17 @@ class VertretungsTag():
         with open(pfad) as f:
             vpday = cls(_data=XML.parse(f))
         return vpday
+    
+    def _to_dict(self) -> dict[str, Any]:
+        return {
+            "zeitstempel": str(self.zeitstempel),
+            "datum": str(self.datum),
+            "datei": self.datei,
+            "zusatzInfo": self.zusatzInfo,
+            "klassen": {klasse._to_dict()["kürzel"]: klasse._to_dict() for klasse in self.klassen},
+            "freieTage": [str(datum) for datum in self.freieTage],
+            "lehrerKrank": self.lehrerKrank
+        }
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -246,6 +262,17 @@ class Klasse():
             if kurs.kursnummer == kursnummer:
                 return kurs
         return None
+    
+    def _to_dict(self) -> dict[str, Any]:
+        return {
+            "kürzel": self.kürzel,
+            "stundenHeute": {
+                periode: [stunde._to_dict() for stunde in stunden]
+                for periode, stunden
+                in self.stundenHeute.items()
+                },
+            "kurse": {kurs._to_dict()["kursnummer"]: kurs._to_dict() for kurs in self.kurse}
+        }
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Stunde                                           │ 
@@ -356,6 +383,23 @@ class Stunde():
         if self.ausfall:
             return f"<Ausfall: '{self.info}'>"
         return f"<'{self.fach}' bei '{self.lehrer}' in Raum '{self.raum}'>"
+    
+    def _to_dict(self) -> dict[str, Any]:
+        return {
+            "lehrer": self.lehrer,
+            "fach": self.fach,
+            "raum": self.raum,
+            "periode": self.periode,
+            "kursnummer": self.kursnummer,
+            "info": self.info,
+            "beginn": str(self.beginn),
+            "ende": str(self.ende),
+            "ausfall": self.ausfall,
+            "geändert": self.geändert,
+            "fachgeändert": self.fachgeändert,
+            "raumgeändert": self.raumgeändert,
+            "lehrergeändert": self.lehrergeändert
+        }
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Kurs                                             │ 
@@ -399,3 +443,11 @@ class Kurs():
 
     def __repr__(self) -> str:
         return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or '-'}' (Kursnummer '{self.kursnummer}')>"
+    
+    def _to_dict(self) -> dict[str, Any]:
+        return {
+            "lehrer": self.lehrer,
+            "fach": self.fach,
+            "gruppe": self.gruppe,
+            "kursnummer": self.kursnummer
+        }

@@ -1,5 +1,15 @@
 # Changelog
 
+### Development
+
+#### 🚀 Neue Funktionen
+
+* Datenmodelle können nun mit `.to_dict()` in Dictionaries umgewandelt werden. Die dadurch erzeugten Dictionaries haben einen etwas anderen Aufbau als die Datenmodell-Klassen von denen sie erzeugt wurden.
+
+#### 🪲 Bug Fixes
+
+* `VertretungsTag.lehrerKrank` wirft einen Fehler, wenn es einen Kurs gibt, der keinen Lehrer hat
+
 ### [1.1.0](https://pypi.org/project/vpmobil/1.1.0/) (2025-08-27)
 
 #### 🚀 Neue Funktionen
