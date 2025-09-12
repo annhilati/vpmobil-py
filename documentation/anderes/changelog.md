@@ -6,6 +6,11 @@
 
 * Datenmodelle können nun mit `.to_dict()` in Dictionaries umgewandelt werden. Die dadurch erzeugten Dictionaries haben einen etwas anderen Aufbau als die Datenmodell-Klassen von denen sie erzeugt wurden.
 
+#### 🔧 Änderungen
+
+* `Stunde.raum` wurde in `stunde.raum` (str) und `Stunde.alleRäume` (list[str]) aufgetrennt
+* `Stunde.lehrer` wurde in `stunde.raum` (str) und `Stunde.alleLehrer` (list[str]) aufgetrennt
+
 #### 🪲 Bug Fixes
 
 * `VertretungsTag.lehrerKrank` wirft einen Fehler, wenn es einen Kurs gibt, der keinen Lehrer hat

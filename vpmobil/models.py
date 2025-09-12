@@ -323,8 +323,17 @@ class Stunde():
         """Lehrer der Stunde<br>
         Gibt `None` zurück, wenn die Stunde entfällt
         """
+        if self.alleLehrer is not None:
+            return self.alleLehrer[0]
+        return None
+        
+    @property
+    def alleLehrer(self) -> list[str] | None:
+        """Alle Lehrer der Stunde<br>
+        Gibt `None` zurück, wenn die Stunde entfällt
+        """
         if self._data.find("Le") is not None and self._data.find("Le").text is not None:
-            return self._data.find("Le").text
+            return self._data.find("Le").text.split(" ")
         else:
             return None
 
@@ -333,8 +342,17 @@ class Stunde():
         """Raum der Stunde<br>
         Gibt `None` zurück, wenn die Stunde entfällt
         """
+        if self.alleRäume is not None:
+            return self.alleRäume[0]
+        return None
+        
+    @property
+    def alleRäume(self) -> list[str] | None:
+        """Räume der Stunde<br>
+        Gibt `None` zurück, wenn die Stunde entfällt
+        """
         if self._data.find("Ra") is not None and self._data.find("Ra").text is not None:
-            return self._data.find("Ra").text
+            return self._data.find("Ra").text.split(" ")
         else:
             return None
         
