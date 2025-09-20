@@ -121,13 +121,15 @@ class VertretungsTag():
                 if stunde.ausfall and klasse.kurs(stunde.kursnummer) is not None:
                     lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
 
-                elif stunde.lehrergeändert: 
-                    lehrerMitUnterricht.add(stunde.lehrer)
+                elif stunde.lehrergeändert:
+                    if stunde.alleLehrer is not None:
+                        lehrerMitUnterricht.update(stunde.alleLehrer)
                     if klasse.kurs(stunde.kursnummer) is not None:
                         lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
 
                 elif not stunde.ausfall and not stunde.lehrergeändert:
-                    lehrerMitUnterricht.add(stunde.lehrer)
+                    if stunde.alleLehrer is not None:
+                        lehrerMitUnterricht.update(stunde.alleLehrer)
 
         return sorted(
             {
