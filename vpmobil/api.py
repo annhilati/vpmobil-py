@@ -1,9 +1,8 @@
+from yarl import URL
+from dataclasses import dataclass
+from datetime import datetime, date, timedelta
 import xml.etree.ElementTree as XML
 import requests as WEB
-from yarl import URL
-
-from datetime import datetime, date, timedelta
-from dataclasses import dataclass
 
 from vpmobil.models import VertretungsTag
 
@@ -21,7 +20,6 @@ class Vertretungsplan():
         Passwort des Benutzers über den zugegriffen werden soll
     serverdomain : str
         Domain des Servers, der die Vertretungsplandaten bereitstellt<br>
-        Muss angegeben werden, wenn der Vertretungsplan selbst gehostet wird
     vezeichnis : str
         Pfad unter dem die Quelldateien abgerufen werden können<br>
         `{schulnummer}` kann als Platzhalter verwendet werden
