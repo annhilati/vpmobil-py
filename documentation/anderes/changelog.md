@@ -4,12 +4,13 @@
 
 #### 🚀 Neue Funktionen
 
-* Datenmodelle können nun mit `.to_dict()` in Dictionaries umgewandelt werden. Die dadurch erzeugten Dictionaries haben einen etwas anderen Aufbau als die Datenmodell-Klassen von denen sie erzeugt wurden.
+* Datenmodelle können nun mit `._to_dict()` in Dictionaries umgewandelt werden<br>
+    > Dies ist ersteinmal eine Übergangslösung, um das Speichern in gut les- und parsbaren Formaten zu ermöglichen. Das Format wird sich in Zukunft sicherlich nochmals ändern.
 
 #### 🔧 Änderungen
 
-* `Stunde.raum` wurde in `stunde.raum` (str) und `Stunde.alleRäume` (list[str]) aufgetrennt
-* `Stunde.lehrer` wurde in `stunde.raum` (str) und `Stunde.alleLehrer` (list[str]) aufgetrennt
+* Die Attribute `.raum` und `.lehrer` des `Stunde`n-Objekts wurde in jeweils `.raum` (str) und `.alleRäume` (list[str]) bzw. `.lehrer` (str) und `.alleLehrer` (list[str]) aufgetrennt<br>
+    > Dies ist ersteinmal eine Übergangslösung, um das Behandeln von multiplen Lehrern und Räumen für Stunden sauber zu ermöglichen. Die genaue Umsetzung wird sich in Zukunft sicherlich nochmals ändern.
 
 #### 🪲 Bug Fixes
 

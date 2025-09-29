@@ -1,12 +1,10 @@
 from __future__ import annotations
 from typing import Any
-
-import xml.etree.ElementTree as XML
-import re
-
 from pathlib import Path
 from datetime import datetime, date, time
 from dataclasses import dataclass
+import xml.etree.ElementTree as XML
+import re
 
 from vpmobil.utils import prettyxml
 
@@ -33,6 +31,9 @@ class VertretungsTag():
 
     def __getitem__(self, v) -> Klasse:
         return self.klasse(v)
+    
+    def __repr__(self):
+        return f"<Vertretungsplan vom {self.datum.strftime('%d.%m.%Y')}>"
         
     @property
     def zeitstempel(self) -> datetime | None:
@@ -69,31 +70,7 @@ class VertretungsTag():
                 if ziZeile.text:
                     ziZeilen.append(ziZeile.text)
         return '\n'.join(ziZeilen) if ziZeilen else None
-
-    def __repr__(self):
-        return f"<Vertretungsplan vom {self.datum.strftime('%d.%m.%Y')}>"
-
-    @property
-    def klassen(self) -> list[Klasse] | None:
-        "Im Vertretungsplan hinterlegte Klassen"
-        klassen: list[Klasse] = []
-        klassen_elemente = self._data.findall('.//Kl')
-        if klassen_elemente is not []:
-            for kl in klassen_elemente:
-                if kl.find('Kurz') is not None:
-                    klassen.append(Klasse(_data=kl))
-            return klassen
-        return None
-
-    def klasse(self, kürzel: str) -> Klasse | None:
-        "Gibt die Klasse zurück, deren Tag `<Kurz>` gleich `kürzel` ist"
-
-        klassen = self.klassen
-        for kl in klassen:
-            if kl.kürzel == kürzel:
-                return kl
-        return None
-
+    
     @property
     def freieTage(self) -> list[date] | None:
         "Im Vertretungsplan als frei markierte Tage"
@@ -139,6 +116,27 @@ class VertretungsTag():
                 and lehrer is not None
             }
         )
+
+    @property
+    def klassen(self) -> list[Klasse] | None:
+        "Im Vertretungsplan hinterlegte Klassen"
+        klassen: list[Klasse] = []
+        klassen_elemente = self._data.findall('.//Kl')
+        if klassen_elemente is not []:
+            for kl in klassen_elemente:
+                if kl.find('Kurz') is not None:
+                    klassen.append(Klasse(_data=kl))
+            return klassen
+        return None
+
+    def klasse(self, kürzel: str) -> Klasse | None:
+        "Gibt die Klasse zurück, deren Tag `<Kurz>` gleich `kürzel` ist"
+
+        klassen = self.klassen
+        for kl in klassen:
+            if kl.kürzel == kürzel:
+                return kl
+        return None
 
     def saveasfile(self, pfad: Path = "./datei.xml", overwrite=False) -> None:
         """Speichert alle Daten des Tages als XML-Datei
@@ -216,10 +214,6 @@ class Klasse():
 
     _data: XML.Element
 
-    @property
-    def kürzel(self) -> str:
-        "Kürzel der Klasse"
-        return self._data.find('Kurz').text
 
     def __repr__(self):
         return f"Vertretungsplan der Klasse {self.kürzel}"
@@ -227,9 +221,11 @@ class Klasse():
     def __getitem__(self, v) -> list[Stunde]:
         return self.stundenHeuteInPeriode(v)
 
-    def stundenHeuteInPeriode(self, periode: int) -> list[Stunde]:
-        "Gibt die Stunden der Klasse an dem Tag in einer bestimmten Unterrichtsperiode zurück"
-        return self.stundenHeute.get(periode)
+    
+    @property
+    def kürzel(self) -> str:
+        "Kürzel der Klasse"
+        return self._data.find('Kurz').text
     
     @property
     def stundenHeute(self) -> dict[int, list[Stunde]] | None:
@@ -249,6 +245,7 @@ class Klasse():
                     fin[stunde.periode].append(stunde)
         return fin
     
+    
     @property
     def kurse(self) -> list[Kurs]:
         "Alle im Plan vermerkten Kurse, die die Klasse hat"
@@ -257,6 +254,10 @@ class Klasse():
         for ue in unterricht.findall("Ue"):
             fin.append(Kurs(ue.find("UeNr")))
         return fin
+    
+    def stundenHeuteInPeriode(self, periode: int) -> list[Stunde]:
+        "Gibt die Stunden der Klasse an dem Tag in einer bestimmten Unterrichtsperiode zurück"
+        return self.stundenHeute.get(periode)
     
     def kurs(self, kursnummer: int) -> Kurs | None:
         "Gibt den Kurs mit `kursnummer` der Klasse zurück"
@@ -287,6 +288,11 @@ class Stunde():
 
     _data: XML.Element
         
+    def __repr__(self):
+        if self.ausfall:
+            return f"<Ausfall: '{self.info}'>"
+        return f"<'{self.fach}' bei '{self.lehrer}' in Raum '{self.raum}'>"
+    
     @property
     def periode(self) -> int:
         "Unterrichtsperiode der Stunde"
@@ -398,11 +404,6 @@ class Stunde():
             return self._data.find("If").text
         else:
             return None
-
-    def __repr__(self):
-        if self.ausfall:
-            return f"<Ausfall: '{self.info}'>"
-        return f"<'{self.fach}' bei '{self.lehrer}' in Raum '{self.raum}'>"
     
     def _to_dict(self) -> dict[str, Any]:
         return {
@@ -432,6 +433,9 @@ class Kurs():
 
     _data: XML.Element
 
+    def __repr__(self) -> str:
+        return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or '-'}' (Kursnummer '{self.kursnummer}')>"
+    
     @property
     def lehrer(self) -> str | None:
         "Lehrer des Kurses"
@@ -460,9 +464,6 @@ class Kurs():
     def kursnummer(self) -> int:
         "Kursnummer des Kurses"
         return int(self._data.text)
-
-    def __repr__(self) -> str:
-        return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or '-'}' (Kursnummer '{self.kursnummer}')>"
     
     def _to_dict(self) -> dict[str, Any]:
         return {
