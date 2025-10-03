@@ -2,7 +2,7 @@ from yarl import URL
 from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 import xml.etree.ElementTree as XML
-import requests as WEB
+import requests
 
 from vpmobil.models import VertretungsTag
 
@@ -84,7 +84,7 @@ class Vertretungsplan():
         file_name: str = datum.strftime(self.dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
         
         file_url = self.webpath / file_name
-        response = WEB.get(str(file_url))
+        response = requests.get(str(file_url))
 
         status = response.status_code
         if status == 200:
@@ -132,7 +132,7 @@ class Vertretungsplan():
         
 class IndiwareFetchingError(Exception):
     "Wenn die angeforderten Daten nicht abgerufen werden können"
-    def __init__(self, message: str, response: WEB.Response = None):
+    def __init__(self, message: str, response: requests.Response = None):
         self.message = message
         self.response = response
 

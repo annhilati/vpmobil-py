@@ -28,8 +28,9 @@ class VertretungsTag():
     def __post_init__(self):
         if self._data.find(".//planart") is None or self._data.find(".//planart").text != "K":
             raise ValueError("VpDay unterstützt nur Indiware-Vertretungspläne des Typs 'K'")
+            # Eventuell sollte dies durch eine eigene Fehlerklasse ersetzt werden
 
-    def __getitem__(self, v) -> Klasse:
+    def __getitem__(self, v) -> Klasse | None:
         return self.klasse(v)
     
     def __repr__(self):
@@ -138,12 +139,12 @@ class VertretungsTag():
                 return kl
         return None
 
-    def saveasfile(self, pfad: Path = "./datei.xml", overwrite=False) -> None:
+    def saveasfile(self, pfad: Path | str = "./datei.xml", overwrite=False) -> None:
         """Speichert alle Daten des Tages als XML-Datei
 
         Parameter
         ---------
-        pfad : Path
+        pfad : Path | str
             Der Dateipfad der zu erstellenden Datei
         overwrite : bool
             Ob die Datei überschrieben werden darf, falls sie bereits existiert
@@ -155,14 +156,14 @@ class VertretungsTag():
 
         xmlpretty = prettyxml(self._data)
 
-        zielpfad = Path(pfad).resolve()
+        zielpfad = Path(pfad).resolve() if isinstance(pfad, str) else pfad.resolve()
         zielverzeichnis = zielpfad.parent
 
         if not zielverzeichnis.exists():
             zielverzeichnis.mkdir(parents=True)
 
         if zielpfad.exists() and not overwrite:
-            raise FileExistsError(f"Die Datei {zielpfad} existiert bereits.")
+            raise FileExistsError(f"Die Datei '{zielpfad}' existiert bereits.")
 
         zielpfad.write_text(xmlpretty, encoding="utf-8")
 

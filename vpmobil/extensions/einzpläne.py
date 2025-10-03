@@ -23,7 +23,7 @@ def kurse(pfad: Path | str) -> dict[str, set[tuple[str, str]]]:
     kurse: dict[str, set[tuple]] = {}
 
     if not seiten[0].startswith("Schulname"):
-        raise ValueError("Das PDF ist auf unbekannte Weise formatiert. Wenn du denkst, dass dies funktionieren sollte, melde diesen Fehler bite im Issue-Tracker von vpmobil-py auf GitHub.")
+        raise ValueError("Das PDF ist auf unbekannte Weise formatiert. Wenn du denkst, dass dies funktionieren sollte, melde diesen Fehler bitte im Issue-Tracker von vpmobil-py auf GitHub.")
 
     for seite in seiten:
         for zeile in seite.splitlines():
