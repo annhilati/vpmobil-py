@@ -215,13 +215,11 @@ class Klasse():
 
     _data: XML.Element
 
-
     def __repr__(self):
         return f"Vertretungsplan der Klasse {self.kürzel}"
     
     def __getitem__(self, v) -> list[Stunde]:
         return self.stundenHeuteInPeriode(v)
-
     
     @property
     def kürzel(self) -> str:
@@ -245,8 +243,7 @@ class Klasse():
                 else:
                     fin[stunde.periode].append(stunde)
         return fin
-    
-    
+        
     @property
     def kurse(self) -> list[Kurs]:
         "Alle im Plan vermerkten Kurse, die die Klasse hat"
