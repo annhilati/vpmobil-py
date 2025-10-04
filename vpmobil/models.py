@@ -100,14 +100,14 @@ class VertretungsTag():
                     lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
 
                 elif stunde.lehrergeändert:
-                    if stunde.alleLehrer is not None:
-                        lehrerMitUnterricht.update(stunde.alleLehrer)
+                    if stunde.lehrer is not None:
+                        lehrerMitUnterricht.update(stunde.lehrer)
                     if klasse.kurs(stunde.kursnummer) is not None:
                         lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
 
                 elif not stunde.ausfall and not stunde.lehrergeändert:
-                    if stunde.alleLehrer is not None:
-                        lehrerMitUnterricht.update(stunde.alleLehrer)
+                    if stunde.lehrer is not None:
+                        lehrerMitUnterricht.update(stunde.lehrer)
 
         return sorted(
             {
@@ -292,7 +292,7 @@ class Stunde():
     def __repr__(self):
         if self.ausfall:
             return f"<Ausfall: '{self.info}'>"
-        return f"<'{self.fach}' bei '{self.lehrer}' in Raum '{self.raum}'>"
+        return f"<'{self.fach}' bei '{", ".join(self.lehrer)}' in '{", ".join(self.räume)}'>"
     
     @property
     def periode(self) -> int:
@@ -319,8 +319,11 @@ class Stunde():
         """Fach der Stunde<br>
         Gibt `None` zurück, wenn die Stunde entfällt
 
-        Es kann sein, dass nicht das wirkliche Fach sondern die Kursbezeichnung zurückgegeben wird. Stattdessen `klasse.kurs(stunde.kursnummer)` verwenden.<br>
-        Bei Unsicherheit mit Fallback: `stunde.fach if klasse.kurs(stunde.kursnummer) is None else klasse.kurs(stunde.kursnummer).fach`
+        Es kann sein, dass nicht das wirkliche Fach sondern die Kursbezeichnung zurückgegeben wird. Stattdessen `klasse.kurs(stunde.kursnummer).fach` verwenden.<br>
+        Bei Unsicherheit mit Fallback:
+        ```
+        stunde.fach if klasse.kurs(stunde.kursnummer) is None else klasse.kurs(stunde.kursnummer).fach
+        ```
         """
         if self._data.find("Fa") is not None and self._data.find("Fa").text not in [None, "---"]:
             return self._data.find("Fa").text
@@ -328,42 +331,24 @@ class Stunde():
             return None
         
     @property
-    def lehrer(self) -> str | None:
-        """Lehrer der Stunde<br>
-        Gibt `None` zurück, wenn die Stunde entfällt
-        """
-        if self.alleLehrer is not None:
-            return self.alleLehrer[0]
-        return None
-        
-    @property
-    def alleLehrer(self) -> list[str] | None:
+    def lehrer(self) -> list[str]:
         """Alle Lehrer der Stunde<br>
-        Gibt `None` zurück, wenn die Stunde entfällt
+        Gibt `[]` zurück, wenn die Stunde entfällt oder keine Lehrer eingetragen sind
         """
         if self._data.find("Le") is not None and self._data.find("Le").text is not None:
             return self._data.find("Le").text.split(" ")
         else:
-            return None
-
-    @property
-    def raum(self) -> str | None:
-        """Raum der Stunde<br>
-        Gibt `None` zurück, wenn die Stunde entfällt
-        """
-        if self.alleRäume is not None:
-            return self.alleRäume[0]
-        return None
+            return []
         
     @property
-    def alleRäume(self) -> list[str] | None:
+    def räume(self) -> list[str]:
         """Räume der Stunde<br>
-        Gibt `None` zurück, wenn die Stunde entfällt
+        Gibt `[]` zurück, wenn die Stunde entfällt oder keine Räume eingetragen sind
         """
         if self._data.find("Ra") is not None and self._data.find("Ra").text is not None:
             return self._data.find("Ra").text.split(" ")
         else:
-            return None
+            return []
         
     @property
     def fachgeändert(self) -> bool:
@@ -391,7 +376,7 @@ class Stunde():
         Kann `None` sein, wenn das Fach der Stunde geändert wurde, jedoch nicht, wenn die Stunde entfällt.<br>
         Kann `None` sein, beispielsweise wenn die Stunde eine Exkursion ist.
         
-        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.<br>
+        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
         """
         if self._data.find("Nr") is not None and self._data.find("Nr").text is not None:
             return int(self._data.find("Nr").text)
@@ -408,9 +393,9 @@ class Stunde():
     
     def _to_dict(self) -> dict[str, Any]:
         return {
-            "lehrer": self.lehrer,
             "fach": self.fach,
-            "raum": self.raum,
+            "lehrer": self.lehrer,
+            "räume": self.räume,
             "periode": self.periode,
             "kursnummer": self.kursnummer,
             "info": self.info,

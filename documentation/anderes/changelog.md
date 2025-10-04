@@ -9,8 +9,9 @@
 
 #### 🔧 Änderungen
 
-* Die Attribute `.raum` und `.lehrer` des `Stunde`n-Objekts wurde in jeweils `.raum` (str) und `.alleRäume` (list[str]) bzw. `.lehrer` (str) und `.alleLehrer` (list[str]) aufgetrennt<br>
-    > Dies ist ersteinmal eine Übergangslösung, um das Behandeln von multiplen Lehrern und Räumen für Stunden sauber zu ermöglichen. Die genaue Umsetzung wird sich in Zukunft sicherlich nochmals ändern.
+* `Stunde.lehrer` gibt die Lehrer der Stunde nun als Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
+* `Stunde.raum` wurde entfernt
+* `Stunde.räume` gibt nun die Räume der Stunde als Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
 
 #### 🪲 Bug Fixes
 
