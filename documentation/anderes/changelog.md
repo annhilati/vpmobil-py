@@ -6,12 +6,14 @@
 
 * Datenmodelle können nun mit `._to_dict()` in Dictionaries umgewandelt werden<br>
     > Dies ist ersteinmal eine Übergangslösung, um das Speichern in gut les- und parsbaren Formaten zu ermöglichen. Das Format wird sich in Zukunft sicherlich nochmals ändern.
+* `Vertretungsplan()` hat nun einen neuen Parameter `Port` (int). Mit ihm kann der Port des Service übergeben werden, über den die Vertretungsplandaten bereitstellt werden
 
 #### 🔧 Änderungen
 
 * `Stunde.lehrer` gibt die Lehrer der Stunde nun als Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
 * `Stunde.raum` wurde entfernt
 * `Stunde.räume` gibt nun die Räume der Stunde als Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
+* Die Option, mit `Vertretungsplan.fetch()` über den Parameter `datei` eine bestimmte Datei abzurufen wurde vorerst entfernt
 
 #### 🪲 Bug Fixes
 

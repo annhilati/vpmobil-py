@@ -19,7 +19,9 @@ class Vertretungsplan():
     passwort : str
         Passwort des Benutzers über den zugegriffen werden soll
     serverdomain : str
-        Domain des Servers, der die Vertretungsplandaten bereitstellt<br>
+        Domain des Servers, der die Vertretungsplandaten bereitstellt
+    port : int
+        Port des Service, der die Vertretungsplandaten bereitstellt
     vezeichnis : str
         Pfad unter dem die Quelldateien abgerufen werden können<br>
         `{schulnummer}` kann als Platzhalter verwendet werden
@@ -32,6 +34,7 @@ class Vertretungsplan():
     benutzername:       str
     passwort:           str
     serverdomain:       str = "stundenplan24.de"
+    port:               int = None
     verzeichnis:        str = "/{schulnummer}/mobil/mobdaten"
     dateinamenschema:   str = "PlanKl%Y%m%d.xml"
     
@@ -57,22 +60,20 @@ class Vertretungsplan():
             user=self.benutzername,
             password=self.passwort,
             host=self.serverdomain,
+            port=self.port,
             path=self.verzeichnis.format(schulnummer=self.schulnummer)
         )
 
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def fetch(self, datum: date = date.today(), datei: str = None) -> VertretungsTag:
+    def fetch(self, datum: date = date.today()) -> VertretungsTag:
         """Ruft die Daten eines Tages ab.
 
         Parameter
         ----------
         datum : date
-            Abzurufender Tag.
-        datei : str (optional)
-            Name der abzurufende Datei inklusive Dateipfad (ohne anführenden Schrägstrich)<br>
-            Bei Angabe wird der Parameter `datum` ignoriert
+            Abzurufender Tag
 
         Raises
         ----------
@@ -81,7 +82,7 @@ class Vertretungsplan():
         ValueError : Falls die Antwort vom Server kein gültiges XML enthält
         """
 
-        file_name: str = datum.strftime(self.dateinamenschema) if datei is None else datei.format(schulnummer=self.schulnummer)
+        file_name: str = datum.strftime(self.dateinamenschema)
         
         file_url = self.webpath / file_name
         response = requests.get(str(file_url))
