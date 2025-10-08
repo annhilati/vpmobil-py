@@ -43,9 +43,8 @@ class Vertretungsplan():
         if self.serverdomain.endswith('/'):
             self.serverdomain= self.serverdomain[:-1]
 
-        if self.serverdomain.startswith("http://") or self.serverdomain.startswith("https://"):
-            parts = self.serverdomain.split("://", 1)
-            self.serverdomain = parts[1] if len(parts) > 1 else parts[0]
+        if "://" in self.serverdomain:
+            self.serverdomain = self.serverdomain.split("://", 1)[-1]
 
         if self.verzeichnis.endswith('/'):
             self.verzeichnis = self.verzeichnis[:-1]
