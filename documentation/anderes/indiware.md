@@ -20,7 +20,8 @@ f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"
 ```
 
 ### Vertretungsplan XML Baum
-```
+Dieses Format wird bei `/moble/mobdaten/PlanLe{yyyymmdd}.xml`, `/mobil/mobdaten/PlanKl{yyyymmdd}.xml` und `mobra/mobdaten/PlanRa{yyyymmdd}.xml` mit den exakt gleichen Tagnamen verwendet.
+```yaml
 VpMobil
 ├── Kopf
 │   ├── planart
@@ -32,28 +33,37 @@ VpMobil
 │   ├── tageprowoche
 │   └── schulnummer
 ├── FreieTage
-│   └── ft                  # n
+│   └── ft                      # n
 └── Klassen
-    └── Kl                  # n
+    └── Kl                      # n     # Deklariert bei PlanLe über einen Lehrer, bei PlanRa über einen Raum
         ├── Kurz
         ├── Hash
         ├── KlStunden
-        │   └── KlSt        # n
+        │   └── KlSt            # n
         ├── Kurse
-        │   └── Ku          # n
+        │   └── Ku              # n
         │       └── KKz
         ├── Unterricht
-        │   └── Ue          # n
+        │   └── Ue              # n
         │       └── UeNr
-        └── Pl
-            └── Std         # n
-                ├── St
-                ├── Beginn
-                ├── Ende
-                ├── Fa
-                ├── Ku2
-                ├── Le
-                ├── Ra
-                ├── Nr
-                └── If
+        ├── Pl
+        │   └── Std             # n
+        │       ├── St
+        │       ├── Beginn
+        │       ├── Ende
+        │       ├── Fa
+        │       ├── Ku2
+        │       ├── Le                  # Bezeichnet bei PlanLe eine Klasse
+        │       ├── Ra                  # Bezeichnet bei PlanRa eine Klasse
+        │       ├── Nr
+        │       └── If
+        └── Aufsichten                  # Vermutlich nur bei PlanLe
+            └── Aufsicht        # n
+                ├── AuTag
+                ├── AuVorStunde
+                ├── AuUhrzeit
+                ├── AuZeit
+                └── AuOrt
+
+# ZusatzInfo fehlt momentan
 ```

@@ -27,7 +27,7 @@ class VertretungsTag():
 
     def __post_init__(self):
         if self._data.find(".//planart") is None or self._data.find(".//planart").text != "K":
-            raise ValueError("VpDay unterstützt nur Indiware-Vertretungspläne des Typs 'K'")
+            raise ValueError("VertretungsTag unterstützt nur Indiware-Vertretungspläne des Typs 'K'")
             # Eventuell sollte dies durch eine eigene Fehlerklasse ersetzt werden
 
     def __getitem__(self, v) -> Klasse | None:
@@ -255,10 +255,10 @@ class Klasse():
     
     def stundenHeuteInPeriode(self, periode: int) -> list[Stunde]:
         "Gibt die Stunden der Klasse an dem Tag in einer bestimmten Unterrichtsperiode zurück"
-        return self.stundenHeute.get(periode)
+        return self.stundenHeute.get(periode) or []
     
     def kurs(self, kursnummer: int) -> Kurs | None:
-        "Gibt den Kurs mit `kursnummer` der Klasse zurück"
+        "Gibt den Kurs der Klasse mit der Kursnummer `kursnummer` zurück"
         for kurs in self.kurse:
             if kurs.kursnummer == kursnummer:
                 return kurs
