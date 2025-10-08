@@ -40,10 +40,10 @@ VpMobil
         ├── Hash
         ├── KlStunden
         │   └── KlSt            # n
-        ├── Kurse
+        ├── Kurse                       # Nur bei PlanKl
         │   └── Ku              # n
         │       └── KKz
-        ├── Unterricht
+        ├── Unterricht                  # nur bei PlanKl
         │   └── Ue              # n
         │       └── UeNr
         ├── Pl
