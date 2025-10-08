@@ -22,11 +22,9 @@ class Vertretungsplan():
         Domain des Servers, der die Vertretungsplandaten bereitstellt
     port : int
         Port des Service, der die Vertretungsplandaten bereitstellt
-    vezeichnis : str
-        Pfad unter dem die Quelldateien abgerufen werden können<br>
-        `{schulnummer}` kann als Platzhalter verwendet werden
-    dateinamenschema : str
-        Schema der Quelldateinamen<br>
+    dateipfadschema : str
+        Schema des Pfads unter dem die Quelldateien abgerufen werden können<br>
+        `{schulnummer}` kann als Platzhalter verwendet werden<br>
         [Platzhalter des datetime-Moduls](https://strftime.org/) können verwendet werden
     """
     
@@ -35,8 +33,7 @@ class Vertretungsplan():
     passwort:           str
     serverdomain:       str = "stundenplan24.de"
     port:               int = None
-    verzeichnis:        str = "/{schulnummer}/mobil/mobdaten"
-    dateinamenschema:   str = "PlanKl%Y%m%d.xml"
+    dateipfadschema:    str = "/{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
     
     def __post_init__(self):
 
@@ -45,22 +42,18 @@ class Vertretungsplan():
 
         if "://" in self.serverdomain:
             self.serverdomain = self.serverdomain.split("://", 1)[-1]
-
-        if self.verzeichnis.endswith('/'):
-            self.verzeichnis = self.verzeichnis[:-1]
             
-        if not self.verzeichnis.startswith("/"):
-            self.verzeichnis = "/" + self.verzeichnis
+        if not self.dateipfadschema.startswith("/"):
+            self.dateipfadschema = "/" + self.dateipfadschema
 
     @property
-    def webpath(self) -> URL:
+    def socket(self) -> URL:
         return URL.build(
             scheme="http",
             user=self.benutzername,
             password=self.passwort,
             host=self.serverdomain,
-            port=self.port,
-            path=self.verzeichnis.format(schulnummer=self.schulnummer)
+            port=self.port
         )
 
     def __repr__(self):
@@ -81,18 +74,22 @@ class Vertretungsplan():
         ValueError : Falls die Antwort vom Server kein gültiges XML enthält
         """
 
-        file_name: str = datum.strftime(self.dateinamenschema)
+        dateipfad: str = (
+            datum
+            .strftime(self.dateipfadschema)
+            .format(schulnummer=self.schulnummer)
+        )
         
-        file_url = self.webpath / file_name
+        file_url = self.socket / dateipfad
         response = requests.get(str(file_url))
 
         status = response.status_code
         if status == 200:
-            return VertretungsTag(_data=XML.fromstring(response.content))
+            return VertretungsTag(XML.fromstring(response.content))
         elif status == 401:
             raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", response=response)
         elif status == 404:
-            raise ResourceNotFound(message=f"Datei '{file_name}' konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer '{self.schulnummer}' ist nicht registriert.", response=response)
+            raise ResourceNotFound(message=f"Datei '{dateipfad}' konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer '{self.schulnummer}' ist nicht registriert.", response=response)
         else:
             response.raise_for_status()
 

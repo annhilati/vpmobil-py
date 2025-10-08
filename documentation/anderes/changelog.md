@@ -15,6 +15,7 @@
 * `Stunde.räume` gibt nun die Räume der Stunde als Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
 * Die Option, mit `Vertretungsplan.fetch()` über den Parameter `datei` eine bestimmte Datei abzurufen wurde vorerst entfernt
 * `Klasse.stundenHeuteInPeriode()` gibt nun `[]` statt `None` zurück, wenn keine Stunden vorhanden sind
+* Die Parameter `vezeichnis` und `dateinamenschema` von `Vertretungsplan.fetch()` wurden zusammengeführt
 
 #### 🪲 Bug Fixes
 
