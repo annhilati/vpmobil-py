@@ -16,8 +16,8 @@ def prettyxml(object: ET.Element | ET.ElementTree) -> str:
 
 class Stundenplan24Pfade(StrEnum):
     Klassen = "{schulnummer}/mobil/mobdaten/Klassen.xml"
-    PlanKl  = "{schulnummer}/mobil/mobdaten/PlanKl{yyyymmdd}.xml"
+    PlanKl  = "{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
     Lehrer  = "{schulnummer}/moble/mobdaten/Lehrer.xml"
-    PlanLe  = "{schulnummer}/moble/mobdaten/PlanLa{yyyymmdd}.xml"
+    PlanLe  = "{schulnummer}/moble/mobdaten/PlanLa%Y%m%d.xml"
     Raeume  = "{schulnummer}/mobra/mobdaten/Raeume.xml"
-    PlanRa  = "{schulnummer}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"
+    PlanRa  = "{schulnummer}/mobra/mobdaten/PlanRa%Y%m%d.xml"

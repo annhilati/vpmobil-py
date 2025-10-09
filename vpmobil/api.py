@@ -63,6 +63,8 @@ class Vertretungsplan():
     def fetch(self, datum: date = date.today(), datei: str = None) -> VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """Ruft die Daten eines Tages ab.
 
+        Die Methode sollte nur verwendet werden, wenn zu erwarten ist, welcher Typ zurückgegeben wird. Verwende Typ-Annotation: `plan: RaumVertretungsTag = vp.fetch()`
+
         Parameter
         ----------
         datum : date
@@ -73,7 +75,7 @@ class Vertretungsplan():
         Raises
         ----------
         ResourceNotFound : Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist
-        InvalidCredentialsError : Wenn Benutzername oder Passwort falsch sind
+        Unauthorized : Wenn die Zugangsdaten keinen Zugriff auf die Datei haben
         ValueError : Falls die Antwort vom Server kein gültiges XML enthält
         """
 
@@ -81,7 +83,7 @@ class Vertretungsplan():
             datum
             .strftime(self.dateipfadschema if datei is None else datei)
             .format(schulnummer=self.schulnummer)
-        ) 
+        )
         
         file_url = self.socket / dateipfad
         response = requests.get(str(file_url))
@@ -90,9 +92,9 @@ class Vertretungsplan():
         if status == 200:
             return VertretungsTagBase(XML.fromstring(response.content))
         elif status == 401:
-            raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", response=response)
+            raise Unauthorized(message=f"Zugangsdaten haben keinen Zugriff auf '{dateipfad}'.", response=response)
         elif status == 404:
-            raise ResourceNotFound(message=f"Datei '{dateipfad}' konnte nicht abgerufen werden. Entweder existiert sie nicht, oder die Schulnummer '{self.schulnummer}' ist nicht registriert.", response=response)
+            raise ResourceNotFound(message=f"Datei '{dateipfad}' existiert nicht.", response=response)
         else:
             response.raise_for_status()
 
@@ -143,6 +145,6 @@ class ResourceNotFound(IndiwareFetchingError):
     "Wenn die angeforderten Daten nicht existieren"
     ...
 
-class InvalidCredentialsError(IndiwareFetchingError):
+class Unauthorized(IndiwareFetchingError):
     "Wenn die Anmeldedaten ungültig sind"
     ...

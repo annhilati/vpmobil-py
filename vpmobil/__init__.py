@@ -19,15 +19,20 @@ for periode, stunden in klasse8b.stundenHeute:
 Siehe auch das `extensions`-Submodul. Importe aus anderen Submodulen sind in der Regel nicht notwendig.
 """
 
-from vpmobil.api import Vertretungsplan, IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound
-from vpmobil.models import VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, Klasse, Stunde, Kurs, Aufsicht
+from vpmobil.api import Vertretungsplan, IndiwareFetchingError, Unauthorized, ResourceNotFound
+from vpmobil.models import (
+    VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
+    Klasse, Raum, Lehrer,
+    Stunde, Kurs, Aufsicht
+    )
 from vpmobil.utils import Stundenplan24Pfade
 
 _symbols = [
     Vertretungsplan,
     VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
-    Klasse, Stunde, Kurs, Aufsicht,
-    IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound,
+    Klasse, Lehrer, Raum,
+    Stunde, Kurs, Aufsicht,
+    IndiwareFetchingError, Unauthorized, ResourceNotFound,
     Stundenplan24Pfade
 ]
 _constants = []

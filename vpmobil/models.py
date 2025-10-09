@@ -37,10 +37,10 @@ class VertretungsTagBase(VpmobilPyModell):
 
     def __new__(cls, _data: XML.ElementTree):
         if cls is VertretungsTagBase:
-            if _data.find(".//planart") is None or _data.find(".//planart").text is None:
+            if _data.find("Kopf/planart") is None or _data.find("Kopf/planart").text is None:
                 raise ValueError
             
-            match _data.find(".//planart").text:
+            match _data.find("Kopf/planart").text:
                 case "K":
                     return VertretungsTag(_data)
                 case "L":
@@ -61,18 +61,14 @@ class VertretungsTagBase(VpmobilPyModell):
     @property
     def zeitstempel(self) -> datetime | None:
         "Veröffentlichungszeitpunkt des Vertretungsplans"
-        element = self._data.find('Kopf/zeitstempel')
-        if element is None or not element.text:
-            return None
-        return datetime.strptime(element.text, "%d.%m.%Y, %H:%M")
+        if self._data_safe_value("Kopf/zeitstempel", "text") is not None:
+            return datetime.strptime(self._data.find("Kopf/zeitstempel").text, "%d.%m.%Y, %H:%M")
+        return None
         
     @property
     def datei(self) -> str | None:
         "Dateiname der Quelldatei"
-        element = self._data.find('Kopf/datei')
-        if element is None or not element.text:
-            return None
-        return element.text
+        return self._data_safe_value("Kopf/datei", "text")
 
     @property
     def datum(self) -> date | None:
@@ -95,6 +91,18 @@ class VertretungsTagBase(VpmobilPyModell):
             if ft.text is not None:
                 freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
         return freieTageList
+    
+    @property
+    def zusatzInfo(self) -> str | None:
+        """Zusätzliche Informationen zum Tag<br>
+        Kann Multiline sein
+        """
+        ziZeilen = []
+        for zusatzInfo in self._data.findall('.//ZusatzInfo'):
+            for ziZeile in zusatzInfo.findall('.//ZiZeile'):
+                if ziZeile.text:
+                    ziZeilen.append(ziZeile.text)
+        return '\n'.join(ziZeilen) if ziZeilen else None
             
     @classmethod
     def fromfile(cls, pfad: Path) -> VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
@@ -340,7 +348,9 @@ class Aufsicht(VpmobilPyModell):
     @property
     def uhrzeit(self) -> time:
         "Uhrzeit der Aufsicht"
-        return datetime.strptime(self._data.find("AuUhrzeit").text, "%H:%M").time() if self._data_safe_value("AuUhrzeit", "text") is not None else None
+        if self._data_safe_value("AuUhrzeit", "text") is not None:
+            return datetime.strptime(self._data.find("AuUhrzeit").text, "%H:%M").time()  
+        return None
     
     @property
     def zeit(self) -> str:
@@ -374,12 +384,16 @@ class Stunde(VpmobilPyModell):
     @property
     def beginn(self) -> time:
         "Beginn der Stunde"
-        return datetime.strptime(self._data.find("Beginn").text, "%H:%M").time() if self._data_safe_value("Beginn", "text") is not None else None
+        if self._data_safe_value("Beginn", "text") is not None:
+            return datetime.strptime(self._data.find("Beginn").text, "%H:%M").time()  
+        return None
     
     @property
     def ende(self) -> time:
         "Ende der Stunde"
-        return datetime.strptime(self._data.find("Ende").text, "%H:%M").time() if self._data_safe_value("Ende", "text") is not None else None
+        if self._data_safe_value("Ende", "text") is not None:
+            return datetime.strptime(self._data.find("Ende").text, "%H:%M").time() 
+        return None
     
     @property
     def ausfall(self) -> bool:
@@ -397,10 +411,12 @@ class Stunde(VpmobilPyModell):
         stunde.fach if klasse.kurs(stunde.kursnummer) is None else klasse.kurs(stunde.kursnummer).fach
         ```
         """
-        return self._data_safe_value("Fa", "text") if self._data_safe_value("Fa", "text") != "---" else None
+        if self._data_safe_value("Fa", "text") != "---":
+            return self._data_safe_value("Fa", "text")
+        return None
 
     @property
-    def klassen(self) -> str | None:
+    def klassen(self) -> list[str]:
         """Alle Klassen der Stunde<br>
         Gibt `[]` zurück, wenn die Stunde entfällt oder keine Klassen eingetragen sind
         """
@@ -420,7 +436,9 @@ class Stunde(VpmobilPyModell):
         if self._planart == "L":
             return self._quelle
         else:
-            return self._data.find("Le").text.split(config.SEPARATOR) if self._data_safe_value("Le", "text") is not None else []
+            if self._data_safe_value("Le", "text") is not None:
+                return self._data.find("Le").text.split(config.SEPARATOR)
+            return []
 
         
     @property
@@ -431,8 +449,10 @@ class Stunde(VpmobilPyModell):
         if self._planart == "R":
             return self._quelle
         else:
-            return self._data.find("Ra").text.split(config.SEPARATOR) if self._data_safe_value("Ra", "text") is not None else []
-        
+            if self._data_safe_value("Ra", "text") is not None:
+                return self._data.find("Ra").text.split(config.SEPARATOR) 
+            return []
+            
     @property
     def fachgeändert(self) -> bool:
         "Ob eine Änderung des Fachs für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
@@ -471,7 +491,9 @@ class Stunde(VpmobilPyModell):
         
         Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
         """
-        return int(self._data.find("Nr").text) if self._data_safe_value("Nr", "text") is not None else None
+        if self._data_safe_value("Nr", "text") is not None:
+            return int(self._data.find("Nr").text)
+        return None
     
     @property
     def info(self) -> str | None:
@@ -507,4 +529,6 @@ class Kurs(VpmobilPyModell):
     @property
     def kursnummer(self) -> int:
         "Kursnummer des Kurses"
-        return int(self._data_safe_value("UeNr", "text")) if self._data_safe_value("UeNr", "text") is not None else None
+        if self._data_safe_value("UeNr", "text") is not None:
+            return int(self._data_safe_value("UeNr", "text"))
+        return None
