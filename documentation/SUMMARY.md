@@ -8,4 +8,5 @@
 ## Anderes
 
 * [Changelog](anderes/changelog.md)
+* [Indiware Spezifikationen](anderes/indiware.md)
 * [Credits](anderes/credits.md)
