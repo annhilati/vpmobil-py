@@ -2,8 +2,8 @@
 
 from vpmobil import *
 
-vp = Vertretungsplan()
-day = VertretungsTag()
+vp =   Vertretungsplan()
+day =  VertretungsTag()
 day1 = RaumVertretungsTag()
 day2 = LehrerVertretungsTag()
 klasse = Klasse()
@@ -14,7 +14,6 @@ kurs = Kurs()
 aufsicht = Aufsicht()
 
 vp.fetch()
-vp.bulkfetch()
 
 day.datei
 day.datum

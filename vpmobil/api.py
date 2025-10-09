@@ -8,7 +8,7 @@ from vpmobil.models import MobdatenBase, VertretungsTag, LehrerVertretungsTag, R
 
 @dataclass
 class Vertretungsplan():
-    """Klasse, die den Zugang zu einem Indiware Vertretungsplan repräsentiert.
+    """Klasse, die den Zugang zu einem Indiware Vertretungsplan regelt.
 
     Parameter
     ----------

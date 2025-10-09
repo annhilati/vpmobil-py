@@ -17,7 +17,7 @@ class VpmobilPyModell():
 
     def _data_safe_value(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict | None:
         "Gibt `None`-safe das Attribut eines Untertags zurück.<br>Ist `None`, wenn `tag` nichts existiert, `attr` `None` oder `""` ist"
-        return None if getattr(self._data.find(tag), attr, None) == "" else getattr(self._data.find(tag), attr, None)
+        return getattr(self._data.find(tag), attr, None) or None
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                   VertretungsTagBase                                     │ 
@@ -38,7 +38,7 @@ class MobdatenBase(VpmobilPyModell):
     def __new__(cls, _data: XML.ElementTree):
         if cls is MobdatenBase:
             if _data.find("Kopf/planart") is None or _data.find("Kopf/planart").text is None:
-                raise ValueError
+                raise ValueError("XML-Quelldaten sind unbekannt formatiert")
             
             match _data.find("Kopf/planart").text:
                 case "K":
@@ -48,7 +48,7 @@ class MobdatenBase(VpmobilPyModell):
                 case "R":
                     return RaumVertretungsTag(_data)
                 case _:
-                    raise ValueError
+                    raise ValueError(f"Planart muss eins von 'K', 'L' oder 'R' sein, nicht '{_data.find("Kopf/planart").text}'")
                 
         return super().__new__(cls)
             
@@ -284,6 +284,9 @@ class RaumVertretungsTag(MobdatenBase):
 
 class KlasseLikeBase(VpmobilPyModell):
     
+    def __getitem__(self, v) -> list[Stunde]:
+        return self.stundenHeuteInPeriode(v)
+    
     @property
     def kürzel(self) -> str:
         return self._data.find('Kurz').text
@@ -309,9 +312,6 @@ class KlasseLikeBase(VpmobilPyModell):
     def stundenHeuteInPeriode(self, periode: int) -> list[Stunde]:
         "Gibt die Stunden in einer bestimmten Unterrichtsperiode zurück."
         return self.stundenHeute.get(periode) or []
-    
-    def __getitem__(self, v) -> list[Stunde]:
-        return self.stundenHeuteInPeriode(v)
     
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Klasse                                         │ 
