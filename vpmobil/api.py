@@ -100,39 +100,39 @@ class Vertretungsplan():
         else:
             response.raise_for_status()
 
-    def bulkfetch(self) -> list[VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag]:
-        """Ruft alle Pläne in einem Zeitraum von 2 Monaten ab.
+    # def bulkfetch(self) -> list[VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag]:
+    #     """Ruft alle Pläne in einem Zeitraum von 2 Monaten ab.
 
-        Raises
-        ----------
-        ResourceNotFound : Wenn keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
-        InvalidCredentialsError : Wenn Benutzername oder Passwort falsch sind.
-        ValueError : Falls eine Antwort vom Server kein gültiges XML enthält
-        """
+    #     Raises
+    #     ----------
+    #     ResourceNotFound : Wenn keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist.
+    #     InvalidCredentialsError : Wenn Benutzername oder Passwort falsch sind.
+    #     ValueError : Falls eine Antwort vom Server kein gültiges XML enthält
+    #     """
 
-        today = datetime.today().date()
+    #     today = datetime.today().date()
 
-        def date_range(start_date: date, end_date: date):
-            delta = timedelta(days=1)
-            current_date = start_date
-            while current_date <= end_date:
-                yield current_date
-                current_date += delta
+    #     def date_range(start_date: date, end_date: date):
+    #         delta = timedelta(days=1)
+    #         current_date = start_date
+    #         while current_date <= end_date:
+    #             yield current_date
+    #             current_date += delta
 
-        pläne: list[MobdatenBase] = []
-        for tag in date_range(today - timedelta(days=30), today + timedelta(days=30)):
-            if tag.weekday() > 4:
-                continue
-            else:
-                try:
-                    plan = self.fetch(tag)
-                    pläne.append(plan)
-                except IndiwareFetchingError:
-                    continue
-        if len(pläne) == 0:
-            raise ResourceNotFound("Es konnten in einem zweimonatigen Zeitraum keine Vertretungspläne gefunden werden.")
-        else:
-            return pläne
+    #     pläne: list[MobdatenBase] = []
+    #     for tag in date_range(today - timedelta(days=30), today + timedelta(days=30)):
+    #         if tag.weekday() > 4:
+    #             continue
+    #         else:
+    #             try:
+    #                 plan = self.fetch(tag)
+    #                 pläne.append(plan)
+    #             except IndiwareFetchingError:
+    #                 continue
+    #     if len(pläne) == 0:
+    #         raise ResourceNotFound("Es konnten in einem zweimonatigen Zeitraum keine Vertretungspläne gefunden werden.")
+    #     else:
+    #         return pläne
         
 class IndiwareFetchingError(Exception):
     """Wenn die angeforderten Daten nicht abgerufen werden können."""

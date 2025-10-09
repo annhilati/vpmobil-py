@@ -427,6 +427,8 @@ class Aufsicht(VpmobilPyModell):
 
 @dataclass
 class Stunde(VpmobilPyModell):
+    """Klasse, die eine bestimmte Unterrichtsstunde repräsentiert.
+    """
 
     _quelle: str = field(init=True)
     

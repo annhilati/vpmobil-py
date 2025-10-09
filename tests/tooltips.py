@@ -26,11 +26,24 @@ day.freieTage
 day.zusatzInfo
 day.zeitstempel
 
+day1.räume
+day1.raum()
+
+day2.lehrer
+day2.get_lehrer()
+
 klasse.stundenHeute
 klasse.stundenHeuteInPeriode()
 klasse.kürzel
 klasse.kurse
 klasse.kurs()
+
+lehrer.aufsichten
+
+aufsicht.ort
+aufsicht.uhrzeit
+aufsicht.vorStunde
+aufsicht.zeit
 
 stunde.geändert
 stunde.ausfall
@@ -39,8 +52,8 @@ stunde.ende
 stunde.fach
 stunde.info
 stunde.kursnummer
-stunde.lehrer
 stunde.periode
+stunde.lehrer
 stunde.räume
 stunde.klassen
 

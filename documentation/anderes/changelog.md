@@ -4,18 +4,24 @@
 
 #### 🚀 Neue Funktionen
 
-* Datenmodelle können nun mit `._to_dict()` in Dictionaries umgewandelt werden<br>
-    > Dies ist ersteinmal eine Übergangslösung, um das Speichern in gut les- und parsbaren Formaten zu ermöglichen. Das Format wird sich in Zukunft sicherlich nochmals ändern.
-* `Vertretungsplan()` hat nun einen neuen Parameter `Port` (int). Mit ihm kann der Port des Service übergeben werden, über den die Vertretungsplandaten bereitstellt werden
+* Parameter `port` (int) zu `Vertretungsplan` hinzugefügt
+* Unterstützung für Lehrer- und Raumpläne<br>
+→ Neue Klassen `LehrerVertretungsTag` und `RaumVertretungsTag` mit eigenen Attributen sowie Pendants zu `VertretungsTag.klassen` und `.klasse()` hinzugefügt
+
 
 #### 🔧 Änderungen
 
+**Instanzierung von Plänen**
+* Parameter `vezeichnis` und `dateinamenschema` von `Vertretungsplan.fetch()` zusammengeführt
+* `Vertretungsplan.fetch()` kann nun auch Instanzen von `LehrerVertretungsTag` und `RaumVertretungsTag` zurückgeben.<br>
+Standardmäßig wird wie bisher die Datei abgerufen, deren Pfad das in `Vertretungsplan.dateipfadschema` hinterlegte Format und das Datum `date` hat. Wenn zusätzlich der Parameter `datei` angegeben wird, ersetzt das den Standarddateipfad.
+* Die Standardpfade von stundenplan24.de sind im Enumerator `Stundenplan24Pfade` verfügbar
+
+**Rückgabewerte**
 * `Stunde.lehrer` gibt die Lehrer der Stunde nun als Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
 * `Stunde.raum` wurde entfernt
 * `Stunde.räume` gibt nun die Räume der Stunde als Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
-* Die Option, mit `Vertretungsplan.fetch()` über den Parameter `datei` eine bestimmte Datei abzurufen wurde vorerst entfernt
 * `Klasse.stundenHeuteInPeriode()` gibt nun `[]` statt `None` zurück, wenn keine Stunden vorhanden sind
-* Die Parameter `vezeichnis` und `dateinamenschema` von `Vertretungsplan.fetch()` wurden zusammengeführt
 
 #### 🪲 Bug Fixes
 
