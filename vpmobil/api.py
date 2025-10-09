@@ -4,7 +4,7 @@ from datetime import datetime, date, timedelta
 import xml.etree.ElementTree as XML
 import requests
 
-from vpmobil.models import VertretungsTag
+from vpmobil.models import VertretungsTagBase, VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag
 
 @dataclass
 class Vertretungsplan():
@@ -25,7 +25,8 @@ class Vertretungsplan():
     dateipfadschema : str
         Schema des Pfads unter dem die Quelldateien abgerufen werden können<br>
         `{schulnummer}` kann als Platzhalter verwendet werden<br>
-        [Platzhalter des datetime-Moduls](https://strftime.org/) können verwendet werden
+        [Platzhalter des datetime-Moduls](https://strftime.org/) können verwendet werden<br>
+        Die Standardpfade von `stundenplan24.de` sind als Attribute von `vpmobil.utils.Stundenplan24Pfade` verfügbar
     """
     
     schulnummer:        int
@@ -33,18 +34,18 @@ class Vertretungsplan():
     passwort:           str
     serverdomain:       str = "stundenplan24.de"
     port:               int = None
-    dateipfadschema:    str = "/{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
+    dateipfadschema:    str = "{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
     
     def __post_init__(self):
 
         if self.serverdomain.endswith('/'):
-            self.serverdomain= self.serverdomain[:-1]
+            self.serverdomain = self.serverdomain[:-1]
 
         if "://" in self.serverdomain:
             self.serverdomain = self.serverdomain.split("://", 1)[-1]
             
-        if not self.dateipfadschema.startswith("/"):
-            self.dateipfadschema = "/" + self.dateipfadschema
+        if self.dateipfadschema.startswith("/"):
+            self.dateipfadschema = self.dateipfadschema[1:]
 
     @property
     def socket(self) -> URL:
@@ -59,13 +60,15 @@ class Vertretungsplan():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def fetch(self, datum: date = date.today()) -> VertretungsTag:
+    def fetch(self, datum: date = date.today(), datei: str = None) -> VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """Ruft die Daten eines Tages ab.
 
         Parameter
         ----------
         datum : date
             Abzurufender Tag
+        datei : str
+            Pfad (beginnend nach der TLD) der abzurufenden Datei. `datum` kann parallel mit `datei` durch [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden.
 
         Raises
         ----------
@@ -76,16 +79,16 @@ class Vertretungsplan():
 
         dateipfad: str = (
             datum
-            .strftime(self.dateipfadschema)
+            .strftime(self.dateipfadschema if datei is None else datei)
             .format(schulnummer=self.schulnummer)
-        )
+        ) 
         
         file_url = self.socket / dateipfad
         response = requests.get(str(file_url))
 
         status = response.status_code
         if status == 200:
-            return VertretungsTag(XML.fromstring(response.content))
+            return VertretungsTagBase(XML.fromstring(response.content))
         elif status == 401:
             raise InvalidCredentialsError(message=f"Passwort oder Benutzername sind ungültig.", response=response)
         elif status == 404:
@@ -93,7 +96,7 @@ class Vertretungsplan():
         else:
             response.raise_for_status()
 
-    def bulkfetch(self) -> list[VertretungsTag]:
+    def bulkfetch(self) -> list[VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag]:
         """Ruft alle Pläne in einem Zeitraum von 2 Monaten ab.
 
         Raises
@@ -112,7 +115,7 @@ class Vertretungsplan():
                 yield current_date
                 current_date += delta
 
-        pläne: list[VertretungsTag] = []
+        pläne: list[VertretungsTagBase] = []
         for tag in date_range(today - timedelta(days=30), today + timedelta(days=30)):
             if tag.weekday() > 4:
                 continue

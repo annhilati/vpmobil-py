@@ -14,7 +14,10 @@ def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     reparsed = MD.parseString(string)
     return reparsed.toprettyxml(indent="\t")
 
-class StandardPfade(StrEnum):
-    PlanKl = "/mobil/mobdaten/PlanKl{yyyymmdd}.xml"
-    PlanLe = "/moble/mobdaten/PlanLa{yyyymmdd}.xml"
-    PlanRa = "/mobra/mobdaten/PlanRa{yyyymmdd}.xml"
+class Stundenplan24Pfade(StrEnum):
+    Klassen = "{schulnummer}/mobil/mobdaten/Klassen.xml"
+    PlanKl  = "{schulnummer}/mobil/mobdaten/PlanKl{yyyymmdd}.xml"
+    Lehrer  = "{schulnummer}/moble/mobdaten/Lehrer.xml"
+    PlanLe  = "{schulnummer}/moble/mobdaten/PlanLa{yyyymmdd}.xml"
+    Raeume  = "{schulnummer}/mobra/mobdaten/Raeume.xml"
+    PlanRa  = "{schulnummer}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"

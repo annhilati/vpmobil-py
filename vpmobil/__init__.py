@@ -20,11 +20,16 @@ Siehe auch das `extensions`-Submodul. Importe aus anderen Submodulen sind in der
 """
 
 from vpmobil.api import Vertretungsplan, IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound
-from vpmobil.models import VertretungsTag, Klasse, Stunde, Kurs
+from vpmobil.models import VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, Klasse, Stunde, Kurs, Aufsicht
+from vpmobil.utils import Stundenplan24Pfade
 
-_symbols = [Vertretungsplan,
-            VertretungsTag, Klasse, Stunde, Kurs,
-            IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound]
+_symbols = [
+    Vertretungsplan,
+    VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
+    Klasse, Stunde, Kurs, Aufsicht,
+    IndiwareFetchingError, InvalidCredentialsError, ResourceNotFound,
+    Stundenplan24Pfade
+]
 _constants = []
 
 __all__ = [obj.__name__ for obj in _symbols] + _constants
