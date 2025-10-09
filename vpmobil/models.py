@@ -367,7 +367,6 @@ class Lehrer(KlasseLikeBase):
     def aufsichten(self) -> list[Aufsicht]:
         """Aufsichten des Lehrers
         """
-
         fin: list[Stunde] = []
         aufsichten = self._data.find("Aufsichten")
         for aufsicht in aufsichten.findall("Aufsicht"):

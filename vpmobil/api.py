@@ -83,7 +83,7 @@ class Vertretungsplan():
 
         dateipfad: str = (
             datum
-            .strftime(self.dateipfadschema if datei is None else datei)
+            .strftime(datei or self.dateipfadschema)
             .format(schulnummer=self.schulnummer)
         )
         
