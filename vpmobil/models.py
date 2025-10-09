@@ -328,7 +328,7 @@ class Klasse(KlasseLikeBase):
     """
 
     def __repr__(self):
-        return f"Vertretungsplan der Klasse {self.kürzel}"
+        return f"<Klasse '{self.kürzel}'>"
     
     @property
     def kurse(self) -> list[Kurs]:
@@ -361,7 +361,7 @@ class Lehrer(KlasseLikeBase):
     """
 
     def __repr__(self):
-        return f"Vertretungsplan des Lehrers {self.kürzel}"
+        return f"<Lehrer '{self.kürzel}'>"
     
     @property
     def aufsichten(self) -> list[Aufsicht]:
@@ -388,7 +388,7 @@ class Raum(KlasseLikeBase):
     """
 
     def __repr__(self):
-        return f"Vertretungsplan des Raums {self.kürzel}"
+        return f"<Raum '{self.kürzel}'>"
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Aufsicht                                         │ 

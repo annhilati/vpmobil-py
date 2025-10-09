@@ -19,6 +19,7 @@ Neue Klassen sind:
 * `MobdatenBase`
   * Basisklasse für Vertretungspläne
   * Erzeugt beim Instanzierungsversuch eine Instanz einer ihrer Subklassen
+  * Kann mit `isinstance()` als Protokoll für alle Vertretungspläne genutzt werden
   * Kann vererbt werden, um weitere Planarten zu definieren 
 * `LehrerVertretungsTag`
   * Subklasse von `MobdatenBase`
@@ -34,17 +35,19 @@ Neue Klassen sind:
   * Wird von `RaumVertretungsTag.räume` erzeugt
 * `Aufsicht`
   * Ein primitives Datenmodell, ähnlich zu `Stunde`, das Informationen über eine Lehreraufsicht enthält
+  * Hat `.vorStunde`, `.uhrzeit`, `.zeit` und `.ort`
   * Wird von `Lehrer.aufsichten` erzeugt
 
 ### 🔧 Änderungen
 
 * `Vertretungsplan` und `.fetch()` wurden angepasst, um die neuen Vertretungsplanarten verarbeiten zu können
-* `Stunde.raum` wurde durch `Stunde.räume` ersetzt
-* `Stunde.räume` gibt nun eine Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
+* `Stunde.raum` wurde durch `Stunde.räume` ersetzt, das nun eine Liste von Strings zurückgibt. Statt `None` wird `[]` zurückgegeben
 * `Stunde.lehrer` gibt nun eine Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
 * `Klasse.stundenHeuteInPeriode()` gibt nun `[]` statt `None` zurück
-* Alle Properties, die Klassen, Lehrer oder Räume zurückgeben verwenden nun das Trennzeichen, das in `config.SEPARATOR` festgelegt werden kann, um Mehrfachnennungen zu trennen
-* Alle Properties wurden `None`-sicher gemacht, sodass sie nun keine Fehler mehr werfen können, sollte ein Tag in den Quelldateien unerwarteter Weise nicht vorhanden sein
+* Alle Properties, die Klassen, Lehrer oder Räume zurückgeben, verwenden nun das Trennzeichen, das in `config.SEPARATOR` festgelegt werden kann, um Mehrfachnennungen zu trennen
+* Alle Properties wurden `None`-sicher gemacht, sodass sie nun keine Fehler mehr werfen können, sollte ein Tag in der Quelldatei unerwarteter Weise nicht vorhanden sein
+* `InvalidCredentialsError` wurde in `Unauthorized` umbenannt
+* `Vertretungsplan.bulkfetch()` wurde entfernt
 
 #### `Vertretungsplan` und `.fetch()`
 `Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden. 
