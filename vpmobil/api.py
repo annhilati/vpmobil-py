@@ -4,7 +4,7 @@ from datetime import datetime, date, timedelta
 import xml.etree.ElementTree as XML
 import requests
 
-from vpmobil.models import VertretungsTagBase, VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag
+from vpmobil.models import MobdatenBase, VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag
 
 @dataclass
 class Vertretungsplan():
@@ -63,7 +63,9 @@ class Vertretungsplan():
     def fetch(self, datum: date = date.today(), datei: str = None) -> VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """Ruft die Daten eines Tages ab.
 
-        Die Methode sollte nur verwendet werden, wenn zu erwarten ist, welcher Typ zurückgegeben wird. Verwende Typ-Annotation: `plan: RaumVertretungsTag = vp.fetch()`
+        Die Methode sollte nur verwendet werden, wenn zu erwarten ist, welcher Typ zurückgegeben wird.<br>
+        Verwende dafür Typ-Annotation: `plan: RaumVertretungsTag = vp.fetch()`<br>
+        Falls es unklar ist, kann `vpmobil.MobdatenBase` als Protokoll verwendet werden.
 
         Parameter
         ----------
@@ -90,7 +92,7 @@ class Vertretungsplan():
 
         status = response.status_code
         if status == 200:
-            return VertretungsTagBase(XML.fromstring(response.content))
+            return MobdatenBase(XML.fromstring(response.content))
         elif status == 401:
             raise Unauthorized(message=f"Zugangsdaten haben keinen Zugriff auf '{dateipfad}'.", response=response)
         elif status == 404:
@@ -117,7 +119,7 @@ class Vertretungsplan():
                 yield current_date
                 current_date += delta
 
-        pläne: list[VertretungsTagBase] = []
+        pläne: list[MobdatenBase] = []
         for tag in date_range(today - timedelta(days=30), today + timedelta(days=30)):
             if tag.weekday() > 4:
                 continue
@@ -133,7 +135,7 @@ class Vertretungsplan():
             return pläne
         
 class IndiwareFetchingError(Exception):
-    "Wenn die angeforderten Daten nicht abgerufen werden können"
+    """Wenn die angeforderten Daten nicht abgerufen werden können."""
     def __init__(self, message: str, response: requests.Response = None):
         self.message = message
         self.response = response
@@ -142,9 +144,15 @@ class IndiwareFetchingError(Exception):
         return f"{self.message} ({self.response})"
     
 class ResourceNotFound(IndiwareFetchingError):
-    "Wenn die angeforderten Daten nicht existieren"
+    """Wenn die angeforderten Daten nicht existieren
+    
+    Subklasse von `IndiwareFetchingError`
+    """
     ...
 
 class Unauthorized(IndiwareFetchingError):
-    "Wenn die Anmeldedaten ungültig sind"
+    """Wenn die Anmeldedaten keinen Zugriff auf die angeforderten Daten haben.
+    
+    Subklasse von `IndiwareFetchingError`
+    """
     ...

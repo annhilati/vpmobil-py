@@ -25,7 +25,7 @@ gesStd = 0
 okStd = 0
 day = 20
 month = 6
-dat = "20250620"
+dat = "20250925"
 testVar = ""
 endNow = False
 while endNow == False:
@@ -41,7 +41,7 @@ while endNow == False:
                 for std in tag.klasse(kl).stundenHeute[st]:
                     gesStd += 1
                     try:
-                        testVar = kl + str(std.beginn) + str(std.ende) + str(std.lehrer) + str(std.fach) + str(std.raum) + str(std.periode) + str(std.kursnummer)
+                        testVar = kl + str(std.beginn) + str(std.ende) + str(std.lehrer) + str(std.fach) + str(std.räume) + str(std.periode) + str(std.kursnummer)
                     except Exception as e:
                         # raise e # DEBUG
                         print("UNITEST - FEHLER - " + "Klasse " + kl + ", Stunde " + str(std.periode) + " am Tag " + dat)
@@ -64,7 +64,7 @@ while endNow == False:
             print("UNITEST - FEHLER - einer von .datei, .datum, .wochentag, .zeitstempel, .zusatzinfo am Tag " + dat)
             print(testVar)
     finally:
-        if dat == "20250710":
+        if dat == "20251025":
             endNow = True
             break
         if day == 31:

@@ -24,8 +24,8 @@ class VpmobilPyModell():
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass # Dunder neu generieren
-class VertretungsTagBase(VpmobilPyModell):
-    """Base-Class für Vertretungspläne an einem bestimmten Tag.
+class MobdatenBase(VpmobilPyModell):
+    """Base-Class für Vertretungspläne.
 
     Beim Versuch einer Instanzierung wird automatisch eine Instanz von `VertretungsTag`, `LehrerVertretungsTag` oder `RaumVertretungsTag` zurückgegeben.
 
@@ -36,7 +36,7 @@ class VertretungsTagBase(VpmobilPyModell):
     _planart: Literal["K", "L", "R"] = field(init=False, default=None)
 
     def __new__(cls, _data: XML.ElementTree):
-        if cls is VertretungsTagBase:
+        if cls is MobdatenBase:
             if _data.find("Kopf/planart") is None or _data.find("Kopf/planart").text is None:
                 raise ValueError
             
@@ -107,7 +107,7 @@ class VertretungsTagBase(VpmobilPyModell):
     @classmethod
     def fromfile(cls, pfad: Path) -> VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """
-        Erzeugt ein VertretungsTag-Objekt aus einer XML-Vertretungsplandatei
+        Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
 
         Parameter
         ----------
@@ -124,7 +124,7 @@ class VertretungsTagBase(VpmobilPyModell):
         return instance
     
     def saveasfile(self, pfad: Path | str = "./datei.xml", overwrite=False) -> None:
-        """Speichert alle Daten des Tages als XML-Datei
+        """Speichert alle Daten des Tages als XML-Datei.
 
         Parameter
         ---------
@@ -163,11 +163,22 @@ class VertretungsTagBase(VpmobilPyModell):
 # │                                      VertretungsTag                                      │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class VertretungsTag(VertretungsTagBase):
+class VertretungsTag(MobdatenBase):
+    """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Klassen repräsentiert.
+    
+    Unterstützt Subskription: 
+    ```
+    data: VpDay = vp.fetch()
+    klasse = data["10a"]
+    ```
+    """
+
+    def __getitem__(self, v) -> Klasse | None:
+        return self.klasse(v)
 
     @property
     def lehrerKrank(self) -> list[str]:
-        "Aller Lehrer, die unplanmäßig keinen Unterricht haben"
+        "Lehrer, die unplanmäßig keinen Unterricht haben"
         
         lehrerMitUnterricht: set[str] = set()
         lehrerVielleichtKrank: set[str] = set()
@@ -199,12 +210,11 @@ class VertretungsTag(VertretungsTagBase):
     
     @property
     def klassen(self) -> list[Klasse]:
-        "Im Vertretungsplan hinterlegte Klassen"
+        "Im Vertretungsplan beschriebene Klassen"
         return [Klasse(element, self._planart) for element in (self._elemente_Klassen() or [])]
     
     def klasse(self, kürzel: str) -> Klasse | None:
-        "Gibt die Klasse zurück, deren Tag `<Kurz>` gleich `kürzel` ist"
-
+        "Gibt die Klasse mit der Bezeichnung `kürzel` zurück."
         for kl in self.klassen:
             if kl.kürzel == kürzel:
                 return kl
@@ -214,16 +224,26 @@ class VertretungsTag(VertretungsTagBase):
 # │                                   LehrerVertretungsTag                                   │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class LehrerVertretungsTag(VertretungsTagBase):
+class LehrerVertretungsTag(MobdatenBase):
+    """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Lehrer repräsentiert.
+    
+    Unterstützt Subskription: 
+    ```
+    data: VpDay = vp.fetch()
+    lehrer = data["Ah"]
+    ```
+    """
+
+    def __getitem__(self, v) -> Klasse | None:
+        return self.get_lehrer(v)
 
     @property
     def lehrer(self) -> list[Lehrer]:
-        "Im Vertretungsplan hinterlegte Klassen"
+        "Im Vertretungsplan beschriebene Lehrer"
         return [Lehrer(element, self._planart) for element in (self._elemente_Klassen() or [])]
     
     def get_lehrer(self, kürzel: str) -> Lehrer | None:
-        "Gibt den Lehrer zurück, dessen Tag `<Kurz>` gleich `kürzel` ist"
-
+        "Gibt den Lehrer mit der Abkürzung `kürzel` zurück."
         for le in self.lehrer:
             if le.kürzel == kürzel:
                 return le
@@ -233,16 +253,26 @@ class LehrerVertretungsTag(VertretungsTagBase):
 # │                                    RaumVertretungsTag                                    │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class RaumVertretungsTag(VertretungsTagBase):
+class RaumVertretungsTag(MobdatenBase):
+    """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Räume repräsentiert.
+    
+    Unterstützt Subskription: 
+    ```
+    data: VpDay = vp.fetch()
+    raum = data["E07"]
+    ```
+    """
+
+    def __getitem__(self, v) -> Klasse | None:
+        return self.raum(v)
     
     @property
     def räume(self) -> list[Raum]:
-        "Im Vertretungsplan hinterlegte Klassen"
+        "Im Vertretungsplan beschriebene Räume"
         return [Raum(element, self._planart) for element in (self._elemente_Klassen() or [])]
     
     def raum(self, kürzel: str) -> Raum | None:
-        "Gibt den Lehrer zurück, dessen Tag `<Kurz>` gleich `kürzel` ist"
-
+        "Gibt den Raum mit der Bezeichnung `kürzel` zurück."
         for ra in self.räume:
             if ra.kürzel == kürzel:
                 return ra
@@ -277,15 +307,18 @@ class KlasseLikeBase(VpmobilPyModell):
         return fin
 
     def stundenHeuteInPeriode(self, periode: int) -> list[Stunde]:
-        "Gibt die Stunden an dem Tag in einer bestimmten Unterrichtsperiode zurück"
+        "Gibt die Stunden in einer bestimmten Unterrichtsperiode zurück."
         return self.stundenHeute.get(periode) or []
+    
+    def __getitem__(self, v) -> list[Stunde]:
+        return self.stundenHeuteInPeriode(v)
     
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Klasse                                         │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Klasse(KlasseLikeBase):
-    """Klasse, die den Vertretungsplan für eine bestimmte Klasse an einem bestimmten Tag repräsentiert.
+    """Klasse, die den Vertretungsplan für eine bestimmte Klasse repräsentiert.
     
     Unterstützt Subskription: 
     ```
@@ -294,9 +327,12 @@ class Klasse(KlasseLikeBase):
     ```
     """
 
+    def __repr__(self):
+        return f"Vertretungsplan der Klasse {self.kürzel}"
+    
     @property
     def kurse(self) -> list[Kurs]:
-        "Alle im Plan vermerkten Kurse, die die Klasse hat"
+        "Kurse der Klasse"
         fin: list[Kurs] = []
         unterricht = self._data.find("Unterricht")
         for ue in unterricht.findall("Ue"):
@@ -304,7 +340,7 @@ class Klasse(KlasseLikeBase):
         return fin
     
     def kurs(self, kursnummer: int) -> Kurs | None:
-        "Gibt den Kurs der Klasse mit der Kursnummer `kursnummer` zurück"
+        "Gibt den Kurs der Klasse mit der Kursnummer `kursnummer` zurück."
         for kurs in self.kurse:
             if kurs.kursnummer == kursnummer:
                 return kurs
@@ -315,11 +351,21 @@ class Klasse(KlasseLikeBase):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
     
 class Lehrer(KlasseLikeBase):
+    """Klasse, die den Vertretungsplan für einen bestimmten Lehrer repräsentiert.
+    
+    Unterstützt Subskription: 
+    ```
+    data: Lehrer = vpday.lehrer("Ah")
+    stunden_zur_dritten = data[3]
+    ```
+    """
+
+    def __repr__(self):
+        return f"Vertretungsplan des Lehrers {self.kürzel}"
     
     @property
     def aufsichten(self) -> list[Aufsicht]:
-        """Alle Aufsichten an dem Tag als Dictionary<br>
-        Die Schlüssel sind die Unterrichtsperioden, die Werte Listen von Unterrichsstunden
+        """Aufsichten des Lehrers
         """
 
         fin: list[Stunde] = []
@@ -333,16 +379,29 @@ class Lehrer(KlasseLikeBase):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Raum(KlasseLikeBase):
-    ...
+    """Klasse, die den Vertretungsplan für einen bestimmten Raum repräsentiert.
+    
+    Unterstützt Subskription: 
+    ```
+    data: Raum = vpday.raum("E07")
+    stunden_zur_dritten = data[3]
+    ```
+    """
+
+    def __repr__(self):
+        return f"Vertretungsplan des Raums {self.kürzel}"
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Aufsicht                                         │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Aufsicht(VpmobilPyModell):
+    """Klasse, die eine Lehreraufsicht repräsentiert.
+    """
 
     @property
     def vorStunde(self) -> int:
+        "Unterrichtsperiode, vor der die Aufsicht stattfindet"
         return self._data_safe_value("AuVorStunde", "text")
     
     @property
@@ -485,7 +544,8 @@ class Stunde(VpmobilPyModell):
 
     @property
     def kursnummer(self) -> int | None:
-        """Nummer des Kurses der Stunde<br>
+        """Nummer des Kurses der Stunde
+
         Kann `None` sein, wenn das Fach der Stunde geändert wurde, jedoch nicht, wenn die Stunde entfällt.<br>
         Kann `None` sein, beispielsweise wenn die Stunde eine Exkursion ist.
         
