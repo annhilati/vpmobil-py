@@ -3,9 +3,9 @@
 from vpmobil import *
 
 vp =   Vertretungsplan()
-day =  VertretungsTag()
-day1 = RaumVertretungsTag()
-day2 = LehrerVertretungsTag()
+day =  VertretungsTag()         # Tag <- Klassen <- Stunden <- Fa, Le, Ra, FaAe, LeAe, ...
+day1 = RaumVertretungsTag()     # Tag <- Räume   <- Stunden <- Fa, Le, Kl, FaAe, LeAe, ...
+day2 = LehrerVertretungsTag()   # Tag <- Lehrer  <- Stunden <- Fa, Kl, Ra, FaAe, LeAe, ...
 klasse = Klasse()
 raum = Raum()
 lehrer = Lehrer()
@@ -57,6 +57,6 @@ stunde.räume
 stunde.klassen
 
 kurs.fach
-kurs.gruppe
+kurs.kürzel
 kurs.kursnummer
 kurs.lehrer

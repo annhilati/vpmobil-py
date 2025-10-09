@@ -48,6 +48,7 @@ Neue Klassen sind:
 * Alle Properties wurden `None`-sicher gemacht, sodass sie nun keine Fehler mehr werfen können, sollte ein Tag in der Quelldatei unerwarteter Weise nicht vorhanden sein
 * `InvalidCredentialsError` wurde in `Unauthorized` umbenannt
 * `Vertretungsplan.bulkfetch()` wurde entfernt
+* `Kurs.gruppe` wurde in `.kürzel` umbenannt. Es gibt jetzt als Fallback `.fach` zurück
 
 #### `Vertretungsplan` und `.fetch()`
 `Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden. 

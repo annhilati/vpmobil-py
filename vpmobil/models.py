@@ -270,7 +270,7 @@ class RaumVertretungsTag(MobdatenBase):
     def räume(self) -> list[Raum]:
         "Im Vertretungsplan beschriebene Räume"
         return [Raum(element, self._planart) for element in (self._elemente_Klassen() or [])]
-    
+
     def raum(self, kürzel: str) -> Raum | None:
         "Gibt den Raum mit der Bezeichnung `kürzel` zurück."
         for ra in self.räume:
@@ -570,7 +570,12 @@ class Kurs(VpmobilPyModell):
     """
 
     def __repr__(self) -> str:
-        return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.gruppe or '-'}' (Kursnummer '{self.kursnummer}')>"
+        return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.kürzel or '-'}' (Kursnummer '{self.kursnummer}')>"
+    
+    @property
+    def kürzel(self) -> str | None:
+        "Gruppenbezeichnung des Kurses<br>Gibt als Fallback das Fach zurück"
+        return self._data_safe_value("UeNr", "attrib").get("UeGr", self.fach)
     
     @property
     def lehrer(self) -> str | None:
@@ -581,11 +586,6 @@ class Kurs(VpmobilPyModell):
     def fach(self) -> str | None:
         "Fach des Kurses"
         return self._data_safe_value("UeNr", "attrib").get("UeFa", None)
-    
-    @property
-    def gruppe(self) -> str | None:
-        "Gruppenbezeichnung des Kurses"
-        return self._data_safe_value("UeNr", "attrib").get("UeGr", None)
 
     @property
     def kursnummer(self) -> int:
