@@ -15,9 +15,12 @@ class VpmobilPyModell():
     _data:    XML.Element            = field(init=True)
     _planart: Literal["K", "L", "R"] = field(init=True)
 
-    def _data_safe_value(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict | None:
-        "Gibt `None`-safe das Attribut eines Untertags zurück.<br>Ist `None`, wenn `tag` nichts existiert, `attr` `None` oder `""` ist"
-        return getattr(self._data.find(tag), attr, None) or None
+    def _data_value_safe_type(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict | Literal[False]:
+        "Gibt ein Attribut eines Untertags zurück.<br>Ist niemals `None`. Stattdessen wird `\"\"` oder `{}` zurückgegeben."
+        element = self._data.find(tag)
+        match attr:
+            case "text":    return getattr(element, attr, "")
+            case "attrib":  return getattr(element, attr, {})
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                   VertretungsTagBase                                     │ 
@@ -61,14 +64,14 @@ class MobdatenBase(VpmobilPyModell):
     @property
     def zeitstempel(self) -> datetime | None:
         "Veröffentlichungszeitpunkt des Vertretungsplans"
-        if self._data_safe_value("Kopf/zeitstempel", "text") is not None:
+        if self._data_value_safe_type("Kopf/zeitstempel", "text"):
             return datetime.strptime(self._data.find("Kopf/zeitstempel").text, "%d.%m.%Y, %H:%M")
         return None
         
     @property
     def datei(self) -> str | None:
         "Dateiname der Quelldatei"
-        return self._data_safe_value("Kopf/datei", "text")
+        return self._data_value_safe_type("Kopf/datei", "text") or None
 
     @property
     def datum(self) -> date | None:
@@ -399,26 +402,26 @@ class Aufsicht(VpmobilPyModell):
     """
 
     @property
-    def vorStunde(self) -> int:
+    def vorStunde(self) -> int | None:
         "Unterrichtsperiode, vor der die Aufsicht stattfindet"
-        return self._data_safe_value("AuVorStunde", "text")
+        return self._data_value_safe_type("AuVorStunde", "text") or None
     
     @property
-    def uhrzeit(self) -> time:
+    def uhrzeit(self) -> time | None:
         "Uhrzeit der Aufsicht"
-        if self._data_safe_value("AuUhrzeit", "text") is not None:
+        if self._data_value_safe_type("AuUhrzeit", "text"):
             return datetime.strptime(self._data.find("AuUhrzeit").text, "%H:%M").time()  
         return None
     
     @property
-    def zeit(self) -> str:
+    def zeit(self) -> str | None:
         "Hinweis zum Zeitpunkt der Aufsicht"
-        return self._data_safe_value("AuZeit", "text")
+        return self._data_value_safe_type("AuZeit", "text") or None
     
     @property
-    def ort(self) -> str:
+    def ort(self) -> str | None:
         "Hinweis zum Ort der Aufsicht"
-        return self._data_safe_value("AuOrt", "text")
+        return self._data_value_safe_type("AuOrt", "text") or None
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Stunde                                          │ 
@@ -444,21 +447,21 @@ class Stunde(VpmobilPyModell):
     @property
     def beginn(self) -> time:
         "Beginn der Stunde"
-        if self._data_safe_value("Beginn", "text") is not None:
+        if self._data_value_safe_type("Beginn", "text"):
             return datetime.strptime(self._data.find("Beginn").text, "%H:%M").time()  
         return None
     
     @property
     def ende(self) -> time:
         "Ende der Stunde"
-        if self._data_safe_value("Ende", "text") is not None:
+        if self._data_value_safe_type("Ende", "text"):
             return datetime.strptime(self._data.find("Ende").text, "%H:%M").time() 
         return None
     
     @property
     def ausfall(self) -> bool:
         "Ob die Stunde entfällt"
-        return self._data_safe_value("Fa", "text") == "---"
+        return self._data_value_safe_type("Fa", "text") == "---"
 
     @property
     def fach(self) -> str | None:
@@ -471,8 +474,8 @@ class Stunde(VpmobilPyModell):
         stunde.fach if klasse.kurs(stunde.kursnummer) is None else klasse.kurs(stunde.kursnummer).fach
         ```
         """
-        if self._data_safe_value("Fa", "text") != "---":
-            return self._data_safe_value("Fa", "text")
+        if self._data_value_safe_type("Fa", "text") != "---":
+            return self._data_value_safe_type("Fa", "text")
         return None
 
     @property
@@ -483,9 +486,9 @@ class Stunde(VpmobilPyModell):
         if self._planart == "K":
             return self._quelle
         elif self._planart == "R":
-            return self._data.find("Ra").text.split(config.SEPARATOR) if self._data_safe_value("Ra", "text") is not None else []
+            return self._data.find("Ra").text.split(config.SEPARATOR) if self._data_value_safe_type("Ra", "text") else []
         elif self._planart == "L":
-            return self._data.find("Le").text.split(config.SEPARATOR) if self._data_safe_value("Le", "text") is not None else []
+            return self._data.find("Le").text.split(config.SEPARATOR) if self._data_value_safe_type("Le", "text") else []
 
         
     @property
@@ -496,7 +499,7 @@ class Stunde(VpmobilPyModell):
         if self._planart == "L":
             return self._quelle
         else:
-            if self._data_safe_value("Le", "text") is not None:
+            if self._data_value_safe_type("Le", "text"):
                 return self._data.find("Le").text.split(config.SEPARATOR)
             return []
 
@@ -509,24 +512,24 @@ class Stunde(VpmobilPyModell):
         if self._planart == "R":
             return self._quelle
         else:
-            if self._data_safe_value("Ra", "text") is not None:
+            if self._data_value_safe_type("Ra", "text"):
                 return self._data.find("Ra").text.split(config.SEPARATOR) 
             return []
             
     @property
     def fachgeändert(self) -> bool:
         "Ob eine Änderung des Fachs für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
-        return "FaAe" in self._data_safe_value("Fa", "attrib")
+        return "FaAe" in self._data_value_safe_type("Fa", "attrib")
     
     @property
     def lehrergeändert(self) -> bool:
         "Ob eine Änderung des Lehrers für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
-        return "LeAe" in self._data_safe_value("Le", "attrib") if self._planart != "L" else False
+        return "LeAe" in self._data_value_safe_type("Le", "attrib") if self._planart != "L" else False
     
     @property
     def raumgeändert(self) -> bool:
         "Ob eine Änderung des Raums für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
-        return "RaAe" in self._data_safe_value("Ra", "attrib") if self._planart != "R" else False
+        return "RaAe" in self._data_value_safe_type("Ra", "attrib") if self._planart != "R" else False
     
     @property
     def klassegeändert(self) -> bool:
@@ -534,9 +537,9 @@ class Stunde(VpmobilPyModell):
         if self._planart == "K":
             return False
         elif self._planart == "L":
-            return "LeAe" in self._data_safe_value("Le", "attrib")
+            return "LeAe" in self._data_value_safe_type("Le", "attrib")
         elif self._planart == "R":
-            return "RaAe" in self._data_safe_value("Ra", "attrib")
+            return "RaAe" in self._data_value_safe_type("Ra", "attrib")
 
     @property
     def geändert(self) -> bool:
@@ -552,14 +555,14 @@ class Stunde(VpmobilPyModell):
         
         Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
         """
-        if self._data_safe_value("Nr", "text") is not None:
+        if self._data_value_safe_type("Nr", "text"):
             return int(self._data.find("Nr").text)
         return None
     
     @property
     def info(self) -> str | None:
         "Zusätzliche Information der Stunde"
-        return self._data_safe_value("If", "text")
+        return self._data_value_safe_type("If", "text") or None
         
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Kurs                                            │ 
@@ -575,21 +578,21 @@ class Kurs(VpmobilPyModell):
     @property
     def kürzel(self) -> str | None:
         "Gruppenbezeichnung des Kurses<br>Gibt als Fallback das Fach zurück"
-        return self._data_safe_value("UeNr", "attrib").get("UeGr", self.fach)
+        return self._data_value_safe_type("UeNr", "attrib").get("UeGr", self.fach)
     
     @property
     def lehrer(self) -> str | None:
         "Lehrer des Kurses"
-        return self._data_safe_value("UeNr", "attrib").get("UeLe", None)
+        return self._data_value_safe_type("UeNr", "attrib").get("UeLe", None)
     
     @property
     def fach(self) -> str | None:
         "Fach des Kurses"
-        return self._data_safe_value("UeNr", "attrib").get("UeFa", None)
+        return self._data_value_safe_type("UeNr", "attrib").get("UeFa", None)
 
     @property
     def kursnummer(self) -> int:
         "Kursnummer des Kurses"
-        if self._data_safe_value("UeNr", "text") is not None:
-            return int(self._data_safe_value("UeNr", "text"))
+        if self._data_value_safe_type("UeNr", "text"):
+            return int(self._data_value_safe_type("UeNr", "text"))
         return None
