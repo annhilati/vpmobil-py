@@ -31,8 +31,8 @@ day1.raum()
 day2.lehrer
 day2.get_lehrer()
 
-klasse.stundenHeute
-klasse.stundenHeuteInPeriode()
+klasse.stunden
+klasse.stundenInPeriode()
 klasse.kürzel
 klasse.kurse
 klasse.kurs()

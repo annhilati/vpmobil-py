@@ -15,6 +15,8 @@ def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     return reparsed.toprettyxml(indent="\t")
 
 class Stundenplan24Pfade(StrEnum):
+    """Enumerator mit den Pfaden für Vertretungsplanquelldateien, wie sie auf `stundenplan24.de` verwendet werden.<br>
+    Enthalten den `{schulnummer}`- und `date`-Platzhalter"""
     Klassen = "{schulnummer}/mobil/mobdaten/Klassen.xml"
     PlanKl  = "{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
     Lehrer  = "{schulnummer}/moble/mobdaten/Lehrer.xml"

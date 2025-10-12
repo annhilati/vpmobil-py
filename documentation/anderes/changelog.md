@@ -8,6 +8,8 @@
 * Parameter `port` zu `Vertretungsplan` hinzugefügt
 * Enumerator `Stundenplan24Pfade` hinzugefügt, der die Standardpfade auf stundenplan24.de enthält
 * Submodul `config` hinzugefügt, das Parameter für das Parsing enthält
+* Datenmodelle können mit `._as_dict()` in ein sauberes JSON-kompatibles Dictionary umgewandelt werden<br>
+  > Diese Implementierung ist noch experimentell und kann sich in Zukunft ändern.
 
 #### Lehrer- & Raumpläne
 
@@ -49,6 +51,7 @@ Neue Klassen sind:
 * `InvalidCredentialsError` wurde in `Unauthorized` umbenannt
 * `Vertretungsplan.bulkfetch()` wurde entfernt
 * `Kurs.gruppe` wurde in `.kürzel` umbenannt. Es gibt jetzt als Fallback `.fach` zurück
+* `Klasse.stundenHeute` wurde in `.stunden` und `.stundenHeuteInPeriode` in `.stundenInPeriode` umbenannt
 
 #### `Vertretungsplan` und `.fetch()`
 `Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden. 

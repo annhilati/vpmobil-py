@@ -3,20 +3,24 @@ API wrapper module for interacting with vpmobil substitution plans
 
 ---
 
-### Beispiel für die Nutzung
+**💡 Wie man beginnt**
 ```python
 from vpmobil import Vertretungsplan
 plan = Vertretungsplan(10323955, "schueler", "h39gh23")
 heute = plan.fetch()
-klasse8b = heute.klasse("8b")
-for periode, stunden in klasse8b.stundenHeute:
-    for stunde in stunden:
-        print(f"{periode} | {stunde.fach} bei {stunde.lehrer}")
 ```
 
 ---
 
-Siehe auch das `extensions`-Submodul. Importe aus anderen Submodulen sind in der Regel nicht notwendig.
+📦 Alle relevanten Klassen können direkt aus `vpmobil` importiert werden.
+
+---
+
+⚙️ Konfiguration kann im `config`-Submodul vorgenommen werden.
+
+---
+
+🛠️ Im `extensions`-Submodul befinden sich weitere Indiware-related Funktionen.
 """
 
 from vpmobil.api import Vertretungsplan, IndiwareFetchingError, Unauthorized, ResourceNotFound

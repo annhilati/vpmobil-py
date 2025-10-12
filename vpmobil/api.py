@@ -1,10 +1,11 @@
 from yarl import URL
+from datetime import date
 from dataclasses import dataclass
-from datetime import datetime, date, timedelta
 import xml.etree.ElementTree as XML
 import requests
 
 from vpmobil.models import MobdatenBase, VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag
+from vpmobil.utils import Stundenplan24Pfade
 
 @dataclass
 class Vertretungsplan():
@@ -26,7 +27,7 @@ class Vertretungsplan():
         Schema des Pfads unter dem die Quelldateien abgerufen werden können<br>
         `{schulnummer}` kann als Platzhalter verwendet werden<br>
         [Platzhalter des datetime-Moduls](https://strftime.org/) können verwendet werden<br>
-        Die Standardpfade von `stundenplan24.de` sind als Attribute von `vpmobil.utils.Stundenplan24Pfade` verfügbar
+        Die Standardpfade von `stundenplan24.de` sind als Attribute von `Stundenplan24Pfade` verfügbar
     """
     
     schulnummer:        int
@@ -34,7 +35,7 @@ class Vertretungsplan():
     passwort:           str
     serverdomain:       str = "stundenplan24.de"
     port:               int = None
-    dateipfadschema:    str = "{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
+    dateipfadschema:    str = Stundenplan24Pfade.PlanKl
     
     def __post_init__(self):
 

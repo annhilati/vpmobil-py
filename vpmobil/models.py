@@ -61,12 +61,11 @@ class VpmobilPyModell():
         return result
 
 
-
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                   VertretungsTagBase                                     │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-@dataclass # Dunder neu generieren
+@dataclass(eq=False) # Dunder neu generieren
 class MobdatenBase(VpmobilPyModell):
     """Base-Class für Vertretungspläne.
 
@@ -227,7 +226,7 @@ class VertretungsTag(MobdatenBase):
         lehrerVielleichtKrank: set[str] = set()
 
         for klasse in self.klassen:
-            for stunde in [stunde for stunden in klasse.stundenHeute.values() for stunde in stunden]:
+            for stunde in [stunde for stunden in klasse.stunden.values() for stunde in stunden]:
 
                 if stunde.ausfall and klasse.kurs(stunde.kursnummer) is not None:
                     lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
@@ -328,14 +327,14 @@ class RaumVertretungsTag(MobdatenBase):
 class KlasseLikeBase(VpmobilPyModell):
     
     def __getitem__(self, v) -> list[Stunde]:
-        return self.stundenHeuteInPeriode(v)
+        return self.stundenInPeriode(v)
     
     @property
     def kürzel(self) -> str:
         return self._data.find('Kurz').text
     
     @property
-    def stundenHeute(self) -> dict[int, list[Stunde]]:
+    def stunden(self) -> dict[int, list[Stunde]]:
         """Alle Stunden an dem Tag als Dictionary<br>
         Die Schlüssel sind die Unterrichtsperioden, die Werte Listen von Unterrichsstunden
         """
@@ -352,9 +351,9 @@ class KlasseLikeBase(VpmobilPyModell):
                     fin[stunde.periode].append(stunde)
         return fin
 
-    def stundenHeuteInPeriode(self, periode: int) -> list[Stunde]:
+    def stundenInPeriode(self, periode: int) -> list[Stunde]:
         "Gibt die Stunden in einer bestimmten Unterrichtsperiode zurück."
-        return self.stundenHeute.get(periode) or []
+        return self.stunden.get(periode) or []
     
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Klasse                                         │ 
@@ -467,12 +466,12 @@ class Aufsicht(VpmobilPyModell):
 # │                                          Stunde                                          │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-@dataclass
+@dataclass(eq=False)
 class Stunde(VpmobilPyModell):
     """Klasse, die eine bestimmte Unterrichtsstunde repräsentiert.
     """
 
-    _quelle: str = field(init=True)
+    _context: str = field(init=True)
     
     def __repr__(self):
         if self.ausfall:
@@ -524,7 +523,7 @@ class Stunde(VpmobilPyModell):
         Gibt `[]` zurück, wenn die Stunde entfällt oder keine Klassen eingetragen sind
         """
         if self._planart == "K":
-            return self._quelle
+            return self._context
         elif self._planart == "R":
             return self._data.find("Ra").text.split(config.SEPARATOR) if self._data_value_safe_type("Ra", "text") else []
         elif self._planart == "L":
@@ -537,7 +536,7 @@ class Stunde(VpmobilPyModell):
         Gibt `[]` zurück, wenn die Stunde entfällt oder keine Lehrer eingetragen sind
         """
         if self._planart == "L":
-            return self._quelle
+            return self._context
         else:
             if self._data_value_safe_type("Le", "text"):
                 return self._data.find("Le").text.split(config.SEPARATOR)
@@ -550,7 +549,7 @@ class Stunde(VpmobilPyModell):
         Gibt `[]` zurück, wenn die Stunde entfällt oder keine Räume eingetragen sind
         """
         if self._planart == "R":
-            return self._quelle
+            return self._context
         else:
             if self._data_value_safe_type("Ra", "text"):
                 return self._data.find("Ra").text.split(config.SEPARATOR) 

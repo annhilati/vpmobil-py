@@ -37,8 +37,8 @@ while endNow == False:
     else:
         pln += 1
         for kl in klassen:
-            for st in tag.klasse(kl).stundenHeute:
-                for std in tag.klasse(kl).stundenHeute[st]:
+            for st in tag.klasse(kl).stunden:
+                for std in tag.klasse(kl).stunden[st]:
                     gesStd += 1
                     try:
                         testVar = kl + str(std.beginn) + str(std.ende) + str(std.lehrer) + str(std.fach) + str(std.räume) + str(std.periode) + str(std.kursnummer)
