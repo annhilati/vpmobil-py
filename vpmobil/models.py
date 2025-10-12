@@ -152,7 +152,7 @@ class MobdatenBase(VpmobilPyModell):
 
         zielpfad.write_text(xmlpretty, encoding="utf-8")
 
-    def _elemente_Klassen(self) -> list[XML.Element] | None:
+    def _elemente_Klassen(self) -> list[XML.Element]:
         klassen: list[XML.Element] = []
         klassen_elemente = self._data.findall('.//Kl')
         if klassen_elemente is not []:
@@ -160,7 +160,7 @@ class MobdatenBase(VpmobilPyModell):
                 if kl.find('Kurz') is not None:
                     klassen.append(kl)
             return klassen
-        return None
+        return []
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                      VertretungsTag                                      │ 
@@ -214,7 +214,7 @@ class VertretungsTag(MobdatenBase):
     @property
     def klassen(self) -> list[Klasse]:
         "Im Vertretungsplan beschriebene Klassen"
-        return [Klasse(element, self._planart) for element in (self._elemente_Klassen() or [])]
+        return [Klasse(element, self._planart) for element in self._elemente_Klassen()]
     
     def klasse(self, kürzel: str) -> Klasse | None:
         "Gibt die Klasse mit der Bezeichnung `kürzel` zurück."
@@ -243,7 +243,7 @@ class LehrerVertretungsTag(MobdatenBase):
     @property
     def lehrer(self) -> list[Lehrer]:
         "Im Vertretungsplan beschriebene Lehrer"
-        return [Lehrer(element, self._planart) for element in (self._elemente_Klassen() or [])]
+        return [Lehrer(element, self._planart) for element in self._elemente_Klassen()]
     
     def get_lehrer(self, kürzel: str) -> Lehrer | None:
         "Gibt den Lehrer mit der Abkürzung `kürzel` zurück."
@@ -272,7 +272,7 @@ class RaumVertretungsTag(MobdatenBase):
     @property
     def räume(self) -> list[Raum]:
         "Im Vertretungsplan beschriebene Räume"
-        return [Raum(element, self._planart) for element in (self._elemente_Klassen() or [])]
+        return [Raum(element, self._planart) for element in self._elemente_Klassen()]
 
     def raum(self, kürzel: str) -> Raum | None:
         "Gibt den Raum mit der Bezeichnung `kürzel` zurück."
