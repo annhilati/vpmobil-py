@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Any
 import re
 
 from vpmobil.utils import prettyxml
@@ -21,6 +21,46 @@ class VpmobilPyModell():
         match attr:
             case "text":    return getattr(element, attr, "")
             case "attrib":  return getattr(element, attr, {})
+
+    def _as_dict(self) -> dict[str, Any]:
+        """Gibt alle Properties als Dict zurück, wendet bei Bedarf Typkonverter an."""
+        from datetime import datetime, date, time
+
+        converters = {
+            datetime:   lambda d: d.strftime("%d.%m.%Y:%H:%M"),
+            time:       lambda d: d.strftime("%H:%M"),
+            date:       lambda d: d.strftime("%d.%m.%Y"),
+        }
+
+        def apply_converter(value: Any) -> Any:
+            # Rekursion für Listen, Tupel, Dictionaries
+            if isinstance(value, list):
+                return [apply_converter(v) for v in value]
+            if isinstance(value, tuple):
+                return tuple(apply_converter(v) for v in value)
+            if isinstance(value, dict):
+                return {k: apply_converter(v) for k, v in value.items()}
+
+            # Rekursive Behandlung eigener Modelle
+            if isinstance(value, VpmobilPyModell):
+                return value._as_dict()
+
+            # Typkonverter anwenden
+            for t, conv in converters.items():
+                if isinstance(value, t):
+                    return conv(value)
+
+            return value
+
+        result = {}
+        for name in dir(self.__class__):
+            attr = getattr(self.__class__, name, None)
+            if isinstance(attr, property):
+                val = getattr(self, name)
+                result[name] = apply_converter(val)
+        return result
+
+
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                   VertretungsTagBase                                     │ 

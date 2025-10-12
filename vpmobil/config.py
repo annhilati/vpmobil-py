@@ -1,7 +1,7 @@
 """
 Globale (Parsing-) Parameter für vpmobil-py
 
-Attribute
+Parameter
 ---------
 SEPARATOR : str
     Zeichen das verwendet wird, um Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen

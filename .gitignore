@@ -12,3 +12,4 @@ tests/temp/*
 analyse
 test.py
 __pycache__
+test.json
