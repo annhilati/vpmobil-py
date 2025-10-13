@@ -232,13 +232,13 @@ class VertretungsTag(MobdatenBase):
                     lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
 
                 elif stunde.lehrergeändert:
-                    if stunde.lehrer is not None:
+                    if len(stunde.lehrer) > 0:
                         lehrerMitUnterricht.update(stunde.lehrer)
                     if klasse.kurs(stunde.kursnummer) is not None:
                         lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
 
                 elif not stunde.ausfall and not stunde.lehrergeändert:
-                    if stunde.lehrer is not None:
+                    if len(stunde.lehrer) > 0:
                         lehrerMitUnterricht.update(stunde.lehrer)
 
         return sorted(

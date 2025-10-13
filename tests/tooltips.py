@@ -45,6 +45,10 @@ aufsicht.vorStunde
 aufsicht.zeit
 
 stunde.geändert
+stunde.lehrergeändert
+stunde.raumgeändert
+stunde.klassegeändert
+stunde.fachgeändert
 stunde.ausfall
 stunde.beginn
 stunde.ende

@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
 from enum import StrEnum
+from datetime import date, timedelta
 
 def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     if isinstance(object, ET.ElementTree):
@@ -23,3 +24,9 @@ class Stundenplan24Pfade(StrEnum):
     PlanLe  = "{schulnummer}/moble/mobdaten/PlanLe%Y%m%d.xml"
     Raeume  = "{schulnummer}/mobra/mobdaten/Raeume.xml"
     PlanRa  = "{schulnummer}/mobra/mobdaten/PlanRa%Y%m%d.xml"
+
+def date_range(start: date, end: date):
+    current = start
+    while current <= end:
+        yield current
+        current += timedelta(days=1)
