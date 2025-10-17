@@ -6,8 +6,8 @@ API wrapper module for interacting with vpmobil substitution plans
 **💡 Wie man beginnt**
 ```python
 from vpmobil import Vertretungsplan
-plan = Vertretungsplan(10323955, "schueler", "h39gh23")
-heute = plan.fetch()
+vp = Vertretungsplan(10323955, "schueler", "h39gh23")
+heute = vp.fetch()
 ```
 
 ---
@@ -25,7 +25,7 @@ heute = plan.fetch()
 
 from vpmobil.api import Vertretungsplan, IndiwareFetchingError, Unauthorized, ResourceNotFound
 from vpmobil.models import (
-    VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
+    VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume,
     Klasse, Raum, Lehrer,
     Stunde, Kurs, Aufsicht
     )
@@ -33,7 +33,7 @@ from vpmobil.utils import Stundenplan24Pfade
 
 _symbols = [
     Vertretungsplan,
-    VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
+    VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume,
     Klasse, Lehrer, Raum,
     Stunde, Kurs, Aufsicht,
     IndiwareFetchingError, Unauthorized, ResourceNotFound,

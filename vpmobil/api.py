@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import xml.etree.ElementTree as XML
 import requests
 
-from vpmobil.models import MobdatenBase, VertretungsTag, LehrerVertretungsTag, RaumVertretungsTag
+from vpmobil.models import MobdatenBase, VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume
 from vpmobil.utils import Stundenplan24Pfade
 
 @dataclass
@@ -61,7 +61,7 @@ class Vertretungsplan():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def fetch(self, datum: date = date.today(), datei: str = None) -> VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
+    def fetch(self, datum: date = date.today(), datei: str = None) -> VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume:
         """Ruft die Daten eines Tages ab.
 
         Die Methode sollte nur verwendet werden, wenn zu erwarten ist, welcher Typ zurückgegeben wird.<br>
@@ -108,7 +108,7 @@ class IndiwareFetchingError(Exception):
         self.response = response
 
     def __str__(self):
-        return f"{self.message} ({self.response})"
+        return f"{self.message} (Status {self.response.status_code})"
     
 class ResourceNotFound(IndiwareFetchingError):
     """Wenn die angeforderten Daten nicht existieren

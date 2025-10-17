@@ -52,6 +52,7 @@ Neue Klassen sind:
 * `Vertretungsplan.bulkfetch()` wurde entfernt
 * `Kurs.gruppe` wurde in `.kürzel` umbenannt. Es gibt jetzt als Fallback `.fach` zurück
 * `Klasse.stundenHeute` wurde in `.stunden` und `.stundenHeuteInPeriode` in `.stundenInPeriode` umbenannt
+* `VertretungsTag.freieTage` gibt statt `None` nun `[]` zurück
 
 #### `Vertretungsplan` und `.fetch()`
 `Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden. 

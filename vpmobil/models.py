@@ -24,7 +24,6 @@ class VpmobilPyModell():
 
     def _as_dict(self) -> dict[str, Any]:
         """Gibt alle Properties als Dict zurück, wendet bei Bedarf Typkonverter an."""
-        from datetime import datetime, date, time
 
         converters = {
             datetime:   lambda d: d.strftime("%d.%m.%Y:%H:%M"),
@@ -86,9 +85,9 @@ class MobdatenBase(VpmobilPyModell):
                 case "K":
                     return VertretungsTag(_data)
                 case "L":
-                    return LehrerVertretungsTag(_data)
+                    return VertretungsTagLehrer(_data)
                 case "R":
-                    return RaumVertretungsTag(_data)
+                    return VertretungsTagRäume(_data)
                 case _:
                     raise ValueError(f"Planart muss eins von 'K', 'L' oder 'R' sein, nicht '{_data.find("Kopf/planart").text}'")
                 
@@ -121,33 +120,33 @@ class MobdatenBase(VpmobilPyModell):
         return None
     
     @property
-    def freieTage(self) -> list[date] | None:
+    def freieTage(self) -> list[date]:
         "Im Vertretungsplan als frei markierte Tage"
 
         freieTage = self._data.find("FreieTage")
-        if freieTage is None:
-            return None
-        
-        freieTageList: list[date] = []
-        for ft in freieTage.findall("ft"):
-            if ft.text is not None:
-                freieTageList.append(datetime.strptime(ft.text, "%y%m%d").date())
-        return freieTageList
+        if freieTage is not None:
+            return [
+                datetime.strptime(ft.text, "%y%m%d").date()
+                for ft in freieTage.findall("ft")
+                if ft.text is not None
+            ]
+        return []
     
     @property
     def zusatzInfo(self) -> str | None:
         """Zusätzliche Informationen zum Tag<br>
         Kann Multiline sein
         """
-        ziZeilen = []
-        for zusatzInfo in self._data.findall('.//ZusatzInfo'):
-            for ziZeile in zusatzInfo.findall('.//ZiZeile'):
-                if ziZeile.text:
-                    ziZeilen.append(ziZeile.text)
+        ziZeilen = [
+            ziZeile.text
+            for zusatzInfo in self._data.findall('.//ZusatzInfo')
+            for ziZeile in zusatzInfo.findall('.//ZiZeile')
+            if ziZeile.text
+        ]
         return '\n'.join(ziZeilen) if ziZeilen else None
             
     @classmethod
-    def fromfile(cls, pfad: Path) -> VertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
+    def fromfile(cls, pfad: Path) -> VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume:
         """
         Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
 
@@ -266,7 +265,7 @@ class VertretungsTag(MobdatenBase):
 # │                                   LehrerVertretungsTag                                   │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class LehrerVertretungsTag(MobdatenBase):
+class VertretungsTagLehrer(MobdatenBase):
     """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Lehrer repräsentiert.
     
     Unterstützt Subskription: 
@@ -295,7 +294,7 @@ class LehrerVertretungsTag(MobdatenBase):
 # │                                    RaumVertretungsTag                                    │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class RaumVertretungsTag(MobdatenBase):
+class VertretungsTagRäume(MobdatenBase):
     """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Räume repräsentiert.
     
     Unterstützt Subskription: 
