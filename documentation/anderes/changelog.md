@@ -8,7 +8,7 @@
 * Parameter `port` zu `Vertretungsplan` hinzugefügt
 * Enumerator `Stundenplan24Pfade` hinzugefügt, der die Standardpfade auf stundenplan24.de enthält
 * Submodul `config` hinzugefügt, das Parameter für das Parsing enthält
-* Datenmodelle können mit `._as_dict()` in ein sauberes JSON-kompatibles Dictionary umgewandelt werden<br>
+* Datenmodelle können mit `.as_dict()` in ein sauberes JSON-kompatibles Dictionary umgewandelt werden<br>
   > Diese Implementierung ist noch experimentell und kann sich in Zukunft ändern.
 
 #### Lehrer- & Raumpläne

@@ -43,7 +43,7 @@ class Vertretungsplan():
             self.serverdomain = self.serverdomain[:-1]
 
         if "://" in self.serverdomain:
-            self.serverdomain = self.serverdomain.split("://", 1)[-1]
+            self.serverdomain = self.serverdomain.split("://")[-1]
             
         if self.dateipfadschema.startswith("/"):
             self.dateipfadschema = self.dateipfadschema[1:]
@@ -92,14 +92,13 @@ class Vertretungsplan():
         response = requests.get(str(file_url))
 
         status = response.status_code
-        if status == 200:
-            return MobdatenBase(XML.fromstring(response.content))
-        elif status == 401:
+        if status == 401:
             raise Unauthorized(message=f"Zugangsdaten haben keinen Zugriff auf '{dateipfad}'.", response=response)
         elif status == 404:
             raise ResourceNotFound(message=f"Datei '{dateipfad}' existiert nicht.", response=response)
         else:
             response.raise_for_status()
+            return MobdatenBase(XML.fromstring(response.content))
         
 class IndiwareFetchingError(Exception):
     """Wenn die angeforderten Daten nicht abgerufen werden können."""

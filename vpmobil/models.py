@@ -22,17 +22,22 @@ class VpmobilPyModell():
             case "text":    return getattr(element, attr, "")
             case "attrib":  return getattr(element, attr, {})
 
-    def _as_dict(self) -> dict[str, Any]:
-        """Gibt alle Properties als Dict zurück, wendet bei Bedarf Typkonverter an."""
+    def as_dict(self) -> dict[str, Any]:
+        """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und wandelt alle Datentypen in Primitives um, sodass das Dictionary beispielsweise in JSON modelliert werden kann.
+        
+        - `datetime(2025, 10, 18, 21, 3)` -> `"18.10.2025:21:03"`
+        - `time(21, 3)` -> `"21:03"`
+        - `date(2025, 10, 18)` -> `"18.10.2025"`
+        """
 
         converters = {
-            datetime:   lambda d: d.strftime("%d.%m.%Y:%H:%M"),
-            time:       lambda d: d.strftime("%H:%M"),
-            date:       lambda d: d.strftime("%d.%m.%Y"),
+            datetime:        lambda d: d.strftime("%d.%m.%Y:%H:%M"),
+            time:            lambda d: d.strftime("%H:%M"),
+            date:            lambda d: d.strftime("%d.%m.%Y"),
+            VpmobilPyModell: lambda d: d.as_dict()
         }
 
         def apply_converter(value: Any) -> Any:
-            # Rekursion für Listen, Tupel, Dictionaries
             if isinstance(value, list):
                 return [apply_converter(v) for v in value]
             if isinstance(value, tuple):
@@ -40,11 +45,6 @@ class VpmobilPyModell():
             if isinstance(value, dict):
                 return {k: apply_converter(v) for k, v in value.items()}
 
-            # Rekursive Behandlung eigener Modelle
-            if isinstance(value, VpmobilPyModell):
-                return value._as_dict()
-
-            # Typkonverter anwenden
             for t, conv in converters.items():
                 if isinstance(value, t):
                     return conv(value)
@@ -57,14 +57,18 @@ class VpmobilPyModell():
             if isinstance(attr, property):
                 val = getattr(self, name)
                 result[name] = apply_converter(val)
+
+        try: import json; _ = json.dumps(result, ensure_ascii=False)
+        except: raise AssertionError("Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt im Bugtracker von vpmobil-py auf GitHub.")
+
         return result
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
-# │                                   VertretungsTagBase                                     │ 
+# │                                       MobdatenBase                                       │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-@dataclass(eq=False) # Dunder neu generieren
+@dataclass(eq=False)
 class MobdatenBase(VpmobilPyModell):
     """Base-Class für Vertretungspläne.
 
@@ -122,9 +126,7 @@ class MobdatenBase(VpmobilPyModell):
     @property
     def freieTage(self) -> list[date]:
         "Im Vertretungsplan als frei markierte Tage"
-
-        freieTage = self._data.find("FreieTage")
-        if freieTage is not None:
+        if freieTage := self._data.find("FreieTage"):
             return [
                 datetime.strptime(ft.text, "%y%m%d").date()
                 for ft in freieTage.findall("ft")
@@ -137,13 +139,13 @@ class MobdatenBase(VpmobilPyModell):
         """Zusätzliche Informationen zum Tag<br>
         Kann Multiline sein
         """
-        ziZeilen = [
-            ziZeile.text
-            for zusatzInfo in self._data.findall('.//ZusatzInfo')
-            for ziZeile in zusatzInfo.findall('.//ZiZeile')
-            if ziZeile.text
-        ]
-        return '\n'.join(ziZeilen) if ziZeilen else None
+        if zusatzInfo := self._data.find('.//ZusatzInfo'):
+            return '\n'.join([
+                ziZeile.text
+                for ziZeile in zusatzInfo.findall('.//ZiZeile')
+                if ziZeile.text
+            ])
+        return None
             
     @classmethod
     def fromfile(cls, pfad: Path) -> VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume:
@@ -191,13 +193,19 @@ class MobdatenBase(VpmobilPyModell):
         zielpfad.write_text(xmlpretty, encoding="utf-8")
 
     def _elemente_Klassen(self) -> list[XML.Element]:
-        klassen: list[XML.Element] = []
-        klassen_elemente = self._data.findall('.//Kl')
-        if klassen_elemente is not []:
-            for kl in klassen_elemente:
-                if kl.find('Kurz') is not None:
-                    klassen.append(kl)
-            return klassen
+        # klassen: list[XML.Element] = []
+        # klassen_elemente = self._data.findall('.//Kl')
+        # if klassen_elemente is not []:
+        #     for kl in klassen_elemente:
+        #         if kl.find('Kurz') is not None:
+        #             klassen.append(kl)
+        #     return klassen
+        # return []
+        if klassen := self._data.find('.//Klassen'):
+            return [
+                kl for kl in klassen.findall(".//Kl")
+                if kl.find('Kurz') is not None
+            ]
         return []
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -373,12 +381,13 @@ class Klasse(KlasseLikeBase):
     
     @property
     def kurse(self) -> list[Kurs]:
-        "Kurse der Klasse"
-        fin: list[Kurs] = []
-        unterricht = self._data.find("Unterricht")
-        for ue in unterricht.findall("Ue"):
-            fin.append(Kurs(ue, self._planart))
-        return fin
+        "Kurse der Klasse" 
+        if unterricht := self._data.find("Unterricht"):
+            return [
+                Kurs(ue, self._planart)
+                for ue in unterricht.findall("Ue")
+            ]
+        return []
     
     def kurs(self, kursnummer: int) -> Kurs | None:
         "Gibt den Kurs der Klasse mit der Kursnummer `kursnummer` zurück."
@@ -406,13 +415,13 @@ class Lehrer(KlasseLikeBase):
     
     @property
     def aufsichten(self) -> list[Aufsicht]:
-        """Aufsichten des Lehrers
-        """
-        fin: list[Stunde] = []
-        aufsichten = self._data.find("Aufsichten")
-        for aufsicht in aufsichten.findall("Aufsicht"):
-            fin.append(Aufsicht(aufsicht, self._planart))
-        return fin
+        """Aufsichten des Lehrers"""
+        if aufsichten := self._data.find("Aufsichten"):
+            return [
+                Aufsicht(aufsicht, self._planart)
+                for aufsicht in aufsichten.findall("Aufsicht")
+            ]
+        return []
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Raum                                           │ 
@@ -522,7 +531,7 @@ class Stunde(VpmobilPyModell):
         Gibt `[]` zurück, wenn die Stunde entfällt oder keine Klassen eingetragen sind
         """
         if self._planart == "K":
-            return self._context
+            return [self._context]
         elif self._planart == "R":
             return self._data.find("Ra").text.split(config.SEPARATOR) if self._data_value_safe_type("Ra", "text") else []
         elif self._planart == "L":
@@ -611,7 +620,7 @@ class Kurs(VpmobilPyModell):
     """
 
     def __repr__(self) -> str:
-        return f"<'{self.fach}' bei '{self.lehrer}', Gruppe '{self.kürzel or '-'}' (Kursnummer '{self.kursnummer}')>"
+        return f"<'{self.kürzel}' bei '{self.lehrer}' (Kursnummer '{self.kursnummer}')>"
     
     @property
     def kürzel(self) -> str | None:

@@ -6,25 +6,28 @@ vp =   Vertretungsplan()
 day =  VertretungsTag()         # Tag <- Klassen <- Stunden <- Fa, Le, Ra, FaAe, LeAe, ...
 day1 = VertretungsTagRäume()    # Tag <- Räume   <- Stunden <- Fa, Le, Kl, FaAe, LeAe, ...
 day2 = VertretungsTagLehrer()   # Tag <- Lehrer  <- Stunden <- Fa, Kl, Ra, FaAe, LeAe, ...
-klasse = Klasse()
-raum = Raum()
-lehrer = Lehrer()
-stunde = Stunde()
-kurs = Kurs()
+klasse  = Klasse()
+raum    = Raum()
+lehrer  = Lehrer()
+stunde  = Stunde()
+kurs    = Kurs()
 aufsicht = Aufsicht()
+
+Stundenplan24Pfade
 
 vp.fetch()
 
 day.datei
 day.datum
-day.klasse()
-day.klassen
+day.zeitstempel
+day.zusatzInfo
 day.saveasfile()
 day.fromfile()
-day.lehrerKrank
 day.freieTage
-day.zusatzInfo
-day.zeitstempel
+
+day.klassen
+day.klasse()
+day.lehrerKrank
 
 day1.räume
 day1.raum()
