@@ -1,3 +1,10 @@
+"""Erweiterung für die Arbeit mit EinzPläne-PDF-Dateien
+
+---
+
+EinzPläne-PDF-Dateien sind PDFs, die von der Indiware-Planungssoftware bereitgestellt werden und die Wochenpläne von Schüler einzeln untereinander als Tabelle enthalten.
+"""
+
 from PyPDF2 import PdfReader
 from pathlib import Path
 

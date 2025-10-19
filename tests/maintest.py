@@ -1,4 +1,5 @@
 from vpmobil import Vertretungsplan, VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume, Stundenplan24Pfade
+from vpmobil.extensions import reparser
 from dotenv import load_dotenv
 from os import getenv
 from datetime import date, datetime, time
@@ -9,15 +10,16 @@ load_dotenv()
 
 vp = Vertretungsplan(getenv("SCHULNUMMER"), getenv("NUTZER"), getenv("PASSWORT"))
 
+#tag = vp.fetch(datei=Stundenplan24Pfade.Klassen)
+tag = reparser.lehrer_from_klassen(vp.fetch(datei=Stundenplan24Pfade.Klassen))
+
 def main():
-    
-    tag = vp.fetch(datei=Stundenplan24Pfade.Klassen)
 
     print(tag.datei)
-    assert type(tag.datei) is str
+    assert type(tag.datei) in [str, NoneType]
 
     print(tag.datum)
-    assert type(tag.datum) is date
+    assert type(tag.datum) is date, tag.datum
 
     print(tag.zeitstempel)
     assert type(tag.zeitstempel) is datetime
@@ -32,13 +34,13 @@ def main():
     if type(tag) == VertretungsTag:
         assert type(tag.klassen) is list
 
-        for klasse in tag.klassen:
-            print(klasse)
+        for lehrer in tag.klassen:
+            print(lehrer)
 
-            assert type(klasse.stunden) is dict
-            if len(klasse.stunden) == 0: print("\033[31mklasse.stunden == {}")
+            assert type(lehrer.stunden) is dict
+            if len(lehrer.stunden) == 0: print("\033[31mklasse.stunden == {}")
 
-            for periode, stunden in klasse.stunden.items():
+            for periode, stunden in lehrer.stunden.items():
                 for stunde in stunden:
                     print(stunde)
 
@@ -58,9 +60,9 @@ def main():
                     assert type(stunde.kursnummer) is int
                     assert type(stunde.periode) is int
 
-            assert type(klasse.kürzel)  is str
+            assert type(lehrer.kürzel)  is str
 
-            for kurs in klasse.kurse:
+            for kurs in lehrer.kurse:
                 print(kurs)
 
                 assert type(kurs.kursnummer)    is int
@@ -70,6 +72,37 @@ def main():
 
         assert type(tag.lehrerKrank) is list
         if len(tag.lehrerKrank) == 0: print("\033[31mtag.lehrerKrank == 0")
+
+    elif type(tag) == VertretungsTagLehrer:
+        assert type(tag.lehrer) is list
+
+        for lehrer in tag.lehrer:
+            print(lehrer)
+
+            assert type(lehrer.stunden) is dict
+            if len(lehrer.stunden) == 0: print("\033[31mklasse.stunden == {}")
+
+            for periode, stunden in lehrer.stunden.items():
+                for stunde in stunden:
+                    print(stunde)
+
+                    assert type(stunde.geändert) is bool 
+                    assert type(stunde.lehrergeändert) is bool 
+                    assert type(stunde.raumgeändert) is bool 
+                    assert type(stunde.klassegeändert) is bool 
+                    assert type(stunde.fachgeändert) is bool 
+                    assert type(stunde.ausfall) is bool 
+                    assert type(stunde.beginn) is time 
+                    assert type(stunde.ende) is time 
+                    assert type(stunde.lehrer) is list, stunde.lehrer
+                    assert type(stunde.klassen) is list and len(stunde.klassen) > 0
+                    assert type(stunde.räume) is list
+                    assert type(stunde.info) in [str, NoneType]
+                    assert type(stunde.fach) in [str, NoneType]
+                    assert type(stunde.kursnummer) is int
+                    assert type(stunde.periode) is int
+
+            assert type(lehrer.kürzel)  is str
 
 
 main()

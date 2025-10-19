@@ -34,36 +34,36 @@ VpMobil
 │   └── schulnummer
 ├── FreieTage
 │   └── ft                      # n
-└── Klassen
-    └── Kl                      # n     # Deklariert bei PlanLe über einen Lehrer, bei PlanRa über einen Raum
-        ├── Kurz
-        ├── Hash
-        ├── KlStunden
-        │   └── KlSt            # n
-        ├── Kurse                       # Nur bei PlanKl
-        │   └── Ku              # n
-        │       └── KKz
-        ├── Unterricht                  # nur bei PlanKl
-        │   └── Ue              # n
-        │       └── UeNr
-        ├── Pl
-        │   └── Std             # n
-        │       ├── St
-        │       ├── Beginn
-        │       ├── Ende
-        │       ├── Fa
-        │       ├── Ku2
-        │       ├── Le                  # Bezeichnet bei PlanLe eine Klasse
-        │       ├── Ra                  # Bezeichnet bei PlanRa eine Klasse
-        │       ├── Nr
-        │       └── If
-        └── Aufsichten                  # Vermutlich nur bei PlanLe
-            └── Aufsicht        # n
-                ├── AuTag
-                ├── AuVorStunde
-                ├── AuUhrzeit
-                ├── AuZeit
-                └── AuOrt
-
-# ZusatzInfo fehlt momentan
+├── Klassen
+│   └── Kl                      # n     # Deklariert bei PlanLe über einen Lehrer, bei PlanRa über einen Raum
+│       ├── Kurz
+│       ├── Hash
+│       ├── KlStunden
+│       │   └── KlSt            # n
+│       ├── Kurse                       # Nur bei PlanKl
+│       │   └── Ku              # n
+│       │       └── KKz
+│       ├── Unterricht                  # nur bei PlanKl
+│       │   └── Ue              # n
+│       │       └── UeNr
+│       ├── Pl
+│       │   └── Std             # n
+│       │       ├── St
+│       │       ├── Beginn
+│       │       ├── Ende
+│       │       ├── Fa
+│       │       ├── Ku2
+│       │       ├── Le                  # Bezeichnet bei PlanLe eine Klasse
+│       │       ├── Ra                  # Bezeichnet bei PlanRa eine Klasse
+│       │       ├── Nr
+│       │       └── If
+│       └── Aufsichten                  # Vermutlich nur bei PlanLe
+│           └── Aufsicht        # n
+│               ├── AuTag
+│               ├── AuVorStunde
+│               ├── AuUhrzeit
+│               ├── AuZeit
+│               └── AuOrt
+└── ZusatzInfo
+    └── ZiZeile
 ```

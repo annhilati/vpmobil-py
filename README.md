@@ -25,7 +25,7 @@ vp = Vertretungsplan(39563772, "schueler", "j39jjs6")
 tag = vp.fetch(20240619)
 klasse = tag.klasse("9b")
 
-for periode, stunden in klasse.stundenHeute:
+for periode, stunden in klasse.stunden:
     for stunde in stunden:
         print(f"{periode} | {stunde.fach} bei {stunde.lehrer}")
 ```
@@ -36,7 +36,5 @@ for periode, stunden in klasse.stundenHeute:
 
 <h3 align="center"> DISCLAIMER </h3>
 <p align="center">
-  Das Paket und seine zugehörigen Dienste und Projekte sind eigenständig und stehen in keiner Verbindung zu Indiware, der VpMobil24 App oder stundenplan24.de. Die Nutzung obliegt der Verantwortung des Nutzers. Die   Entwickler übernehmen keine Haftung für Schäden, die durch die Nutzung entstehen.
+  Das Paket und seine zugehörigen Dienste und Projekte sind eigenständig und stehen in keiner Verbindung zu Indiware, der VpMobil24 App oder stundenplan24.de. Die Nutzung obliegt der Verantwortung des Nutzers. Die Entwickler übernehmen keine Haftung für Schäden, die durch die Nutzung entstehen.
 </p>
-
-<!-- https://annhilati.gitbook.io/db/pypi-upload>

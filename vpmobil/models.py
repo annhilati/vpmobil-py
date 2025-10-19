@@ -118,9 +118,14 @@ class MobdatenBase(VpmobilPyModell):
     @property
     def datum(self) -> date | None:
         "Datum für das der Vertretungsplan gilt"
-        if match := re.search(r"(\d{4})(\d{2})(\d{2})", self.datei):
-            year, month, day = map(int, match.groups())
-            return date(year, month, day)
+        import locale; locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
+
+        if self._data_value_safe_type("Kopf/DatumPlan", "text"):
+            return datetime.strptime(
+                self._data.find("Kopf/DatumPlan")
+                .text.split(",", 1)[-1]
+                .strip(),
+                "%d. %B %Y").date()
         return None
     
     @property
@@ -544,7 +549,7 @@ class Stunde(VpmobilPyModell):
         Gibt `[]` zurück, wenn die Stunde entfällt oder keine Lehrer eingetragen sind
         """
         if self._planart == "L":
-            return self._context
+            return [self._context]
         else:
             if self._data_value_safe_type("Le", "text"):
                 return self._data.find("Le").text.split(config.SEPARATOR)
@@ -557,7 +562,7 @@ class Stunde(VpmobilPyModell):
         Gibt `[]` zurück, wenn die Stunde entfällt oder keine Räume eingetragen sind
         """
         if self._planart == "R":
-            return self._context
+            return [self._context]
         else:
             if self._data_value_safe_type("Ra", "text"):
                 return self._data.find("Ra").text.split(config.SEPARATOR) 

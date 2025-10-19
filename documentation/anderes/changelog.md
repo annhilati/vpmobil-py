@@ -10,11 +10,12 @@
 * Submodul `config` hinzugefügt, das Parameter für das Parsing enthält
 * Datenmodelle können mit `.as_dict()` in ein sauberes JSON-kompatibles Dictionary umgewandelt werden<br>
   > Diese Implementierung ist noch experimentell und kann sich in Zukunft ändern.
+* Konversionsfunktionen zwischen `VertretungsTag`-Datenmodellen in `extensions.reparser` hinzugefügt
 
 #### Lehrer- & Raumpläne
 
 Im Rahmen der Einführung neuer Vertretungsplantypen wurden einige Datenmodelle in Basis- und Unterklassen aufgeteilt.
-Die drei Vertretungsplanklassen `VertretungsTag`, `LehrerVertretungsTag` und `RaumVertretungsTag` erben von einer neuen Basisklasse, die grundlegendes Verhalten für Pläne enthält. Die einzelnen Planklassen bringen dann noch weitere Funktionen mit.
+Die drei Vertretungsplanklassen `VertretungsTag`, `VertretungsTagLehrer` und `VertretungsTagRäume` erben von einer neuen Basisklasse, die grundlegendes Verhalten für Pläne enthält. Die einzelnen Planklassen bringen dann noch weitere Funktionen mit.
 
 Neue Klassen sind:
 
@@ -23,18 +24,18 @@ Neue Klassen sind:
   * Erzeugt beim Instanzierungsversuch eine Instanz einer ihrer Subklassen
   * Kann mit `isinstance()` als Protokoll für alle Vertretungspläne genutzt werden
   * Kann vererbt werden, um weitere Planarten zu definieren 
-* `LehrerVertretungsTag`
+* `VertretungsTagLehrer`
   * Subklasse von `MobdatenBase`
   * Hat `.lehrer` und `.get_lehrer()`
-* `RaumVertretungsTag`
+* `VertretungsTagRäume`
   * Subklasse von `MobdatenBase`
   * Hat `.räume` und `.raum()`
 * `Lehrer`
   * Das Lehrerplan-Äquivalent zu `Klasse`
-  * Wird von `LehrerVertretungsTag.lehrer` erzeugt
+  * Wird von `VertretungsTagLehrer.lehrer` erzeugt
 * `Raum`
   * Das Raumplan-Äquivalent zu `Klasse`
-  * Wird von `RaumVertretungsTag.räume` erzeugt
+  * Wird von `VertretungsTagRäume.räume` erzeugt
 * `Aufsicht`
   * Ein primitives Datenmodell, ähnlich zu `Stunde`, das Informationen über eine Lehreraufsicht enthält
   * Hat `.vorStunde`, `.uhrzeit`, `.zeit` und `.ort`
@@ -43,16 +44,17 @@ Neue Klassen sind:
 ### 🔧 Änderungen
 
 * `Vertretungsplan` und `.fetch()` wurden angepasst, um die neuen Vertretungsplanarten verarbeiten zu können
+* `Vertretungsplan.bulkfetch()` wurde entfernt
+* `InvalidCredentialsError` wurde in `Unauthorized` umbenannt
+* `VertretungsTag.freieTage` gibt statt `None` nun `[]` zurück
+* `Klasse.stundenHeute` wurde in `.stunden` und `.stundenHeuteInPeriode` in `.stundenInPeriode` umbenannt
+* `Klasse.stundenInPeriode()` gibt nun `[]` statt `None` zurück
 * `Stunde.raum` wurde durch `Stunde.räume` ersetzt, das nun eine Liste von Strings zurückgibt. Statt `None` wird `[]` zurückgegeben
 * `Stunde.lehrer` gibt nun eine Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
-* `Klasse.stundenHeuteInPeriode()` gibt nun `[]` statt `None` zurück
+* `Kurs.gruppe` wurde in `.kürzel` umbenannt. Es gibt jetzt als Fallback `.fach` zurück
 * Alle Properties, die Klassen, Lehrer oder Räume zurückgeben, verwenden nun das Trennzeichen, das in `config.SEPARATOR` festgelegt werden kann, um Mehrfachnennungen zu trennen
 * Alle Properties wurden `None`-sicher gemacht, sodass sie nun keine Fehler mehr werfen können, sollte ein Tag in der Quelldatei unerwarteter Weise nicht vorhanden sein
-* `InvalidCredentialsError` wurde in `Unauthorized` umbenannt
-* `Vertretungsplan.bulkfetch()` wurde entfernt
-* `Kurs.gruppe` wurde in `.kürzel` umbenannt. Es gibt jetzt als Fallback `.fach` zurück
-* `Klasse.stundenHeute` wurde in `.stunden` und `.stundenHeuteInPeriode` in `.stundenInPeriode` umbenannt
-* `VertretungsTag.freieTage` gibt statt `None` nun `[]` zurück
+* `VertretungsTag.datum` parst jetzt nicht mehr den Dateinamen sondern den XML-Tag `DatumPlan`
 
 #### `Vertretungsplan` und `.fetch()`
 `Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden. 
