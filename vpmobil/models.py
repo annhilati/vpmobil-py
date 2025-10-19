@@ -153,7 +153,7 @@ class MobdatenBase(VpmobilPyModell):
         return None
             
     @classmethod
-    def fromfile(cls, pfad: Path) -> VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume:
+    def fromfile(cls, pfad: Path | str) -> VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume:
         """
         Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
 
@@ -167,7 +167,7 @@ class MobdatenBase(VpmobilPyModell):
         FileNotFoundError : Wenn die Datei nicht existiert
         ValueError : Wenn die Datei nicht gelesen werden kann
         """
-        with open(pfad) as f:
+        with open(pfad, encoding="utf-8-sig") as f:
             instance = cls(_data=XML.parse(f))
         return instance
     
