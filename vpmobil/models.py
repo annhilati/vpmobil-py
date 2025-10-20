@@ -3,10 +3,9 @@ from dataclasses import dataclass, field
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time
 from pathlib import Path
-from typing import Literal, Any, ClassVar
-import re
+from typing import Literal, Any
 
-from vpmobil._lib import prettyxml
+from vpmobil.utils import prettyxml
 from vpmobil import config
 
 @dataclass(init=True, eq=False)
@@ -32,9 +31,9 @@ class VpmobilPyModell():
 
         converters = {
             datetime:        lambda d: d.strftime("%d.%m.%Y:%H:%M"),
-            time:            lambda d: d.strftime("%H:%M"),
+            time:            lambda t: t.strftime("%H:%M"),
             date:            lambda d: d.strftime("%d.%m.%Y"),
-            VpmobilPyModell: lambda d: d.as_dict()
+            VpmobilPyModell: lambda m: m.as_dict()
         }
 
         def apply_converter(value: Any) -> Any:
@@ -648,3 +647,7 @@ class Kurs(VpmobilPyModell):
         if self._data_value_safe_type("UeNr", "text"):
             return int(self._data_value_safe_type("UeNr", "text"))
         return None
+    
+
+VertretungsTagType = VertretungsTag | VertretungsTagRäume | VertretungsTagLehrer
+KlasseLikeType = Klasse | Lehrer | Raum

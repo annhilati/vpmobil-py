@@ -1,11 +1,23 @@
 from yarl import URL
+from enum import StrEnum
 from datetime import date
 from dataclasses import dataclass
 import xml.etree.ElementTree as XML
 import requests
 
 from vpmobil.models import MobdatenBase, VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume
-from vpmobil.utils import Stundenplan24Pfade
+
+class Stundenplan24Pfade(StrEnum):
+    """Enumerator mit den Pfaden für Vertretungsplanquelldateien, wie sie auf `stundenplan24.de` verwendet werden.<br>
+    
+    Pfade enthalten die Platzhalter `{schulnummer}`, `&Y`, `%m` und `%d`.
+    """
+    Klassen = "{schulnummer}/mobil/mobdaten/Klassen.xml"
+    PlanKl  = "{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
+    Lehrer  = "{schulnummer}/moble/mobdaten/Lehrer.xml"
+    PlanLe  = "{schulnummer}/moble/mobdaten/PlanLe%Y%m%d.xml"
+    Raeume  = "{schulnummer}/mobra/mobdaten/Raeume.xml"
+    PlanRa  = "{schulnummer}/mobra/mobdaten/PlanRa%Y%m%d.xml"
 
 @dataclass
 class Vertretungsplan():
@@ -122,3 +134,4 @@ class Unauthorized(IndiwareFetchingError):
     Subklasse von `IndiwareFetchingError`
     """
     ...
+
