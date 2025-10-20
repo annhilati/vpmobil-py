@@ -6,111 +6,124 @@ Mit den Funktionen dieses Submoduls können beispielsweise `VertretungsTag`-Obje
 um so eine Auswertung aus Perspektive der Lehrer zu ermöglichen.
 """
 
-import xml.etree.ElementTree as XML
-from vpmobil import VertretungsTag, VertretungsTagLehrer
+from typing import Callable, Literal
+from vpmobil.models import (
+    VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume, MobdatenBase,
+    Stunde
+)
+from vpmobil.utils import VertretungsTagType, KlasseLikeType
 from vpmobil import config
+import xml.etree.ElementTree as XML
 
 def _subElement(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
     element = XML.SubElement(parent, tag, attrib)
     if text: element.text = text
     return element
 
-def lehrer_from_klassen(tag: VertretungsTag) -> VertretungsTagLehrer:
+def _make_converter(
+    planart:     Literal["K", "L", "R"],
+    get_Le:      Callable[[Stunde], list[str]],
+    get_LeAe:    Callable[[Stunde], bool],
+    get_Ra:      Callable[[Stunde], list[str]],
+    get_RaAe:    Callable[[Stunde], bool],
+    get_Kl:      Callable[[VertretungsTagType], list[KlasseLikeType]],
+    get_will_Kl: Callable[[Stunde], list[str]],
+):
+    def converter(tag: VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume):
+        """Aus welchem Attribut bekomme ich xyz für den neuen Plan?"""
+        root = XML.Element("VpMobil")
 
-    root = XML.Element("VpMobil")
+        Kopf = _subElement(root, "Kopf")
+        _subElement(Kopf, "planart", planart)
+        _subElement(Kopf, "zeitstempel", tag.zeitstempel.strftime("%d.%m.%Y, %H:%M"))
+        _subElement(Kopf, "DatumPlan", tag.datum.strftime("%A, %d. %B %Y"))
 
-    Kopf = _subElement(root, "Kopf")
-    _subElement(Kopf, "planart", "L")
-    _subElement(Kopf, "zeitstempel", tag.zeitstempel.strftime("%d.%m.%Y, %H:%M"))
-    _subElement(Kopf, "DatumPlan", tag.datum.strftime("%A, %d. %B %Y"))
+        FreieTage = _subElement(root, "FreieTage")
+        for datum in tag.freieTage:
+            _subElement(FreieTage, "ft", datum.strftime("%y%m%d"))
 
-    FreieTage = _subElement(root, "FreieTage")
-    for datum in tag.freieTage:
-        _subElement(FreieTage, "ft", datum.strftime("%y%m%d"))
+        Klassen = _subElement(root, "Klassen")
+        target_map = {}
+        seen: set[tuple] = set()
 
-    Klassen = _subElement(root, "Klassen")
+        for klasseLike in get_Kl(tag):
+            for periode, stunden in klasseLike.stunden.items():
+                for stunde in stunden:
+                    for target in get_will_Kl(stunde):
+                        key = (
+                            target,
+                            stunde.periode,
+                            stunde.fach or "",
+                            tuple(sorted(get_Le(stunde))),
+                            tuple(sorted(get_Ra(stunde))),
+                        )
+                        if key in seen:
+                            continue
+                            # Um zu vermeiden, dass im resultierenden Plan mehrmals die selbe Stunde steht, nur weil sie aus dem Quellplan bei verschiedenen Klassenartigen vorkam
+                        seen.add(key)
 
-    Pl_map = {}
+                        if target not in target_map:
+                            Kl = _subElement(Klassen, "Kl")
+                            _subElement(Kl, "Kurz", target)
+                            Pl = _subElement(Kl, "Pl")
+                            target_map[target] = Pl
+                        else:
+                            Pl = target_map[target]
 
-    for klasse in tag.klassen:
-        for periode, stunden in klasse.stunden.items():
-            for stunde in stunden:
-                for lehrer in stunde.lehrer:
+                        Std = _subElement(Pl, "Std")
+                        _subElement(Std, "St", str(stunde.periode))
+                        _subElement(Std, "Beginn", stunde.beginn.strftime("%H:%M"))
+                        _subElement(Std, "Ende", stunde.ende.strftime("%H:%M"))
 
-                    if lehrer not in Pl_map:
-                        Kl = _subElement(Klassen, "Kl")
-                        _subElement(Kl, "Kurz", lehrer)
-                        Pl = _subElement(Kl, "Pl")
-                        Pl_map[lehrer] = Pl
-                    else:
-                        Pl = Pl_map[lehrer]
+                        fa_text = "" if stunde.fach is None and not stunde.ausfall else stunde.fach if not stunde.ausfall else "---"
+                        Fa = _subElement(Std, "Fa", fa_text)
+                        if stunde.fachgeändert:
+                            Fa.set("FaAe", "FaGeaendert")
 
-                    Std = _subElement(Pl, "Std")
-                    _subElement(Std, "St", str(stunde.periode))
-                    _subElement(Std, "Beginn", stunde.beginn.strftime("%H:%M"))
-                    _subElement(Std, "Ende", stunde.ende.strftime("%H:%M"))
-                    if stunde.fach:             Fa = _subElement(Std, "Fa", stunde.fach)
-                    elif stunde.ausfall:        Fa = _subElement(Std, "Fa", "---")
-                    if stunde.fachgeändert:     Fa.set("FaAe", "FaGeaendert")
+                        Le = _subElement(Std, "Le", config.SEPARATOR.join(get_Le(stunde)))
+                        if get_LeAe(stunde):
+                            Le.set("LeAe", "LeGeaendert")
 
-                    Le = _subElement(Std, "Le", config.SEPARATOR.join(stunde.klassen)) # wird bei leerer Liste ""
-                    if stunde.klassegeändert: 
-                        Le.set("LeAe", "LeGeaendert")
+                        Ra = _subElement(Std, "Ra", config.SEPARATOR.join(get_Ra(stunde)))
+                        if get_RaAe(stunde):
+                            Ra.set("RaAe", "RaGeaendert")
 
-                    Ra = _subElement(Std, "Ra", config.SEPARATOR.join(stunde.räume)) # wird bei leerer Liste ""
-                    if stunde.raumgeändert:
-                        Ra.set("RaAe", "RaGeaendert")
-                    if stunde.kursnummer:       _subElement(Std, "Nr", str(stunde.kursnummer))
-                    if stunde.info:             _subElement(Std, "If", stunde.info)
+                        if getattr(stunde, "kursnummer", None):
+                            _subElement(Std, "Nr", str(stunde.kursnummer))
+                        if getattr(stunde, "info", None):
+                            _subElement(Std, "If", stunde.info)
 
-    return VertretungsTagLehrer(XML.ElementTree(root))
+        return MobdatenBase(XML.ElementTree(root))
 
-def räume_from_klassen(tag: VertretungsTag) -> VertretungsTagLehrer:
+    return converter
 
-    root = XML.Element("VpMobil")
+# Spezialisierungen für deine beiden Fälle:
+lehrer_from_klassen = _make_converter(
+    planart=     "L",
+    get_Le=      lambda s: s.klassen,
+    get_LeAe=    lambda s: s.klassegeändert,
+    get_Ra=      lambda s: s.räume,
+    get_RaAe=    lambda s: s.raumgeändert,
+    get_Kl=      lambda d: d.klassen,
+    get_will_Kl= lambda s: s.lehrer
+)
 
-    Kopf = _subElement(root, "Kopf")
-    _subElement(Kopf, "planart", "R")
-    _subElement(Kopf, "zeitstempel", tag.zeitstempel.strftime("%d.%m.%Y, %H:%M"))
-    _subElement(Kopf, "DatumPlan", tag.datum.strftime("%A, %d. %B %Y"))
+räume_from_klassen = _make_converter(
+    planart=     "R",
+    get_Le=      lambda s: s.lehrer,
+    get_LeAe=    lambda s: s.lehrergeändert,
+    get_Ra=      lambda s: s.klassen,
+    get_RaAe=    lambda s: s.klassegeändert,
+    get_Kl=      lambda d: d.klassen,
+    get_will_Kl= lambda s: s.räume
+)
 
-    FreieTage = _subElement(root, "FreieTage")
-    for datum in tag.freieTage:
-        _subElement(FreieTage, "ft", datum.strftime("%y%m%d"))
-
-    Klassen = _subElement(root, "Klassen")
-
-    Pl_map = {}
-
-    for klasse in tag.klassen:
-        for periode, stunden in klasse.stunden.items():
-            for stunde in stunden:
-                for raum in stunde.räume:
-
-                    if raum not in Pl_map:
-                        Kl = _subElement(Klassen, "Kl")
-                        _subElement(Kl, "Kurz", raum)
-                        Pl = _subElement(Kl, "Pl")
-                        Pl_map[raum] = Pl
-                    else:
-                        Pl = Pl_map[raum]
-
-                    Std = _subElement(Pl, "Std")
-                    _subElement(Std, "St", str(stunde.periode))
-                    _subElement(Std, "Beginn", stunde.beginn.strftime("%H:%M"))
-                    _subElement(Std, "Ende", stunde.ende.strftime("%H:%M"))
-                    if stunde.fach:             Fa = _subElement(Std, "Fa", stunde.fach)
-                    elif stunde.ausfall:        Fa = _subElement(Std, "Fa", "---")
-                    if stunde.fachgeändert:     Fa.set("FaAe", "FaGeaendert")
-
-                    Le = _subElement(Std, "Le", config.SEPARATOR.join(stunde.lehrer)) # wird bei leerer Liste ""
-                    if stunde.lehrergeändert: 
-                        Le.set("LeAe", "LeGeaendert")
-
-                    Ra = _subElement(Std, "Ra", config.SEPARATOR.join(stunde.klassen)) # wird bei leerer Liste ""
-                    if stunde.klassegeändert:
-                        Ra.set("RaAe", "RaGeaendert")
-                    if stunde.kursnummer:       _subElement(Std, "Nr", str(stunde.kursnummer))
-                    if stunde.info:             _subElement(Std, "If", stunde.info)
-
-    return VertretungsTagLehrer(XML.ElementTree(root))
+klassen_from_lehrer = _make_converter(
+    planart=     "K",
+    get_Le=      lambda s: s.lehrer,
+    get_LeAe=    lambda s: s.lehrergeändert,
+    get_Ra=      lambda s: s.räume,
+    get_RaAe=    lambda s: s.raumgeändert,
+    get_Kl=      lambda d: d.lehrer,
+    get_will_Kl= lambda s: s.klassen
+)

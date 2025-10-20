@@ -3,10 +3,10 @@ from dataclasses import dataclass, field
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time
 from pathlib import Path
-from typing import Literal, Any
+from typing import Literal, Any, ClassVar
 import re
 
-from vpmobil.utils import prettyxml
+from vpmobil._lib import prettyxml
 from vpmobil import config
 
 @dataclass(init=True, eq=False)
