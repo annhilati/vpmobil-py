@@ -33,6 +33,17 @@ for periode, stunden in klasse.stunden:
 > [!NOTE]
 > Because Indiware only distributes substitution plan modules in Germany and the vast majority of users are therefore German, most of the package's functions and classes, their docstrings and the wiki are phrased in German.
 
+## Features
+
+- ⬇️ **Fetching:** Vertretungspläne flexibel aus Quellen abrufen und einlesen
+- 📦 **Datenmodelle:** Strukturierte Klassen zur typisierten Repräsentation aller Planinhalte
+- 🌌 **Feature-Complete:** Sämtliche im Alltag relevanten Informationen werden vollständig abgebildet
+- 🧠 **Lazy Evaluation:** Auswertung einzelner Eigenschaften erfolgt erst bei Bedarf
+- 🔧 **Konfiguration:** Eigenheiten der Vertretungsplaner können konfiguriert und bei der Auswertung berücksichtig werden 
+- ⚙️ **Kompatibilität:** Export der Datenmodelle in beliebige, einfach weiterverarbeitbare Formate wie JSON
+- 👁️ **Perspektivenkonversion:** Vertretungspläne können in ihrer Perspektive umgewandelt werden, um beispielsweise Lehrer auszuwerten, wenn nur Klassenpläne verfügbar sind
+- ➕ **Weitere Funktionen**: Parsen von PDFs, die von Indiware-Software erstellt werden
+
 
 <h3 align="center"> DISCLAIMER </h3>
 <p align="center">
