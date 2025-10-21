@@ -23,14 +23,12 @@ heute = vp.fetch()
 🛠️ Im `extensions`-Submodul befinden sich weitere Indiware-related Funktionen.
 """
 
-from vpmobil.api import Vertretungsplan, IndiwareFetchingError, Unauthorized, ResourceNotFound
+from vpmobil.api import Vertretungsplan, IndiwareFetchingError, Unauthorized, ResourceNotFound, Stundenplan24Pfade
 from vpmobil.models import (
     VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume,
     Klasse, Raum, Lehrer,
     Stunde, Kurs, Aufsicht
     )
-from vpmobil.utils import Stundenplan24Pfade
-
 _symbols = [
     Vertretungsplan,
     VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume,

@@ -1,8 +1,8 @@
 from datetime import date, timedelta
+from string import ascii_letters as letters
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
 import re
-from string import ascii_letters as letters
 
 def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     if isinstance(object, ET.ElementTree):
@@ -28,14 +28,19 @@ def parse_aufzählung(s: str, separator: str, parse_hyphen: bool) -> list[str]:
     # - Gemischte Klassen (5a-10c) wieder hinzufügen
     # - Prüfen, ob Leerzeichen zwischen den - sein dürfen. Im zweifelsfall alle Whitespaces entfernen
 
-    result: list[str] = []
     if not s:
-        return result
+        return []
     parts = [p.strip() for p in s.split(separator) if p.strip()]
+
+    if not parse_hyphen:
+        return parts
+    
+    result: list[str] = []
     for part in parts:
-        if "-" not in part or parse_hyphen is False:
+        if "-" not in part:
             result.append(part)
             continue
+
         # Bereich mit gleicher Zahl (z. B. 5a-5c oder 5a-c)
         m_same = re.fullmatch(r"(\d+)([a-z])-(?:\1)?([a-z])", part)
         if m_same:
@@ -44,6 +49,7 @@ def parse_aufzählung(s: str, separator: str, parse_hyphen: bool) -> list[str]:
             for c in letters[letters.index(start): letters.index(end) + 1]:
                 result.append(f"{num}{c}")
             continue
+
         # Bereich mit gleicher Buchstabenposition (z. B. 5a-10a)
         m_letter = re.fullmatch(r"(\d+)([a-z])-(\d+)\2", part)
         if m_letter:
@@ -51,6 +57,8 @@ def parse_aufzählung(s: str, separator: str, parse_hyphen: bool) -> list[str]:
             for n in range(start_n, end_n + 1):
                 result.append(f"{n}{letter}")
             continue
+
         # alles andere ist ungültig
         raise ValueError(f"Ungültiger Klassenbereich: {part}")
+    
     return result

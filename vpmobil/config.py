@@ -3,16 +3,22 @@ Globale (Parsing-) Parameter für vpmobil-py
 
 Parameter
 ---------
-SEPARATOR : str
+Parameter sind als Attribute von `config` ausles- und setzbar.
+
+SEPARATOR : str = `" "`
     Zeichen das verwendet wird, um Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
+INTERPRET_HYPHEN_AS_RANGE : bool = `True`
+    Ob `-` in Klassenangaben als Bereich interpretiert werden sollen
 """
 
 SEPARATOR = " "
 """Zeichen das verwendet wird, um etwaige Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
 
-- `"10a, 10b"` -> `SEPARATOR = ", "`
-- `"10a 10b"` -> `SEPARATOR = " "`
-- etc.
+Wenn der Vertretungsplaner Klassen wie
+- `"10a, 10b"` einträgt, sollte der Separator `", "` und bei
+- `"10a 10b"` beispielsweise `" "` sein.
+
+Wenn der Planer inkonsistent in seiner Syntax ist, sollte Auswertung nur für alle angegebenen Klassen gemeinsam gemacht werden.
 """
 
 INTERPRET_HYPHEN_AS_RANGE = True

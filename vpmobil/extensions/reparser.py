@@ -8,19 +8,14 @@ um so eine Auswertung aus Perspektive der Lehrer zu ermöglichen.
 
 from typing import Callable, Literal
 from vpmobil.models import (
-    VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume, MobdatenBase,
-    Stunde
+    VertretungsTag as VT, VertretungsTagLehrer as VTL, VertretungsTagRäume as VTR, MobdatenBase,
+    Stunde,
+    VertretungsTagType, KlasseLikeType
 )
-from vpmobil.utils import VertretungsTagType, KlasseLikeType
 from vpmobil import config
 import xml.etree.ElementTree as XML
 
-def _subElement(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
-    element = XML.SubElement(parent, tag, attrib)
-    if text: element.text = text
-    return element
-
-def _make_converter(
+def _converter(
     planart:     Literal["K", "L", "R"],
     get_Le:      Callable[[Stunde], list[str]],
     get_LeAe:    Callable[[Stunde], bool],
@@ -29,7 +24,12 @@ def _make_converter(
     get_Kl:      Callable[[VertretungsTagType], list[KlasseLikeType]],
     get_will_Kl: Callable[[Stunde], list[str]],
 ):
-    def converter(tag: VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume):
+    def _subElement(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
+        element = XML.SubElement(parent, tag, attrib)
+        if text: element.text = text
+        return element
+
+    def converter(tag: VT | VTL | VTR):
         """Aus welchem Attribut bekomme ich xyz für den neuen Plan?"""
         root = XML.Element("VpMobil")
 
@@ -97,33 +97,75 @@ def _make_converter(
 
     return converter
 
-# Spezialisierungen für deine beiden Fälle:
-lehrer_from_klassen = _make_converter(
-    planart=     "L",
-    get_Le=      lambda s: s.klassen,
-    get_LeAe=    lambda s: s.klassegeändert,
-    get_Ra=      lambda s: s.räume,
-    get_RaAe=    lambda s: s.raumgeändert,
-    get_Kl=      lambda d: d.klassen,
-    get_will_Kl= lambda s: s.lehrer
-)
 
-räume_from_klassen = _make_converter(
-    planart=     "R",
-    get_Le=      lambda s: s.lehrer,
-    get_LeAe=    lambda s: s.lehrergeändert,
-    get_Ra=      lambda s: s.klassen,
-    get_RaAe=    lambda s: s.klassegeändert,
-    get_Kl=      lambda d: d.klassen,
-    get_will_Kl= lambda s: s.räume
-)
-
-klassen_from_lehrer = _make_converter(
-    planart=     "K",
-    get_Le=      lambda s: s.lehrer,
-    get_LeAe=    lambda s: s.lehrergeändert,
-    get_Ra=      lambda s: s.räume,
-    get_RaAe=    lambda s: s.raumgeändert,
-    get_Kl=      lambda d: d.lehrer,
-    get_will_Kl= lambda s: s.klassen
-)
+def VertretungsTag(tag: VTL | VTR) -> VT:
+    if type(tag) == VTL:
+        return _converter(
+            planart=     "K",
+            get_Le=      lambda s: s.klassen,
+            get_LeAe=    lambda s: s.klassegeändert,
+            get_Ra=      lambda s: s.räume,
+            get_RaAe=    lambda s: s.raumgeändert,
+            get_Kl=      lambda d: d.lehrer,
+            get_will_Kl= lambda s: s.klassen
+        )(tag)
+    elif type(tag) == VTR:
+        return _converter(
+            planart=     "K",
+            get_Le=      lambda s: s.lehrer,
+            get_LeAe=    lambda s: s.lehrergeändert,
+            get_Ra=      lambda s: s.räume,
+            get_RaAe=    lambda s: s.raumgeändert,
+            get_Kl=      lambda d: d.räume,
+            get_will_Kl= lambda s: s.klassen
+        )(tag)
+    else:
+        raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
+    
+def VertretungsTagLehrer(tag: VT | VTR) -> VTL:
+    if type(tag) == VT:
+        return _converter(
+            planart=     "L",
+            get_Le=      lambda s: s.lehrer,
+            get_LeAe=    lambda s: s.lehrergeändert,
+            get_Ra=      lambda s: s.räume,
+            get_RaAe=    lambda s: s.raumgeändert,
+            get_Kl=      lambda d: d.klassen,
+            get_will_Kl= lambda s: s.lehrer
+        )(tag)
+    elif type(tag) == VTR:
+        return _converter(
+            planart=     "L",
+            get_Le=      lambda s: s.lehrer,
+            get_LeAe=    lambda s: s.lehrergeändert,
+            get_Ra=      lambda s: s.räume,
+            get_RaAe=    lambda s: s.raumgeändert,
+            get_Kl=      lambda d: d.räume,
+            get_will_Kl= lambda s: s.lehrer
+        )(tag)
+    else:
+        raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
+    
+def VertretungsTagRäume(tag: VT | VTL) -> VTR:
+    if type(tag) == VT:
+        return _converter(
+            planart=     "R",
+            get_Le=      lambda s: s.lehrer,
+            get_LeAe=    lambda s: s.lehrergeändert,
+            get_Ra=      lambda s: s.räume,
+            get_RaAe=    lambda s: s.raumgeändert,
+            get_Kl=      lambda d: d.klassen,
+            get_will_Kl= lambda s: s.räume
+        )(tag)
+    elif type(tag) == VTL:
+        return _converter(
+            planart=     "R",
+            get_Le=      lambda s: s.klassen,
+            get_LeAe=    lambda s: s.klassegeändert,
+            get_Ra=      lambda s: s.räume,
+            get_RaAe=    lambda s: s.raumgeändert,
+            get_Kl=      lambda d: d.lehrer,
+            get_will_Kl= lambda s: s.räume
+        )(tag)
+    else:
+        raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
