@@ -139,10 +139,10 @@ class MobdatenBase(VpmobilPyModell):
         """Zusätzliche Informationen zum Tag<br>
         Kann Multiline sein
         """
-        if zusatzInfo := self._data.find('.//ZusatzInfo'):
+        if zusatzInfo := self._data.find('ZusatzInfo'):
             return '\n'.join([
                 ziZeile.text
-                for ziZeile in zusatzInfo.findall('.//ZiZeile')
+                for ziZeile in zusatzInfo.findall('ZiZeile')
                 if ziZeile.text
             ])
         return None
@@ -522,7 +522,7 @@ class Stunde(VpmobilPyModell):
         ```
         """
         if self._data_value_safe_type("Fa", "text") != "---":
-            return self._data_value_safe_type("Fa", "text")
+            return self._data.find("Fa").text
         return None
 
     @property
@@ -569,20 +569,20 @@ class Stunde(VpmobilPyModell):
         return "FaAe" in self._data_value_safe_type("Fa", "attrib")
     
     @property
-    def lehrergeändert(self) -> bool:
-        "Ob eine Änderung des Lehrers für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
-        return "LeAe" in self._data_value_safe_type("Le", "attrib") if self._planart != "L" else False
+    def lehrergeändert(self) -> bool | None:
+        "Ob eine Änderung des Lehrers für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt<br>Ist None, falls die Stunde aus einem Lehrerplan kommt"
+        return "LeAe" in self._data_value_safe_type("Le", "attrib") if self._planart != "L" else None
     
     @property
-    def raumgeändert(self) -> bool:
-        "Ob eine Änderung des Raums für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
-        return "RaAe" in self._data_value_safe_type("Ra", "attrib") if self._planart != "R" else False
+    def raumgeändert(self) -> bool | None:
+        "Ob eine Änderung des Raums für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt<br>Ist None, falls die Stunde aus einem Raumplan kommt"
+        return "RaAe" in self._data_value_safe_type("Ra", "attrib") if self._planart != "R" else None
     
     @property
-    def klassegeändert(self) -> bool:
-        "Ob eine Änderung der Klasse für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
+    def klassegeändert(self) -> bool | None:
+        "Ob eine Änderung der Klasse für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt<br>Ist None, falls die Stunde aus einem Klassenplan kommt"
         if self._planart == "K":
-            return False
+            return None
         elif self._planart == "L":
             return "LeAe" in self._data_value_safe_type("Le", "attrib")
         elif self._planart == "R":

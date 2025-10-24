@@ -18,6 +18,7 @@ def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     reparsed = MD.parseString(string)
     return reparsed.toprettyxml(indent="\t")
 
+
 def date_range(start: date, end: date):
     current = start
     while current <= end:
