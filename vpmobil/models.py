@@ -5,7 +5,7 @@ from datetime import datetime, date, time
 from pathlib import Path
 from typing import Literal, Any
 
-from vpmobil.utils import prettyxml
+from vpmobil.utils import prettyxml, parse_aufzählung
 from vpmobil import config
 
 @dataclass(init=True, eq=False)
@@ -58,7 +58,7 @@ class VpmobilPyModell():
                 result[name] = apply_converter(val)
 
         try: import json; _ = json.dumps(result, ensure_ascii=False)
-        except: raise AssertionError("Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt im Bugtracker von vpmobil-py auf GitHub.")
+        except: raise AssertionError(config.ERRORS.KEY_VALUE_ASSERTION)
 
         return result
 
@@ -82,7 +82,7 @@ class MobdatenBase(VpmobilPyModell):
     def __new__(cls, _data: XML.ElementTree):
         if cls is MobdatenBase:
             if _data.find("Kopf/planart") is None or _data.find("Kopf/planart").text is None:
-                raise ValueError("XML-Quelldaten sind unbekannt formatiert")
+                raise ValueError(config.ERRORS.UNKNWON_XML)
             
             match _data.find("Kopf/planart").text:
                 case "K":
@@ -120,11 +120,7 @@ class MobdatenBase(VpmobilPyModell):
         import locale; locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
 
         if self._data_value_safe_type("Kopf/DatumPlan", "text"):
-            return datetime.strptime(
-                self._data.find("Kopf/DatumPlan")
-                .text.split(",", 1)[-1]
-                .strip(),
-                "%d. %B %Y").date()
+            return datetime.strptime(self._data.find("Kopf/DatumPlan").text, ("%A, %d. %B %Y")).date()
         return None
     
     @property
@@ -196,7 +192,7 @@ class MobdatenBase(VpmobilPyModell):
 
         zielpfad.write_text(xmlpretty, encoding="utf-8")
 
-    def _elemente_Klassen(self) -> list[XML.Element]:
+    def _Klassen_elemente(self) -> list[XML.Element]:
         # klassen: list[XML.Element] = []
         # klassen_elemente = self._data.findall('.//Kl')
         # if klassen_elemente is not []:
@@ -264,7 +260,7 @@ class VertretungsTag(MobdatenBase):
     @property
     def klassen(self) -> list[Klasse]:
         "Im Vertretungsplan beschriebene Klassen"
-        return [Klasse(element, self._planart) for element in self._elemente_Klassen()]
+        return [Klasse(element, self._planart) for element in self._Klassen_elemente()]
     
     def klasse(self, kürzel: str) -> Klasse | None:
         "Gibt die Klasse mit der Bezeichnung `kürzel` zurück."
@@ -293,7 +289,7 @@ class VertretungsTagLehrer(MobdatenBase):
     @property
     def lehrer(self) -> list[Lehrer]:
         "Im Vertretungsplan beschriebene Lehrer"
-        return [Lehrer(element, self._planart) for element in self._elemente_Klassen()]
+        return [Lehrer(element, self._planart) for element in self._Klassen_elemente()]
     
     def get_lehrer(self, kürzel: str) -> Lehrer | None:
         "Gibt den Lehrer mit der Abkürzung `kürzel` zurück."
@@ -322,7 +318,7 @@ class VertretungsTagRäume(MobdatenBase):
     @property
     def räume(self) -> list[Raum]:
         "Im Vertretungsplan beschriebene Räume"
-        return [Raum(element, self._planart) for element in self._elemente_Klassen()]
+        return [Raum(element, self._planart) for element in self._Klassen_elemente()]
 
     def raum(self, kürzel: str) -> Raum | None:
         "Gibt den Raum mit der Bezeichnung `kürzel` zurück."
@@ -537,9 +533,9 @@ class Stunde(VpmobilPyModell):
         if self._planart == "K":
             return [self._context]
         elif self._planart == "R":
-            return self._data.find("Ra").text.split(config.SEPARATOR) if self._data_value_safe_type("Ra", "text") else []
+            return parse_aufzählung(self._data.find("Ra").text) if self._data_value_safe_type("Ra", "text") else []
         elif self._planart == "L":
-            return self._data.find("Le").text.split(config.SEPARATOR) if self._data_value_safe_type("Le", "text") else []
+            return parse_aufzählung(self._data.find("Le").text) if self._data_value_safe_type("Le", "text") else []
 
         
     @property
@@ -551,7 +547,7 @@ class Stunde(VpmobilPyModell):
             return [self._context]
         else:
             if self._data_value_safe_type("Le", "text"):
-                return self._data.find("Le").text.split(config.SEPARATOR)
+                return parse_aufzählung(self._data.find("Le").text)
             return []
 
         
@@ -564,7 +560,7 @@ class Stunde(VpmobilPyModell):
             return [self._context]
         else:
             if self._data_value_safe_type("Ra", "text"):
-                return self._data.find("Ra").text.split(config.SEPARATOR) 
+                return parse_aufzählung(self._data.find("Ra").text)
             return []
             
     @property

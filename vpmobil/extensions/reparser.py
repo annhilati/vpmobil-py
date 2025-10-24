@@ -93,6 +93,8 @@ def _converter(
                         if getattr(stunde, "info", None):
                             _subElement(Std, "If", stunde.info)
 
+                        Pl[:] = sorted(Pl, key=lambda e: int(e.findtext("St")))
+
         return MobdatenBase(XML.ElementTree(root))
 
     return converter

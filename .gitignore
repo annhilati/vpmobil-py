@@ -1,6 +1,7 @@
 # Environment
 *.env
 /.vscode
+test*.*
 
 # Python Build
 **.egg-info/
@@ -10,7 +11,4 @@ dist/
 # Dev
 tests/temp/*
 analyse
-test.py
 __pycache__
-test.json
-test.xml

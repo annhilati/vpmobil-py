@@ -28,3 +28,7 @@ Falls ja würde
 - `"10a-10c"` als `"10a", "10b", "10c"` und
 - `"8a-10a"` als `"8a", "9a", "10a"` interpretiert.
 """
+
+class ERRORS:
+    KEY_VALUE_ASSERTION = "Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt im Bugtracker von vpmobil-py auf GitHub."
+    UNKNOWN_XML = "XML-Quelldaten sind unbekannt formatiert"

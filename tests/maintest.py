@@ -10,8 +10,8 @@ load_dotenv()
 
 vp = Vertretungsplan(getenv("SCHULNUMMER"), getenv("NUTZER"), getenv("PASSWORT"))
 
-#tag = vp.fetch(datei=Stundenplan24Pfade.Klassen)
-tag = reparser.VertretungsTagLehrer(vp.fetch(datei=Stundenplan24Pfade.Klassen))
+tag = vp.fetch(datei=Stundenplan24Pfade.Klassen)
+#tag = reparser.VertretungsTagLehrer(vp.fetch(datei=Stundenplan24Pfade.Klassen))
 
 def main():
 
