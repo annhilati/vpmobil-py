@@ -24,7 +24,6 @@ Neue Klassen sind:
   * Basisklasse für Vertretungspläne
   * Erzeugt beim Instanzierungsversuch eine Instanz einer ihrer Subklassen
   * Kann mit `isinstance()` als Protokoll für alle Vertretungspläne genutzt werden
-  * Kann vererbt werden, um weitere Planarten zu definieren 
 * `VertretungsTagLehrer`
   * Subklasse von `MobdatenBase`
   * Hat `.lehrer` und `.get_lehrer()`
@@ -48,16 +47,16 @@ Neue Klassen sind:
 * `Vertretungsplan.bulkfetch()` wurde entfernt
 * `InvalidCredentialsError` wurde in `Unauthorized` umbenannt
 * `VertretungsTag.freieTage` gibt statt `None` nun `[]` zurück
+* `VertretungsTag.datum` parst jetzt nicht mehr den Dateinamen sondern den XML-Tag `DatumPlan`
 * `Klasse.stundenHeute` wurde in `.stunden` und `.stundenHeuteInPeriode` in `.stundenInPeriode` umbenannt
 * `Klasse.stundenInPeriode()` gibt nun `[]` statt `None` zurück
 * `Stunde.raum` wurde durch `Stunde.räume` ersetzt, das nun eine Liste von Strings zurückgibt. Statt `None` wird `[]` zurückgegeben
 * `Stunde.lehrer` gibt nun eine Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
+* `Stunde.ausfall` ist nun auch `True`, wenn die Stundeninfo `"selbst"` enthält und Lehrer und Räume nicht vorhanden sind
 * `Kurs.gruppe` wurde in `.kürzel` umbenannt. Es gibt jetzt als Fallback `.fach` zurück
 * Alle Properties, die Klassen, Lehrer oder Räume zurückgeben, verwenden nun das Trennzeichen, das in `config.SEPARATOR` festgelegt werden kann, um Mehrfachnennungen zu trennen
 * Alle Properties wurden `None`-sicher gemacht, sodass sie nun keine Fehler mehr werfen können, sollte ein Tag in der Quelldatei unerwarteter Weise nicht vorhanden sein
-* `VertretungsTag.datum` parst jetzt nicht mehr den Dateinamen sondern den XML-Tag `DatumPlan`
-* Aufzählungen von Klassen können nun auch Bereiche (z.B. `"5a-7c"`) enthalten und werden aufgelöst
-* `Stunde.ausfall` ist nun auch `True`, wenn die Stundeninfo `"selbst"` enthält und Lehrer und Räume nicht vorhanden sind
+* Aufzählungen von Klassen können nun auch Bereiche (z.B. `"5a-7c"`) enthalten und werden aufgelöst. Das Format einer Klassenbezeichnung kann in `config` durch ein Pattern konfiguriert werden. Die Capturing Groups `stufe` und `suffix` müssen enthalten sein
 
 #### `Vertretungsplan` und `.fetch()`
 `Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden. 

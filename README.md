@@ -1,4 +1,5 @@
 <h1 align="center">vpmobil-py</h1>
+<h6 align="center">Das bislang mächtigste Auswertungstool für Indiware-Vertretungspläne</h6>
 <p align="center">
   <code>pip install vpmobil</code>
   <br>
@@ -15,7 +16,6 @@
   <br>
   <a href="https://github.com/annhilati/vpmobil-py">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/annhilati/vpmobil-py?style=for-the-badge&logo=github&label=Letzter%20Commit&color=23A55A"></a>  
-
 
 ```python
 from vpmobil import Vertretungsplan
@@ -41,7 +41,7 @@ for periode, stunden in klasse.stunden:
 - 🧠 **Lazy Evaluation:** Auswertung einzelner Eigenschaften erfolgt erst bei Bedarf
 - 🔧 **Konfiguration:** Eigenheiten der Vertretungsplaner können konfiguriert und bei der Auswertung berücksichtig werden 
 - ⚙️ **Kompatibilität:** Export der Datenmodelle in beliebige, einfach weiterverarbeitbare Formate wie JSON
-- 👁️ **Perspektivenkonversion:** Vertretungspläne können in ihrer Perspektive umgewandelt werden, um beispielsweise Lehrer auszuwerten, wenn nur Klassenpläne verfügbar sind
+- 👁️ **Perspektivenkonversion:** Die Perspektive von Vertretungsplänen kann geändert werden, beispielsweise um Lehrer auszuwerten, wenn nur Klassenpläne verfügbar sind
 - ➕ **Weitere Funktionen**: Parsen von PDFs, die von Indiware-Software erstellt werden
 
 
