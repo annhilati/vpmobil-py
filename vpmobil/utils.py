@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-import string
+from string import ascii_lowercase
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
 import re
@@ -26,23 +26,21 @@ def date_range(start: date, end: date):
         current += timedelta(days=1)
 
 
-import re
-import string
-from typing import List
-
 def parse_aufzählung(
-    s: str,
+    string: str,
     separator: str = config.AUFZÄHLUNGS_SEPARATOR,
     parse_hyphen: bool = config.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN,
-    class_pattern: str = config.KLASSENBEZEICHNER_PATTERN,
-) -> List[str]:
-    """Parst Klassenangaben wie '5a', '5a-5c', '5a,5b,6a-7a', '9b-10c'
-    oder '5/1-5/3' zu einer Liste von Strings, basierend auf dem konfigurierten Pattern."""
+    class_pattern: re.Pattern = config.KLASSENBEZEICHNER_PATTERN,
+) -> list[str]:
+    """Wandelt Aufzählungen in Strings in eine Liste von Strings um.
+    
+    Unterstützt auch Bereiche von Klassen, je nach `class_pattern`
+    """
 
-    if not s:
+    if not string:
         return []
 
-    parts = [p.strip() for p in s.split(separator) if p.strip()]
+    parts = [p.strip() for p in string.split(separator) if p.strip()]
 
     if not parse_hyphen:
         return parts
@@ -55,8 +53,8 @@ def parse_aufzählung(
             continue
 
         start_raw, end_raw = part.split("-", 1)
-        start_match = re.compile(class_pattern).fullmatch(start_raw.strip())
-        end_match = re.compile(class_pattern).fullmatch(end_raw.strip())
+        start_match = class_pattern.fullmatch(start_raw.strip())
+        end_match = class_pattern.fullmatch(end_raw.strip())
 
         if not (start_match and end_match):
             # Fallback: unverständlicher Bereich, unverändert übernehmen
@@ -77,7 +75,7 @@ def parse_aufzählung(
             continue
 
         if s_suffix.isalpha() and e_suffix.isalpha():
-            letters = list(string.ascii_lowercase)
+            letters = list(ascii_lowercase)
             start_i = letters.index(s_suffix)
             end_i = letters.index(e_suffix)
             if s_stufe == e_stufe:

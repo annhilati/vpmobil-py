@@ -11,6 +11,7 @@
 * Datenmodelle können mit `.as_dict()` in ein sauberes JSON-kompatibles Dictionary umgewandelt werden<br>
   > Diese Implementierung ist noch experimentell und kann sich in Zukunft ändern.
 * Konversionsfunktionen zwischen `VertretungsTag`-Datenmodellen in `extensions.reparser` hinzugefügt
+* Support für Klausuren hinzugefügt
 
 #### Lehrer- & Raumpläne
 

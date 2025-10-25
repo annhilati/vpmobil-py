@@ -1,7 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from xml.etree import ElementTree as XML
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timedelta
 from pathlib import Path
 from typing import Literal, Any
 
@@ -396,6 +396,16 @@ class Klasse(KlasseLikeBase):
                 return kurs
         return None
     
+    @property
+    def klausuren(self) -> list[Klausur]:
+        """Klausuren der Klasse"""
+        if klausuren := self._data.find("Klausuren"):
+            return [
+                Klausur(klausur, self._planart)
+                for klausur in klausuren.findall("Klausur")
+            ]
+        return []
+    
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Lehrer                                         │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -448,6 +458,9 @@ class Aufsicht(VpmobilPyModell):
     """Klasse, die eine Lehreraufsicht repräsentiert.
     """
 
+    def __repr__(self):
+        return f"<Aufsicht ab '{self.zeit}' in '{self.ort}'>"
+
     @property
     def vorStunde(self) -> int | None:
         "Unterrichtsperiode, vor der die Aufsicht stattfindet"
@@ -471,6 +484,53 @@ class Aufsicht(VpmobilPyModell):
         return self._data_value_safe_type("AuOrt", "text") or None
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                         Klausur                                          │ 
+# ╰──────────────────────────────────────────────────────────────────────────────────────────╯
+
+class Klausur(VpmobilPyModell):
+    """Klasse, die eine Klausur repräsentiert.
+    """
+
+    def __repr__(self):
+        return f"<Klausur für '{self.kurs}' ab '{self.beginn}'>"
+
+
+    @property
+    def kurs(self) -> str | None:
+        "Kurs für den die Klausur ansteht"
+        return self._data_value_safe_type("KlKurs", "text") or None
+
+    @property
+    def lehrer(self) -> str | None:
+        "Lehrer des Kurses für den die Klausur ansteht"
+        return self._data_value_safe_type("KlKursleiter", "text") or None
+    
+    @property
+    def periode(self) -> int | None:
+        "Unterrichtsperiode, zu der die Klausur beginnt<br>Kann `0` sein"
+        if self._data_value_safe_type("KlStunde", "text"):
+            return int(self._data.find("KlStunde"))
+        return None
+    
+    @property
+    def beginn(self) -> time | None:
+        "Beginn der Klausur"
+        if self._data_value_safe_type("KlBeginn", "text"):
+            return datetime.strptime(self._data.find("KlBeginn").text, "%H:%M").time()
+        return None
+    
+    @property
+    def dauer(self) -> timedelta | None:
+        if self._data_value_safe_type("KlDauer", "text"):
+            return timedelta(minutes=int(self._data.find("KlDauer").text))
+        return None
+    
+    @property
+    def info(self) -> str | None:
+        "Zusätzliche Information zur Klausur"
+        return self._data_value_safe_type("KlKinfo", "text") or None
+    
+# ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Stunde                                          │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
@@ -488,7 +548,7 @@ class Stunde(VpmobilPyModell):
     
     @property
     def periode(self) -> int:
-        "Unterrichtsperiode der Stunde"
+        "Unterrichtsperiode der Stunde<br>Kann `0` sein"
         return int(self._data.find("St").text)
 
     @property
@@ -608,13 +668,9 @@ class Stunde(VpmobilPyModell):
     
     @property
     def info(self) -> str | None:
-        "Zusätzliche Information der Stunde"
+        "Zusätzliche Information zur Stunde"
         return self._data_value_safe_type("If", "text") or None
-    
-    # @property
-    # def verschiebungs_info(self) -> dict | None:
-    #     "Enthält, die geparste Informationen aus der Stundeninfo, falls die Stunde eine verschobene Stunde ist"
-        
+            
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Kurs                                            │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯

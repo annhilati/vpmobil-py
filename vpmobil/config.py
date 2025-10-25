@@ -33,10 +33,8 @@ Falls ja würde
 - `"8a-10a"` als `"8a", "9a", "10a"` interpretiert.
 """
 
-KLASSENBEZEICHNER_PATTERN = re.compile("|".join(f"(?:{p})" for p in [
-    r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])",
-    r"(?P<stufe>[1-9][0-9]?)/(?P<suffix>[1-9][0-9]?)"
-]))
+# KLASSENBEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
+KLASSENBEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)/(?P<suffix>[1-9][0-9]?)"
 """Capture Pattern für Stufe und Suffix einer Klasse<br>
 Standardmäßig können Formate wie `"6b"` und `"6/2"` bearbeitet werden<br>
 Muss die Capture-Groups `stufe` und `suffix` enthalten

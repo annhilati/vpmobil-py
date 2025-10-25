@@ -57,6 +57,15 @@ VpMobil
 │       │       ├── Ra                  # Bezeichnet bei PlanRa eine Klasse
 │       │       ├── Nr
 │       │       └── If
+│       ├── Klausuren                   # Vermutlich nur bei PlanKl
+│       │   └── Klausur         # n
+│       │       ├── KlJahrgang
+│       │       ├── KlKurs
+│       │       ├── KlKursleiter
+│       │       ├── KlStunde
+│       │       ├── KlBeginn
+│       │       ├── KlDauer
+│       │       └── KlKinfo
 │       └── Aufsichten                  # Vermutlich nur bei PlanLe
 │           └── Aufsicht        # n
 │               ├── AuTag
