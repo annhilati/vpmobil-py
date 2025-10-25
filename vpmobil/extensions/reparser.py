@@ -21,8 +21,8 @@ def _converter(
     get_LeAe:    Callable[[Stunde], bool],
     get_Ra:      Callable[[Stunde], list[str]],
     get_RaAe:    Callable[[Stunde], bool],
-    get_Kl:      Callable[[VertretungsTagType], list[KlasseLikeType]],
-    get_will_Kl: Callable[[Stunde], list[str]],
+    get_old_Kl:      Callable[[VertretungsTagType], list[KlasseLikeType]],
+    get_new_Kl_target: Callable[[Stunde], list[str]],
 ):
     def _subElement(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
         element = XML.SubElement(parent, tag, attrib)
@@ -46,10 +46,10 @@ def _converter(
         target_map = {}
         seen: set[tuple] = set()
 
-        for klasseLike in get_Kl(tag):
+        for klasseLike in get_old_Kl(tag):
             for periode, stunden in klasseLike.stunden.items():
                 for stunde in stunden:
-                    for target in get_will_Kl(stunde):
+                    for target in get_new_Kl_target(stunde):
                         key = (
                             target,
                             stunde.periode,
@@ -72,8 +72,8 @@ def _converter(
 
                         Std = _subElement(Pl, "Std")
                         _subElement(Std, "St", str(stunde.periode))
-                        _subElement(Std, "Beginn", stunde.beginn.strftime("%H:%M"))
-                        _subElement(Std, "Ende", stunde.ende.strftime("%H:%M"))
+                        if stunde.beginn:   _subElement(Std, "Beginn", stunde.beginn.strftime("%H:%M"))
+                        if stunde.ende:     _subElement(Std, "Ende", stunde.ende.strftime("%H:%M"))
 
                         fa_text = "" if stunde.fach is None and not stunde.ausfall else stunde.fach if not stunde.ausfall else "---"
                         Fa = _subElement(Std, "Fa", fa_text)
@@ -95,6 +95,8 @@ def _converter(
 
                         Pl[:] = sorted(Pl, key=lambda e: int(e.findtext("St")))
 
+        Klassen[:] = sorted(Klassen, key=lambda e: e.findtext("Kurz"))
+
         return MobdatenBase(XML.ElementTree(root))
 
     return converter
@@ -104,12 +106,12 @@ def VertretungsTag(tag: VTL | VTR) -> VT:
     if type(tag) == VTL:
         return _converter(
             planart=     "K",
-            get_Le=      lambda s: s.klassen,
-            get_LeAe=    lambda s: s.klassegeändert,
+            get_Le=      lambda s: s.lehrer,
+            get_LeAe=    lambda s: s.lehrergeändert,
             get_Ra=      lambda s: s.räume,
             get_RaAe=    lambda s: s.raumgeändert,
-            get_Kl=      lambda d: d.lehrer,
-            get_will_Kl= lambda s: s.klassen
+            get_old_Kl=      lambda d: d.lehrer,
+            get_new_Kl_target= lambda s: s.klassen
         )(tag)
     elif type(tag) == VTR:
         return _converter(
@@ -118,8 +120,8 @@ def VertretungsTag(tag: VTL | VTR) -> VT:
             get_LeAe=    lambda s: s.lehrergeändert,
             get_Ra=      lambda s: s.räume,
             get_RaAe=    lambda s: s.raumgeändert,
-            get_Kl=      lambda d: d.räume,
-            get_will_Kl= lambda s: s.klassen
+            get_old_Kl=      lambda d: d.räume,
+            get_new_Kl_target= lambda s: s.klassen
         )(tag)
     else:
         raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
@@ -128,22 +130,22 @@ def VertretungsTagLehrer(tag: VT | VTR) -> VTL:
     if type(tag) == VT:
         return _converter(
             planart=     "L",
-            get_Le=      lambda s: s.lehrer,
-            get_LeAe=    lambda s: s.lehrergeändert,
+            get_Le=      lambda s: s.klassen,
+            get_LeAe=    lambda s: s.klassegeändert,
             get_Ra=      lambda s: s.räume,
             get_RaAe=    lambda s: s.raumgeändert,
-            get_Kl=      lambda d: d.klassen,
-            get_will_Kl= lambda s: s.lehrer
+            get_old_Kl=      lambda d: d.klassen,
+            get_new_Kl_target= lambda s: s.lehrer
         )(tag)
     elif type(tag) == VTR:
         return _converter(
             planart=     "L",
-            get_Le=      lambda s: s.lehrer,
-            get_LeAe=    lambda s: s.lehrergeändert,
+            get_Le=      lambda s: s.klassen,
+            get_LeAe=    lambda s: s.klassegeändert,
             get_Ra=      lambda s: s.räume,
             get_RaAe=    lambda s: s.raumgeändert,
-            get_Kl=      lambda d: d.räume,
-            get_will_Kl= lambda s: s.lehrer
+            get_old_Kl=      lambda d: d.räume,
+            get_new_Kl_target= lambda s: s.lehrer
         )(tag)
     else:
         raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
@@ -154,20 +156,20 @@ def VertretungsTagRäume(tag: VT | VTL) -> VTR:
             planart=     "R",
             get_Le=      lambda s: s.lehrer,
             get_LeAe=    lambda s: s.lehrergeändert,
-            get_Ra=      lambda s: s.räume,
-            get_RaAe=    lambda s: s.raumgeändert,
-            get_Kl=      lambda d: d.klassen,
-            get_will_Kl= lambda s: s.räume
+            get_Ra=      lambda s: s.klassen,
+            get_RaAe=    lambda s: s.klassegeändert,
+            get_old_Kl=      lambda d: d.klassen,
+            get_new_Kl_target= lambda s: s.räume
         )(tag)
     elif type(tag) == VTL:
         return _converter(
             planart=     "R",
-            get_Le=      lambda s: s.klassen,
-            get_LeAe=    lambda s: s.klassegeändert,
-            get_Ra=      lambda s: s.räume,
-            get_RaAe=    lambda s: s.raumgeändert,
-            get_Kl=      lambda d: d.lehrer,
-            get_will_Kl= lambda s: s.räume
+            get_Le=      lambda s: s.lehrer,
+            get_LeAe=    lambda s: s.lehrergeändert,
+            get_Ra=      lambda s: s.klassen,
+            get_RaAe=    lambda s: s.klassegeändert,
+            get_old_Kl=      lambda d: d.lehrer,
+            get_new_Kl_target= lambda s: s.räume
         )(tag)
     else:
         raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
