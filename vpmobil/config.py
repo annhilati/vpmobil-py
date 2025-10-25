@@ -1,4 +1,3 @@
-import re
 
 """
 Globale (Parsing-) Parameter für vpmobil-py
@@ -7,11 +6,14 @@ Parameter
 ---------
 Parameter sind als Attribute von `config` ausles- und setzbar.
 
-SEPARATOR : str = `" "`
+AUFZÄHLUNGS_SEPARATOR : str = `" "`
     Zeichen das verwendet wird, um Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
-INTERPRET_HYPHEN_AS_RANGE : bool = `True`
+BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN : bool = `True`
     Ob `-` in Klassenangaben als Bereich interpretiert werden sollen
+KLASSENBEZEICHNER_PATTERN : Pattern
+    Capture-Pattern zum parsen von Klassenbezeichnungen
 """
+import re
 
 AUFZÄHLUNGS_SEPARATOR = " "
 """Zeichen das verwendet wird, um etwaige Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
@@ -31,20 +33,26 @@ Falls ja würde
 - `"8a-10a"` als `"8a", "9a", "10a"` interpretiert.
 """
 
-KLASSEN_BEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
-"Kann die Paramater `stufe` und `suffix` haben"
+KLASSENBEZEICHNER_PATTERN = re.compile("|".join(f"(?:{p})" for p in [
+    r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])",
+    r"(?P<stufe>[1-9][0-9]?)/(?P<suffix>[1-9][0-9]?)"
+]))
+"""Capture Pattern für Stufe und Suffix einer Klasse<br>
+Standardmäßig können Formate wie `"6b"` und `"6/2"` bearbeitet werden<br>
+Muss die Capture-Groups `stufe` und `suffix` enthalten
+"""
 
-STUNDENVERSCHIEBUNG_PATTERN = re.compile(
-    r"statt\s+"
-    r"(?P<wochentag1>[A-ZÄÖÜa-zäöü]{2})\s*\((?P<datum1>\d{1,2}\.\d{1,2}\.)\)\s*"
-    r"St\.?\s*(?P<stunde1>\d+);\s*"
-    r"(?P<fach>[A-ZÄÖÜa-zäöü]+)\s+"
-    r"(?P<titel>Herr|Frau)\s+"
-    r"(?P<name>[A-ZÄÖÜa-zäöü]+)\s+"
-    r"gehalten\s+am\s+"
-    r"(?P<wochentag2>[A-ZÄÖÜa-zäöü]{2})\s*\((?P<datum2>\d{1,2}\.\d{1,2}\.)\)\s*"
-    r"St\.?\s*(?P<stunde2>\d+)"
-)
+# STUNDENVERSCHIEBUNG_PATTERN = re.compile(
+#     r"statt\s+"
+#     r"(?P<wochentag1>[A-ZÄÖÜa-zäöü]{2})\s*\((?P<datum1>\d{1,2}\.\d{1,2}\.)\)\s*"
+#     r"St\.?\s*(?P<stunde1>\d+);\s*"
+#     r"(?P<fach>[A-ZÄÖÜa-zäöü]+)\s+"
+#     r"(?P<titel>Herr|Frau)\s+"
+#     r"(?P<name>[A-ZÄÖÜa-zäöü]+)\s+"
+#     r"gehalten\s+am\s+"
+#     r"(?P<wochentag2>[A-ZÄÖÜa-zäöü]{2})\s*\((?P<datum2>\d{1,2}\.\d{1,2}\.)\)\s*"
+#     r"St\.?\s*(?P<stunde2>\d+)"
+# )
 """
 Das Format, in dem in den Informationen zu einer Stunde eine Verschiebung vermerkt wird.
 

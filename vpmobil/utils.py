@@ -34,7 +34,7 @@ def parse_aufzählung(
     s: str,
     separator: str = config.AUFZÄHLUNGS_SEPARATOR,
     parse_hyphen: bool = config.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN,
-    class_pattern: re.Pattern = config.KLASSEN_BEZEICHNER_PATTERN,
+    class_pattern: str = config.KLASSENBEZEICHNER_PATTERN,
 ) -> List[str]:
     """Parst Klassenangaben wie '5a', '5a-5c', '5a,5b,6a-7a', '9b-10c'
     oder '5/1-5/3' zu einer Liste von Strings, basierend auf dem konfigurierten Pattern."""
@@ -55,8 +55,8 @@ def parse_aufzählung(
             continue
 
         start_raw, end_raw = part.split("-", 1)
-        start_match = class_pattern.fullmatch(start_raw.strip())
-        end_match = class_pattern.fullmatch(end_raw.strip())
+        start_match = re.compile(class_pattern).fullmatch(start_raw.strip())
+        end_match = re.compile(class_pattern).fullmatch(end_raw.strip())
 
         if not (start_match and end_match):
             # Fallback: unverständlicher Bereich, unverändert übernehmen
@@ -89,9 +89,6 @@ def parse_aufzählung(
                         result.append(f"{n}{c}")
             continue
 
-        # Wenn gemischt oder nicht eindeutig, einfach übernehmen
         result.append(part)
 
     return result
-
-print(parse_aufzählung("5a-10c, 5/1-5/4"))

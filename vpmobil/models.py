@@ -610,6 +610,10 @@ class Stunde(VpmobilPyModell):
     def info(self) -> str | None:
         "Zusätzliche Information der Stunde"
         return self._data_value_safe_type("If", "text") or None
+    
+    # @property
+    # def verschiebungs_info(self) -> dict | None:
+    #     "Enthält, die geparste Informationen aus der Stundeninfo, falls die Stunde eine verschobene Stunde ist"
         
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Kurs                                            │ 
