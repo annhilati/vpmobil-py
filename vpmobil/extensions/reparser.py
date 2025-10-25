@@ -80,11 +80,11 @@ def _converter(
                         if stunde.fachgeändert:
                             Fa.set("FaAe", "FaGeaendert")
 
-                        Le = _subElement(Std, "Le", config.SEPARATOR.join(get_Le(stunde)))
+                        Le = _subElement(Std, "Le", config.AUFZÄHLUNGS_SEPARATOR.join(get_Le(stunde)))
                         if get_LeAe(stunde):
                             Le.set("LeAe", "LeGeaendert")
 
-                        Ra = _subElement(Std, "Ra", config.SEPARATOR.join(get_Ra(stunde)))
+                        Ra = _subElement(Std, "Ra", config.AUFZÄHLUNGS_SEPARATOR.join(get_Ra(stunde)))
                         if get_RaAe(stunde):
                             Ra.set("RaAe", "RaGeaendert")
 

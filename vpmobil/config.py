@@ -1,3 +1,5 @@
+import re
+
 """
 Globale (Parsing-) Parameter für vpmobil-py
 
@@ -11,7 +13,7 @@ INTERPRET_HYPHEN_AS_RANGE : bool = `True`
     Ob `-` in Klassenangaben als Bereich interpretiert werden sollen
 """
 
-SEPARATOR = " "
+AUFZÄHLUNGS_SEPARATOR = " "
 """Zeichen das verwendet wird, um etwaige Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
 
 Wenn der Vertretungsplaner Klassen wie
@@ -21,12 +23,32 @@ Wenn der Vertretungsplaner Klassen wie
 Wenn der Planer inkonsistent in seiner Syntax ist, sollte Auswertung nur für alle angegebenen Klassen gemeinsam gemacht werden.
 """
 
-INTERPRET_HYPHEN_AS_RANGE = True
+BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN = True
 """Ob `-` in Klassenangaben als Bereich interpretiert werden sollen
 
 Falls ja würde
 - `"10a-10c"` als `"10a", "10b", "10c"` und
 - `"8a-10a"` als `"8a", "9a", "10a"` interpretiert.
+"""
+
+KLASSEN_BEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
+"Kann die Paramater `stufe` und `suffix` haben"
+
+STUNDENVERSCHIEBUNG_PATTERN = re.compile(
+    r"statt\s+"
+    r"(?P<wochentag1>[A-ZÄÖÜa-zäöü]{2})\s*\((?P<datum1>\d{1,2}\.\d{1,2}\.)\)\s*"
+    r"St\.?\s*(?P<stunde1>\d+);\s*"
+    r"(?P<fach>[A-ZÄÖÜa-zäöü]+)\s+"
+    r"(?P<titel>Herr|Frau)\s+"
+    r"(?P<name>[A-ZÄÖÜa-zäöü]+)\s+"
+    r"gehalten\s+am\s+"
+    r"(?P<wochentag2>[A-ZÄÖÜa-zäöü]{2})\s*\((?P<datum2>\d{1,2}\.\d{1,2}\.)\)\s*"
+    r"St\.?\s*(?P<stunde2>\d+)"
+)
+"""
+Das Format, in dem in den Informationen zu einer Stunde eine Verschiebung vermerkt wird.
+
+Standard: `statt Mo (27.10.) St.6; ETH Herr Reinhold gehalten am Di (28.10.) St.4`
 """
 
 class ERRORS:

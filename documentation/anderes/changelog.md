@@ -55,7 +55,8 @@ Neue Klassen sind:
 * Alle Properties, die Klassen, Lehrer oder Räume zurückgeben, verwenden nun das Trennzeichen, das in `config.SEPARATOR` festgelegt werden kann, um Mehrfachnennungen zu trennen
 * Alle Properties wurden `None`-sicher gemacht, sodass sie nun keine Fehler mehr werfen können, sollte ein Tag in der Quelldatei unerwarteter Weise nicht vorhanden sein
 * `VertretungsTag.datum` parst jetzt nicht mehr den Dateinamen sondern den XML-Tag `DatumPlan`
-* Aufzählungen von Klassen können nun auch Bereiche (z.B. `"5a-7c"`) emhalten und werden aufgelöst
+* Aufzählungen von Klassen können nun auch Bereiche (z.B. `"5a-7c"`) enthalten und werden aufgelöst
+* `Stunde.ausfall` ist nun auch `True`, wenn die Stundeninfo `"selbst"` enthält und Lehrer und Räume nicht vorhanden sind
 
 #### `Vertretungsplan` und `.fetch()`
 `Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden. 

@@ -507,8 +507,8 @@ class Stunde(VpmobilPyModell):
     
     @property
     def ausfall(self) -> bool:
-        "Ob die Stunde entfällt"
-        return self._data_value_safe_type("Fa", "text") == "---"
+        """Ob die Stunde entfällt<br>Ebenfalls `True`, falls Die Stundeninfo `"selbst"` enthält und Lehrer und Räume nicht vorhanden sind"""
+        return self._data_value_safe_type("Fa", "text") == "---" or ("selbst" in self.info and not self.lehrer and not self.räume)
 
     @property
     def fach(self) -> str | None:

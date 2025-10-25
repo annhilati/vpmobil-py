@@ -26,47 +26,72 @@ def date_range(start: date, end: date):
         current += timedelta(days=1)
 
 
-def parse_aufzählung(s: str, separator: str = config.SEPARATOR, parse_hyphen: bool = config.INTERPRET_HYPHEN_AS_RANGE) -> list[str]:
-    """Parst Klassenangaben wie '5a', '5a-5c', '5a,5b,6a-7a', '9b-10c' zu einer Liste von Strings."""
+import re
+import string
+from typing import List
+
+def parse_aufzählung(
+    s: str,
+    separator: str = config.AUFZÄHLUNGS_SEPARATOR,
+    parse_hyphen: bool = config.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN,
+    class_pattern: re.Pattern = config.KLASSEN_BEZEICHNER_PATTERN,
+) -> List[str]:
+    """Parst Klassenangaben wie '5a', '5a-5c', '5a,5b,6a-7a', '9b-10c'
+    oder '5/1-5/3' zu einer Liste von Strings, basierend auf dem konfigurierten Pattern."""
 
     if not s:
         return []
 
-    letters = list(string.ascii_lowercase)
     parts = [p.strip() for p in s.split(separator) if p.strip()]
 
     if not parse_hyphen:
         return parts
 
     result: list[str] = []
+
     for part in parts:
-        if "-" in part:
-            
-            # Bereich mit gleicher Zahl (z. B. 5a-5c oder 5a-c)
-            if m_same := re.fullmatch(r"(\d+)([a-z])-(?:\1)?([a-z])", part):
-                num = int(m_same.group(1))
-                start, end = m_same.group(2), m_same.group(3)
-                for c in letters[letters.index(start): letters.index(end) + 1]:
-                    result.append(f"{num}{c}")
-                continue
+        if "-" not in part:
+            result.append(part)
+            continue
 
-            # Bereich mit gleicher Buchstabenposition (z. B. 5a-10a)
-            if m_letter := re.fullmatch(r"(\d+)([a-z])-(\d+)\2", part):
-                start_n, letter, end_n = int(m_letter[1]), m_letter[2], int(m_letter[3])
-                for n in range(start_n, end_n + 1):
-                    result.append(f"{n}{letter}")
-                continue
+        start_raw, end_raw = part.split("-", 1)
+        start_match = class_pattern.fullmatch(start_raw.strip())
+        end_match = class_pattern.fullmatch(end_raw.strip())
 
-            # Gemischter Bereich (z. B. 9b-10c)
-            if m_mixed := re.fullmatch(r"(\d+)([a-z])-(\d+)([a-z])", part):
-                start_n, start_l, end_n, end_l = int(m_mixed[1]), m_mixed[2], int(m_mixed[3]), m_mixed[4]
-                start_li = letters.index(start_l)
-                end_li = letters.index(end_l)
-                for n in range(start_n, end_n + 1):
-                    for li in range(start_li, end_li + 1):
-                        result.append(f"{n}{letters[li]}")
-                continue
+        if not (start_match and end_match):
+            # Fallback: unverständlicher Bereich, unverändert übernehmen
+            result.append(part)
+            continue
 
+        s_stufe, s_suffix = start_match["stufe"], start_match["suffix"]
+        e_stufe, e_suffix = end_match["stufe"], end_match["suffix"]
+
+        # Unterscheide Zahlensuffix (z. B. 5/1–5/3) vs. Buchstabensuffix (z. B. 5a–5c)
+        if s_suffix.isdigit() and e_suffix.isdigit():
+            if s_stufe == e_stufe:
+                for i in range(int(s_suffix), int(e_suffix) + 1):
+                    result.append(f"{s_stufe}/{i}")
+            else:
+                for n in range(int(s_stufe), int(e_stufe) + 1):
+                    result.append(f"{n}/{s_suffix}")  # fallback bei ungleicher stufe
+            continue
+
+        if s_suffix.isalpha() and e_suffix.isalpha():
+            letters = list(string.ascii_lowercase)
+            start_i = letters.index(s_suffix)
+            end_i = letters.index(e_suffix)
+            if s_stufe == e_stufe:
+                for c in letters[start_i:end_i + 1]:
+                    result.append(f"{s_stufe}{c}")
+            else:
+                for n in range(int(s_stufe), int(e_stufe) + 1):
+                    for c in letters[start_i:end_i + 1]:
+                        result.append(f"{n}{c}")
+            continue
+
+        # Wenn gemischt oder nicht eindeutig, einfach übernehmen
         result.append(part)
 
     return result
+
+print(parse_aufzählung("5a-10c, 5/1-5/4"))
