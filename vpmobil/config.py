@@ -15,6 +15,17 @@ KLASSENBEZEICHNER_PATTERN : Pattern
 """
 import re
 
+def set_config(overrides: dict[str], /) -> None:
+    "Setzt Parameter anhand von Keys"
+    import sys
+    config = sys.modules[__name__]
+
+    for key, value in overrides.items():
+        if hasattr(config, key):
+            setattr(config, key, value)
+        else:
+            raise ValueError(f"Ungültiger Parameter: {key}")
+
 AUFZÄHLUNGS_SEPARATOR = " "
 """Zeichen das verwendet wird, um etwaige Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
 
@@ -33,8 +44,7 @@ Falls ja würde
 - `"8a-10a"` als `"8a", "9a", "10a"` interpretiert.
 """
 
-# KLASSENBEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
-KLASSENBEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)/(?P<suffix>[1-9][0-9]?)"
+KLASSENBEZEICHNER_PATTERN = re.compile(r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])")
 """Capture Pattern für Stufe und Suffix einer Klasse<br>
 Standardmäßig können Formate wie `"6b"` und `"6/2"` bearbeitet werden<br>
 Muss die Capture-Groups `stufe` und `suffix` enthalten

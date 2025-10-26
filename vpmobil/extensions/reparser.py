@@ -2,13 +2,15 @@
 
 ---
 
-Mit den Funktionen dieses Submoduls können beispielsweise `VertretungsTag`-Objekte (mit geringfügigen Einbußen) in `VertretungsTagLehrer`-Objekte umgewandelt werden,
+Mit den Funktionen dieses Submoduls können Vertretungsplantag in eine andere Planart umgewandelt werden.
+
+So können beispielsweise `KlassenVertretungsTag`-Objekte (mit geringfügigen Einbußen) in `LehrerVertretungsTag`-Objekte umgewandelt werden,
 um so eine Auswertung aus Perspektive der Lehrer zu ermöglichen.
 """
 
 from typing import Callable, Literal
 from vpmobil.models import (
-    VertretungsTag as VT, VertretungsTagLehrer as VTL, VertretungsTagRäume as VTR, MobdatenBase,
+    KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, VertretungsTag,
     Stunde,
     VertretungsTagType, KlasseLikeType
 )
@@ -16,20 +18,20 @@ from vpmobil import config
 import xml.etree.ElementTree as XML
 
 def _converter(
-    planart:     Literal["K", "L", "R"],
-    get_Le:      Callable[[Stunde], list[str]],
-    get_LeAe:    Callable[[Stunde], bool],
-    get_Ra:      Callable[[Stunde], list[str]],
-    get_RaAe:    Callable[[Stunde], bool],
-    get_old_Kl:      Callable[[VertretungsTagType], list[KlasseLikeType]],
-    get_new_Kl_target: Callable[[Stunde], list[str]],
+    planart:       Literal["K", "L", "R"],
+    get_Le:        Callable[[Stunde], list[str]],
+    get_LeAe:      Callable[[Stunde], bool],
+    get_Ra:        Callable[[Stunde], list[str]],
+    get_RaAe:      Callable[[Stunde], bool],
+    get_old_Kl:    Callable[[VertretungsTagType], list[KlasseLikeType]],
+    get_Kl_target: Callable[[Stunde], list[str]],
 ):
     def _subElement(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
         element = XML.SubElement(parent, tag, attrib)
         if text: element.text = text
         return element
 
-    def converter(tag: VT | VTL | VTR):
+    def converter(tag: VertretungsTagType):
         """Aus welchem Attribut bekomme ich xyz für den neuen Plan?"""
         root = XML.Element("VpMobil")
 
@@ -49,7 +51,7 @@ def _converter(
         for klasseLike in get_old_Kl(tag):
             for periode, stunden in klasseLike.stunden.items():
                 for stunde in stunden:
-                    for target in get_new_Kl_target(stunde):
+                    for target in get_Kl_target(stunde):
                         key = (
                             target,
                             stunde.periode,
@@ -97,79 +99,111 @@ def _converter(
 
         Klassen[:] = sorted(Klassen, key=lambda e: e.findtext("Kurz"))
 
-        return MobdatenBase(XML.ElementTree(root))
+        return VertretungsTag(XML.ElementTree(root))
 
     return converter
 
 
-def VertretungsTag(tag: VTL | VTR) -> VT:
-    if type(tag) == VTL:
+def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> KlassenVertretungsTag:
+    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Klassen um.
+    
+    Verloren gehen
+    --------
+    - Aufsichten
+    - Stunden, bei denen keine Klassen angegeben sind
+    """
+    if type(tag) == LehrerVertretungsTag:
         return _converter(
             planart=     "K",
-            get_Le=      lambda s: s.lehrer,
-            get_LeAe=    lambda s: s.lehrergeändert,
-            get_Ra=      lambda s: s.räume,
-            get_RaAe=    lambda s: s.raumgeändert,
-            get_old_Kl=      lambda d: d.lehrer,
-            get_new_Kl_target= lambda s: s.klassen
+            get_Le=       lambda s: s.lehrer,
+            get_LeAe=     lambda s: s.lehrergeändert,
+            get_Ra=       lambda s: s.räume,
+            get_RaAe=     lambda s: s.raumgeändert,
+            get_old_Kl=   lambda d: d.lehrer,
+            get_Kl_target=lambda s: s.klassen
         )(tag)
-    elif type(tag) == VTR:
+    elif type(tag) == RaumVertretungsTag:
         return _converter(
             planart=     "K",
-            get_Le=      lambda s: s.lehrer,
-            get_LeAe=    lambda s: s.lehrergeändert,
-            get_Ra=      lambda s: s.räume,
-            get_RaAe=    lambda s: s.raumgeändert,
-            get_old_Kl=      lambda d: d.räume,
-            get_new_Kl_target= lambda s: s.klassen
+            get_Le=       lambda s: s.lehrer,
+            get_LeAe=     lambda s: s.lehrergeändert,
+            get_Ra=       lambda s: s.räume,
+            get_RaAe=     lambda s: s.raumgeändert,
+            get_old_Kl=   lambda d: d.räume,
+            get_Kl_target=lambda s: s.klassen
         )(tag)
+    elif type(tag) == KlassenVertretungsTag:
+        return tag
     else:
         raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
     
-def VertretungsTagLehrer(tag: VT | VTR) -> VTL:
-    if type(tag) == VT:
+def LehrerPerspektive(tag: KlassenVertretungsTag | RaumVertretungsTag, /) -> LehrerVertretungsTag:
+    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Lehrer um.
+    
+    Verloren gehen
+    --------
+    - Kurse
+    - Klausuren
+    - Stunden, bei denen keine Lehrer angegeben sind (auch bei Entfall)
+    """
+
+    if type(tag) == KlassenVertretungsTag:
         return _converter(
             planart=     "L",
-            get_Le=      lambda s: s.klassen,
-            get_LeAe=    lambda s: s.klassegeändert,
-            get_Ra=      lambda s: s.räume,
-            get_RaAe=    lambda s: s.raumgeändert,
-            get_old_Kl=      lambda d: d.klassen,
-            get_new_Kl_target= lambda s: s.lehrer
+            get_Le=       lambda s: s.klassen,
+            get_LeAe=     lambda s: s.klassegeändert,
+            get_Ra=       lambda s: s.räume,
+            get_RaAe=     lambda s: s.raumgeändert,
+            get_old_Kl=   lambda d: d.klassen,
+            get_Kl_target=lambda s: s.lehrer
         )(tag)
-    elif type(tag) == VTR:
+    elif type(tag) == RaumVertretungsTag:
         return _converter(
             planart=     "L",
-            get_Le=      lambda s: s.klassen,
-            get_LeAe=    lambda s: s.klassegeändert,
-            get_Ra=      lambda s: s.räume,
-            get_RaAe=    lambda s: s.raumgeändert,
-            get_old_Kl=      lambda d: d.räume,
-            get_new_Kl_target= lambda s: s.lehrer
+            get_Le=       lambda s: s.klassen,
+            get_LeAe=     lambda s: s.klassegeändert,
+            get_Ra=       lambda s: s.räume,
+            get_RaAe=     lambda s: s.raumgeändert,
+            get_old_Kl=   lambda d: d.räume,
+            get_Kl_target=lambda s: s.lehrer
         )(tag)
+    elif type(tag) == LehrerVertretungsTag:
+        return tag
     else:
         raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
     
-def VertretungsTagRäume(tag: VT | VTL) -> VTR:
-    if type(tag) == VT:
+def RaumPerspektive(tag: KlassenVertretungsTag | LehrerVertretungsTag, /) -> RaumVertretungsTag:
+    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Klassen um.
+    
+    Verloren gehen
+    --------
+    - Aufsichten
+    - Kurse
+    - Klausuren
+    - Stunden, bei denen keine Räume angegeben sind (auch bei Entfall)
+    """
+
+    if type(tag) == KlassenVertretungsTag:
         return _converter(
             planart=     "R",
-            get_Le=      lambda s: s.lehrer,
-            get_LeAe=    lambda s: s.lehrergeändert,
-            get_Ra=      lambda s: s.klassen,
-            get_RaAe=    lambda s: s.klassegeändert,
-            get_old_Kl=      lambda d: d.klassen,
-            get_new_Kl_target= lambda s: s.räume
+            get_Le=       lambda s: s.lehrer,
+            get_LeAe=     lambda s: s.lehrergeändert,
+            get_Ra=       lambda s: s.klassen,
+            get_RaAe=     lambda s: s.klassegeändert,
+            get_old_Kl=   lambda d: d.klassen,
+            get_Kl_target=lambda s: s.räume
         )(tag)
-    elif type(tag) == VTL:
+    elif type(tag) == LehrerVertretungsTag:
         return _converter(
             planart=     "R",
-            get_Le=      lambda s: s.lehrer,
-            get_LeAe=    lambda s: s.lehrergeändert,
-            get_Ra=      lambda s: s.klassen,
-            get_RaAe=    lambda s: s.klassegeändert,
-            get_old_Kl=      lambda d: d.lehrer,
-            get_new_Kl_target= lambda s: s.räume
+            get_Le=       lambda s: s.lehrer,
+            get_LeAe=     lambda s: s.lehrergeändert,
+            get_Ra=       lambda s: s.klassen,
+            get_RaAe=     lambda s: s.klassegeändert,
+            get_old_Kl=   lambda d: d.lehrer,
+            get_Kl_target=lambda s: s.räume
         )(tag)
+    elif type(tag) == RaumVertretungsTag:
+        return tag
     else:
         raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")

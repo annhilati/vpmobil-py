@@ -68,7 +68,7 @@ class VpmobilPyModell():
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(eq=False)
-class MobdatenBase(VpmobilPyModell):
+class VertretungsTag(VpmobilPyModell):
     """Base-Class für Vertretungspläne.
 
     Beim Versuch einer Instanzierung wird automatisch eine Instanz von `VertretungsTag`, `LehrerVertretungsTag` oder `RaumVertretungsTag` zurückgegeben.
@@ -80,17 +80,17 @@ class MobdatenBase(VpmobilPyModell):
     _planart: Literal["K", "L", "R"] = field(init=False, default=None)
 
     def __new__(cls, _data: XML.ElementTree):
-        if cls is MobdatenBase:
+        if cls is VertretungsTag:
             if _data.find("Kopf/planart") is None or _data.find("Kopf/planart").text is None:
                 raise ValueError(config.ERRORS.UNKNWON_XML)
             
             match _data.find("Kopf/planart").text:
                 case "K":
-                    return VertretungsTag(_data)
+                    return KlassenVertretungsTag(_data)
                 case "L":
-                    return VertretungsTagLehrer(_data)
+                    return LehrerVertretungsTag(_data)
                 case "R":
-                    return VertretungsTagRäume(_data)
+                    return RaumVertretungsTag(_data)
                 case _:
                     raise ValueError(f"Planart muss eins von 'K', 'L' oder 'R' sein, nicht '{_data.find("Kopf/planart").text}'")
                 
@@ -148,7 +148,7 @@ class MobdatenBase(VpmobilPyModell):
         return None
             
     @classmethod
-    def fromfile(cls, pfad: Path | str) -> VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume:
+    def fromfile(cls, pfad: Path | str) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """
         Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
 
@@ -212,7 +212,7 @@ class MobdatenBase(VpmobilPyModell):
 # │                                      VertretungsTag                                      │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class VertretungsTag(MobdatenBase):
+class KlassenVertretungsTag(VertretungsTag):
     """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Klassen repräsentiert.
     
     Unterstützt Subskription: 
@@ -273,7 +273,7 @@ class VertretungsTag(MobdatenBase):
 # │                                   LehrerVertretungsTag                                   │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class VertretungsTagLehrer(MobdatenBase):
+class LehrerVertretungsTag(VertretungsTag):
     """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Lehrer repräsentiert.
     
     Unterstützt Subskription: 
@@ -302,7 +302,7 @@ class VertretungsTagLehrer(MobdatenBase):
 # │                                    RaumVertretungsTag                                    │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class VertretungsTagRäume(MobdatenBase):
+class RaumVertretungsTag(VertretungsTag):
     """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Räume repräsentiert.
     
     Unterstützt Subskription: 
@@ -705,5 +705,5 @@ class Kurs(VpmobilPyModell):
         return None
     
 
-VertretungsTagType = VertretungsTag | VertretungsTagRäume | VertretungsTagLehrer
+VertretungsTagType = KlassenVertretungsTag | RaumVertretungsTag | LehrerVertretungsTag
 KlasseLikeType = Klasse | Lehrer | Raum

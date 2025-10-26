@@ -1,4 +1,4 @@
-from vpmobil import Vertretungsplan, VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume, Stundenplan24Pfade
+from vpmobil import Vertretungsplan, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, Stundenplan24Pfade
 from vpmobil.extensions import reparser
 from dotenv import load_dotenv
 from os import getenv
@@ -31,7 +31,7 @@ def main():
 
     print(json.dumps(tag.as_dict(), ensure_ascii=False))
 
-    if type(tag) == VertretungsTag:
+    if type(tag) == KlassenVertretungsTag:
         assert type(tag.klassen) is list
 
         for lehrer in tag.klassen:
@@ -73,7 +73,7 @@ def main():
         assert type(tag.lehrerKrank) is list
         if len(tag.lehrerKrank) == 0: print("\033[31mtag.lehrerKrank == 0")
 
-    elif type(tag) == VertretungsTagLehrer:
+    elif type(tag) == LehrerVertretungsTag:
         assert type(tag.lehrer) is list
 
         for lehrer in tag.lehrer:

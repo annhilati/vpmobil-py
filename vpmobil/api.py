@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import xml.etree.ElementTree as XML
 import requests
 
-from vpmobil.models import MobdatenBase, VertretungsTag, VertretungsTagLehrer, VertretungsTagRäume
+from vpmobil.models import VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag
 
 class Stundenplan24Pfade(StrEnum):
     """Enumerator mit den Pfaden für Vertretungsplanquelldateien, wie sie auf `stundenplan24.de` verwendet werden.<br>
@@ -73,7 +73,7 @@ class Vertretungsplan():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def fetch(self, datum: date = date.today(), datei: str = None) -> VertretungsTag | VertretungsTagLehrer | VertretungsTagRäume:
+    def fetch(self, datum: date = date.today(), datei: str = None) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """Ruft die Daten eines Tages ab.
 
         Die Methode sollte nur verwendet werden, wenn zu erwarten ist, welcher Typ zurückgegeben wird.<br>
@@ -110,7 +110,7 @@ class Vertretungsplan():
             raise ResourceNotFound(message=f"Datei '{dateipfad}' existiert nicht.", response=response)
         else:
             response.raise_for_status()
-            return MobdatenBase(XML.fromstring(response.content))
+            return VertretungsTag(XML.fromstring(response.content))
         
 class IndiwareFetchingError(Exception):
     """Wenn die angeforderten Daten nicht abgerufen werden können."""

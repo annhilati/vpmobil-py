@@ -16,26 +16,26 @@
 #### Lehrer- & Raumpläne
 
 Im Rahmen der Einführung neuer Vertretungsplantypen wurden einige Datenmodelle in Basis- und Unterklassen aufgeteilt.
-Die drei Vertretungsplanklassen `VertretungsTag`, `VertretungsTagLehrer` und `VertretungsTagRäume` erben von einer neuen Basisklasse, die grundlegendes Verhalten für Pläne enthält. Die einzelnen Planklassen bringen dann noch weitere Funktionen mit.
+Die drei Vertretungsplanklassen `KlassenVertretungsTag`, `LehrerVertretungsTag` und `RaumVertretungsTag` erben von einer neuen Basisklasse, die grundlegendes Verhalten für Pläne enthält. Die einzelnen Planklassen bringen dann noch weitere Funktionen mit.
 
 Neue Klassen sind:
 
-* `MobdatenBase`
+* `VertretungsTag`
   * Basisklasse für Vertretungspläne
   * Erzeugt beim Instanzierungsversuch eine Instanz einer ihrer Subklassen
   * Kann mit `isinstance()` als Protokoll für alle Vertretungspläne genutzt werden
-* `VertretungsTagLehrer`
+* `LehrerVertretungsTag`
   * Subklasse von `MobdatenBase`
   * Hat `.lehrer` und `.get_lehrer()`
-* `VertretungsTagRäume`
+* `RaumVertretungsTag`
   * Subklasse von `MobdatenBase`
   * Hat `.räume` und `.raum()`
 * `Lehrer`
   * Das Lehrerplan-Äquivalent zu `Klasse`
-  * Wird von `VertretungsTagLehrer.lehrer` erzeugt
+  * Wird von `LehrerVertretungsTag.lehrer` erzeugt
 * `Raum`
   * Das Raumplan-Äquivalent zu `Klasse`
-  * Wird von `VertretungsTagRäume.räume` erzeugt
+  * Wird von `RaumVertretungsTag.räume` erzeugt
 * `Aufsicht`
   * Ein primitives Datenmodell, ähnlich zu `Stunde`, das Informationen über eine Lehreraufsicht enthält
   * Hat `.vorStunde`, `.uhrzeit`, `.zeit` und `.ort`
