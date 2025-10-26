@@ -651,7 +651,7 @@ class Stunde(VpmobilPyModell):
     @property
     def geändert(self) -> bool:
         "Ob eine Änderung im Plan vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
-        return self.fachgeändert or self.lehrergeändert or self.raumgeändert or self.klassegeändert
+        return bool(self.fachgeändert or self.lehrergeändert or self.raumgeändert or self.klassegeändert)
 
     @property
     def kursnummer(self) -> int | None:

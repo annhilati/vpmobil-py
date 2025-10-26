@@ -1,5 +1,4 @@
 from vpmobil import Vertretungsplan, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, Stundenplan24Pfade
-from vpmobil.extensions import reparser
 from dotenv import load_dotenv
 from os import getenv
 from datetime import date, datetime, time
@@ -44,10 +43,10 @@ def main():
                 for stunde in stunden:
                     print(stunde)
 
-                    assert type(stunde.geändert) is bool 
-                    assert type(stunde.lehrergeändert) is bool 
-                    assert type(stunde.raumgeändert) is bool 
-                    assert type(stunde.klassegeändert) is bool 
+                    assert type(stunde.geändert) is bool, type(stunde.geändert)
+                    assert type(stunde.lehrergeändert) in [bool, NoneType]
+                    assert type(stunde.raumgeändert) in [bool, NoneType] 
+                    assert type(stunde.klassegeändert) in [bool, NoneType] 
                     assert type(stunde.fachgeändert) is bool 
                     assert type(stunde.ausfall) is bool 
                     assert type(stunde.beginn) is time 
