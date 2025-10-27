@@ -166,7 +166,7 @@ class VertretungsTag(VpmobilPyModell):
             instance = cls(_data=XML.parse(f))
         return instance
     
-    def saveasfile(self, pfad: Path | str = "./datei.xml", overwrite=False) -> None:
+    def saveasfile(self, pfad: Path | str = "./datei.xml", overwrite=True) -> None:
         """Speichert alle Daten des Tages als XML-Datei.
 
         Parameter
@@ -663,7 +663,8 @@ class Stunde(VpmobilPyModell):
         Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
         """
         if self._data_value_safe_type("Nr", "text"):
-            return int(self._data.find("Nr").text)
+            try: return int(self._data.find("Nr").text) # "763+" Festgestellt bei 10126582/PlanKl20250527.xml/8c/Stunden
+            except: ...
         return None
     
     @property

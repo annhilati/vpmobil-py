@@ -30,7 +30,7 @@ def parse_aufzählung(
     string: str,
     separator: str = config.AUFZÄHLUNGS_SEPARATOR,
     parse_hyphen: bool = config.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN,
-    class_pattern: re.Pattern = config.KLASSENBEZEICHNER_PATTERN,
+    class_pattern: str = config.KLASSENBEZEICHNER_PATTERN,
 ) -> list[str]:
     """Wandelt Aufzählungen in Strings in eine Liste von Strings um.
     
@@ -53,8 +53,8 @@ def parse_aufzählung(
             continue
 
         start_raw, end_raw = part.split("-", 1)
-        start_match = class_pattern.fullmatch(start_raw.strip())
-        end_match = class_pattern.fullmatch(end_raw.strip())
+        start_match = re.fullmatch(class_pattern, start_raw.strip())
+        end_match = re.fullmatch(class_pattern, end_raw.strip())
 
         if not (start_match and end_match):
             # Fallback: unverständlicher Bereich, unverändert übernehmen

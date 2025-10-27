@@ -25,13 +25,13 @@ heute = vp.fetch()
 
 from vpmobil.api import Vertretungsplan, IndiwareFetchingError, Unauthorized, ResourceNotFound, Stundenplan24Pfade
 from vpmobil.models import (
-    KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
+    VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
     Klasse, Raum, Lehrer,
     Stunde, Kurs, Aufsicht
     )
 _symbols = [
     Vertretungsplan,
-    KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
+    VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
     Klasse, Lehrer, Raum,
     Stunde, Kurs, Aufsicht,
     IndiwareFetchingError, Unauthorized, ResourceNotFound,

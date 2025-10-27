@@ -51,7 +51,15 @@ def _converter(
         for klasseLike in get_old_Kl(tag):
             for periode, stunden in klasseLike.stunden.items():
                 for stunde in stunden:
-                    for target in get_Kl_target(stunde):
+
+                    targets = (
+                        get_Kl_target(stunde)
+                        or ([klasseLike.kurs(stunde.kursnummer).lehrer]
+                            if getattr(klasseLike, "kurs", None)
+                            and stunde.kursnummer is not None
+                            else []))
+
+                    for target in targets:
                         key = (
                             target,
                             stunde.periode,
@@ -110,7 +118,6 @@ def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> Kla
     Verloren gehen
     --------
     - Aufsichten
-    - Stunden, bei denen keine Klassen angegeben sind
     """
     if type(tag) == LehrerVertretungsTag:
         return _converter(
@@ -144,7 +151,6 @@ def LehrerPerspektive(tag: KlassenVertretungsTag | RaumVertretungsTag, /) -> Leh
     --------
     - Kurse
     - Klausuren
-    - Stunden, bei denen keine Lehrer angegeben sind (auch bei Entfall)
     """
 
     if type(tag) == KlassenVertretungsTag:
@@ -180,7 +186,6 @@ def RaumPerspektive(tag: KlassenVertretungsTag | LehrerVertretungsTag, /) -> Rau
     - Aufsichten
     - Kurse
     - Klausuren
-    - Stunden, bei denen keine Räume angegeben sind (auch bei Entfall)
     """
 
     if type(tag) == KlassenVertretungsTag:

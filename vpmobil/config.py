@@ -10,10 +10,9 @@ AUFZÄHLUNGS_SEPARATOR : str = `" "`
     Zeichen das verwendet wird, um Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
 BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN : bool = `True`
     Ob `-` in Klassenangaben als Bereich interpretiert werden sollen
-KLASSENBEZEICHNER_PATTERN : Pattern
+KLASSENBEZEICHNER_PATTERN : str
     Capture-Pattern zum parsen von Klassenbezeichnungen
 """
-import re
 
 def set_config(overrides: dict[str], /) -> None:
     "Setzt Parameter anhand von Keys"
@@ -44,7 +43,7 @@ Falls ja würde
 - `"8a-10a"` als `"8a", "9a", "10a"` interpretiert.
 """
 
-KLASSENBEZEICHNER_PATTERN = re.compile(r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])")
+KLASSENBEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
 """Capture Pattern für Stufe und Suffix einer Klasse<br>
 Standardmäßig können Formate wie `"6b"` und `"6/2"` bearbeitet werden<br>
 Muss die Capture-Groups `stufe` und `suffix` enthalten
