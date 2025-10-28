@@ -11,7 +11,7 @@ um so eine Auswertung aus Perspektive der Lehrer zu ermöglichen.
 from typing import Callable, Literal
 from vpmobil.models import (
     KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, VertretungsTag,
-    Stunde,
+    Stunde, Kurs,
     VertretungsTagType, KlasseLikeType
 )
 from vpmobil import config
@@ -25,14 +25,15 @@ def _converter(
     get_RaAe:      Callable[[Stunde], bool],
     get_old_Kl:    Callable[[VertretungsTagType], list[KlasseLikeType]],
     get_Kl_target: Callable[[Stunde], list[str]],
+    get_Kl_target_K: Callable[[Kurs], str]
 ):
+    """Aus welchem Attribut bekomme ich xyz für den neuen Plan?"""
     def _subElement(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
         element = XML.SubElement(parent, tag, attrib)
         if text: element.text = text
         return element
 
     def converter(tag: VertretungsTagType):
-        """Aus welchem Attribut bekomme ich xyz für den neuen Plan?"""
         root = XML.Element("VpMobil")
 
         Kopf = _subElement(root, "Kopf")
@@ -54,9 +55,10 @@ def _converter(
 
                     targets = (
                         get_Kl_target(stunde)
-                        or ([klasseLike.kurs(stunde.kursnummer).lehrer]
+                        or ([get_Kl_target_K(klasseLike.kurs(stunde.kursnummer))] # hier noch falsch
                             if getattr(klasseLike, "kurs", None)
                             and stunde.kursnummer is not None
+                            and get_Kl_target_K(klasseLike.kurs(stunde.kursnummer)) is not None
                             else []))
 
                     for target in targets:
@@ -127,7 +129,8 @@ def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> Kla
             get_Ra=       lambda s: s.räume,
             get_RaAe=     lambda s: s.raumgeändert,
             get_old_Kl=   lambda d: d.lehrer,
-            get_Kl_target=lambda s: s.klassen
+            get_Kl_target=lambda s: s.klassen,
+            get_Kl_target_K=lambda s: None
         )(tag)
     elif type(tag) == RaumVertretungsTag:
         return _converter(
@@ -137,7 +140,8 @@ def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> Kla
             get_Ra=       lambda s: s.räume,
             get_RaAe=     lambda s: s.raumgeändert,
             get_old_Kl=   lambda d: d.räume,
-            get_Kl_target=lambda s: s.klassen
+            get_Kl_target=lambda s: s.klassen,
+            get_Kl_target_K=lambda k: None
         )(tag)
     elif type(tag) == KlassenVertretungsTag:
         return tag
@@ -161,7 +165,8 @@ def LehrerPerspektive(tag: KlassenVertretungsTag | RaumVertretungsTag, /) -> Leh
             get_Ra=       lambda s: s.räume,
             get_RaAe=     lambda s: s.raumgeändert,
             get_old_Kl=   lambda d: d.klassen,
-            get_Kl_target=lambda s: s.lehrer
+            get_Kl_target=lambda s: s.lehrer,
+            get_Kl_target_K=lambda k: k.lehrer
         )(tag)
     elif type(tag) == RaumVertretungsTag:
         return _converter(
@@ -171,7 +176,8 @@ def LehrerPerspektive(tag: KlassenVertretungsTag | RaumVertretungsTag, /) -> Leh
             get_Ra=       lambda s: s.räume,
             get_RaAe=     lambda s: s.raumgeändert,
             get_old_Kl=   lambda d: d.räume,
-            get_Kl_target=lambda s: s.lehrer
+            get_Kl_target=lambda s: s.lehrer,
+            get_Kl_target_K=lambda k: None
         )(tag)
     elif type(tag) == LehrerVertretungsTag:
         return tag
@@ -196,7 +202,8 @@ def RaumPerspektive(tag: KlassenVertretungsTag | LehrerVertretungsTag, /) -> Rau
             get_Ra=       lambda s: s.klassen,
             get_RaAe=     lambda s: s.klassegeändert,
             get_old_Kl=   lambda d: d.klassen,
-            get_Kl_target=lambda s: s.räume
+            get_Kl_target=lambda s: s.räume,
+            get_Kl_target_K=lambda k: None
         )(tag)
     elif type(tag) == LehrerVertretungsTag:
         return _converter(
@@ -206,7 +213,8 @@ def RaumPerspektive(tag: KlassenVertretungsTag | LehrerVertretungsTag, /) -> Rau
             get_Ra=       lambda s: s.klassen,
             get_RaAe=     lambda s: s.klassegeändert,
             get_old_Kl=   lambda d: d.lehrer,
-            get_Kl_target=lambda s: s.räume
+            get_Kl_target=lambda s: s.räume, 
+            get_Kl_target_K=lambda k: None
         )(tag)
     elif type(tag) == RaumVertretungsTag:
         return tag

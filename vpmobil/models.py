@@ -9,7 +9,7 @@ from vpmobil.utils import prettyxml, parse_aufzählung
 from vpmobil import config
 
 @dataclass(init=True, eq=False)
-class VpmobilPyModell():
+class VpMobilPyModell():
 
     _data:    XML.Element            = field(init=True)
     _planart: Literal["K", "L", "R"] = field(init=True)
@@ -24,16 +24,16 @@ class VpmobilPyModell():
     def as_dict(self) -> dict[str, Any]:
         """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und wandelt alle Datentypen in Primitives um, sodass das Dictionary beispielsweise in JSON modelliert werden kann.
         
-        - `datetime(2025, 10, 18, 21, 3)` -> `"18.10.2025:21:03"`
+        - `datetime(2025, 10, 18, 21, 3)` -> `"18.10.2025, 21:03"`
         - `time(21, 3)` -> `"21:03"`
         - `date(2025, 10, 18)` -> `"18.10.2025"`
         """
 
         converters = {
-            datetime:        lambda d: d.strftime("%d.%m.%Y:%H:%M"),
+            datetime:        lambda d: d.strftime("%d.%m.%Y, %H:%M"),
             time:            lambda t: t.strftime("%H:%M"),
             date:            lambda d: d.strftime("%d.%m.%Y"),
-            VpmobilPyModell: lambda m: m.as_dict()
+            VpMobilPyModell: lambda m: m.as_dict()
         }
 
         def apply_converter(value: Any) -> Any:
@@ -68,7 +68,7 @@ class VpmobilPyModell():
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(eq=False)
-class VertretungsTag(VpmobilPyModell):
+class VertretungsTag(VpMobilPyModell):
     """Base-Class für Vertretungspläne.
 
     Beim Versuch einer Instanzierung wird automatisch eine Instanz von `VertretungsTag`, `LehrerVertretungsTag` oder `RaumVertretungsTag` zurückgegeben.
@@ -192,15 +192,7 @@ class VertretungsTag(VpmobilPyModell):
 
         zielpfad.write_text(xmlpretty, encoding="utf-8")
 
-    def _Klassen_elemente(self) -> list[XML.Element]:
-        # klassen: list[XML.Element] = []
-        # klassen_elemente = self._data.findall('.//Kl')
-        # if klassen_elemente is not []:
-        #     for kl in klassen_elemente:
-        #         if kl.find('Kurz') is not None:
-        #             klassen.append(kl)
-        #     return klassen
-        # return []
+    def _Kl_elemente(self) -> list[XML.Element]:
         if klassen := self._data.find('.//Klassen'):
             return [
                 kl for kl in klassen.findall(".//Kl")
@@ -260,7 +252,7 @@ class KlassenVertretungsTag(VertretungsTag):
     @property
     def klassen(self) -> list[Klasse]:
         "Im Vertretungsplan beschriebene Klassen"
-        return [Klasse(element, self._planart) for element in self._Klassen_elemente()]
+        return [Klasse(element, self._planart) for element in self._Kl_elemente()]
     
     def klasse(self, kürzel: str) -> Klasse | None:
         "Gibt die Klasse mit der Bezeichnung `kürzel` zurück."
@@ -289,7 +281,7 @@ class LehrerVertretungsTag(VertretungsTag):
     @property
     def lehrer(self) -> list[Lehrer]:
         "Im Vertretungsplan beschriebene Lehrer"
-        return [Lehrer(element, self._planart) for element in self._Klassen_elemente()]
+        return [Lehrer(element, self._planart) for element in self._Kl_elemente()]
     
     def get_lehrer(self, kürzel: str) -> Lehrer | None:
         "Gibt den Lehrer mit der Abkürzung `kürzel` zurück."
@@ -318,7 +310,7 @@ class RaumVertretungsTag(VertretungsTag):
     @property
     def räume(self) -> list[Raum]:
         "Im Vertretungsplan beschriebene Räume"
-        return [Raum(element, self._planart) for element in self._Klassen_elemente()]
+        return [Raum(element, self._planart) for element in self._Kl_elemente()]
 
     def raum(self, kürzel: str) -> Raum | None:
         "Gibt den Raum mit der Bezeichnung `kürzel` zurück."
@@ -331,7 +323,7 @@ class RaumVertretungsTag(VertretungsTag):
 # │                                      KlasseLikeBase                                      │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class KlasseLikeBase(VpmobilPyModell):
+class KlasseLikeBase(VpMobilPyModell):
     
     def __getitem__(self, v) -> list[Stunde]:
         return self.stundenInPeriode(v)
@@ -454,7 +446,7 @@ class Raum(KlasseLikeBase):
 # │                                         Aufsicht                                         │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class Aufsicht(VpmobilPyModell):
+class Aufsicht(VpMobilPyModell):
     """Klasse, die eine Lehreraufsicht repräsentiert.
     """
 
@@ -487,7 +479,7 @@ class Aufsicht(VpmobilPyModell):
 # │                                         Klausur                                          │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class Klausur(VpmobilPyModell):
+class Klausur(VpMobilPyModell):
     """Klasse, die eine Klausur repräsentiert.
     """
 
@@ -535,7 +527,7 @@ class Klausur(VpmobilPyModell):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(eq=False)
-class Stunde(VpmobilPyModell):
+class Stunde(VpMobilPyModell):
     """Klasse, die eine bestimmte Unterrichtsstunde repräsentiert.
     """
 
@@ -676,7 +668,7 @@ class Stunde(VpmobilPyModell):
 # │                                          Kurs                                            │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
-class Kurs(VpmobilPyModell):
+class Kurs(VpMobilPyModell):
     """Klasse die einen bestimmten Kurs repräsentiert.
     """
 
