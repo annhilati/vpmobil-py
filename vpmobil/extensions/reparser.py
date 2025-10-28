@@ -27,10 +27,10 @@ def _converter(
     get_Kl_target: Callable[[Stunde], list[str]],
     get_Kl_target_K: Callable[[Kurs], str]
 ):
-    """Aus welchem Attribut bekomme ich xyz für den neuen Plan?"""
     def _subElement(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
         element = XML.SubElement(parent, tag, attrib)
-        if text: element.text = text
+        if text:
+            element.text = text
         return element
 
     def converter(tag: VertretungsTagType):
@@ -46,8 +46,7 @@ def _converter(
             _subElement(FreieTage, "ft", datum.strftime("%y%m%d"))
 
         Klassen = _subElement(root, "Klassen")
-        target_map = {}
-        seen: set[tuple] = set()
+        merge_map: dict[str, dict[tuple, dict[str, set[str]]]] = {}
 
         for klasseLike in get_old_Kl(tag):
             for periode, stunden in klasseLike.stunden.items():
@@ -55,7 +54,7 @@ def _converter(
 
                     targets = (
                         get_Kl_target(stunde)
-                        or ([get_Kl_target_K(klasseLike.kurs(stunde.kursnummer))] # hier noch falsch
+                        or ([get_Kl_target_K(klasseLike.kurs(stunde.kursnummer))]
                             if getattr(klasseLike, "kurs", None)
                             and stunde.kursnummer is not None
                             and get_Kl_target_K(klasseLike.kurs(stunde.kursnummer)) is not None
@@ -67,52 +66,59 @@ def _converter(
                             target,
                             stunde.periode,
                             stunde.fach or "",
-                            tuple(sorted(get_Le(stunde))),
-                            tuple(sorted(get_Ra(stunde))),
+                            getattr(stunde, "kursnummer", None),
+                            getattr(stunde, "info", None),
+                            stunde.beginn.strftime("%H:%M") if stunde.beginn else "",
+                            stunde.ende.strftime("%H:%M") if stunde.ende else "",
                         )
-                        if key in seen:
-                            continue
-                            # Um zu vermeiden, dass im resultierenden Plan mehrmals die selbe Stunde steht, nur weil sie aus dem Quellplan bei verschiedenen Klassenartigen vorkam
-                        seen.add(key)
 
-                        if target not in target_map:
-                            Kl = _subElement(Klassen, "Kl")
-                            _subElement(Kl, "Kurz", target)
-                            Pl = _subElement(Kl, "Pl")
-                            target_map[target] = Pl
-                        else:
-                            Pl = target_map[target]
+                        merge_map.setdefault(target, {})
+                        if key not in merge_map[target]:
+                            merge_map[target][key] = {"Le": set(), "Ra": set(), "LeAe": False, "RaAe": False, "fachgeändert": stunde.fachgeändert, "ausfall": stunde.ausfall}
 
-                        Std = _subElement(Pl, "Std")
-                        _subElement(Std, "St", str(stunde.periode))
-                        if stunde.beginn:   _subElement(Std, "Beginn", stunde.beginn.strftime("%H:%M"))
-                        if stunde.ende:     _subElement(Std, "Ende", stunde.ende.strftime("%H:%M"))
+                        merge_map[target][key]["Le"].update(get_Le(stunde))
+                        merge_map[target][key]["Ra"].update(get_Ra(stunde))
+                        merge_map[target][key]["LeAe"] |= bool(get_LeAe(stunde))
+                        merge_map[target][key]["RaAe"] |= bool(get_RaAe(stunde))
 
-                        fa_text = "" if stunde.fach is None and not stunde.ausfall else stunde.fach if not stunde.ausfall else "---"
-                        Fa = _subElement(Std, "Fa", fa_text)
-                        if stunde.fachgeändert:
-                            Fa.set("FaAe", "FaGeaendert")
+        # XML erzeugen
+        for target, stunden_dict in merge_map.items():
+            Kl = _subElement(Klassen, "Kl")
+            _subElement(Kl, "Kurz", target)
+            Pl = _subElement(Kl, "Pl")
 
-                        Le = _subElement(Std, "Le", config.AUFZÄHLUNGS_SEPARATOR.join(get_Le(stunde)))
-                        if get_LeAe(stunde):
-                            Le.set("LeAe", "LeGeaendert")
+            for (target, periode, fach, kursnummer, info, beginn, ende), vals in sorted(stunden_dict.items(), key=lambda x: int(x[0][1])):
+                Std = _subElement(Pl, "Std")
+                _subElement(Std, "St", str(periode))
+                if beginn:
+                    _subElement(Std, "Beginn", beginn)
+                if ende:
+                    _subElement(Std, "Ende", ende)
 
-                        Ra = _subElement(Std, "Ra", config.AUFZÄHLUNGS_SEPARATOR.join(get_Ra(stunde)))
-                        if get_RaAe(stunde):
-                            Ra.set("RaAe", "RaGeaendert")
+                fa_text = "" if fach is None and not vals["ausfall"] else fach if not vals["ausfall"] else "---"
+                Fa = _subElement(Std, "Fa", fa_text)
+                if vals["fachgeändert"]:
+                    Fa.set("FaAe", "FaGeaendert")
 
-                        if getattr(stunde, "kursnummer", None):
-                            _subElement(Std, "Nr", str(stunde.kursnummer))
-                        if getattr(stunde, "info", None):
-                            _subElement(Std, "If", stunde.info)
+                Le = _subElement(Std, "Le", config.AUFZÄHLUNGS_SEPARATOR.join(sorted(vals["Le"])))
+                if vals["LeAe"]:
+                    Le.set("LeAe", "LeGeaendert")
 
-                        Pl[:] = sorted(Pl, key=lambda e: int(e.findtext("St")))
+                Ra = _subElement(Std, "Ra", config.AUFZÄHLUNGS_SEPARATOR.join(sorted(vals["Ra"])))
+                if vals["RaAe"]:
+                    Ra.set("RaAe", "RaGeaendert")
+
+                if kursnummer:
+                    _subElement(Std, "Nr", str(kursnummer))
+                if info:
+                    _subElement(Std, "If", info)
 
         Klassen[:] = sorted(Klassen, key=lambda e: e.findtext("Kurz"))
 
         return VertretungsTag(XML.ElementTree(root))
 
     return converter
+
 
 
 def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> KlassenVertretungsTag:
