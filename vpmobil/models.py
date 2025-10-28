@@ -64,7 +64,7 @@ class VpMobilPyModell():
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
-# │                                       MobdatenBase                                       │ 
+# │                                      VertretungsTag                                      │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(eq=False)
@@ -100,13 +100,13 @@ class VertretungsTag(VpMobilPyModell):
         self._planart = self._data.find("Kopf/planart").text
             
     def __repr__(self):
-        return f"<Vertretungsplan (Typ {self._planart}) vom {self.datum.strftime('%d.%m.%Y')}>"
+        return f"<Vertretungsplan (Typ {self._planart}) vom {self.datum.strftime(r'%d.%m.%Y')}>"
         
     @property
     def zeitstempel(self) -> datetime | None:
         "Veröffentlichungszeitpunkt des Vertretungsplans"
         if self._data_value_safe_type("Kopf/zeitstempel", "text"):
-            return datetime.strptime(self._data.find("Kopf/zeitstempel").text, "%d.%m.%Y, %H:%M")
+            return datetime.strptime(self._data.find("Kopf/zeitstempel").text, r"%d.%m.%Y, %H:%M")
         return None
         
     @property
@@ -120,7 +120,7 @@ class VertretungsTag(VpMobilPyModell):
         import locale; locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
 
         if self._data_value_safe_type("Kopf/DatumPlan", "text"):
-            return datetime.strptime(self._data.find("Kopf/DatumPlan").text, ("%A, %d. %B %Y")).date()
+            return datetime.strptime(self._data.find("Kopf/DatumPlan").text, (r"%A, %d. %B %Y")).date()
         return None
     
     @property
@@ -201,7 +201,7 @@ class VertretungsTag(VpMobilPyModell):
         return []
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
-# │                                      VertretungsTag                                      │ 
+# │                                  KlassenVertretungsTag                                   │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class KlassenVertretungsTag(VertretungsTag):
@@ -560,7 +560,7 @@ class Stunde(VpMobilPyModell):
     @property
     def ausfall(self) -> bool:
         """Ob die Stunde entfällt<br>Ebenfalls `True`, falls Die Stundeninfo `"selbst"` enthält und Lehrer und Räume nicht vorhanden sind"""
-        return self._data_value_safe_type("Fa", "text") == "---" or (type(self.info) is str and "selbst" in self.info and not self.lehrer and not self.räume)
+        return self._data_value_safe_type("Fa", "text") == "---" or (self.info is not None and "selbst" in self.info and not self.räume)
 
     @property
     def fach(self) -> str | None:

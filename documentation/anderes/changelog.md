@@ -4,14 +4,12 @@
 
 ### 🚀 Neue Funktionen
 
-* Vollumfänglicher Support für Lehrer- und Raumpläne hinzugefügt
+* Vollumfänglicher Support für Lehrer- und Raumpläne hinzugefügt, Support für Klassenpläne vervollständigt
 * Parameter `port` zu `Vertretungsplan` hinzugefügt
 * Enumerator `Stundenplan24Pfade` hinzugefügt, der die Standardpfade auf stundenplan24.de enthält
 * Submodul `config` hinzugefügt, das Parameter für das Parsing enthält
 * Datenmodelle können mit `.as_dict()` in ein sauberes JSON-kompatibles Dictionary umgewandelt werden<br>
-  > Diese Implementierung ist noch experimentell und kann sich in Zukunft ändern.
 * Konversionsfunktionen zwischen `VertretungsTag`-Datenmodellen in `extensions.reparser` hinzugefügt
-* Support für Klausuren hinzugefügt
 
 #### Lehrer- & Raumpläne
 
@@ -25,10 +23,10 @@ Neue Klassen sind:
   * Erzeugt beim Instanzierungsversuch eine Instanz einer ihrer Subklassen
   * Kann mit `isinstance()` als Protokoll für alle Vertretungspläne genutzt werden
 * `LehrerVertretungsTag`
-  * Subklasse von `MobdatenBase`
+  * Subklasse von `VertretungsTag`
   * Hat `.lehrer` und `.get_lehrer()`
 * `RaumVertretungsTag`
-  * Subklasse von `MobdatenBase`
+  * Subklasse von `VertretungsTag`
   * Hat `.räume` und `.raum()`
 * `Lehrer`
   * Das Lehrerplan-Äquivalent zu `Klasse`
@@ -40,6 +38,10 @@ Neue Klassen sind:
   * Ein primitives Datenmodell, ähnlich zu `Stunde`, das Informationen über eine Lehreraufsicht enthält
   * Hat `.vorStunde`, `.uhrzeit`, `.zeit` und `.ort`
   * Wird von `Lehrer.aufsichten` erzeugt
+* `Klausur`
+  * Ein primitives Datenmodell, ähnlich zu `Aufsicht`, das Informationen über eine Klausur enthält
+  * Wird von `Klasse.klausuren` erzeugt
+  
 
 ### 🔧 Änderungen
 

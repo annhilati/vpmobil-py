@@ -59,7 +59,8 @@ def _converter(
                             if getattr(klasseLike, "kurs", None)
                             and stunde.kursnummer is not None
                             and get_Kl_target_K(klasseLike.kurs(stunde.kursnummer)) is not None
-                            else []))
+                            else [])
+                    )
 
                     for target in targets:
                         key = (

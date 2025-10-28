@@ -1,8 +1,8 @@
 # In dieser Datei können Tooltips, Docstrings und Typehints getestet werden
 
 from vpmobil import *
-from vpmobil.models import VertretungsTag, KlasseLikeBase, KlasseLikeType, VertretungsTagType
-from vpmobil.extensions.reparser import KlassenPerspektive, LehrerPerspektive, RaumPerspektive
+from vpmobil.extensions.reparser import *
+from vpmobil.models import KlasseLikeBase, KlasseLikeType, VertretungsTagType
 
 VertretungsTag()
 vp =   Vertretungsplan()
