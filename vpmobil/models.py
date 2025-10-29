@@ -215,51 +215,49 @@ class KlassenVertretungsTag(VertretungsTag):
     """
 
     def __getitem__(self, v) -> Klasse | None:
-        return self.klasse(v)
+        return self.klassen.get(v)
 
     @property
     def lehrerKrank(self) -> list[str]:
         "Lehrer, die unplanmäßig keinen Unterricht haben"
-        
+
         lehrerMitUnterricht: set[str] = set()
         lehrerVielleichtKrank: set[str] = set()
 
-        for klasse in self.klassen:
-            for stunde in [stunde for stunden in klasse.stunden.values() for stunde in stunden]:
+        for klasse in self.klassen.values():
+            for stunde in (stunde for stunden in klasse.stunden.values() for stunde in stunden):
 
-                if stunde.ausfall and klasse.kurs(stunde.kursnummer) is not None:
-                    lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
+                kurs = klasse.kurs(stunde.kursnummer) if hasattr(klasse, "kurs") else None
+
+                if stunde.ausfall and kurs is not None:
+                    lehrerVielleichtKrank.add(kurs.lehrer)
 
                 elif stunde.lehrergeändert:
-                    if len(stunde.lehrer) > 0:
+                    if stunde.lehrer:
                         lehrerMitUnterricht.update(stunde.lehrer)
-                    if klasse.kurs(stunde.kursnummer) is not None:
-                        lehrerVielleichtKrank.add(klasse.kurs(stunde.kursnummer).lehrer)
+                    if kurs is not None:
+                        lehrerVielleichtKrank.add(kurs.lehrer)
 
                 elif not stunde.ausfall and not stunde.lehrergeändert:
-                    if len(stunde.lehrer) > 0:
+                    if stunde.lehrer:
                         lehrerMitUnterricht.update(stunde.lehrer)
 
         return sorted(
             {
                 lehrer for lehrer in lehrerVielleichtKrank
                 if lehrer not in lehrerMitUnterricht
-                and lehrer != ""
-                and lehrer is not None
+                and lehrer
             }
         )
+
     
     @property
-    def klassen(self) -> list[Klasse]:
+    def klassen(self) -> dict[str, Klasse]:
         "Im Vertretungsplan beschriebene Klassen"
-        return [Klasse(element, self._planart) for element in self._Kl_elemente()]
-    
-    def klasse(self, kürzel: str) -> Klasse | None:
-        "Gibt die Klasse mit der Bezeichnung `kürzel` zurück."
-        for kl in self.klassen:
-            if kl.kürzel == kürzel:
-                return kl
-        return None
+        return {
+            Klasse(element, self._planart).kürzel: Klasse(element, self._planart)
+            for element in self._Kl_elemente()
+        }
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                   LehrerVertretungsTag                                   │ 
@@ -275,21 +273,16 @@ class LehrerVertretungsTag(VertretungsTag):
     ```
     """
 
-    def __getitem__(self, v) -> Klasse | None:
-        return self.get_lehrer(v)
+    def __getitem__(self, v) -> Lehrer | None:
+        return self.lehrer.get(v)
 
     @property
-    def lehrer(self) -> list[Lehrer]:
+    def lehrer(self) -> dict[str, Lehrer]:
         "Im Vertretungsplan beschriebene Lehrer"
-        return [Lehrer(element, self._planart) for element in self._Kl_elemente()]
-    
-    def get_lehrer(self, kürzel: str) -> Lehrer | None:
-        "Gibt den Lehrer mit der Abkürzung `kürzel` zurück."
-        for le in self.lehrer:
-            if le.kürzel == kürzel:
-                return le
-        return None
-    
+        return {
+            Lehrer(element, self._planart).kürzel: Klasse(element, self._planart)
+            for element in self._Kl_elemente()
+        }    
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    RaumVertretungsTag                                    │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -304,21 +297,16 @@ class RaumVertretungsTag(VertretungsTag):
     ```
     """
 
-    def __getitem__(self, v) -> Klasse | None:
-        return self.raum(v)
+    def __getitem__(self, v) -> Raum | None:
+        return self.räume.get(v)
     
     @property
-    def räume(self) -> list[Raum]:
+    def räume(self) -> dict[str, Raum]:
         "Im Vertretungsplan beschriebene Räume"
-        return [Raum(element, self._planart) for element in self._Kl_elemente()]
-
-    def raum(self, kürzel: str) -> Raum | None:
-        "Gibt den Raum mit der Bezeichnung `kürzel` zurück."
-        for ra in self.räume:
-            if ra.kürzel == kürzel:
-                return ra
-        return None
-    
+        return {
+            Raum(element, self._planart).kürzel: Klasse(element, self._planart)
+            for element in self._Kl_elemente()
+        }    
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                      KlasseLikeBase                                      │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -372,21 +360,14 @@ class Klasse(KlasseLikeBase):
         return f"<Klasse '{self.kürzel}'>"
     
     @property
-    def kurse(self) -> list[Kurs]:
-        "Kurse der Klasse" 
+    def kurse(self) -> dict[str, Kurs]:
+        "Kurse der Klasse als Dictionary<br>Die Keys sind die Kursnummern der Kurse" 
         if unterricht := self._data.find("Unterricht"):
-            return [
-                Kurs(ue, self._planart)
+            return {
+                Kurs(ue, self._planart).kursnummer: Kurs(ue, self._planart)
                 for ue in unterricht.findall("Ue")
-            ]
-        return []
-    
-    def kurs(self, kursnummer: int) -> Kurs | None:
-        "Gibt den Kurs der Klasse mit der Kursnummer `kursnummer` zurück."
-        for kurs in self.kurse:
-            if kurs.kursnummer == kursnummer:
-                return kurs
-        return None
+            }
+        return {}
     
     @property
     def klausuren(self) -> list[Klausur]:

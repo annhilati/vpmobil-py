@@ -50,8 +50,11 @@ Neue Klassen sind:
 * `InvalidCredentialsError` wurde in `Unauthorized` umbenannt
 * `VertretungsTag.freieTage` gibt statt `None` nun `[]` zurück
 * `VertretungsTag.datum` parst jetzt nicht mehr den Dateinamen sondern den XML-Tag `DatumPlan`
+* `VertretungsTag.klassen`, `.lehrer` und `.räume` geben nun ein Dictionary zurück. Die Schlüssel sind die jeweiligen Kürzel, die Werte sind die jeweiligen Klasseninstanzen
+* `VertretungsTag.klasse()`, `.get_lehrer()` und `.raum()` wurden entfernt
 * `Klasse.stundenHeute` wurde in `.stunden` und `.stundenHeuteInPeriode` in `.stundenInPeriode` umbenannt
 * `Klasse.stundenInPeriode()` gibt nun `[]` statt `None` zurück
+* `Klasse.kurse` gibt nun ein Dictionary zurück. Die Schlüssel sind die jeweiligen Kürzel, die Werte sind die jeweiligen Kursinstanzen
 * `Stunde.raum` wurde durch `Stunde.räume` ersetzt, das nun eine Liste von Strings zurückgibt. Statt `None` wird `[]` zurückgegeben
 * `Stunde.lehrer` gibt nun eine Liste von Strings zurück. Statt `None` wird `[]` zurückgegeben
 * `Stunde.ausfall` ist nun auch `True`, wenn die Stundeninfo `"selbst"` enthält und Lehrer und Räume nicht vorhanden sind

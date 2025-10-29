@@ -23,7 +23,7 @@ def _converter(
     get_LeAe:      Callable[[Stunde], bool],
     get_Ra:        Callable[[Stunde], list[str]],
     get_RaAe:      Callable[[Stunde], bool],
-    get_old_Kl:    Callable[[VertretungsTagType], list[KlasseLikeType]],
+    get_old_Kl:    Callable[[VertretungsTagType], dict[str, KlasseLikeType]],
     get_Kl_target: Callable[[Stunde], list[str]],
     get_Kl_target_K: Callable[[Kurs], str]
 ):
@@ -48,7 +48,7 @@ def _converter(
         Klassen = _subElement(root, "Klassen")
         merge_map: dict[str, dict[tuple, dict[str, set[str]]]] = {}
 
-        for klasseLike in get_old_Kl(tag):
+        for klasseLike in get_old_Kl(tag).values():
             for periode, stunden in klasseLike.stunden.items():
                 for stunde in stunden:
 
