@@ -39,9 +39,9 @@ for periode, stunden in klasse.stunden:
 - 📦 **Datenmodelle:** Strukturierte Klassen zur typisierten Repräsentation aller Planinhalte
 - 🌌 **Feature-Complete:** Sämtliche im Alltag relevanten Informationen werden vollständig abgebildet
 - 🧠 **Lazy Evaluation:** Auswertung einzelner Eigenschaften erfolgt erst bei Bedarf
-- 🔧 **Konfiguration:** Eigenheiten der Vertretungsplaner können konfiguriert und bei der Auswertung berücksichtig werden 
-- ⚙️ **Kompatibilität:** Export der Datenmodelle in beliebige, einfach weiterverarbeitbare Formate wie JSON
-- 👁️ **Perspektivenkonversion:** Die Perspektive von Vertretungsplänen kann geändert werden, beispielsweise um Lehrer auszuwerten, wenn nur Klassenpläne verfügbar sind
+- 🔧 **Konfiguration:** Eigenheiten der Vertretungsplaner können bei der Auswertung berücksichtig werden 
+- ⚙️ **Kompatibilität:** Export der Daten in beliebige Key-Value-Formate wie JSON oder YAML
+- 👁️ **Perspektivenkonversion:** Änderung der Perspektive von Vertretungsplänen, beispielsweise um Lehrer auszuwerten, wenn nur Klassenpläne verfügbar sind
 - ➕ **Weitere Funktionen**: Parsen von PDFs, die von Indiware-Software erstellt werden
 
 

@@ -31,15 +31,15 @@ def main():
     print(json.dumps(tag.as_dict(), ensure_ascii=False))
 
     if type(tag) == KlassenVertretungsTag:
-        assert type(tag.klassen) is list
+        assert type(tag.klassen) is dict
 
-        for lehrer in tag.klassen:
-            print(lehrer)
+        for klasse in tag.klassen.values():
+            print(klasse)
 
-            assert type(lehrer.stunden) is dict
-            if len(lehrer.stunden) == 0: print("\033[31mklasse.stunden == {}")
+            assert type(klasse.stunden) is dict
+            if len(klasse.stunden) == 0: print("\033[31mklasse.stunden == {}")
 
-            for periode, stunden in lehrer.stunden.items():
+            for periode, stunden in klasse.stunden.items():
                 for stunde in stunden:
                     print(stunde)
 
@@ -56,12 +56,12 @@ def main():
                     assert type(stunde.räume) is list
                     assert type(stunde.info) in [str, NoneType]
                     assert type(stunde.fach) in [str, NoneType]
-                    assert type(stunde.kursnummer) is int
+                    assert type(stunde.kursnummer) in [int, NoneType]
                     assert type(stunde.periode) is int
 
-            assert type(lehrer.kürzel)  is str
+            assert type(klasse.kürzel)  is str
 
-            for kurs in lehrer.kurse:
+            for kurs in klasse.kurse.values():
                 print(kurs)
 
                 assert type(kurs.kursnummer)    is int

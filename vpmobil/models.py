@@ -220,33 +220,32 @@ class KlassenVertretungsTag(VertretungsTag):
     @property
     def lehrerKrank(self) -> list[str]:
         "Lehrer, die unplanmäßig keinen Unterricht haben"
-
+        
         lehrerMitUnterricht: set[str] = set()
         lehrerVielleichtKrank: set[str] = set()
 
         for klasse in self.klassen.values():
-            for stunde in (stunde for stunden in klasse.stunden.values() for stunde in stunden):
+            for stunde in [stunde for stunden in klasse.stunden.values() for stunde in stunden]:
 
-                kurs = klasse.kurs(stunde.kursnummer) if hasattr(klasse, "kurs") else None
-
-                if stunde.ausfall and kurs is not None:
-                    lehrerVielleichtKrank.add(kurs.lehrer)
+                if stunde.ausfall and klasse.kurse.get(stunde.kursnummer) is not None:
+                    lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
 
                 elif stunde.lehrergeändert:
-                    if stunde.lehrer:
+                    if len(stunde.lehrer) > 0:
                         lehrerMitUnterricht.update(stunde.lehrer)
-                    if kurs is not None:
-                        lehrerVielleichtKrank.add(kurs.lehrer)
+                    if klasse.kurse.get(stunde.kursnummer) is not None:
+                        lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
 
                 elif not stunde.ausfall and not stunde.lehrergeändert:
-                    if stunde.lehrer:
+                    if len(stunde.lehrer) > 0:
                         lehrerMitUnterricht.update(stunde.lehrer)
 
         return sorted(
             {
                 lehrer for lehrer in lehrerVielleichtKrank
                 if lehrer not in lehrerMitUnterricht
-                and lehrer
+                and lehrer != ""
+                and lehrer is not None
             }
         )
 
