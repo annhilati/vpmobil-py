@@ -126,6 +126,7 @@ def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> Kla
     
     Verloren gehen
     --------
+    - Dateiname
     - Aufsichten
     """
     if type(tag) == LehrerVertretungsTag:
@@ -160,6 +161,7 @@ def LehrerPerspektive(tag: KlassenVertretungsTag | RaumVertretungsTag, /) -> Leh
     
     Verloren gehen
     --------
+    - Dateiname
     - Kurse
     - Klausuren
     """
@@ -196,6 +198,7 @@ def RaumPerspektive(tag: KlassenVertretungsTag | LehrerVertretungsTag, /) -> Rau
     
     Verloren gehen
     --------
+    - Dateiname
     - Aufsichten
     - Kurse
     - Klausuren

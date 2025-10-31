@@ -5,7 +5,7 @@ from datetime import datetime, date, time, timedelta
 from pathlib import Path
 from typing import Literal, Any
 
-from vpmobil.utils import prettyxml, parse_aufzählung
+from vpmobil.utils import prettyxml, slice_aufzählung
 from vpmobil import config
 
 @dataclass(init=True, eq=False)
@@ -565,9 +565,9 @@ class Stunde(VpMobilPyModell):
         if self._planart == "K":
             return [self._context]
         elif self._planart == "R":
-            return parse_aufzählung(self._data.find("Ra").text) if self._data_value_safe_type("Ra", "text") else []
+            return slice_aufzählung(self._data.find("Ra").text) if self._data_value_safe_type("Ra", "text") else []
         elif self._planart == "L":
-            return parse_aufzählung(self._data.find("Le").text) if self._data_value_safe_type("Le", "text") else []
+            return slice_aufzählung(self._data.find("Le").text) if self._data_value_safe_type("Le", "text") else []
 
         
     @property
@@ -579,7 +579,7 @@ class Stunde(VpMobilPyModell):
             return [self._context]
         else:
             if self._data_value_safe_type("Le", "text"):
-                return parse_aufzählung(self._data.find("Le").text)
+                return slice_aufzählung(self._data.find("Le").text)
             return []
 
         
@@ -592,7 +592,7 @@ class Stunde(VpMobilPyModell):
             return [self._context]
         else:
             if self._data_value_safe_type("Ra", "text"):
-                return parse_aufzählung(self._data.find("Ra").text)
+                return slice_aufzählung(self._data.find("Ra").text)
             return []
             
     @property

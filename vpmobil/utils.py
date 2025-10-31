@@ -26,7 +26,7 @@ def date_range(start: date, end: date):
         current += timedelta(days=1)
 
 
-def parse_aufzählung(
+def slice_aufzählung(
     string: str,
     separator: str = config.AUFZÄHLUNGS_SEPARATOR,
     parse_hyphen: bool = config.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN,
