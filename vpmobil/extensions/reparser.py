@@ -54,10 +54,10 @@ def _converter(
 
                     targets = (
                         get_Kl_target(stunde)
-                        or ([get_Kl_target_K(klasseLike.kurs(stunde.kursnummer))]
+                        or ([get_Kl_target_K(klasseLike.kurse[stunde.kursnummer])]
                             if getattr(klasseLike, "kurs", None)
                             and stunde.kursnummer is not None
-                            and get_Kl_target_K(klasseLike.kurs(stunde.kursnummer)) is not None
+                            and get_Kl_target_K(klasseLike.kurse[stunde.kursnummer]) is not None
                             else [])
                     )
 
@@ -155,7 +155,7 @@ def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> Kla
         return tag
     else:
         raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
-    
+
 def LehrerPerspektive(tag: KlassenVertretungsTag | RaumVertretungsTag, /) -> LehrerVertretungsTag:
     """Wandelt einen Vertretungsplan in einen aus der Perspektive der Lehrer um.
     

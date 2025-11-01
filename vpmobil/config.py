@@ -45,7 +45,6 @@ Falls ja würde
 
 KLASSENBEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
 """Capture Pattern für Stufe und Suffix einer Klasse<br>
-Standardmäßig können Formate wie `"6b"` und `"6/2"` bearbeitet werden<br>
 Muss die Capture-Groups `stufe` und `suffix` enthalten
 """
 
