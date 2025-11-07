@@ -1,4 +1,5 @@
 from vpmobil import Vertretungsplan, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, Stundenplan24Pfade
+from vpmobil.extensions import reparser
 from dotenv import load_dotenv
 from os import getenv
 from datetime import date, datetime, time
@@ -55,7 +56,7 @@ def main():
                     assert type(stunde.klassen) is list and len(stunde.klassen) > 0
                     assert type(stunde.räume) is list
                     assert type(stunde.info) in [str, NoneType]
-                    assert type(stunde.fach) in [str, NoneType]
+                    assert type(stunde.fach) in [str, NoneType], type(stunde.fach)
                     assert type(stunde.kursnummer) in [int, NoneType]
                     assert type(stunde.periode) is int
 
@@ -73,9 +74,9 @@ def main():
         if len(tag.lehrerKrank) == 0: print("\033[31mtag.lehrerKrank == 0")
 
     elif type(tag) == LehrerVertretungsTag:
-        assert type(tag.lehrer) is list
+        assert type(tag.lehrer) is dict
 
-        for lehrer in tag.lehrer:
+        for lehrer in tag.lehrer.values():
             print(lehrer)
 
             assert type(lehrer.stunden) is dict
@@ -85,23 +86,25 @@ def main():
                 for stunde in stunden:
                     print(stunde)
 
-                    assert type(stunde.geändert) is bool 
-                    assert type(stunde.lehrergeändert) is bool 
-                    assert type(stunde.raumgeändert) is bool 
-                    assert type(stunde.klassegeändert) is bool 
+                    assert type(stunde.geändert) is bool, type(stunde.geändert)
+                    assert type(stunde.lehrergeändert) in [bool, NoneType]
+                    assert type(stunde.raumgeändert) in [bool, NoneType] 
+                    assert type(stunde.klassegeändert) in [bool, NoneType] 
                     assert type(stunde.fachgeändert) is bool 
                     assert type(stunde.ausfall) is bool 
                     assert type(stunde.beginn) is time 
                     assert type(stunde.ende) is time 
-                    assert type(stunde.lehrer) is list, stunde.lehrer
+                    assert type(stunde.lehrer) is list 
                     assert type(stunde.klassen) is list and len(stunde.klassen) > 0
                     assert type(stunde.räume) is list
                     assert type(stunde.info) in [str, NoneType]
-                    assert type(stunde.fach) in [str, NoneType]
-                    assert type(stunde.kursnummer) is int
+                    assert type(stunde.fach) in [str, NoneType], type(stunde.fach)
+                    assert type(stunde.kursnummer) in [int, NoneType]
                     assert type(stunde.periode) is int
 
             assert type(lehrer.kürzel)  is str
 
 
+main()
+tag = reparser.LehrerPerspektive(vp.fetch(datei=Stundenplan24Pfade.Klassen))
 main()

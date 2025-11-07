@@ -105,8 +105,8 @@ class VertretungsTag(VpMobilPyModell):
     @property
     def zeitstempel(self) -> datetime | None:
         "Veröffentlichungszeitpunkt des Vertretungsplans"
-        if self._data_value_safe_type("Kopf/zeitstempel", "text"):
-            return datetime.strptime(self._data.find("Kopf/zeitstempel").text, r"%d.%m.%Y, %H:%M")
+        if s := self._data_value_safe_type("Kopf/zeitstempel", "text"):
+            return datetime.strptime(s, r"%d.%m.%Y, %H:%M")
         return None
         
     @property
@@ -119,8 +119,8 @@ class VertretungsTag(VpMobilPyModell):
         "Datum für das der Vertretungsplan gilt"
         import locale; locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
 
-        if self._data_value_safe_type("Kopf/DatumPlan", "text"):
-            return datetime.strptime(self._data.find("Kopf/DatumPlan").text, (r"%A, %d. %B %Y")).date()
+        if s := self._data_value_safe_type("Kopf/DatumPlan", "text"):
+            return datetime.strptime(s, (r"%A, %d. %B %Y")).date()
         return None
     
     @property
@@ -279,7 +279,7 @@ class LehrerVertretungsTag(VertretungsTag):
     def lehrer(self) -> dict[str, Lehrer]:
         "Im Vertretungsplan beschriebene Lehrer"
         return {
-            Lehrer(element, self._planart).kürzel: Klasse(element, self._planart)
+            Lehrer(element, self._planart).kürzel: Lehrer(element, self._planart)
             for element in self._Kl_elemente()
         }    
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -303,7 +303,7 @@ class RaumVertretungsTag(VertretungsTag):
     def räume(self) -> dict[str, Raum]:
         "Im Vertretungsplan beschriebene Räume"
         return {
-            Raum(element, self._planart).kürzel: Klasse(element, self._planart)
+            Raum(element, self._planart).kürzel: Raum(element, self._planart)
             for element in self._Kl_elemente()
         }    
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -441,8 +441,8 @@ class Aufsicht(VpMobilPyModell):
     @property
     def uhrzeit(self) -> time | None:
         "Uhrzeit der Aufsicht"
-        if self._data_value_safe_type("AuUhrzeit", "text"):
-            return datetime.strptime(self._data.find("AuUhrzeit").text, "%H:%M").time()  
+        if s := self._data_value_safe_type("AuUhrzeit", "text"):
+            return datetime.strptime(s, "%H:%M").time()  
         return None
     
     @property
@@ -480,21 +480,21 @@ class Klausur(VpMobilPyModell):
     @property
     def periode(self) -> int | None:
         "Unterrichtsperiode, zu der die Klausur beginnt<br>Kann `0` sein"
-        if self._data_value_safe_type("KlStunde", "text"):
-            return int(self._data.find("KlStunde"))
+        if s := self._data_value_safe_type("KlStunde", "text"):
+            return int(s)
         return None
     
     @property
     def beginn(self) -> time | None:
         "Beginn der Klausur"
-        if self._data_value_safe_type("KlBeginn", "text"):
-            return datetime.strptime(self._data.find("KlBeginn").text, "%H:%M").time()
+        if s := self._data_value_safe_type("KlBeginn", "text"):
+            return datetime.strptime(s, "%H:%M").time()
         return None
     
     @property
     def dauer(self) -> timedelta | None:
-        if self._data_value_safe_type("KlDauer", "text"):
-            return timedelta(minutes=int(self._data.find("KlDauer").text))
+        if s := self._data_value_safe_type("KlDauer", "text"):
+            return timedelta(minutes=int(s))
         return None
     
     @property
@@ -516,7 +516,7 @@ class Stunde(VpMobilPyModell):
     def __repr__(self):
         if self.ausfall:
             return f"<Ausfall: '{self.info}'>"
-        return f"<'{self.fach}' bei '{", ".join(self.lehrer)}' in '{", ".join(self.räume)}'>"
+        return f"<'{", ".join(self.klassen)}' mit '{self.fach}' bei '{", ".join(self.lehrer)}' in '{", ".join(self.räume)}'>"
     
     @property
     def periode(self) -> int:
@@ -526,15 +526,15 @@ class Stunde(VpMobilPyModell):
     @property
     def beginn(self) -> time:
         "Beginn der Stunde"
-        if self._data_value_safe_type("Beginn", "text"):
-            return datetime.strptime(self._data.find("Beginn").text, "%H:%M").time()  
+        if s := self._data_value_safe_type("Beginn", "text"):
+            return datetime.strptime(s, "%H:%M").time()  
         return None
     
     @property
     def ende(self) -> time:
         "Ende der Stunde"
-        if self._data_value_safe_type("Ende", "text"):
-            return datetime.strptime(self._data.find("Ende").text, "%H:%M").time() 
+        if s := self._data_value_safe_type("Ende", "text"):
+            return datetime.strptime(s, "%H:%M").time() 
         return None
     
     @property
@@ -553,8 +553,8 @@ class Stunde(VpMobilPyModell):
         stunde.fach if klasse.kurs(stunde.kursnummer) is None else klasse.kurs(stunde.kursnummer).fach
         ```
         """
-        if self._data_value_safe_type("Fa", "text") != "---":
-            return self._data.find("Fa").text
+        if (s := self._data_value_safe_type("Fa", "text")) != "---":
+            return s
         return None
 
     @property
@@ -578,8 +578,8 @@ class Stunde(VpMobilPyModell):
         if self._planart == "L":
             return [self._context]
         else:
-            if self._data_value_safe_type("Le", "text"):
-                return slice_aufzählung(self._data.find("Le").text)
+            if s := self._data_value_safe_type("Le", "text"):
+                return slice_aufzählung(s)
             return []
 
         
@@ -591,8 +591,8 @@ class Stunde(VpMobilPyModell):
         if self._planart == "R":
             return [self._context]
         else:
-            if self._data_value_safe_type("Ra", "text"):
-                return slice_aufzählung(self._data.find("Ra").text)
+            if s := self._data_value_safe_type("Ra", "text"):
+                return slice_aufzählung(s)
             return []
             
     @property
@@ -634,9 +634,10 @@ class Stunde(VpMobilPyModell):
         
         Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
         """
-        if self._data_value_safe_type("Nr", "text"):
-            try: return int(self._data.find("Nr").text) # "763+" Festgestellt bei 10126582/PlanKl20250527.xml/8c/Stunden
-            except: ...
+        if nr := self._data_value_safe_type("Nr", "text"):
+            if nr.endswith("+"): # Gemäß #44
+                nr = nr[:-1]
+            return int(nr)
         return None
     
     @property
@@ -673,8 +674,8 @@ class Kurs(VpMobilPyModell):
     @property
     def kursnummer(self) -> int:
         "Kursnummer des Kurses"
-        if self._data_value_safe_type("UeNr", "text"):
-            return int(self._data_value_safe_type("UeNr", "text"))
+        if s := self._data_value_safe_type("UeNr", "text"):
+            return int(s)
         return None
     
 
