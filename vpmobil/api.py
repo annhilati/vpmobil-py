@@ -73,7 +73,7 @@ class Vertretungsplan():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def fetch(self, datum: date = date.today(), datei: str = None) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
+    def fetch(self, datum: date = date.today(), /, datei: str = None) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """Ruft die Daten eines Tages ab.
 
         Die Methode sollte nur verwendet werden, wenn zu erwarten ist, welcher Typ zurückgegeben wird.<br>

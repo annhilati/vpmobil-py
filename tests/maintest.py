@@ -11,7 +11,6 @@ load_dotenv()
 vp = Vertretungsplan(getenv("SCHULNUMMER"), getenv("NUTZER"), getenv("PASSWORT"))
 
 tag = vp.fetch(datei=Stundenplan24Pfade.Klassen)
-#tag = reparser.VertretungsTagLehrer(vp.fetch(datei=Stundenplan24Pfade.Klassen))
 
 def main():
 
@@ -104,7 +103,42 @@ def main():
 
             assert type(lehrer.kürzel)  is str
 
+    elif type(tag) == RaumVertretungsTag:
+        assert type(tag.räume) is dict
+
+        for lehrer in tag.räume.values():
+            print(lehrer)
+
+            assert type(lehrer.stunden) is dict
+            if len(lehrer.stunden) == 0: print("\033[31mklasse.stunden == {}")
+
+            for periode, stunden in lehrer.stunden.items():
+                for stunde in stunden:
+                    print(stunde)
+
+                    assert type(stunde.geändert) is bool, type(stunde.geändert)
+                    assert type(stunde.lehrergeändert) in [bool, NoneType]
+                    assert type(stunde.raumgeändert) in [bool, NoneType] 
+                    assert type(stunde.klassegeändert) in [bool, NoneType] 
+                    assert type(stunde.fachgeändert) is bool 
+                    assert type(stunde.ausfall) is bool 
+                    assert type(stunde.beginn) is time 
+                    assert type(stunde.ende) is time 
+                    assert type(stunde.lehrer) is list 
+                    assert type(stunde.klassen) is list and len(stunde.klassen) > 0
+                    assert type(stunde.räume) is list
+                    assert type(stunde.info) in [str, NoneType]
+                    assert type(stunde.fach) in [str, NoneType], type(stunde.fach)
+                    assert type(stunde.kursnummer) in [int, NoneType]
+                    assert type(stunde.periode) is int
+
+            assert type(lehrer.kürzel)  is str
+
+
+
 
 main()
-tag = reparser.LehrerPerspektive(vp.fetch(datei=Stundenplan24Pfade.Klassen))
+tag = reparser.LehrerPerspektive(tag)
+main()
+tag = reparser.RaumPerspektive(tag)
 main()
