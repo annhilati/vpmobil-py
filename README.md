@@ -36,12 +36,12 @@ for periode, stunden in klasse.stunden:
 ## Features
 
 - ⬇️ **Fetching:** Vertretungspläne flexibel aus Quellen abrufen und einlesen
-- 📦 **Datenmodelle:** Strukturierte Klassen zur typisierten Repräsentation aller Planinhalte
+- 📦 **Objektorientiert:** Strukturierte Klassen zur typisierten Repräsentation aller Planinhalte
 - 🌌 **Feature-Complete:** Sämtliche im Alltag relevanten Informationen werden vollständig abgebildet
 - 🧠 **Lazy Evaluation:** Auswertung einzelner Eigenschaften erfolgt erst bei Bedarf
 - 🔧 **Konfiguration:** Eigenheiten der Vertretungsplaner können bei der Auswertung berücksichtig werden 
 - ⚙️ **Kompatibilität:** Export der Daten in beliebige Key-Value-Formate wie JSON oder YAML
-- 👁️ **Perspektivenkonversion:** Änderung der Perspektive von Vertretungsplänen, beispielsweise um Lehrer auszuwerten, wenn nur Klassenpläne verfügbar sind
+- 👁️ **Perspektivisch:** Änderung des Plankontexts um direkt erweiterte Auswertung zu ermöglichen
 - ➕ **Weitere Funktionen**: Parsen von PDFs, die von Indiware-Software erstellt werden
 
 
