@@ -32,13 +32,14 @@ from vpmobil.api import Vertretungsplan, IndiwareFetchingError, Unauthorized, Re
 from vpmobil.models import (
     VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
     Klasse, Raum, Lehrer,
-    Stunde, Kurs, Aufsicht
+    Stunde, Kurs, Aufsicht, Klausur
     )
+from vpmobil.config import set_config
 _symbols = [
     Vertretungsplan,
     VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
     Klasse, Lehrer, Raum,
-    Stunde, Kurs, Aufsicht,
+    Stunde, Kurs, Aufsicht, Klausur,
     IndiwareFetchingError, Unauthorized, ResourceNotFound,
     Stundenplan24Pfade
 ]

@@ -524,14 +524,14 @@ class Stunde(VpMobilPyModell):
         return int(self._data.find("St").text)
 
     @property
-    def beginn(self) -> time:
+    def beginn(self) -> time | None:
         "Beginn der Stunde"
         if s := self._data_value_safe_type("Beginn", "text"):
             return datetime.strptime(s, "%H:%M").time()  
         return None
     
     @property
-    def ende(self) -> time:
+    def ende(self) -> time | None:
         "Ende der Stunde"
         if s := self._data_value_safe_type("Ende", "text"):
             return datetime.strptime(s, "%H:%M").time() 

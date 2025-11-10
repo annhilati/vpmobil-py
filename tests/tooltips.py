@@ -15,6 +15,7 @@ lehrer  = Lehrer()
 stunde  = Stunde()
 kurs    = Kurs()
 aufsicht = Aufsicht()
+klausur = Klausur()
 
 Stundenplan24Pfade
 
@@ -28,15 +29,11 @@ day.saveasfile()
 day.fromfile()
 day.freieTage
 
-day.klassen
-day.klasse()
 day.lehrerKrank
 
+day.klassen
 day1.räume
-day1.raum()
-
 day2.lehrer
-day2.get_lehrer()
 
 klasse.stunden
 klasse.stundenInPeriode()
@@ -50,6 +47,13 @@ aufsicht.ort
 aufsicht.uhrzeit
 aufsicht.vorStunde
 aufsicht.zeit
+
+klausur.beginn
+klausur.dauer
+klausur.info
+klausur.kurs
+klausur.lehrer
+klausur.periode
 
 stunde.geändert
 stunde.lehrergeändert

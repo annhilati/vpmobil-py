@@ -1,4 +1,3 @@
-
 """
 Globale (Parsing-) Parameter für vpmobil-py
 

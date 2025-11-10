@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://pypi.org/project/vpmobil/2.0.0/) (2025-10-??)
+## [2.0.0](https://pypi.org/project/vpmobil/2.0.0/) (2025-11-10)
 
 ### 🚀 Neue Funktionen
 
