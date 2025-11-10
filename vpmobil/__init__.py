@@ -28,7 +28,7 @@ heute = vp.fetch()
 ```
 """
 
-from vpmobil.api import Vertretungsplan, IndiwareFetchingError, Unauthorized, ResourceNotFound, Stundenplan24Pfade
+from vpmobil.api import Vertretungsplan, VpMobilPyError, Unauthorized, ResourceNotFound, Stundenplan24Pfade
 from vpmobil.models import (
     VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
     Klasse, Raum, Lehrer,
@@ -40,7 +40,7 @@ _symbols = [
     VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
     Klasse, Lehrer, Raum,
     Stunde, Kurs, Aufsicht, Klausur,
-    IndiwareFetchingError, Unauthorized, ResourceNotFound,
+    VpMobilPyError, Unauthorized, ResourceNotFound,
     Stundenplan24Pfade
 ]
 _constants = []

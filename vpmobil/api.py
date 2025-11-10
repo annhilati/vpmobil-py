@@ -112,7 +112,7 @@ class Vertretungsplan():
             response.raise_for_status()
             return VertretungsTag(XML.fromstring(response.content))
         
-class IndiwareFetchingError(Exception):
+class VpMobilPyError(Exception):
     """Wenn die angeforderten Daten nicht abgerufen werden können."""
     def __init__(self, message: str, response: requests.Response = None):
         self.message = message
@@ -121,17 +121,17 @@ class IndiwareFetchingError(Exception):
     def __str__(self):
         return f"{self.message} (Status {self.response.status_code})"
     
-class ResourceNotFound(IndiwareFetchingError):
+class ResourceNotFound(VpMobilPyError):
     """Wenn die angeforderten Daten nicht existieren
     
-    Subklasse von `IndiwareFetchingError`
+    Subklasse von `VpMobilPyError`
     """
     ...
 
-class Unauthorized(IndiwareFetchingError):
+class Unauthorized(VpMobilPyError):
     """Wenn die Anmeldedaten keinen Zugriff auf die angeforderten Daten haben.
     
-    Subklasse von `IndiwareFetchingError`
+    Subklasse von `VpMobilPyError`
     """
     ...
 
