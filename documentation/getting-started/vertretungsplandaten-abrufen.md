@@ -1,18 +1,58 @@
 # Vertretungsplandaten abrufen
 
+## 1. Stundendaten auswerten
+
 ```python
 from vpmobil import Vertretungsplan
 
 plan = Vertretungsplan(10323955, "schueler", "h39gh23")
-# Deklariere eine Vertretungsplan-Instanz
+# Eine Vertretungsplan-Instanz erstellen
 
 heute = plan.fetch()
-# Erstelle ein VpDay-Objekt, dass die heutigen Daten enthält
+# Die heutigen Plandaten abrufen
 
-klasse8b = heute.klasse("8b")
+klasse8b = heute.klassen["8b"]
+# Eine Klasse isolieren
 
-for periode, stunden in klasse8b.stundenHeute:
+for periode, stunden in klasse8b.stunden:
     for stunde in stunden:
         print(f"{periode} | {stunde.fach} bei {stunde.lehrer}")
-# Listet die Stunden der Klasse 8b in der Konsole auf
+# Details zu den Stunden der Klasse ausgeben
+```
+
+## 2. Andere Pläne abrufen
+
+```python
+from vpmobil import Vertretungsplan, Stundenplan24Pfade, Unauthorized
+from datetime import date
+
+plan = Vertretungsplan(10323955, "schueler", "h39gh23")
+
+try:
+    tag = plan.fetch(date(2025, 10, 5), datei=Stundenplan24Pfade.PlanRa)
+    # Die Plandaten der Räume vom 5.10.2025 abrufen
+
+except Unauthorized:
+    # Abfangen, falls die Zugangsdaten keine Berechtigung für Raumpläne haben
+    continue
+
+...
+```
+
+## 3. Pläne aus anderen Perspektiven auswerten
+
+```python
+from vpmobil import Vertretungsplan, Stundenplan24Pfade
+from vpmobil.extensions.reparser import LehrerPerspektive
+
+plan = Vertretungsplan(10323955, "schueler", "h39gh23")
+heute = plan.fetch(datei=Stundenplan24Pfade.PlanKl)
+# Den heutigen Klassenplan abrufen
+
+reparsed = LehrerPerspektive(heute)
+# Klassenplan in einen Lehrerplan umwandeln
+
+for lehrer in reparsed.lehrer:
+    print(lehrer)
+# Details zu den Lehrern ausgeben
 ```
