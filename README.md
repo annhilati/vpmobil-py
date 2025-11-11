@@ -5,12 +5,12 @@
   <br>
   <br>
   <a href="https://pypi.org/project/vpmobil">
-    <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/v/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Version&color=5865F2"></a>
+    <img alt="PyPI Version" src="https://img.shields.io/pypi/v/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Version&color=5865F2"></a>
   <a href="https://pypi.org/project/vpmobil/">
-    <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dw/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Downloads&color=5865F2"></a>
+    <img alt="PyPI Downloads" src="https://img.shields.io/pypi/dw/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Downloads&color=5865F2"></a>
   <br>
   <a href="https://annhilati.gitbook.io/vpmobil">
-    <img alt="Static Badge" src="https://img.shields.io/badge/Gitbook-Documentation?style=for-the-badge&logo=gitbook&logoColor=white&label=Dokumentation&color=23A55A"></a>
+    <img alt="Gitbook Documentation" src="https://img.shields.io/badge/Gitbook-Documentation?style=for-the-badge&logo=gitbook&logoColor=white&label=Dokumentation&color=23A55A"></a>
   <a href="https://github.com/annhilati/vpmobil-py?tab=EUPL-1.2-1-ov-file">
     <img alt="GitHub License" src="https://img.shields.io/github/license/annhilati/vpmobil-py?style=for-the-badge&label=Lizenz&color=F23F42"></a>
   <br>
@@ -22,7 +22,7 @@ from vpmobil import Vertretungsplan
 
 vp = Vertretungsplan(39563772, "schueler", "j39jjs6")
 
-tag = vp.fetch(20240619)
+tag = vp.fetch(date(2025, 11, 11))
 klasse = tag.klasse("9b")
 
 for periode, stunden in klasse.stunden:
