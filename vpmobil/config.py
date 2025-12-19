@@ -14,7 +14,7 @@ KLASSENBEZEICHNER_PATTERN : str
 """
 
 def set_config(overrides: dict[str], /) -> None:
-    "Setzt Parameter anhand von Keys"
+    "Setzt Parameter anhand von Keys."
     import sys
     config = sys.modules[__name__]
 
