@@ -4,7 +4,12 @@
 
 ### 🔧 Änderungen
 
-* `IndiwareFecthingError` wurde in `VpMobilPyError` umbenannt
+* `IndiwareFetchingError` wurde in `VpMobilPyError` umbenannt
+
+### 🪲 Bug Fixes
+
+* Regex-Muster in Presets werden fälschlicherweise kompilliert
+
 
 ## [2.0.0](https://pypi.org/project/vpmobil/2.0.0/) (2025-11-10)
 
