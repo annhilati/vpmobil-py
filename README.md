@@ -19,6 +19,7 @@
 
 ```python
 from vpmobil import Vertretungsplan
+from datetime import date
 
 vp = Vertretungsplan(39563772, "schueler", "j39jjs6")
 
