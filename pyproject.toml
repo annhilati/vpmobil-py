@@ -1,7 +1,7 @@
 [project]
 name = "vpmobil"
 version = "2.0.0"
-description = "API wrapper module for evaluating vpmobil substitution plans"
+description = "API wrapper library for evaluating VpMobil substitution plans"
 readme = "README.md"
 requires-python = ">=3.8"
 license = "EUPL-1.2"
