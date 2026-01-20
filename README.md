@@ -21,7 +21,7 @@
 from vpmobil import Vertretungsplan
 from datetime import date
 
-vp = Vertretungsplan(39563772, "schueler", "j39jjs6")
+vp = Vertretungsplan(10000000, "schueler", "password")
 
 tag = vp.fetch(date(2025, 11, 11))
 klasse = tag.klassen["9b"]
