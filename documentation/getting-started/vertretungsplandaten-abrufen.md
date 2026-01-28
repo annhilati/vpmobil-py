@@ -5,7 +5,7 @@
 ```python
 from vpmobil import Vertretungsplan
 
-plan = Vertretungsplan(10323955, "schueler", "h39gh23")
+plan = Vertretungsplan(10000000, "schueler", "password")
 # Eine Vertretungsplan-Instanz erstellen
 
 heute = plan.fetch()
@@ -26,7 +26,7 @@ for periode, stunden in klasse8b.stunden:
 from vpmobil import Vertretungsplan, Stundenplan24Pfade, Unauthorized
 from datetime import date
 
-plan = Vertretungsplan(10323955, "schueler", "h39gh23")
+plan = Vertretungsplan(10000000, "schueler", "password")
 
 try:
     tag = plan.fetch(date(2025, 10, 5), datei=Stundenplan24Pfade.PlanRa)
@@ -45,7 +45,7 @@ except Unauthorized:
 from vpmobil import Vertretungsplan, Stundenplan24Pfade
 from vpmobil.extensions.reparser import LehrerPerspektive
 
-plan = Vertretungsplan(10323955, "schueler", "h39gh23")
+plan = Vertretungsplan(10000000, "schueler", "password")
 heute = plan.fetch(datei=Stundenplan24Pfade.PlanKl)
 # Den heutigen Klassenplan abrufen
 

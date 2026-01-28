@@ -19,7 +19,13 @@
   * XML-Parsing
 {% endhint %}
 
-## Verwendete Bibliotheken und Pakete
+{% hint style="info" %}
+### [moonoe](https://github.com/moonoee)
+
+* Korrespondenz zu Lehrer- und Raumplänen
+{% endhint %}
+
+## Verwendete Bibliotheken
 
 * [PyPDF2](https://pypi.org/project/PyPDF2)
 * [requests](https://pypi.org/project/requests/)

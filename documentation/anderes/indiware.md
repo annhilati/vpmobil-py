@@ -2,25 +2,27 @@
 
 ## Endpoints
 ```py
-f"https://www.stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanLe_Basis.xml"         # ?
-f"https://www.stundenplan24.de/{schoolcode}/moble/mobdaten/Lehrer.xml"              # -> Klassen
-f"https://www.stundenplan24.de/{schoolcode}/moble/mobdaten/PlanLe{yyyymmdd}.xml"    # Klassen
-f"https://www.stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe.xml"             # -> neu
-f"https://www.stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe{yyyymmdd}.xml"   # neu
+f"https://www.stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanKl_Basis.xml"         # (Funktion unbekannt)
+f"https://www.stundenplan24.de/{schoolcode}/mobil/mobdaten/Klassen.xml"             # aktueller Klassenplan
+f"https://www.stundenplan24.de/{schoolcode}/mobil/mobdaten/PlanKl{yyyymmdd}.xml"    # bestimmter Klassenplan
+f"https://www.stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl.xml"               # aktueller Klassenänderungsplan
+f"https://www.stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl{yyyymmdd}.xml"     # bestimmter Klassenänderungsplan
 
-f"https://www.stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanKl_Basis.xml"         # ?
-f"https://www.stundenplan24.de/{schoolcode}/mobil/mobdaten/Klassen.xml"             # -> Klassen
-f"https://www.stundenplan24.de/{schoolcode}/mobil/mobdaten/PlanKl{yyyymmdd}.xml"    # Klassen
-f"https://www.stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl.xml"               # -> neu
-f"https://www.stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl{yyyymmdd}.xml"     # neu
+f"https://www.stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanLe_Basis.xml"         # (Funktion unbekannt)
+f"https://www.stundenplan24.de/{schoolcode}/moble/mobdaten/Lehrer.xml"              # aktueller Lehrerplan
+f"https://www.stundenplan24.de/{schoolcode}/moble/mobdaten/PlanLe{yyyymmdd}.xml"    # bestimmter Lehrerplan
+f"https://www.stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe.xml"             # aktueller Lehreränderungsplan
+f"https://www.stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe{yyyymmdd}.xml"   # bestimmter Lehreränderungsplan
 
-f"https://www.stundenplan24.de/{schoolcode}/wplan/wdatenr/SPlanRa_Basis.xml"        # Raeume
-f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/Raeume.xml"              # -> Klassen
-f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"    # Klassen
+f"https://www.stundenplan24.de/{schoolcode}/wplan/wdatenr/SPlanRa_Basis.xml"        # (Funktion unbekannt)
+f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/Raeume.xml"              # aktueller Raumplan
+f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"    # bestimmter Raumplan
 ```
 
-### Vertretungsplan XML Baum
+## Tagesplan XML Baum
 Dieses Format wird bei `/moble/mobdaten/PlanLe{yyyymmdd}.xml`, `/mobil/mobdaten/PlanKl{yyyymmdd}.xml` und `mobra/mobdaten/PlanRa{yyyymmdd}.xml` mit den exakt gleichen Tagnamen verwendet.
+
+Tags, die mit `# n` markiert sind, können mehrfach vorkommen
 ```yaml
 VpMobil
 ├── Kopf
@@ -35,7 +37,7 @@ VpMobil
 ├── FreieTage
 │   └── ft                      # n
 ├── Klassen
-│   └── Kl                      # n     # Deklariert bei PlanLe über einen Lehrer, bei PlanRa über einen Raum
+│   └── Kl                      # n     # Beschreibt bei PlanLe über einen Lehrer, bei PlanRa über einen Raum
 │       ├── Kurz
 │       ├── Hash
 │       ├── KlStunden
@@ -43,7 +45,7 @@ VpMobil
 │       ├── Kurse                       # Nur bei PlanKl
 │       │   └── Ku              # n
 │       │       └── KKz
-│       ├── Unterricht                  # nur bei PlanKl
+│       ├── Unterricht                  # Nur bei PlanKl
 │       │   └── Ue              # n
 │       │       └── UeNr
 │       ├── Pl
@@ -57,7 +59,7 @@ VpMobil
 │       │       ├── Ra                  # Bezeichnet bei PlanRa eine Klasse
 │       │       ├── Nr
 │       │       └── If
-│       ├── Klausuren                   # Vermutlich nur bei PlanKl
+│       ├── Klausuren                   # Nur bei PlanKl
 │       │   └── Klausur         # n
 │       │       ├── KlJahrgang
 │       │       ├── KlKurs
@@ -66,7 +68,7 @@ VpMobil
 │       │       ├── KlBeginn
 │       │       ├── KlDauer
 │       │       └── KlKinfo
-│       └── Aufsichten                  # Vermutlich nur bei PlanLe
+│       └── Aufsichten                  # Nur bei PlanLe
 │           └── Aufsicht        # n
 │               ├── AuTag
 │               ├── AuVorStunde

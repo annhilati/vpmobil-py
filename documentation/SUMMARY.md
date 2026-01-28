@@ -4,7 +4,8 @@
 
 * [vpmobil-py installieren](README.md)
 * [Vertretungsplandaten abrufen](getting-started/vertretungsplandaten-abrufen.md)
-* [Übersicht der Module](getting-started/module.md)
+<!-- * [Übersicht der Module](getting-started/module.md) -->
+* [Troubleshooting](getting-started/fehlerbehebung.md)
 
 ## Anderes
 
