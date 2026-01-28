@@ -14,7 +14,7 @@ Je nach Art des Fehler können unterschiedliche Gründe vorliegen:
 - Die angegebene Schulnummer existiert nicht
 - Der angeforderte Tag ist nicht (mehr) verfügbar:<br>
   In der Regel stehen nur Pläne für die Tage von bis zu zwei Wochen um den aktuellen Tag zum Abrufen zur Verfügung.
-- Die schulische Einrichtung verwendet eine eigene Instanz von VpMobil.<br>
+- Die Schule verwendet eine eigene Instanz von VpMobil.<br>
   In diesem Fall ist es notwendig herauszufinden, unter welcher Domain und ggf. unter welchem Pfad die Quelldateien bereitgestellt werden. Hierfür kann Hilfe im [Bugtracker von vpmobil-py](https://github.com/annhilati/vpmobil-py/issues) in Anspruch genommen werden.
 - Die Schule stellt Pläne der angeforderten Art nicht zur Verfügung
 

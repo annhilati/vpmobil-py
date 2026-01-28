@@ -22,7 +22,8 @@ f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"
 ## Tagesplan XML Baum
 Dieses Format wird bei `/moble/mobdaten/PlanLe{yyyymmdd}.xml`, `/mobil/mobdaten/PlanKl{yyyymmdd}.xml` und `mobra/mobdaten/PlanRa{yyyymmdd}.xml` mit den exakt gleichen Tagnamen verwendet.
 
-Tags, die mit `# n` markiert sind, können mehrfach vorkommen
+Tags, die mit `# n` markiert sind, können mehrfach vorkommen.
+
 ```yaml
 VpMobil
 ├── Kopf
