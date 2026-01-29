@@ -1,3 +1,7 @@
+---
+icon: python
+---
+
 # vpmobil-py installieren
 
 ### Mit pip

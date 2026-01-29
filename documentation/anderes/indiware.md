@@ -1,6 +1,11 @@
-# Indiware
+---
+icon: sparkle
+---
+
+# Indiware Spezifikationen
 
 ## Endpoints
+
 ```py
 f"https://www.stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanKl_Basis.xml"         # (Funktion unbekannt)
 f"https://www.stundenplan24.de/{schoolcode}/mobil/mobdaten/Klassen.xml"             # aktueller Klassenplan
@@ -20,6 +25,7 @@ f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"
 ```
 
 ## Tagesplan XML Baum
+
 Dieses Format wird bei `/moble/mobdaten/PlanLe{yyyymmdd}.xml`, `/mobil/mobdaten/PlanKl{yyyymmdd}.xml` und `mobra/mobdaten/PlanRa{yyyymmdd}.xml` mit den exakt gleichen Tagnamen verwendet.
 
 Tags, die mit `# n` markiert sind, können mehrfach vorkommen.

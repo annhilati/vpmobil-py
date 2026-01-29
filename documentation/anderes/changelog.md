@@ -1,3 +1,7 @@
+---
+icon: clock-rotate-left
+---
+
 # Changelog
 
 ## Development
@@ -9,7 +13,6 @@
 ### 🪲 Bug Fixes
 
 * Regex-Muster in Presets werden fälschlicherweise kompilliert
-
 
 ## [2.0.0](https://pypi.org/project/vpmobil/2.0.0/) (2025-11-10)
 
@@ -24,8 +27,7 @@
 
 #### Lehrer- & Raumpläne
 
-Im Rahmen der Einführung neuer Vertretungsplantypen wurden einige Datenmodelle in Basis- und Unterklassen aufgeteilt.
-Die drei Vertretungsplanklassen `KlassenVertretungsTag`, `LehrerVertretungsTag` und `RaumVertretungsTag` erben von einer neuen Basisklasse, die grundlegendes Verhalten für Pläne enthält. Die einzelnen Planklassen bringen dann noch weitere Funktionen mit.
+Im Rahmen der Einführung neuer Vertretungsplantypen wurden einige Datenmodelle in Basis- und Unterklassen aufgeteilt. Die drei Vertretungsplanklassen `KlassenVertretungsTag`, `LehrerVertretungsTag` und `RaumVertretungsTag` erben von einer neuen Basisklasse, die grundlegendes Verhalten für Pläne enthält. Die einzelnen Planklassen bringen dann noch weitere Funktionen mit.
 
 Neue Klassen sind:
 
@@ -52,7 +54,6 @@ Neue Klassen sind:
 * `Klausur`
   * Ein primitives Datenmodell, ähnlich zu `Aufsicht`, das Informationen über eine Klausur enthält
   * Wird von `Klasse.klausuren` erzeugt
-  
 
 ### 🔧 Änderungen
 
@@ -75,7 +76,8 @@ Neue Klassen sind:
 * Aufzählungen von Klassen können nun auch Bereiche (z.B. `"5a-7c"`) enthalten und werden aufgelöst. Das Format einer Klassenbezeichnung kann in `config` durch ein Pattern konfiguriert werden. Die Capturing Groups `stufe` und `suffix` müssen enthalten sein
 
 #### `Vertretungsplan` und `.fetch()`
-`Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden. 
+
+`Vertretungsplan` ist nun so konzipiert, dass es ein Standardpfadschema für Dateiabrufe gibt. Andere Dateien können in `.fetch()` dennoch weiterhin abgerufen werden.
 
 * Parameter `vezeichnis` und `dateinamenschema` von `.fetch()` wurden in `dateipfadschema` zusammengeführt
 * Wenn `.fetch()` mit dem Parameter `datei` angegeben wird, ersetzt das den Standarddateipfad. `datei` kann, wie `Vertretungsplan.dateipfadschema` mit Platzhaltern des datetime-Moduls und dem Platzhalter `schulnummer` verwendet werden
@@ -83,8 +85,6 @@ Neue Klassen sind:
 ### 🪲 Bug Fixes
 
 * `VertretungsTag.lehrerKrank` wirft einen Fehler, wenn es einen Kurs gibt, der keinen Lehrer hat
-
-
 
 ## [1.1.0](https://pypi.org/project/vpmobil/1.1.0/) (2025-08-27)
 
@@ -106,15 +106,11 @@ Neue Klassen sind:
 
 * `Vertretungsplan.fetchall()` raised nicht `ResourceNotFound` sondern `IndiwareFetchingError`, wenn keine Pläne gefunden wurden
 
-
-
 ## [1.0.1](https://pypi.org/project/vpmobil/1.0.1/) (2025-08-03)
 
 ### 🪲 Bug Fixes
 
 * `from vpmobil import *` importiert nichts
-
-
 
 ## [1.0.0](https://pypi.org/project/vpmobil/1.0.0/) (2025-08-03)
 
@@ -138,8 +134,6 @@ Neue Klassen sind:
 ### ⚠️ Bekannte Probleme
 
 * `VpDay.lehrerKrank` behandelt mehrere in einem Kurs oder einer Stunde angeführte Lehrer nicht mehr separat
-
-
 
 ## [0.4.2](https://pypi.org/project/vpmobil/0.4.2/) (2024-12-28)
 

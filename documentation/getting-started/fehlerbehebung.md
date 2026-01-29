@@ -1,3 +1,7 @@
+---
+icon: binary-slash
+---
+
 # Fehlerbehebung
 
 ## Plandaten können nicht abgerufen werden
@@ -7,16 +11,18 @@ Ein Tag im Vertretungsplan kann wie [hier](vertretungsplandaten-abrufen.md) geze
 Je nach Art des Fehler können unterschiedliche Gründe vorliegen:
 
 ### `Unauthorized`
-- Benutzername oder Passwort sind ungültig
-- Der Benutzer hat keine Berechtigung um auf Pläne der angeforderten Art zuzugreifen
+
+* Benutzername oder Passwort sind ungültig
+* Der Benutzer hat keine Berechtigung um auf Pläne der angeforderten Art zuzugreifen
 
 ### `ResourceNotFound`
-- Die angegebene Schulnummer existiert nicht
-- Der angeforderte Tag ist nicht (mehr) verfügbar:<br>
+
+* Die angegebene Schulnummer existiert nicht
+* Der angeforderte Tag ist nicht (mehr) verfügbar:\
   In der Regel stehen nur Pläne für die Tage von bis zu zwei Wochen um den aktuellen Tag zum Abrufen zur Verfügung.
-- Die Schule verwendet eine eigene Instanz von VpMobil.<br>
+* Die Schule verwendet eine eigene Instanz von VpMobil.\
   In diesem Fall ist es notwendig herauszufinden, unter welcher Domain und ggf. unter welchem Pfad die Quelldateien bereitgestellt werden. Hierfür kann Hilfe im [Bugtracker von vpmobil-py](https://github.com/annhilati/vpmobil-py/issues) in Anspruch genommen werden.
-- Die Schule stellt Pläne der angeforderten Art nicht zur Verfügung
+* Die Schule stellt Pläne der angeforderten Art nicht zur Verfügung
 
 ### `ModuleNotFoundError`, `NameError` oder `ImportError`
 

@@ -1,3 +1,7 @@
+---
+icon: file-export
+---
+
 # Vertretungsplandaten abrufen
 
 ## 1. Stundendaten auswerten

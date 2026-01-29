@@ -1,9 +1,13 @@
+---
+icon: people-group
+---
+
 # Credits
 
 ## Contributor
 
 {% hint style="success" %}
-### [Annhilati](https://github.com/annhilati)
+#### [Annhilati](https://github.com/annhilati)
 
 * Projektleitung (Repository-Besitzer)
 * Softwareentwicklung
@@ -13,14 +17,14 @@
 {% endhint %}
 
 {% hint style="success" %}
-### [Joshi](https://github.com/Joshi1531)
+#### [Joshi](https://github.com/Joshi1531)
 
 * Softwareentwicklung
   * XML-Parsing
 {% endhint %}
 
 {% hint style="info" %}
-### [moonoe](https://github.com/moonoee)
+#### [moonoe](https://github.com/moonoee)
 
 * Korrespondenz zu Lehrer- und Raumplänen
 {% endhint %}
