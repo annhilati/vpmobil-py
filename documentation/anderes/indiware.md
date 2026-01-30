@@ -7,83 +7,140 @@ icon: sparkle
 ## Endpoints
 
 ```py
-f"https://www.stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanKl_Basis.xml"         # (Funktion unbekannt)
-f"https://www.stundenplan24.de/{schoolcode}/mobil/mobdaten/Klassen.xml"             # aktueller Klassenplan
-f"https://www.stundenplan24.de/{schoolcode}/mobil/mobdaten/PlanKl{yyyymmdd}.xml"    # bestimmter Klassenplan
-f"https://www.stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl.xml"               # aktueller Klassenänderungsplan
-f"https://www.stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl{yyyymmdd}.xml"     # bestimmter Klassenänderungsplan
+# VpMobil24 App
+f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/Klassen.xml"             # aktueller Klassenplan
+f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/PlanKl{yyyymmdd}.xml"    # bestimmter Klassenplan
+f"https://stundenplan24.de/{schoolcode}/moble/mobdaten/Lehrer.xml"              # aktueller Lehrerplan
+f"https://stundenplan24.de/{schoolcode}/moble/mobdaten/PlanLe{yyyymmdd}.xml"    # bestimmter Lehrerplan
+f"https://stundenplan24.de/{schoolcode}/mobra/mobdaten/Raeume.xml"              # aktueller Raumplan
+f"https://stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"    # bestimmter Raumplan
+f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/vpinfok.txt"             # (konkrete Funktion unbekannt)
 
-f"https://www.stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanLe_Basis.xml"         # (Funktion unbekannt)
-f"https://www.stundenplan24.de/{schoolcode}/moble/mobdaten/Lehrer.xml"              # aktueller Lehrerplan
-f"https://www.stundenplan24.de/{schoolcode}/moble/mobdaten/PlanLe{yyyymmdd}.xml"    # bestimmter Lehrerplan
-f"https://www.stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe.xml"             # aktueller Lehreränderungsplan
-f"https://www.stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe{yyyymmdd}.xml"   # bestimmter Lehreränderungsplan
+# Vertretungsplan (Anzeige & PDF)
+f"https://stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl.xml"               # aktueller Änderungsplan für Schüler
+f"https://stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl{yyyymmdd}.xml"     # bestimmter Änderungsplan für Schüler
+f"https://stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe.xml"             # aktueller Änderungsplan für Lehrer
+f"https://stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe{yyyymmdd}.xml"   # bestimmter Änderungsplan für Lehrer
 
-f"https://www.stundenplan24.de/{schoolcode}/wplan/wdatenr/SPlanRa_Basis.xml"        # (Funktion unbekannt)
-f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/Raeume.xml"              # aktueller Raumplan
-f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"    # bestimmter Raumplan
+# Funktion unbekannt
+f"https://stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanKl_Basis.xml"
+f"https://stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanLe_Basis.xml"
+f"https://stundenplan24.de/{schoolcode}/wplan/wdatenr/SPlanRa_Basis.xml"
 
-f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/vpinfok.txt"
 ```
 
-## Tagesplan XML Baum
+## Tagesplan
 
-Dieses Format wird bei `/moble/mobdaten/PlanLe{yyyymmdd}.xml`, `/mobil/mobdaten/PlanKl{yyyymmdd}.xml` und `mobra/mobdaten/PlanRa{yyyymmdd}.xml` mit den exakt gleichen Tagnamen verwendet.
-
-Tags, die mit `# n` markiert sind, können mehrfach vorkommen.
+Dieses XML-Format wird als Quellformat für die VpMobil24 App verwendet.
 
 ```yaml
-VpMobil
-├── Kopf
-│   ├── planart
-│   ├── zeitstempel
-│   ├── DatumPlan
-│   ├── datei
-│   ├── nativ
-│   ├── woche
-│   ├── tageprowoche
-│   └── schulnummer
-├── FreieTage
-│   └── ft                      # n
-├── Klassen
-│   └── Kl                      # n     # Beschreibt bei PlanLe über einen Lehrer, bei PlanRa über einen Raum
-│       ├── Kurz
-│       ├── Hash
-│       ├── KlStunden
-│       │   └── KlSt            # n
-│       ├── Kurse                       # Nur bei PlanKl
-│       │   └── Ku              # n
-│       │       └── KKz
-│       ├── Unterricht                  # Nur bei PlanKl
-│       │   └── Ue              # n
-│       │       └── UeNr
-│       ├── Pl
-│       │   └── Std             # n
-│       │       ├── St
-│       │       ├── Beginn
-│       │       ├── Ende
-│       │       ├── Fa
-│       │       ├── Ku2
-│       │       ├── Le                  # Bezeichnet bei PlanLe eine Klasse
-│       │       ├── Ra                  # Bezeichnet bei PlanRa eine Klasse
-│       │       ├── Nr
-│       │       └── If
-│       ├── Klausuren                   # Nur bei PlanKl
-│       │   └── Klausur         # n
-│       │       ├── KlJahrgang
-│       │       ├── KlKurs
-│       │       ├── KlKursleiter
-│       │       ├── KlStunde
-│       │       ├── KlBeginn
-│       │       ├── KlDauer
-│       │       └── KlKinfo
-│       └── Aufsichten                  # Nur bei PlanLe
-│           └── Aufsicht        # n
-│               ├── AuTag
-│               ├── AuVorStunde
-│               ├── AuUhrzeit
-│               ├── AuZeit
-│               └── AuOrt
-└── ZusatzInfo
-    └── ZiZeile
+<VpMobil>
+├── <Kopf>
+│   ├── <planart>
+│   ├── <zeitstempel>                   # strptime Format: '%d.%m.%Y, %H:%M'
+│   ├── <DatumPlan>                     # strptime Format: '%A, %d. %B %Y'
+│   ├── <datei>
+│   ├── <nativ>
+│   ├── <woche>
+│   ├── <tageprowoche>
+│   └── <schulnummer>
+├── <FreieTage>
+│   └── *<ft>                           # strptime Format: '%y%m%d'
+├── <Klassen>
+│   └── *<Kl>                           # Beschreibt bei Typ K eine Klasse, bei Typ L einen Lehrer, bei Typ R einen Raum
+│       ├── <Kurz>
+│       ├── <Hash>
+│       ├── <KlStunden>
+│       │   └── *<KlSt>
+│       │       ├ ZeitVon               # strptime Format: '%H:%M'
+│       │       └ ZeitBis               # strptime Format: '%H:%M'
+│       ├── <Kurse>                     # Nur bei Typ K
+│       │   └── *<Ku>
+│       │       └── <KKz>
+│       │           └ KLe
+│       ├── <Unterricht>                # Nur bei Typ K
+│       │   └── *<Ue>
+│       │       └── <UeNr>
+│       │           ├ UeLe
+│       │           ├ UeGr
+│       │           └ UeFa
+│       ├── <Pl>
+│       │   └── *<Std>
+│       │       ├── <St>
+│       │       ├── <Beginn>            # strptime Format: '%H:%M'
+│       │       ├── <Ende>              # strptime Format: '%H:%M'
+│       │       ├── <Fa>
+│       │       ├── <Ku2>
+│       │       ├── <Le>                # Bezeichnet bei Typ L eine Klasse
+│       │       ├── <Ra>                # Bezeichnet bei Typ R eine Klasse
+│       │       ├── <Nr>
+│       │       └── <If>
+│       ├── <Klausuren>                 # Nur bei Typ K
+│       │   └── *<Klausur>
+│       │       ├── <KlJahrgang>
+│       │       ├── <KlKurs>
+│       │       ├── <KlKursleiter>
+│       │       ├── <KlStunde>
+│       │       ├── <KlBeginn>
+│       │       ├── <KlDauer>
+│       │       └── <KlKinfo>
+│       └── <Aufsichten>                # Nur bei Typ L
+│           └── *<Aufsicht>
+│               ├── <AuTag>
+│               ├── <AuVorStunde>
+│               ├── <AuUhrzeit>
+│               ├── <AuZeit>
+│               └── <AuOrt>
+└── <ZusatzInfo>
+    └── <ZiZeile>
+```
+
+## Vertretungsplan
+
+Dieses XML-Format wird als Quellformat für Informationsmonitore und Vertretungsplan-PDFs verwendet.
+
+```yaml
+<vp>
+├   <kopf>
+│   ├── <datei>
+│   ├── <titel>
+│   ├── <schulname>
+│   ├── <datum>
+│   └── <kopfinfo>
+│       ├── <abwesendl>
+│       ├── <abwesendk>
+│       ├── <aenderungl>
+│       └── <aenderungk>
+├── <freietage>
+│   └── *<ft>                           # strptime Format: '%y%m%d'
+├── <haupt>
+│   └── *<aktion>
+│       ├── <klasse>
+│       ├── <stunde>
+│       ├── <fach>
+│       │   └ fageaendert
+│       ├── <lehrer>
+│       │   └ legeaendert
+│       ├── <raum>
+│       │   └ rageaendert
+│       └── <info>
+└── <fuss>
+    └── <fusszeile>
+        └── <fussinfo>
+```
+
+## vpinfok.txt
+
+Die genaue Funktion dieser Datei im INI-Format ist unbekannt.
+
+```yaml
+[Grunddaten]
+├── Nativ
+├── Datum                               # strptime Format: '%d.%m.%Y'
+├── Uhrzeit                             # strptime Format: '%H:%M:%S'
+├── Plan1                               # strptime Format: '%Y%m%d'
+├── Plan2                               # strptime Format: '%Y%m%d'
+├── Plan3                               # strptime Format: '%Y%m%d'
+├── Plan4                               # strptime Format: '%Y%m%d'
+└── Anzahl
 ```
