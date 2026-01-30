@@ -22,6 +22,8 @@ f"https://www.stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe{yyyymmdd}.xml
 f"https://www.stundenplan24.de/{schoolcode}/wplan/wdatenr/SPlanRa_Basis.xml"        # (Funktion unbekannt)
 f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/Raeume.xml"              # aktueller Raumplan
 f"https://www.stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"    # bestimmter Raumplan
+
+f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/vpinfok.txt"
 ```
 
 ## Tagesplan XML Baum
