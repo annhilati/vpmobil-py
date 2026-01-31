@@ -16,7 +16,7 @@ f"https://stundenplan24.de/{schoolcode}/mobra/mobdaten/Raeume.xml"              
 f"https://stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"    # bestimmter Raumplan
 f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/vpinfok.txt"             # (konkrete Funktion unbekannt)
 
-# Vertretungsplan (Anzeige & PDF)
+# Vertretungsplan (Monitor & PDF)
 f"https://stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl.xml"               # aktueller Änderungsplan für Schüler
 f"https://stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl{yyyymmdd}.xml"     # bestimmter Änderungsplan für Schüler
 f"https://stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe.xml"             # aktueller Änderungsplan für Lehrer
@@ -70,9 +70,12 @@ Dieses XML-Format wird als Quellformat für die VpMobil24 App verwendet.
 │       │       ├── <Beginn>            # strptime Format: '%H:%M'
 │       │       ├── <Ende>              # strptime Format: '%H:%M'
 │       │       ├── <Fa>
+│       │       │   └ FaAe              # Literal: 'FaGeaendert'
 │       │       ├── <Ku2>
 │       │       ├── <Le>                # Bezeichnet bei Typ L eine Klasse
+│       │       │   └ LeAe              # Literal: 'LeGeaendert'
 │       │       ├── <Ra>                # Bezeichnet bei Typ R eine Klasse
+│       │       │   └ RaAe              # Literal: 'RaGeaendert'
 │       │       ├── <Nr>
 │       │       └── <If>
 │       ├── <Klausuren>                 # Nur bei Typ K
