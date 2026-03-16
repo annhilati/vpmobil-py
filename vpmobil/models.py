@@ -117,10 +117,14 @@ class VertretungsTag(VpMobilPyModell):
     @property
     def datum(self) -> date | None:
         "Datum für das der Vertretungsplan gilt"
-        import locale; locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
-
+        import locale
+        
         if s := self._data_value_safe_type("Kopf/DatumPlan", "text"):
-            return datetime.strptime(s, (r"%A, %d. %B %Y")).date()
+            for s in ["de_DE.UTF-8", "German_Germany"]:
+                try:
+                    locale.setlocale(locale.LC_TIME, s)
+                    return datetime.strptime(s, (r"%A, %d. %B %Y")).date()
+                except: continue
         return None
     
     @property
