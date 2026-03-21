@@ -363,7 +363,7 @@ class Klasse(KlasseLikeBase):
         return f"<Klasse '{self.kürzel}'>"
     
     @property
-    def kurse(self) -> dict[str, Kurs]:
+    def kurse(self) -> dict[int, Kurs]:
         "Kurse der Klasse als Dictionary<br>Die Keys sind die Kursnummern der Kurse" 
         if unterricht := self._data.find("Unterricht"):
             return {
@@ -554,7 +554,7 @@ class Stunde(VpMobilPyModell):
         Es kann sein, dass nicht das wirkliche Fach sondern die Kursbezeichnung zurückgegeben wird. Stattdessen `klasse.kurs(stunde.kursnummer).fach` verwenden.<br>
         Bei Unsicherheit mit Fallback:
         ```
-        stunde.fach if klasse.kurs(stunde.kursnummer) is None else klasse.kurs(stunde.kursnummer).fach
+        stunde.fach if klasse.kurse[stunde.kursnummer] is None else klasse.kurse[stunde.kursnummer].fach
         ```
         """
         if (s := self._data_value_safe_type("Fa", "text")) != "---":

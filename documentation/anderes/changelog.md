@@ -13,6 +13,8 @@ icon: clock-rotate-left
 ### 🪲 Bug Fixes
 
 * Regex-Muster in Presets werden fälschlicherweise kompilliert
+* Das Dekodieren von Zeitstrings funktioniert auf manchen Geräten nicht
+* Syntax im Tip von `Stunde.fach` korrigiert
 
 ## [2.0.0](https://pypi.org/project/vpmobil/2.0.0/) (2025-11-10)
 
