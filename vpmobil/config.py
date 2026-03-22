@@ -13,12 +13,26 @@ KLASSENBEZEICHNER_PATTERN : str
     Capture-Pattern zum parsen von Klassenbezeichnungen
 """
 
-def set_config(overrides: dict[str], /) -> None:
+from typing import overload, Any
+
+@overload
+def set_config(overrides: dict[str, Any], /) -> None: ...
+@overload
+def set_config(**overrides: Any) -> None: ...
+
+def set_config(overrides: dict[str, Any] | None = None, /, **kwargs: Any) -> None:
     "Setzt Parameter anhand von Keys."
     import sys
     config = sys.modules[__name__]
 
-    for key, value in overrides.items():
+    data: dict[str, Any] = {}
+
+    if overrides is not None:
+        data.update(overrides)
+    if kwargs:
+        data.update(kwargs)
+
+    for key, value in data.items():
         if hasattr(config, key):
             setattr(config, key, value)
         else:

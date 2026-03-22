@@ -23,23 +23,17 @@ class Stundenplan24Pfade(StrEnum):
 class Vertretungsplan():
     """Klasse, die den Zugang zu einem Indiware Vertretungsplan regelt.
 
-    Parameter
-    ----------
-    schulnummer : int
-        Schulnummer des Vertretungsplans
-    benutzername : str
-        Benutzername des Benutzers über den zugegriffen werden soll
-    passwort : str
-        Passwort des Benutzers über den zugegriffen werden soll
-    serverdomain : str
-        Domain des Servers, der die Vertretungsplandaten bereitstellt
-    port : int
-        Port des Service, der die Vertretungsplandaten bereitstellt
-    dateipfadschema : str
-        Schema des Pfads unter dem die Quelldateien abgerufen werden können<br>
-        `{schulnummer}` kann als Platzhalter verwendet werden<br>
-        [Platzhalter des datetime-Moduls](https://strftime.org/) können verwendet werden<br>
-        Die Standardpfade von `stundenplan24.de` sind als Attribute von `Stundenplan24Pfade` verfügbar
+    Parameters:
+        schulnummer (int): Schulnummer des Vertretungsplans
+        benutzername (str): Benutzername des Benutzers über den zugegriffen werden soll
+        passwort (str): Passwort des Benutzers über den zugegriffen werden soll
+        serverdomain (str): Domain des Servers, der die Vertretungsplandaten bereitstellt
+        port (int): Port des Service, der die Vertretungsplandaten bereitstellt
+        dateipfadschema (str):
+            Schema des Pfads unter dem die Quelldateien abgerufen werden können<br>
+            `{schulnummer}` kann als Platzhalter verwendet werden<br>
+            [Platzhalter des datetime-Moduls](https://strftime.org/) können verwendet werden<br>
+            Die Standardpfade von `stundenplan24.de` sind als Attribute von `Stundenplan24Pfade` verfügbar
     """
     
     schulnummer:        int
@@ -80,18 +74,14 @@ class Vertretungsplan():
         Verwende dafür Typ-Annotation: `plan: RaumVertretungsTag = vp.fetch()`<br>
         Falls es unklar ist, kann `vpmobil.MobdatenBase` als Protokoll verwendet werden.
 
-        Parameter
-        ----------
-        datum : date
-            Abzurufender Tag
-        datei : str
-            Pfad (beginnend nach der TLD) der abzurufenden Datei. `datum` kann parallel mit `datei` durch [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden.
+        Parameters
+            datum (date): Abzurufender Tag
+            datei (str): Pfad (beginnend nach der TLD) der abzurufenden Datei. `datum` kann parallel mit `datei` durch [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden.
 
-        Raises
-        ----------
-        ResourceNotFound : Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist
-        Unauthorized : Wenn die Zugangsdaten keinen Zugriff auf die Datei haben
-        ValueError : Falls die Antwort vom Server kein gültiges XML enthält
+        Raises:
+            ResourceNotFound: Wenn für den Tag keine Daten verfügbar sind oder die verwendete Schulnummer nicht registriert ist
+            Unauthorized: Wenn die Zugangsdaten keinen Zugriff auf die Datei haben
+            ValueError: Falls die Antwort vom Server kein gültiges XML enthält
         """
 
         dateipfad: str = (

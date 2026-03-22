@@ -121,7 +121,7 @@ def _converter(
 
 
 
-def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> KlassenVertretungsTag:
+def KlassenPerspektive(tag: VertretungsTag, /) -> KlassenVertretungsTag:
     """Wandelt einen Vertretungsplan in einen aus der Perspektive der Klassen um.
     
     Verloren gehen
@@ -154,9 +154,9 @@ def KlassenPerspektive(tag: LehrerVertretungsTag | RaumVertretungsTag, /) -> Kla
     elif type(tag) == KlassenVertretungsTag:
         return tag
     else:
-        raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
+        raise ValueError(f"Unbekannter Plantyp: {type(tag)}")
 
-def LehrerPerspektive(tag: KlassenVertretungsTag | RaumVertretungsTag, /) -> LehrerVertretungsTag:
+def LehrerPerspektive(tag: VertretungsTag, /) -> LehrerVertretungsTag:
     """Wandelt einen Vertretungsplan in einen aus der Perspektive der Lehrer um.
     
     Verloren gehen
@@ -191,9 +191,9 @@ def LehrerPerspektive(tag: KlassenVertretungsTag | RaumVertretungsTag, /) -> Leh
     elif type(tag) == LehrerVertretungsTag:
         return tag
     else:
-        raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
+        raise ValueError(f"Unbekannter Plantyp: {type(tag)}")
     
-def RaumPerspektive(tag: KlassenVertretungsTag | LehrerVertretungsTag, /) -> RaumVertretungsTag:
+def RaumPerspektive(tag: VertretungsTag, /) -> RaumVertretungsTag:
     """Wandelt einen Vertretungsplan in einen aus der Perspektive der Klassen um.
     
     Verloren gehen
@@ -229,4 +229,4 @@ def RaumPerspektive(tag: KlassenVertretungsTag | LehrerVertretungsTag, /) -> Rau
     elif type(tag) == RaumVertretungsTag:
         return tag
     else:
-        raise ValueError(f"Unzulässiger Plantyp: {type(tag)}")
+        raise ValueError(f"Unbekannter Plantyp: {type(tag)}")

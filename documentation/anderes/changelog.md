@@ -6,9 +6,15 @@ icon: clock-rotate-left
 
 ## Development
 
+### 🚀 Neue Funktionen
+
+* Funktion `VertretungsTag.freieRäume()` zum Finden in einem bestimmten Zeitraum freier Räume
+
 ### 🔧 Änderungen
 
 * `IndiwareFetchingError` wurde in `VpMobilPyError` umbenannt
+* `config.set_config` kann nun auch Keyword-Argumente entgegennehmen
+* Typing für Funktionen in der `reparser`-Extension wurde verallgemeinert
 
 ### 🪲 Bug Fixes
 

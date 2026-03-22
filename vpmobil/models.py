@@ -150,21 +150,50 @@ class VertretungsTag(VpMobilPyModell):
                 if ziZeile.text
             ])
         return None
+    
+    def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> list[str]:
+        """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.
+        
+        Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt. Um das zu berücksichtigen, sollten in `räume_context` die Kürzel möglicher Räume mitgegeben werden.
+        """
+
+        from vpmobil.extensions import reparser
+        data = reparser.RaumPerspektive(self)
+
+        frei = set(räume_context)
+
+        for kürzel, raum in data.räume.items():
+
+            frei.add(kürzel)
+
+            for periode, stunden in raum.stunden.items():
+                for stunde in stunden:
+
+                    if stunde.beginn is None or stunde.ende is None:
+                        continue
+                    
+                    if stunde.ende <= beginn or ende <= stunde.beginn:
+                        continue
+
+                    if stunde.ausfall is None:
+                        continue
+
+                    if kürzel in frei:
+                        frei.remove(kürzel)
+
+        return sorted(list(frei))
             
     @classmethod
     def fromfile(cls, pfad: Path | str) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """
         Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
 
-        Parameter
-        ----------
-        pfad: Path
-            Dateipfad einer XML-Datei
+        Parameters:
+            pfad (Path): Dateipfad einer XML-Datei
 
-        Raises
-        ----------
-        FileNotFoundError : Wenn die Datei nicht existiert
-        ValueError : Wenn die Datei nicht gelesen werden kann
+        Raises:
+            FileNotFoundError : Wenn die Datei nicht existiert
+            ValueError : Wenn die Datei nicht gelesen werden kann
         """
         with open(pfad, encoding="utf-8-sig") as f:
             instance = cls(_data=XML.parse(f))
@@ -173,16 +202,12 @@ class VertretungsTag(VpMobilPyModell):
     def saveasfile(self, pfad: Path | str = "./datei.xml", overwrite=True) -> None:
         """Speichert alle Daten des Tages als XML-Datei.
 
-        Parameter
-        ---------
-        pfad : Path | str
-            Der Dateipfad der zu erstellenden Datei
-        overwrite : bool
-            Ob die Datei überschrieben werden darf, falls sie bereits existiert
+        Parameters:
+            pfad (Path | str): Der Dateipfad der zu erstellenden Datei
+            overwrite (bool): Ob die Datei überschrieben werden darf, falls sie bereits existiert
 
-        Raises
-        --------
-        FileExistsError : Falls eine bereits existierende Datei überschrieben werden soll, obwohl `overwrite` `False` ist
+        Raises:
+            FileExistsError: Falls eine bereits existierende Datei überschrieben werden soll, obwohl `overwrite` `False` ist
         """
 
         xmlpretty = prettyxml(self._data)
@@ -223,7 +248,7 @@ class KlassenVertretungsTag(VertretungsTag):
 
     @property
     def lehrerKrank(self) -> list[str]:
-        "Lehrer, die unplanmäßig keinen Unterricht haben"
+        "Kürzel der Lehrer, die unplanmäßig keinen Unterricht haben"
         
         lehrerMitUnterricht: set[str] = set()
         lehrerVielleichtKrank: set[str] = set()

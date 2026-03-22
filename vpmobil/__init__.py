@@ -6,7 +6,7 @@ API wrapper module for interacting with vpmobil substitution plans
 **💡 Wie man beginnt**
 ```python
 from vpmobil import Vertretungsplan
-vp = Vertretungsplan(10323955, "schueler", "h39gh23")
+vp = Vertretungsplan(10000000, "schueler", "password")
 heute = vp.fetch()
 ```
 
@@ -35,6 +35,8 @@ from vpmobil.models import (
     Stunde, Kurs, Aufsicht, Klausur
     )
 from vpmobil.config import set_config
+from vpmobil import config
+
 _symbols = [
     Vertretungsplan,
     VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
