@@ -229,6 +229,7 @@ class VertretungsTag(VpMobilPyModell):
             ]
         return []
 
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                  KlassenVertretungsTag                                   │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -287,6 +288,7 @@ class KlassenVertretungsTag(VertretungsTag):
             for element in self._Kl_elemente()
         }
 
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                   LehrerVertretungsTag                                   │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -311,6 +313,8 @@ class LehrerVertretungsTag(VertretungsTag):
             Lehrer(element, self._planart).kürzel: Lehrer(element, self._planart)
             for element in self._Kl_elemente()
         }    
+    
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    RaumVertretungsTag                                    │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -334,7 +338,9 @@ class RaumVertretungsTag(VertretungsTag):
         return {
             Raum(element, self._planart).kürzel: Raum(element, self._planart)
             for element in self._Kl_elemente()
-        }    
+        }   
+
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                      KlasseLikeBase                                      │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -370,6 +376,7 @@ class KlasseLikeBase(VpMobilPyModell):
         "Gibt die Stunden in einer bestimmten Unterrichtsperiode zurück."
         return self.stunden.get(periode) or []
     
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Klasse                                         │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -407,6 +414,7 @@ class Klasse(KlasseLikeBase):
             ]
         return []
     
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Lehrer                                         │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -434,6 +442,7 @@ class Lehrer(KlasseLikeBase):
             ]
         return []
 
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Raum                                           │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -450,6 +459,7 @@ class Raum(KlasseLikeBase):
 
     def __repr__(self):
         return f"<Raum '{self.kürzel}'>"
+
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Aufsicht                                         │ 
@@ -484,6 +494,7 @@ class Aufsicht(VpMobilPyModell):
         "Hinweis zum Ort der Aufsicht"
         return self._data_value_safe_type("AuOrt", "text") or None
 
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Klausur                                          │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -494,7 +505,6 @@ class Klausur(VpMobilPyModell):
 
     def __repr__(self):
         return f"<Klausur für '{self.kurs}' ab '{self.beginn}'>"
-
 
     @property
     def kurs(self) -> str | None:
@@ -531,6 +541,7 @@ class Klausur(VpMobilPyModell):
         "Zusätzliche Information zur Klausur"
         return self._data_value_safe_type("KlKinfo", "text") or None
     
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Stunde                                          │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
@@ -598,7 +609,6 @@ class Stunde(VpMobilPyModell):
         elif self._planart == "L":
             return slice_aufzählung(self._data.find("Le").text) if self._data_value_safe_type("Le", "text") else []
 
-        
     @property
     def lehrer(self) -> list[str]:
         """Alle Lehrer der Stunde<br>
@@ -611,7 +621,6 @@ class Stunde(VpMobilPyModell):
                 return slice_aufzählung(s)
             return []
 
-        
     @property
     def räume(self) -> list[str]:
         """Räume der Stunde<br>
@@ -674,6 +683,7 @@ class Stunde(VpMobilPyModell):
         "Zusätzliche Information zur Stunde"
         return self._data_value_safe_type("If", "text") or None
             
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Kurs                                            │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
