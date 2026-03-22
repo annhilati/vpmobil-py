@@ -116,14 +116,14 @@ class VertretungsTag(VpMobilPyModell):
 
     @property
     def datum(self) -> date | None:
-        "Datum für das der Vertretungsplan gilt"
+        "Datum für das der Vertretungsplan gilt.<br>Gibt `None` zurück, falls der Zeit-String nicht dekodiert werden kann. In diesem Fall, sollte ein [Issue](https://github.com/annhilati/vpmobil-py/issues) erstell werden."
         import locale
         
-        if s := self._data_value_safe_type("Kopf/DatumPlan", "text"):
+        if DatumPlan := self._data_value_safe_type("Kopf/DatumPlan", "text"):
             for s in ["de_DE.UTF-8", "German_Germany"]:
                 try:
                     locale.setlocale(locale.LC_TIME, s)
-                    return datetime.strptime(s, (r"%A, %d. %B %Y")).date()
+                    return datetime.strptime(DatumPlan, (r"%A, %d. %B %Y")).date()
                 except: continue
         return None
     
