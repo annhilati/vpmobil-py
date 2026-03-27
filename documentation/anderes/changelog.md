@@ -4,6 +4,11 @@ icon: clock-rotate-left
 
 # Changelog
 
+## [2.1.0.1](https://pypi.org/project/vpmobil/2.1.0.1/) (2026-03-27)
+
+### 🪲 Bug Fixes
+* Auf manchen Maschinen wird ein Fehler geworfen, weil `Stunde.__repr__` eine Quote-Kollision hat
+
 ## [2.1.0](https://pypi.org/project/vpmobil/2.1.0/) (2026-03-27)
 
 ### 🚀 Neue Funktionen
