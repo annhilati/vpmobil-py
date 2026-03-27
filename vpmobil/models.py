@@ -556,7 +556,7 @@ class Stunde(VpMobilPyModell):
     def __repr__(self):
         if self.ausfall:
             return f"<Ausfall: '{self.info}'>"
-        return f"<'{", ".join(self.klassen)}' mit '{self.fach}' bei '{", ".join(self.lehrer)}' in '{", ".join(self.räume)}'>"
+        return f"<\'{', '.join(self.klassen)}\' mit \'{self.fach}\' bei \'{', '.join(self.lehrer)}\' in \'{', '.join(self.räume)}\'>"
     
     @property
     def periode(self) -> int:
