@@ -22,6 +22,7 @@ icon: clock-rotate-left
 * Das Dekodieren von Zeitstrings funktioniert auf manchen Geräten nicht
 * Syntax im Tip von `Stunde.fach` korrigiert
 * Typ-Annotation von `Klasse.kurse` korrigiert
+* Auf manchen Maschinen wird ein Fehler geworfen, weil `VertretungsTag.__new__` eine Quote-Kollision hat
 
 ## [2.0.0](https://pypi.org/project/vpmobil/2.0.0/) (2025-11-10)
 

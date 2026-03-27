@@ -92,7 +92,7 @@ class VertretungsTag(VpMobilPyModell):
                 case "R":
                     return RaumVertretungsTag(_data)
                 case _:
-                    raise ValueError(f"Planart muss eins von 'K', 'L' oder 'R' sein, nicht '{_data.find("Kopf/planart").text}'")
+                    raise ValueError(f"Planart muss eins von 'K', 'L' oder 'R' sein, nicht '{_data.find('Kopf/planart').text}'")
                 
         return super().__new__(cls)
             

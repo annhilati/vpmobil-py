@@ -36,7 +36,7 @@ def set_config(overrides: dict[str, Any] | None = None, /, **kwargs: Any) -> Non
         if hasattr(config, key):
             setattr(config, key, value)
         else:
-            raise ValueError(f"Ungültiger Parameter: {key}")
+            raise ValueError(f"Ungültiger Parameter: '{key}'")
 
 AUFZÄHLUNGS_SEPARATOR = " "
 """Zeichen das verwendet wird, um etwaige Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
