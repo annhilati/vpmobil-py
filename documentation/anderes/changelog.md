@@ -4,7 +4,7 @@ icon: clock-rotate-left
 
 # Changelog
 
-## Development
+## [2.1.0](https://pypi.org/project/vpmobil/2.1.0/) (2026-03-27)
 
 ### 🚀 Neue Funktionen
 
