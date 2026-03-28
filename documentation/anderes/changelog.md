@@ -4,6 +4,16 @@ icon: clock-rotate-left
 
 # Changelog
 
+## Development
+
+### 🚀 Neue Funktionen
+
+* Eigenschaft `fachmeta` zu `Stunde` hinzugefügt, die die Information aus dem `Ku2`-Tag der Quelldaten bereitstellt
+
+### 🔧 Änderungen
+
+* Docstring zu `Stunde.fach` etwas konkretisiert
+
 ## [2.1.0.1](https://pypi.org/project/vpmobil/2.1.0.1/) (2026-03-27)
 
 ### 🪲 Bug Fixes

@@ -584,16 +584,29 @@ class Stunde(VpMobilPyModell):
 
     @property
     def fach(self) -> str | None:
-        """Fach der Stunde<br>
-        Gibt `None` zurück, wenn die Stunde entfällt
+        """Fach bzw. Kursbezeichnung der Stunde<br>
+        Gibt `None` zurück, wenn die Stunde entfällt.
 
-        Es kann sein, dass nicht das wirkliche Fach sondern die Kursbezeichnung zurückgegeben wird. Stattdessen `klasse.kurs(stunde.kursnummer).fach` verwenden.<br>
+        Um sicherzustellen, dass tatsächlich das gängige Kürzel des Fachs und nicht eine etwaige Kursbezeichnung zurückgegeben wird, `klasse.kurs(stunde.kursnummer).fach` verwenden.  
         Bei Unsicherheit mit Fallback:
         ```
         stunde.fach if klasse.kurse[stunde.kursnummer] is None else klasse.kurse[stunde.kursnummer].fach
         ```
         """
         if (s := self._data_value_safe_type("Fa", "text")) != "---":
+            return s
+        return None
+    
+    @property
+    def fachmeta(self) -> str | None:
+        """Metainformation über das Fach das normalerweise stattfindet
+
+        Das Verhalten dieses Werts ist etwas unintuitiv. Er wird hauptsächlich bei Stunden von Kursen gesetzt, die mehrere inhatlich parallele Gruppen haben,
+        beispielsweise bei Sport (wenn es separate Kurse für Jungen und Mädchen gibt), Profilen, Religionsgruppen und Kursen der Oberstufe generell.
+        
+        Dieser Wert ist bei entsprechenden Stunden immer gesetzt, auch wenn die Stunde entfällt oder das Fach geändert wurde.
+        """
+        if (s := self._data_value_safe_type("Ku2", "text")):
             return s
         return None
 
@@ -670,7 +683,8 @@ class Stunde(VpMobilPyModell):
         Kann `None` sein, wenn das Fach der Stunde geändert wurde, jedoch nicht, wenn die Stunde entfällt.<br>
         Kann `None` sein, beispielsweise wenn die Stunde eine Exkursion ist.
         
-        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise, wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
+        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise
+        wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
         """
         if nr := self._data_value_safe_type("Nr", "text"):
             if nr.endswith("+"): # Gemäß #44
