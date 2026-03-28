@@ -4,6 +4,7 @@ from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
 from typing import Literal, Any
+import re
 
 from vpmobil.utils import prettyxml, slice_aufzählung
 from vpmobil import config
@@ -696,6 +697,13 @@ class Stunde(VpMobilPyModell):
     def info(self) -> str | None:
         "Zusätzliche Information zur Stunde"
         return self._data_value_safe_type("If", "text") or None
+    
+    @property
+    def verlegt(self) -> bool:
+        "Ob die Stunde hierher verlegt wurde"
+        if (match := re.search(config.STUNDE_HERVERLEGT_PATTERN, self.info)):
+            return match["periode"]
+        return None
             
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮

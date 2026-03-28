@@ -11,6 +11,8 @@ BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN : bool = `True`
     Ob `-` in Klassenangaben als Bereich interpretiert werden sollen
 KLASSENBEZEICHNER_PATTERN : str
     Capture-Pattern zum parsen von Klassenbezeichnungen
+STUNDE_HERVERLEGT_PATTERN : str
+    Capture-Pattern, dass die Periode, von der eine Stunde verleg wurde, extrahiert  
 """
 
 from typing import overload, Any
@@ -57,7 +59,7 @@ Falls ja würde
 """
 
 KLASSENBEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
-"""Capture Pattern für Stufe und Suffix einer Klasse<br>
+"""Capture-Pattern für Stufe und Suffix einer Klasse<br>
 Muss die Capture-Groups `stufe` und `suffix` enthalten
 """
 
@@ -77,6 +79,10 @@ Das Format, in dem in den Informationen zu einer Stunde eine Verschiebung vermer
 
 Standard: `statt Mo (27.10.) St.6; ETH Herr Reinhold gehalten am Di (28.10.) St.4`
 """
+
+STUNDE_HERVERLEGT_PATTERN = r"verlegt von St\.(?P<periode>\d+);"
+"""Capture-Pattern, dass die Periode, von der eine Stunde verleg wurde, extrahiert  
+Muss die Capture-Group `periode`"""
 
 class ERRORS:
     KEY_VALUE_ASSERTION = "Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt im Bugtracker von vpmobil-py auf GitHub."
