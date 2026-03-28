@@ -74,7 +74,7 @@ class Vertretungsplan():
         Verwende dafür Typ-Annotation: `plan: RaumVertretungsTag = vp.fetch()`<br>
         Falls es unklar ist, kann `vpmobil.MobdatenBase` als Protokoll verwendet werden.
 
-        Parameters
+        Parameters:
             datum (date): Abzurufender Tag
             datei (str): Pfad (beginnend nach der TLD) der abzurufenden Datei. `datum` kann parallel mit `datei` durch [Platzhalter des datetime-Moduls](https://strftime.org/) verwendet werden.
 
