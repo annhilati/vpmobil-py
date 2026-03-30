@@ -13,6 +13,7 @@ icon: clock-rotate-left
 
 ### 🔧 Änderungen
 
+* Parameter `serverdomain` von `Vertretungsplan` in `domain` umbenannt
 * Docstring zu `Stunde.fach` etwas konkretisiert
 
 ## [2.1.0.1](https://pypi.org/project/vpmobil/2.1.0.1/) (2026-03-27)
