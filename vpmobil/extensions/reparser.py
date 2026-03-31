@@ -1,12 +1,12 @@
-"""Erweiterung zum Umwandeln von Vertretungsplan-Datenmodellen
-
----
-
-Mit den Funktionen dieses Submoduls können Vertretungsplantag in eine andere Planart umgewandelt werden.
-
-So können beispielsweise `KlassenVertretungsTag`-Objekte (mit geringfügigen Einbußen) in `LehrerVertretungsTag`-Objekte umgewandelt werden,
-um so eine Auswertung aus Perspektive der Lehrer zu ermöglichen.
+"""Dieses Erweiterungsmodul enthält Funktionen, um Vertretungspläne so
+umzuwandeln, dass Auswertung auch aus Perspektive von Lehrern oder Räumen
+möglich ist.
 """
+
+# Die Implementierung hier ist noch ziemlich unschön, aber sie funktioniert.
+# Das Hauptproblem ist die merge_map, die dafür sorgt, dass Stunden, die in
+# verschiedenen Klassenplänen auftauchen, zusammengefasst werden.
+
 
 from typing import Callable, Literal
 from vpmobil.models import (
@@ -17,7 +17,7 @@ from vpmobil.models import (
 from vpmobil import config
 import xml.etree.ElementTree as XML
 
-def _converter(
+def _converter_fabric(
     planart:       Literal["K", "L", "R"],
     get_Le:        Callable[[Stunde], list[str]],
     get_LeAe:      Callable[[Stunde], bool],
@@ -27,7 +27,7 @@ def _converter(
     get_Kl_target: Callable[[Stunde], list[str]],
     get_Kl_target_K: Callable[[Kurs], str]
 ):
-    def _subElement(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
+    def add_Element(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
         element = XML.SubElement(parent, tag, attrib)
         if text:
             element.text = text
@@ -36,16 +36,16 @@ def _converter(
     def converter(tag: VertretungsTagType):
         root = XML.Element("VpMobil")
 
-        Kopf = _subElement(root, "Kopf")
-        _subElement(Kopf, "planart", planart)
-        _subElement(Kopf, "zeitstempel", tag.zeitstempel.strftime("%d.%m.%Y, %H:%M"))
-        _subElement(Kopf, "DatumPlan", tag.datum.strftime("%A, %d. %B %Y"))
+        Kopf = add_Element(root, "Kopf")
+        add_Element(Kopf, "planart", planart)
+        add_Element(Kopf, "zeitstempel", tag.zeitstempel.strftime("%d.%m.%Y, %H:%M"))
+        add_Element(Kopf, "DatumPlan", tag.datum.strftime("%A, %d. %B %Y"))
 
-        FreieTage = _subElement(root, "FreieTage")
+        FreieTage = add_Element(root, "FreieTage")
         for datum in tag.freieTage:
-            _subElement(FreieTage, "ft", datum.strftime("%y%m%d"))
+            add_Element(FreieTage, "ft", datum.strftime("%y%m%d"))
 
-        Klassen = _subElement(root, "Klassen")
+        Klassen = add_Element(root, "Klassen")
         merge_map: dict[str, dict[tuple, dict[str, set[str]]]] = {}
 
         for klasseLike in get_old_Kl(tag).values():
@@ -83,35 +83,35 @@ def _converter(
 
         # XML erzeugen
         for target, stunden_dict in merge_map.items():
-            Kl = _subElement(Klassen, "Kl")
-            _subElement(Kl, "Kurz", target)
-            Pl = _subElement(Kl, "Pl")
+            Kl = add_Element(Klassen, "Kl")
+            add_Element(Kl, "Kurz", target)
+            Pl = add_Element(Kl, "Pl")
 
             for (target, periode, fach, kursnummer, info, beginn, ende), vals in sorted(stunden_dict.items(), key=lambda x: int(x[0][1])):
-                Std = _subElement(Pl, "Std")
-                _subElement(Std, "St", str(periode))
+                Std = add_Element(Pl, "Std")
+                add_Element(Std, "St", str(periode))
                 if beginn:
-                    _subElement(Std, "Beginn", beginn)
+                    add_Element(Std, "Beginn", beginn)
                 if ende:
-                    _subElement(Std, "Ende", ende)
+                    add_Element(Std, "Ende", ende)
 
                 fa_text = "" if fach is None and not vals["ausfall"] else fach if not vals["ausfall"] else "---"
-                Fa = _subElement(Std, "Fa", fa_text)
+                Fa = add_Element(Std, "Fa", fa_text)
                 if vals["fachgeändert"]:
                     Fa.set("FaAe", "FaGeaendert")
 
-                Le = _subElement(Std, "Le", config.AUFZÄHLUNGS_SEPARATOR.join(sorted(vals["Le"])))
+                Le = add_Element(Std, "Le", config.AUFZÄHLUNGS_SEPARATOR.join(sorted(vals["Le"])))
                 if vals["LeAe"]:
                     Le.set("LeAe", "LeGeaendert")
 
-                Ra = _subElement(Std, "Ra", config.AUFZÄHLUNGS_SEPARATOR.join(sorted(vals["Ra"])))
+                Ra = add_Element(Std, "Ra", config.AUFZÄHLUNGS_SEPARATOR.join(sorted(vals["Ra"])))
                 if vals["RaAe"]:
                     Ra.set("RaAe", "RaGeaendert")
 
                 if kursnummer:
-                    _subElement(Std, "Nr", str(kursnummer))
+                    add_Element(Std, "Nr", str(kursnummer))
                 if info:
-                    _subElement(Std, "If", info)
+                    add_Element(Std, "If", info)
 
         Klassen[:] = sorted(Klassen, key=lambda e: e.findtext("Kurz"))
 
@@ -122,15 +122,11 @@ def _converter(
 
 
 def KlassenPerspektive(tag: VertretungsTag, /) -> KlassenVertretungsTag:
-    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Klassen um.
-    
-    Verloren gehen
-    --------
-    - Dateiname
-    - Aufsichten
+    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Klassen
+    um. Dateiname und Lehreraufsichten gehen verloren.
     """
     if type(tag) == LehrerVertretungsTag:
-        return _converter(
+        return _converter_fabric(
             planart=     "K",
             get_Le=       lambda s: s.lehrer,
             get_LeAe=     lambda s: s.lehrergeändert,
@@ -141,7 +137,7 @@ def KlassenPerspektive(tag: VertretungsTag, /) -> KlassenVertretungsTag:
             get_Kl_target_K=lambda s: None
         )(tag)
     elif type(tag) == RaumVertretungsTag:
-        return _converter(
+        return _converter_fabric(
             planart=     "K",
             get_Le=       lambda s: s.lehrer,
             get_LeAe=     lambda s: s.lehrergeändert,
@@ -157,17 +153,12 @@ def KlassenPerspektive(tag: VertretungsTag, /) -> KlassenVertretungsTag:
         raise ValueError(f"Unbekannter Plantyp: {type(tag)}")
 
 def LehrerPerspektive(tag: VertretungsTag, /) -> LehrerVertretungsTag:
-    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Lehrer um.
-    
-    Verloren gehen
-    --------
-    - Dateiname
-    - Kurse
-    - Klausuren
+    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Lehrer
+    um. Dateiname, Kurse und Klausuren gehen verloren.
     """
 
     if type(tag) == KlassenVertretungsTag:
-        return _converter(
+        return _converter_fabric(
             planart=     "L",
             get_Le=       lambda s: s.klassen,
             get_LeAe=     lambda s: s.klassegeändert,
@@ -178,7 +169,7 @@ def LehrerPerspektive(tag: VertretungsTag, /) -> LehrerVertretungsTag:
             get_Kl_target_K=lambda k: k.lehrer
         )(tag)
     elif type(tag) == RaumVertretungsTag:
-        return _converter(
+        return _converter_fabric(
             planart=     "L",
             get_Le=       lambda s: s.klassen,
             get_LeAe=     lambda s: s.klassegeändert,
@@ -194,18 +185,12 @@ def LehrerPerspektive(tag: VertretungsTag, /) -> LehrerVertretungsTag:
         raise ValueError(f"Unbekannter Plantyp: {type(tag)}")
     
 def RaumPerspektive(tag: VertretungsTag, /) -> RaumVertretungsTag:
-    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Klassen um.
-    
-    Verloren gehen
-    --------
-    - Dateiname
-    - Aufsichten
-    - Kurse
-    - Klausuren
+    """Wandelt einen Vertretungsplan in einen aus der Perspektive der Räume
+    um. Veloren gehen Dateiname, Lehreraufsichten, Kurse und Klausuren.
     """
 
     if type(tag) == KlassenVertretungsTag:
-        return _converter(
+        return _converter_fabric(
             planart=     "R",
             get_Le=       lambda s: s.lehrer,
             get_LeAe=     lambda s: s.lehrergeändert,
@@ -216,7 +201,7 @@ def RaumPerspektive(tag: VertretungsTag, /) -> RaumVertretungsTag:
             get_Kl_target_K=lambda k: None
         )(tag)
     elif type(tag) == LehrerVertretungsTag:
-        return _converter(
+        return _converter_fabric(
             planart=     "R",
             get_Le=       lambda s: s.lehrer,
             get_LeAe=     lambda s: s.lehrergeändert,

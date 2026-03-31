@@ -17,7 +17,7 @@ kurs    = Kurs()
 aufsicht = Aufsicht()
 klausur = Klausur()
 
-Stundenplan24Pfade
+Standardpfade
 
 vp.fetch()
 

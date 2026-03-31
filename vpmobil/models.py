@@ -10,21 +10,27 @@ from vpmobil.utils import prettyxml, slice_aufzählung
 from vpmobil import config
 
 @dataclass(init=True, eq=False)
-class VpMobilPyModell():
+class VpMobilPyModell:
 
     _data:    XML.Element            = field(init=True)
     _planart: Literal["K", "L", "R"] = field(init=True)
 
-    def _data_value_safe_type(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict | Literal[False]:
-        "Gibt ein Attribut eines Untertags zurück.<br>Ist niemals `None`. Stattdessen wird `\"\"` oder `{}` zurückgegeben."
+    def _data_value_safe_type(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict:
+        "Gibt ein Attribut eines Untertags zurück. Ist niemals `None`. Stattdessen wird `\"\"` oder `{}` zurückgegeben."
+        # Hier mal hinzufügen, dass direkt Keys aus Element.attrib angefordert werden können?
         element = self._data.find(tag)
         match attr:
             case "text":    return getattr(element, attr, "")
             case "attrib":  return getattr(element, attr, {})
+            case _:         raise ValueError
 
     def as_dict(self) -> dict[str, Any]:
-        """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und wandelt alle Datentypen in Primitives um, sodass das Dictionary beispielsweise in JSON modelliert werden kann.
+        """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und
+        wandelt alle Datentypen in Primitives um, sodass das Dictionary beispielsweise
+        in JSON modelliert werden kann.
         
+        Verwendete Formate: 
+
         - `datetime(2025, 10, 18, 21, 3)` -> `"18.10.2025, 21:03"`
         - `time(21, 3)` -> `"21:03"`
         - `date(2025, 10, 18)` -> `"18.10.2025"`
@@ -77,8 +83,11 @@ class VertretungsTag(VpMobilPyModell):
     Diese klasse kann mit `isinstance()` auch als Protokoll für die oben genannten Subklassen verwendet werden.
     """
 
-    _data:    XML.ElementTree        = field(init=True)
-    _planart: Literal["K", "L", "R"] = field(init=False, default=None)
+    _planart = field(init=False)
+
+    @property
+    def _planart(self) -> Literal["K", "L", "R"]:
+        return self._data_value_safe_type("Kopf/planart", "text")
 
     def __new__(cls, _data: XML.ElementTree):
         if cls is VertretungsTag:
@@ -96,10 +105,7 @@ class VertretungsTag(VpMobilPyModell):
                     raise ValueError(f"Planart muss eins von 'K', 'L' oder 'R' sein, nicht '{_data.find('Kopf/planart').text}'")
                 
         return super().__new__(cls)
-            
-    def __post_init__(self):
-        self._planart = self._data.find("Kopf/planart").text
-            
+                        
     def __repr__(self):
         return f"<Vertretungsplan (Typ {self._planart}) vom {self.datum.strftime(r'%d.%m.%Y')}>"
         

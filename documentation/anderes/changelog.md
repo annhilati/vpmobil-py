@@ -10,6 +10,8 @@ icon: clock-rotate-left
 
 * Eigenschaft `fachmeta` zu `Stunde` hinzugefügt, die die Information aus dem `Ku2`-Tag der Quelldaten bereitstellt
 * Eigenschaft `verlegt` zu `Stunde` hinzugefügt
+* Methode `fetchall()` zu `Vertretungsplan` hinzugefügt
+* `Stundenplan24Pfade` in `Standardpfade umbenannt`
 
 ### 🔧 Änderungen
 

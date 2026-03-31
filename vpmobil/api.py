@@ -7,10 +7,15 @@ import requests
 
 from vpmobil.models import VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag
 
-class Stundenplan24Pfade(StrEnum):
-    """Enumerator mit den Pfaden für Vertretungsplanquelldateien, wie sie auf `stundenplan24.de` verwendet werden.<br>
+class Standardpfade(StrEnum):
+    """Enumerator mit den Pfaden für Vertretungsplanquelldateien,
+    wie sie auf `stundenplan24.de` verwendet werden. `Klassen`, `Lehrer`
+    und `Raeume` enthalten immer die Tage des Plans, die zuletzt
+    veröffentlicht wurden. `PlanKl`, `PlanLe` und `PlanRa` enthalten die
+    Pläne für beliebige Tage.
     
-    Pfade enthalten die Platzhalter `{schulnummer}`, `%%Y`, `%%m` und `%%d`.
+    Die Pfade enthalten immer den Platzhalter `{schulnummer}`, gegebenenfalls
+    auch die strftime-Direktiven `%%Y`, `%%%m` und `%%d`.
     """
     Klassen = "{schulnummer}/mobil/mobdaten/Klassen.xml"
     PlanKl  = "{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
@@ -42,23 +47,23 @@ class Vertretungsplan():
         dateipfadschema (str):
             Schema der Pfade unter dem die Quelldateien abgerufen werden können.
             `{schulnummer}` sowie strftime-Direktiven können als Platzhalter verwendet werden.
-            Die Standardpfade sind im Enumerator `Stundenplan24Pfade` enthalten.
+            Die Standardpfade sind im Enumerator `Standardpfade` enthalten.
     """
     
     schulnummer:      int
     benutzername:     str
     passwort:         str
-    serverdomain:     str = "stundenplan24.de"
+    domain:           str = "stundenplan24.de"
     port:             int = None
-    dateipfadschema:  str = Stundenplan24Pfade.PlanKl
+    dateipfadschema:  str = Standardpfade.PlanKl
     
     def __post_init__(self):
 
-        if self.serverdomain.endswith('/'):
-            self.serverdomain = self.serverdomain[:-1]
+        if self.domain.endswith('/'):
+            self.domain = self.domain[:-1]
 
-        if "://" in self.serverdomain:
-            self.serverdomain = self.serverdomain.split("://")[-1]
+        if "://" in self.domain:
+            self.domain = self.domain.split("://")[-1]
             
         if self.dateipfadschema.startswith("/"):
             self.dateipfadschema = self.dateipfadschema[1:]
@@ -69,7 +74,7 @@ class Vertretungsplan():
             scheme="http",
             user=self.benutzername,
             password=self.passwort,
-            host=self.serverdomain,
+            host=self.domain,
             port=self.port
         )
 
@@ -77,7 +82,7 @@ class Vertretungsplan():
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
     def fetch(self, datum: date = date.today(), /, datei: str = None) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
-        """Ruft die Daten eines Tages ab.
+        """Ruft die Daten eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
 
         Parameters:
             datum (date): Datum des abzurufenden Tags
@@ -112,14 +117,26 @@ class Vertretungsplan():
             response.raise_for_status()
             return VertretungsTag(XML.fromstring(response.content))
         
-    def bulkfetch(self, standardplan: str = Stundenplan24Pfade.Klassen, try_weekend: bool = False) -> list[KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag]:
+    def fetchall(self, standardplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag]:
+        """Ruft die Daten für alle verfügbaren Tage ab. Genauer gesagt wird versucht,
+        jeden Tag im Zeitraum von 14 Tagen vor bis 7 Tagen nach dem zuletzt veröffentlichten
+        Tag abzurufen. Jeder erhaltene Tag fordert wenige hundert Kilobyte.
+
+        Parameters:
+            standardplan (str): Pfad, unter dem immer ein Plan vorhanden ist
+            nur_zukünftige (bool): Ob nur zukünftige Tage abgerufen werden sollen
+            wochenenden (bool): Ob auch Wochenenden abgerufen werden sollen
+        """
 
         standard = self.fetch(datei=standardplan)
 
         results: list[VertretungsTag] = []
 
-        for tag in (tag for tag in (date.today() + timedelta(days=i) for i in range(-14, 15))
-                    if (try_weekend or tag.weekday() < 5) and tag not in standard.freieTage):
+        for tag in (tag for tag in ((standard.datum or date.today()) + timedelta(days=i) for i in range(-7, 15))
+                    if tag not in standard.freieTage
+                    and (wochenenden or tag.weekday() < 5)
+                    and (not nur_zukünftige or tag >= date.today())
+        ):
             try:
                results.append(self.fetch(tag))
             except VpMobilPyError:

@@ -85,5 +85,5 @@ STUNDE_HERVERLEGT_PATTERN = r"verlegt von St\.(?P<periode>\d+);"
 Muss die Capture-Group `periode`"""
 
 class ERRORS:
-    KEY_VALUE_ASSERTION = "Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt im Bugtracker von vpmobil-py auf GitHub."
+    KEY_VALUE_ASSERTION = "Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt auf GitHub im Bugtracker von vpmobil-py."
     UNKNOWN_XML = "XML-Quelldaten sind unbekannt formatiert"

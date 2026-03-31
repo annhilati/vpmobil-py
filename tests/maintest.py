@@ -1,4 +1,4 @@
-from vpmobil import Vertretungsplan, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, Stundenplan24Pfade, set_config
+from vpmobil import Vertretungsplan, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, Standardpfade, set_config
 from vpmobil.extensions import reparser, config_presets
 from dotenv import load_dotenv
 from os import getenv
@@ -12,7 +12,7 @@ vp = Vertretungsplan(getenv("SCHULNUMMER"), getenv("NUTZER"), getenv("PASSWORT")
 vp = Vertretungsplan(getenv("SCHULNUMMER"), getenv("NUTZER"), getenv("PASSWORT"))
 set_config(config_presets.TolkewitzCampus)
 
-tag = vp.fetch(datei=Stundenplan24Pfade.Klassen)
+tag = vp.fetch(datei=Standardpfade.Klassen)
 
 def main():
 
