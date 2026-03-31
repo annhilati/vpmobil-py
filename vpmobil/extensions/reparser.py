@@ -11,11 +11,13 @@ möglich ist.
 from typing import Callable, Literal
 from vpmobil.models import (
     KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, VertretungsTag,
-    Stunde, Kurs,
-    VertretungsTagType, KlasseLikeType
+    Stunde, Kurs, Klasse, Lehrer, Raum
 )
 from vpmobil import config
 import xml.etree.ElementTree as XML
+
+type VertretungsTagType = KlassenVertretungsTag | RaumVertretungsTag | LehrerVertretungsTag
+type KlasseLikeType = Klasse | Lehrer | Raum
 
 def _converter_fabric(
     planart:       Literal["K", "L", "R"],

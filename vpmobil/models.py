@@ -17,6 +17,7 @@ class VpMobilPyModell:
 
     def _data_value_safe_type(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict:
         "Gibt ein Attribut eines Untertags zurück. Ist niemals `None`. Stattdessen wird `\"\"` oder `{}` zurückgegeben."
+        
         # Hier mal hinzufügen, dass direkt Keys aus Element.attrib angefordert werden können?
         element = self._data.find(tag)
         match attr:
@@ -59,8 +60,7 @@ class VpMobilPyModell:
 
         result = {}
         for name in dir(self.__class__):
-            attr = getattr(self.__class__, name, None)
-            if isinstance(attr, property):
+            if isinstance(getattr(self.__class__, name, None), property):
                 val = getattr(self, name)
                 result[name] = apply_converter(val)
 
@@ -76,18 +76,15 @@ class VpMobilPyModell:
 
 @dataclass(eq=False)
 class VertretungsTag(VpMobilPyModell):
-    """Base-Class für Vertretungspläne.
+    """VertretungsTag ist die Basisklasse für Vertretungspläne.
 
-    Beim Versuch einer Instanzierung wird automatisch eine Instanz von `VertretungsTag`, `LehrerVertretungsTag` oder `RaumVertretungsTag` zurückgegeben.
-
-    Diese klasse kann mit `isinstance()` auch als Protokoll für die oben genannten Subklassen verwendet werden.
+    Beim Versuch einer Instanzierung wird entsprechend dem Inhalt automatisch
+    eine Instanz von `VertretungsTag`, `LehrerVertretungsTag` oder
+    `RaumVertretungsTag` zurückgegeben.
     """
 
-    _planart = field(init=False)
-
-    @property
-    def _planart(self) -> Literal["K", "L", "R"]:
-        return self._data_value_safe_type("Kopf/planart", "text")
+    _data:    XML.ElementTree        = field(init=True)
+    _planart: Literal["K", "L", "R"] = field(init=False, default=None)
 
     def __new__(cls, _data: XML.ElementTree):
         if cls is VertretungsTag:
@@ -111,19 +108,19 @@ class VertretungsTag(VpMobilPyModell):
         
     @property
     def zeitstempel(self) -> datetime | None:
-        "Veröffentlichungszeitpunkt des Vertretungsplans"
+        "Veröffentlichungszeitpunkt des Vertretungsplans bzw. der letzten Änderung"
         if s := self._data_value_safe_type("Kopf/zeitstempel", "text"):
             return datetime.strptime(s, r"%d.%m.%Y, %H:%M")
         return None
         
     @property
     def datei(self) -> str | None:
-        "Dateiname der Quelldatei"
+        "Originaler Dateiname der Quelldatei"
         return self._data_value_safe_type("Kopf/datei", "text") or None
 
     @property
     def datum(self) -> date | None:
-        "Datum für das der Vertretungsplan gilt.<br>Gibt `None` zurück, falls der Zeit-String nicht dekodiert werden kann. In diesem Fall, sollte ein [Issue](https://github.com/annhilati/vpmobil-py/issues) erstell werden."
+        "Datum für das der Vertretungsplan gilt"
         import locale
         
         if DatumPlan := self._data_value_safe_type("Kopf/DatumPlan", "text"):
@@ -132,11 +129,12 @@ class VertretungsTag(VpMobilPyModell):
                     locale.setlocale(locale.LC_TIME, s)
                     return datetime.strptime(DatumPlan, (r"%A, %d. %B %Y")).date()
                 except: continue
+            raise ValueError(f"Das Datum {DatumPlan} konnte nicht dekodiert werden. Bitte erstelle ein Issue im Bugtracker von vpmobil-py auf GitHub (https://github.com/annhilati/vpmobil-py/issues)")
         return None
     
     @property
     def freieTage(self) -> list[date]:
-        "Im Vertretungsplan als frei markierte Tage"
+        "Unterrichtsfreie Tage"
         if freieTage := self._data.find("FreieTage"):
             return [
                 datetime.strptime(ft.text, "%y%m%d").date()
@@ -147,8 +145,7 @@ class VertretungsTag(VpMobilPyModell):
     
     @property
     def zusatzInfo(self) -> str | None:
-        """Zusätzliche Informationen zum Tag<br>
-        Kann Multiline sein
+        """Zusätzliche Informationen zum Tag. Kann mehrzeilig sein.
         """
         if zusatzInfo := self._data.find('ZusatzInfo'):
             return '\n'.join([
@@ -161,7 +158,9 @@ class VertretungsTag(VpMobilPyModell):
     def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> list[str]:
         """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.
         
-        Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt. Um das zu berücksichtigen, sollten in `räume_context` die Kürzel möglicher Räume mitgegeben werden.
+        Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt.
+        Um das zu berücksichtigen, sollten in `räume_context` die Kürzel möglicher
+        Räume mitgegeben werden.
         """
 
         from vpmobil.extensions import reparser
@@ -172,63 +171,56 @@ class VertretungsTag(VpMobilPyModell):
         for kürzel, raum in data.räume.items():
 
             frei.add(kürzel)
-
             for periode, stunden in raum.stunden.items():
                 for stunde in stunden:
 
                     if stunde.beginn is None or stunde.ende is None:
-                        continue
-                    
+                        continue # keine Aussage möglich -> überspringen
+                    if stunde.ausfall is True:
+                        continue # Stunde fällt aus
                     if stunde.ende <= beginn or ende <= stunde.beginn:
-                        continue
-
-                    if stunde.ausfall is None:
-                        continue
-
+                        continue # Stunde überschneidet sich nicht mit Zeitraum
                     if kürzel in frei:
                         frei.remove(kürzel)
 
         return sorted(list(frei))
             
     @classmethod
-    def fromfile(cls, pfad: Path | str) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
+    def fromfile(cls, pfad: Path | str, /) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """
         Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
-
-        Parameters:
-            pfad (Path): Dateipfad einer XML-Datei
 
         Raises:
             FileNotFoundError : Wenn die Datei nicht existiert
             ValueError : Wenn die Datei nicht gelesen werden kann
         """
         with open(pfad, encoding="utf-8-sig") as f:
-            instance = cls(_data=XML.parse(f))
+            instance = cls(XML.parse(f))
         return instance
     
     def saveasfile(self, pfad: Path | str = "./datei.xml", overwrite=True) -> None:
-        """Speichert alle Daten des Tages als XML-Datei.
+        """Speichert den Vertretungsplan als XML-Datei.
 
         Parameters:
-            pfad (Path | str): Der Dateipfad der zu erstellenden Datei
+            pfad (Path | str): Dateipfad der zu erstellenden Datei
             overwrite (bool): Ob die Datei überschrieben werden darf, falls sie bereits existiert
 
         Raises:
-            FileExistsError: Falls eine bereits existierende Datei überschrieben werden soll, obwohl `overwrite` `False` ist
+            FileExistsError: Falls die Datei bereits existiert und `overwrite` `False` ist
         """
 
         xmlpretty = prettyxml(self._data)
 
-        zielpfad = Path(pfad).resolve() if isinstance(pfad, str) else pfad.resolve()
+        zielpfad = Path(pfad).resolve() # Funktioniert für Path und str
         zielverzeichnis = zielpfad.parent
         zielverzeichnis.mkdir(parents=True, exist_ok=True)
 
         if zielpfad.exists() and not overwrite:
-            raise FileExistsError(f"Die Datei '{zielpfad}' existiert bereits.")
+            raise FileExistsError(f"Datei '{zielpfad}' existiert bereits.")
 
         zielpfad.write_text(xmlpretty, encoding="utf-8")
 
-    def _Kl_elemente(self) -> list[XML.Element]:
+    def _Kl_Elemente(self) -> list[XML.Element]:
         if klassen := self._data.find('.//Klassen'):
             return [
                 kl for kl in klassen.findall(".//Kl")
@@ -242,11 +234,11 @@ class VertretungsTag(VpMobilPyModell):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class KlassenVertretungsTag(VertretungsTag):
-    """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Klassen repräsentiert.
+    """Klasse für Vertretungspläne aus Perspektive der Klassen.
     
-    Unterstützt Subskription: 
+    Einzelne Klassen sind neben `~.klassen` über `__getitem__` und Subskription verfügbar: 
     ```
-    data: VpDay = vp.fetch()
+    data: KlassenVertretungsTag = vp.fetch()
     klasse = data["10a"]
     ```
     """
@@ -292,7 +284,7 @@ class KlassenVertretungsTag(VertretungsTag):
         "Im Vertretungsplan beschriebene Klassen"
         return {
             Klasse(element, self._planart).kürzel: Klasse(element, self._planart)
-            for element in self._Kl_elemente()
+            for element in self._Kl_Elemente()
         }
 
 
@@ -301,11 +293,11 @@ class KlassenVertretungsTag(VertretungsTag):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class LehrerVertretungsTag(VertretungsTag):
-    """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Lehrer repräsentiert.
+    """Klasse für Vertretungspläne aus Perspektive der Lehrer.
     
-    Unterstützt Subskription: 
+    Einzelne Lehrer sind neben `~.lehrer` über `__getitem__` und Subskription verfügbar: 
     ```
-    data: VpDay = vp.fetch()
+    data: LehrerVertretungsTag = vp.fetch()
     lehrer = data["Ah"]
     ```
     """
@@ -318,7 +310,7 @@ class LehrerVertretungsTag(VertretungsTag):
         "Im Vertretungsplan beschriebene Lehrer"
         return {
             Lehrer(element, self._planart).kürzel: Lehrer(element, self._planart)
-            for element in self._Kl_elemente()
+            for element in self._Kl_Elemente()
         }    
     
 
@@ -327,11 +319,11 @@ class LehrerVertretungsTag(VertretungsTag):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class RaumVertretungsTag(VertretungsTag):
-    """Klasse die den Vertretungsplan an einem bestimmten Tag aus Sicht der Räume repräsentiert.
+    """Klasse für Vertretungspläne aus Perspektive der Räume.
     
-    Unterstützt Subskription: 
+    Einzelne Räume sind neben `~.räume` über `__getitem__` und Subskription verfügbar: 
     ```
-    data: VpDay = vp.fetch()
+    data: RaumVertretungsTag = vp.fetch()
     raum = data["E07"]
     ```
     """
@@ -344,7 +336,7 @@ class RaumVertretungsTag(VertretungsTag):
         "Im Vertretungsplan beschriebene Räume"
         return {
             Raum(element, self._planart).kürzel: Raum(element, self._planart)
-            for element in self._Kl_elemente()
+            for element in self._Kl_Elemente()
         }   
 
 
@@ -355,7 +347,7 @@ class RaumVertretungsTag(VertretungsTag):
 class KlasseLikeBase(VpMobilPyModell):
     
     def __getitem__(self, v) -> list[Stunde]:
-        return self.stundenInPeriode(v)
+        return self.stunden.get(v) or []
     
     @property
     def kürzel(self) -> str:
@@ -363,8 +355,8 @@ class KlasseLikeBase(VpMobilPyModell):
     
     @property
     def stunden(self) -> dict[int, list[Stunde]]:
-        """Alle Stunden an dem Tag als Dictionary<br>
-        Die Schlüssel sind die Unterrichtsperioden, die Werte Listen von Unterrichsstunden
+        """Alle Unterrichtsstunden als Dictionary. Die Schlüssel sind die
+        Unterrichtsperioden, die Werte sind Listen von `Stunden`-Objekten.
         """
 
         fin: dict[int, list[Stunde]] = {}
@@ -377,23 +369,18 @@ class KlasseLikeBase(VpMobilPyModell):
                     fin[stunde.periode] = [stunde]
                 else:
                     fin[stunde.periode].append(stunde)
-        return fin
-
-    def stundenInPeriode(self, periode: int) -> list[Stunde]:
-        "Gibt die Stunden in einer bestimmten Unterrichtsperiode zurück."
-        return self.stunden.get(periode) or []
-    
+        return fin    
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Klasse                                         │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Klasse(KlasseLikeBase):
-    """Klasse, die den Vertretungsplan für eine bestimmte Klasse repräsentiert.
+    """Klasse für den Vertretungsplan einer bestimmten Klasse.
     
-    Unterstützt Subskription: 
+    Die Stunden einer Periode sind neben `~.stunden` über `__getitem__` und Subskription verfügbar: 
     ```
-    data: Klasse = vpday.klasse("10a")
+    data: Klasse = tag.klassen["10a"]
     stunden_zur_dritten = data[3]
     ```
     """
@@ -403,7 +390,7 @@ class Klasse(KlasseLikeBase):
     
     @property
     def kurse(self) -> dict[int, Kurs]:
-        "Kurse der Klasse als Dictionary<br>Die Keys sind die Kursnummern der Kurse" 
+        "Kurse der Klasse als Dictionary. Die Keys sind die Kursnummern der Kurse." 
         if unterricht := self._data.find("Unterricht"):
             return {
                 Kurs(ue, self._planart).kursnummer: Kurs(ue, self._planart)
@@ -413,7 +400,7 @@ class Klasse(KlasseLikeBase):
     
     @property
     def klausuren(self) -> list[Klausur]:
-        """Klausuren der Klasse"""
+        "Klausuren der Klasse"
         if klausuren := self._data.find("Klausuren"):
             return [
                 Klausur(klausur, self._planart)
@@ -427,11 +414,11 @@ class Klasse(KlasseLikeBase):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
     
 class Lehrer(KlasseLikeBase):
-    """Klasse, die den Vertretungsplan für einen bestimmten Lehrer repräsentiert.
+    """Klasse für den Vertretungsplan eines bestimmten Lehrers.
     
-    Unterstützt Subskription: 
+    Die Stunden einer Periode sind neben `~.stunden` über `__getitem__` und Subskription verfügbar: 
     ```
-    data: Lehrer = vpday.lehrer("Ah")
+    data: Lehrer = tag.lehrer["Ah"]
     stunden_zur_dritten = data[3]
     ```
     """
@@ -455,11 +442,11 @@ class Lehrer(KlasseLikeBase):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 class Raum(KlasseLikeBase):
-    """Klasse, die den Vertretungsplan für einen bestimmten Raum repräsentiert.
+    """Klasse für den Vertretungsplan eines bestimmten Raums.
     
-    Unterstützt Subskription: 
+    Die Stunden einer Periode sind neben `~.stunden` über `__getitem__` und Subskription verfügbar: 
     ```
-    data: Raum = vpday.raum("E07")
+    data: Raum = tag.räume["E07"]
     stunden_zur_dritten = data[3]
     ```
     """
@@ -525,7 +512,7 @@ class Klausur(VpMobilPyModell):
     
     @property
     def periode(self) -> int | None:
-        "Unterrichtsperiode, zu der die Klausur beginnt<br>Kann `0` sein"
+        "Unterrichtsperiode, zu der die Klausur beginnt. Kann `0` sein."
         if s := self._data_value_safe_type("KlStunde", "text"):
             return int(s)
         return None
@@ -539,13 +526,14 @@ class Klausur(VpMobilPyModell):
     
     @property
     def dauer(self) -> timedelta | None:
+        "Dauer der Klausur"
         if s := self._data_value_safe_type("KlDauer", "text"):
             return timedelta(minutes=int(s))
         return None
     
     @property
     def info(self) -> str | None:
-        "Zusätzliche Information zur Klausur"
+        "Zusätzliche Informationen zur Klausur"
         return self._data_value_safe_type("KlKinfo", "text") or None
     
 
@@ -558,7 +546,7 @@ class Stunde(VpMobilPyModell):
     """Klasse, die eine bestimmte Unterrichtsstunde repräsentiert.
     """
 
-    _context: str = field(init=True)
+    _context: str = field(init=True) # Kürzel der Klasse/des Lehrers/des Raums, zu der/dem die Stunde gehört
     
     def __repr__(self):
         if self.ausfall:
@@ -567,7 +555,7 @@ class Stunde(VpMobilPyModell):
     
     @property
     def periode(self) -> int:
-        "Unterrichtsperiode der Stunde<br>Kann `0` sein"
+        "Unterrichtsperiode der Stunde. Kann `0` sein."
         return int(self._data.find("St").text)
 
     @property
@@ -586,32 +574,42 @@ class Stunde(VpMobilPyModell):
     
     @property
     def ausfall(self) -> bool:
-        """Ob die Stunde entfällt<br>Ebenfalls `True`, falls Die Stundeninfo `"selbst"` enthält und Lehrer und Räume nicht vorhanden sind"""
-        return self._data_value_safe_type("Fa", "text") == "---" or (self.info is not None and "selbst" in self.info and not self.räume)
+        """Ob die Stunde entfällt.
+        
+        Wenn die Stundeninfo das Stichwort `"selbst"` enthält und weder Lehrer
+        noch Räume angegeben sind, wird das ebenfalls als Ausfall interpretiert.
+        """
+        return self._data_value_safe_type("Fa", "text") == "---" or ("selbst" in (self.info or "") and not self.räume + self.lehrer)
 
     @property
     def fach(self) -> str | None:
-        """Fach bzw. Kursbezeichnung der Stunde<br>
-        Gibt `None` zurück, wenn die Stunde entfällt.
+        """Fach bzw. Kursbezeichnung der Stunde. Gibt `None` zurück, wenn die Stunde entfällt.
 
-        Um sicherzustellen, dass tatsächlich das gängige Kürzel des Fachs und nicht eine etwaige Kursbezeichnung zurückgegeben wird, `klasse.kurs(stunde.kursnummer).fach` verwenden.  
-        Bei Unsicherheit mit Fallback:
+        Das tatsächlich das gängige Kürzel des Fachs kann über
+        `klasse.kurs(stunde.kursnummer).fach` erhalten werden.
+
+        Bei Unsicherheit mit Fallback wäre beispielsweise denkbar:
         ```
         stunde.fach if klasse.kurse[stunde.kursnummer] is None else klasse.kurse[stunde.kursnummer].fach
         ```
         """
-        if (s := self._data_value_safe_type("Fa", "text")) != "---":
+        if self.ausfall:
+            return None
+        if (s := self._data_value_safe_type("Fa", "text")):
             return s
         return None
     
     @property
     def fachmeta(self) -> str | None:
-        """Metainformation über das Fach das normalerweise stattfindet
+        """Metainformation über das Fach das normalerweise in dieser Stunde stattfindet.
 
-        Das Verhalten dieses Werts ist etwas unintuitiv. Er wird hauptsächlich bei Stunden von Kursen gesetzt, die mehrere inhatlich parallele Gruppen haben,
-        beispielsweise bei Sport (wenn es separate Kurse für Jungen und Mädchen gibt), Profilen, Religionsgruppen und Kursen der Oberstufe generell.
+        Das Verhalten dieses Werts ist etwas unintuitiv. Er wird hauptsächlich bei
+        Stunden von Kursen gesetzt, die mehrere inhatlich parallele Gruppen haben,
+        beispielsweise bei Sport (wenn es separate Kurse für Jungen und Mädchen gibt),
+        Profilen, Religionsgruppen und Kursen der Oberstufe generell.
         
-        Dieser Wert ist bei entsprechenden Stunden immer gesetzt, auch wenn die Stunde entfällt oder das Fach geändert wurde.
+        Dieser Wert ist bei entsprechenden Stunden immer gesetzt, auch wenn die Stunde
+        entfällt oder das Fach geändert wurde.
         """
         if (s := self._data_value_safe_type("Ku2", "text")):
             return s
@@ -619,8 +617,9 @@ class Stunde(VpMobilPyModell):
 
     @property
     def klassen(self) -> list[str]:
-        """Alle Klassen der Stunde<br>
-        Gibt `[]` zurück, wenn die Stunde entfällt oder keine Klassen eingetragen sind
+        """Alle Klassen der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder
+        keine Klassen eingetragen sind. Falls die Stunden einer Klasse ausgewertet
+        werden, wird hier auch nur diese Klasse zurückgegeben.
         """
         if self._planart == "K":
             return [self._context]
@@ -631,8 +630,9 @@ class Stunde(VpMobilPyModell):
 
     @property
     def lehrer(self) -> list[str]:
-        """Alle Lehrer der Stunde<br>
-        Gibt `[]` zurück, wenn die Stunde entfällt oder keine Lehrer eingetragen sind
+        """Alle Lehrer der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder
+        keine Lehrer eingetragen sind. Falls die Stunden einer Lehrer ausgewertet
+        werden, wird hier auch nur diese Lehrer zurückgegeben.
         """
         if self._planart == "L":
             return [self._context]
@@ -643,8 +643,9 @@ class Stunde(VpMobilPyModell):
 
     @property
     def räume(self) -> list[str]:
-        """Räume der Stunde<br>
-        Gibt `[]` zurück, wenn die Stunde entfällt oder keine Räume eingetragen sind
+        """Alle Räume der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder
+        keine Räume eingetragen sind. Falls die Stunden eines Raums ausgewertet
+        werden, wird hier auch nur dieser Raum zurückgegeben.
         """
         if self._planart == "R":
             return [self._context]
@@ -655,24 +656,24 @@ class Stunde(VpMobilPyModell):
             
     @property
     def fachgeändert(self) -> bool:
-        "Ob eine Änderung des Fachs für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
+        "Ob das Fach der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
         return "FaAe" in self._data_value_safe_type("Fa", "attrib")
     
     @property
-    def lehrergeändert(self) -> bool | None:
-        "Ob eine Änderung des Lehrers für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt<br>Ist None, falls die Stunde aus einem Lehrerplan kommt"
-        return "LeAe" in self._data_value_safe_type("Le", "attrib") if self._planart != "L" else None
+    def lehrergeändert(self) -> bool:
+        "Ob der Lehrer der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
+        return "LeAe" in self._data_value_safe_type("Le", "attrib") if self._planart != "L" else self.geändert
     
     @property
-    def raumgeändert(self) -> bool | None:
-        "Ob eine Änderung des Raums für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt<br>Ist None, falls die Stunde aus einem Raumplan kommt"
-        return "RaAe" in self._data_value_safe_type("Ra", "attrib") if self._planart != "R" else None
+    def raumgeändert(self) -> bool:
+        "Ob der Raum der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
+        return "RaAe" in self._data_value_safe_type("Ra", "attrib") if self._planart != "R" else self.geändert
     
     @property
-    def klassegeändert(self) -> bool | None:
-        "Ob eine Änderung der Klasse für die Stunde vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt<br>Ist None, falls die Stunde aus einem Klassenplan kommt"
+    def klassegeändert(self) -> bool:
+        "Ob die Klasse der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
         if self._planart == "K":
-            return None
+            return self.geändert
         elif self._planart == "L":
             return "LeAe" in self._data_value_safe_type("Le", "attrib")
         elif self._planart == "R":
@@ -680,18 +681,26 @@ class Stunde(VpMobilPyModell):
 
     @property
     def geändert(self) -> bool:
-        "Ob eine Änderung im Plan vorliegt<br>Ebenfalls `True`, wenn die Stunde entfällt"
+        "Ob die Stunde in irgendeiner Weise geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt"
         return bool(self.fachgeändert or self.lehrergeändert or self.raumgeändert or self.klassegeändert)
 
+    @property
+    def verlegt(self) -> bool:
+        "Ob die Stunde hierher verlegt wurde"
+        if (match := re.search(config.STUNDE_HERVERLEGT_PATTERN, self.info)):
+            return match["periode"]
+        return None
+    
     @property
     def kursnummer(self) -> int | None:
         """Nummer des Kurses der Stunde
 
-        Kann `None` sein, wenn das Fach der Stunde geändert wurde, jedoch nicht, wenn die Stunde entfällt.<br>
-        Kann `None` sein, beispielsweise wenn die Stunde eine Exkursion ist.
+        Kann `None` sein, wenn das Fach der Stunde geändert wurde, jedoch nicht, wenn
+        die Stunde entfällt oder, beispielsweise wenn die Stunde eine Exkursion ist.
         
-        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr Details zu einem Kurs zu erhalten, beispielsweise
-        wenn eine Unterrichtsstunde ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
+        Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr
+        Details zu einem Kurs zu erhalten, beispielsweise wenn eine Unterrichtsstunde
+        ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
         """
         if nr := self._data_value_safe_type("Nr", "text"):
             if nr.endswith("+"): # Gemäß #44
@@ -701,16 +710,9 @@ class Stunde(VpMobilPyModell):
     
     @property
     def info(self) -> str | None:
-        "Zusätzliche Information zur Stunde"
+        "Zusätzliche Informationen zur Stunde"
         return self._data_value_safe_type("If", "text") or None
     
-    @property
-    def verlegt(self) -> bool:
-        "Ob die Stunde hierher verlegt wurde"
-        if (match := re.search(config.STUNDE_HERVERLEGT_PATTERN, self.info)):
-            return match["periode"]
-        return None
-            
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Kurs                                            │ 
@@ -725,7 +727,7 @@ class Kurs(VpMobilPyModell):
     
     @property
     def kürzel(self) -> str | None:
-        "Gruppenbezeichnung des Kurses<br>Gibt als Fallback das Fach zurück"
+        "Gruppenbezeichnung des Kurses. Falls keine vorhanden ist, wird das Fach zurückgegeben."
         return self._data_value_safe_type("UeNr", "attrib").get("UeGr", self.fach)
     
     @property
@@ -744,7 +746,3 @@ class Kurs(VpMobilPyModell):
         if s := self._data_value_safe_type("UeNr", "text"):
             return int(s)
         return None
-    
-
-VertretungsTagType = KlassenVertretungsTag | RaumVertretungsTag | LehrerVertretungsTag
-KlasseLikeType = Klasse | Lehrer | Raum

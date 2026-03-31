@@ -41,13 +41,15 @@ def set_config(overrides: dict[str, Any] | None = None, /, **kwargs: Any) -> Non
             raise ValueError(f"Ungültiger Parameter: '{key}'")
 
 AUFZÄHLUNGS_SEPARATOR = " "
-"""Zeichen das verwendet wird, um etwaige Mehrfachnennungen von Lehrern, Räumen oder Klassen aufzutrennen
+"""Zeichen das verwendet wird, um etwaige Mehrfachnennungen von Lehrern,
+Räumen oder Klassen aufzutrennen
 
 Wenn der Vertretungsplaner Klassen wie
 - `"10a, 10b"` einträgt, sollte der Separator `", "` und bei
 - `"10a 10b"` beispielsweise `" "` sein.
 
-Wenn der Planer inkonsistent in seiner Syntax ist, sollte Auswertung nur für alle angegebenen Klassen gemeinsam gemacht werden.
+Wenn der Planer inkonsistent in seiner Syntax ist, sollte Auswertung nur
+für alle angegebenen Klassen gemeinsam gemacht werden.
 """
 
 BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN = True
@@ -59,25 +61,8 @@ Falls ja würde
 """
 
 KLASSENBEZEICHNER_PATTERN = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
-"""Capture-Pattern für Stufe und Suffix einer Klasse<br>
-Muss die Capture-Groups `stufe` und `suffix` enthalten
-"""
-
-# STUNDENVERSCHIEBUNG_PATTERN = re.compile(
-#     r"statt\s+"
-#     r"(?P<wochentag1>[A-ZÄÖÜa-zäöü]{2})\s*\((?P<datum1>\d{1,2}\.\d{1,2}\.)\)\s*"
-#     r"St\.?\s*(?P<stunde1>\d+);\s*"
-#     r"(?P<fach>[A-ZÄÖÜa-zäöü]+)\s+"
-#     r"(?P<titel>Herr|Frau)\s+"
-#     r"(?P<name>[A-ZÄÖÜa-zäöü]+)\s+"
-#     r"gehalten\s+am\s+"
-#     r"(?P<wochentag2>[A-ZÄÖÜa-zäöü]{2})\s*\((?P<datum2>\d{1,2}\.\d{1,2}\.)\)\s*"
-#     r"St\.?\s*(?P<stunde2>\d+)"
-# )
-"""
-Das Format, in dem in den Informationen zu einer Stunde eine Verschiebung vermerkt wird.
-
-Standard: `statt Mo (27.10.) St.6; ETH Herr Reinhold gehalten am Di (28.10.) St.4`
+"""Capture-Pattern für Stufe und Suffix einer Klasse. Die Capture-Groups
+`stufe` und `suffix` müssen enthalten sein.
 """
 
 STUNDE_HERVERLEGT_PATTERN = r"verlegt von St\.(?P<periode>\d+);"
