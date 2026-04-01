@@ -1,5 +1,5 @@
 from __future__ import annotations
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, InitVar
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
@@ -60,7 +60,7 @@ class VpMobilPyModell:
 
         result = {}
         for name in dir(self.__class__):
-            if isinstance(getattr(self.__class__, name, None), property):
+            if isinstance(getattr(self.__class__, name, None), property) and not name.startswith("_"):
                 val = getattr(self, name)
                 result[name] = apply_converter(val)
 
@@ -83,8 +83,12 @@ class VertretungsTag(VpMobilPyModell):
     `RaumVertretungsTag` zurückgegeben.
     """
 
-    _data:    XML.ElementTree        = field(init=True)
-    _planart: Literal["K", "L", "R"] = field(init=False, default=None)
+    _data: XML.ElementTree                    = field(init=True)
+    _planart: InitVar[Literal["K", "L", "R"]] = field(init=False, default=None) # what a nice workaround
+
+    @property
+    def _planart(self) -> Literal["K", "L", "R"]:
+        return self._data_value_safe_type("Kopf/planart", "text")
 
     def __new__(cls, _data: XML.ElementTree):
         if cls is VertretungsTag:
@@ -164,6 +168,7 @@ class VertretungsTag(VpMobilPyModell):
         """
 
         from vpmobil.extensions import reparser
+        
         data = reparser.RaumPerspektive(self)
 
         frei = set(räume_context)
@@ -198,7 +203,7 @@ class VertretungsTag(VpMobilPyModell):
             instance = cls(XML.parse(f))
         return instance
     
-    def saveasfile(self, pfad: Path | str = "./datei.xml", overwrite=True) -> None:
+    def save_source(self, pfad: Path | str = "./datei.xml", overwrite=True) -> None:
         """Speichert den Vertretungsplan als XML-Datei.
 
         Parameters:
@@ -219,6 +224,39 @@ class VertretungsTag(VpMobilPyModell):
             raise FileExistsError(f"Datei '{zielpfad}' existiert bereits.")
 
         zielpfad.write_text(xmlpretty, encoding="utf-8")
+
+    def saveasfile(self, pfad: Path | str = "./datei.yml", overwrite=True) -> None:
+        """Speichert den ausgewerteten Vertretungsplan als JSON- oder YAML-Datei.
+
+        **ACHTUNG**: vpmobil-py hat momentan keine Funktion,
+        um so abgespeicherte Dateien wieder einzulesen.
+
+        Parameters:
+            pfad (Path | str): Dateipfad der zu erstellenden Datei. Die Dateiendung bestimmt,
+                welches Format gewählt wird. Unterstützt werden `.json` und `.yaml` (bzw. `.yml`).
+                Andernfalls wird JSON gewählt.
+            overwrite (bool): Ob die Datei überschrieben werden darf, falls sie bereits existiert
+
+        Raises:
+            FileExistsError: Falls die Datei bereits existiert und `overwrite` `False` ist
+        """
+        import yaml, json
+
+        data = self.as_dict()
+
+        zielpfad = Path(pfad).resolve() # Funktioniert für Path und str
+        zielverzeichnis = zielpfad.parent
+        zielverzeichnis.mkdir(parents=True, exist_ok=True)
+
+        if zielpfad.exists() and not overwrite:
+            raise FileExistsError(f"Datei '{zielpfad}' existiert bereits.")
+
+        if zielpfad.suffix.lower() in ['.yaml', '.yml']:
+            with zielpfad.open('w', encoding='utf-8') as f:
+                yaml.dump(data, f, allow_unicode=True, default_flow_style=False)
+        else:
+            with zielpfad.open('w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
 
     def _Kl_Elemente(self) -> list[XML.Element]:
         if klassen := self._data.find('.//Klassen'):
@@ -623,10 +661,10 @@ class Stunde(VpMobilPyModell):
         """
         if self._planart == "K":
             return [self._context]
-        elif self._planart == "R":
-            return slice_aufzählung(self._data.find("Ra").text) if self._data_value_safe_type("Ra", "text") else []
         elif self._planart == "L":
             return slice_aufzählung(self._data.find("Le").text) if self._data_value_safe_type("Le", "text") else []
+        elif self._planart == "R":
+            return slice_aufzählung(self._data.find("Ra").text) if self._data_value_safe_type("Ra", "text") else []
 
     @property
     def lehrer(self) -> list[str]:
@@ -662,18 +700,18 @@ class Stunde(VpMobilPyModell):
     @property
     def lehrergeändert(self) -> bool:
         "Ob der Lehrer der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
-        return "LeAe" in self._data_value_safe_type("Le", "attrib") if self._planart != "L" else self.geändert
+        return "LeAe" in self._data_value_safe_type("Le", "attrib") if self._planart != "L" else self.raumgeändert
     
     @property
     def raumgeändert(self) -> bool:
         "Ob der Raum der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
-        return "RaAe" in self._data_value_safe_type("Ra", "attrib") if self._planart != "R" else self.geändert
+        return "RaAe" in self._data_value_safe_type("Ra", "attrib") if self._planart != "R" else self.klassegeändert
     
     @property
     def klassegeändert(self) -> bool:
         "Ob die Klasse der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
         if self._planart == "K":
-            return self.geändert
+            return self.raumgeändert
         elif self._planart == "L":
             return "LeAe" in self._data_value_safe_type("Le", "attrib")
         elif self._planart == "R":
@@ -682,14 +720,14 @@ class Stunde(VpMobilPyModell):
     @property
     def geändert(self) -> bool:
         "Ob die Stunde in irgendeiner Weise geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt"
-        return bool(self.fachgeändert or self.lehrergeändert or self.raumgeändert or self.klassegeändert)
+        return self.fachgeändert or self.lehrergeändert or self.raumgeändert or self.klassegeändert
 
     @property
     def verlegt(self) -> bool:
         "Ob die Stunde hierher verlegt wurde"
-        if (match := re.search(config.STUNDE_HERVERLEGT_PATTERN, self.info)):
-            return match["periode"]
-        return None
+        if (match := re.search(config.STUNDE_HERVERLEGT_PATTERN, self.info or "")):
+            return True
+        return False
     
     @property
     def kursnummer(self) -> int | None:

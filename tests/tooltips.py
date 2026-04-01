@@ -25,7 +25,7 @@ day.datei
 day.datum
 day.zeitstempel
 day.zusatzInfo
-day.saveasfile()
+day.save_source()
 day.fromfile()
 day.freieTage
 

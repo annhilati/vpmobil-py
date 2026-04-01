@@ -11,13 +11,15 @@ icon: clock-rotate-left
 * Eigenschaft `fachmeta` zu `Stunde` hinzugefügt, die die Information aus dem `Ku2`-Tag der Quelldaten bereitstellt
 * Eigenschaft `verlegt` zu `Stunde` hinzugefügt
 * Methode `fetchall()` zu `Vertretungsplan` hinzugefügt
-* `Stundenplan24Pfade` in `Standardpfade umbenannt`
+* `Stundenplan24Pfade` in `Standardpfade` umbenannt
+* Neue Methode `saveasfile()` zu `VertretungsTag` hinzugefügt, mit der direkt ausgewertete JSON- oder YAML-Dateien erstellt werden können.
 
 ### 🔧 Änderungen
 
 * Parameter `serverdomain` von `Vertretungsplan` in `domain` umbenannt
 * Methode `stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum` entfernt
 * `Stunde.lehrergeändert`, `~.raumgeändert` und `.~klassegeändert` können bei respektiven Plantypen nun nicht mehr `None` sein. Stattdessen wird `~.geändert` weitergegeben
+* Methode `saveasfile` von `VertretungsTag` in `save_source` umbenannt
 * Alle Docstrings wurden überarbeitet
 
 ## [2.1.0.1](https://pypi.org/project/vpmobil/2.1.0.1/) (2026-03-27)

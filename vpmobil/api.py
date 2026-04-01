@@ -1,5 +1,6 @@
 from yarl import URL
 from enum import StrEnum
+from typing import overload
 from datetime import date, timedelta
 from dataclasses import dataclass
 import xml.etree.ElementTree as XML
