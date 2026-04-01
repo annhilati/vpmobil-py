@@ -13,6 +13,7 @@ from vpmobil.models import (
     KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag, VertretungsTag,
     Stunde, Kurs, Klasse, Lehrer, Raum
 )
+from vpmobil.utils import add_Element
 from vpmobil import config
 import xml.etree.ElementTree as XML
 
@@ -29,11 +30,6 @@ def _converter_fabric(
     get_Kl_target: Callable[[Stunde], list[str]],
     get_Kl_target_K: Callable[[Kurs], str]
 ):
-    def add_Element(parent: XML.Element, tag: str, text: str = None, attrib: dict = {}) -> XML.Element:
-        element = XML.SubElement(parent, tag, attrib)
-        if text:
-            element.text = text
-        return element
 
     def converter(tag: VertretungsTagType):
         root = XML.Element("VpMobil")

@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from typing import Any
 from string import ascii_lowercase
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
@@ -24,6 +25,13 @@ def date_range(start: date, end: date):
     while current <= end:
         yield current
         current += timedelta(days=1)
+
+
+def add_Element(parent: ET.Element, tag: str, text: str | Any = None, attrib: dict = {}) -> ET.Element:
+        element = ET.SubElement(parent, tag, attrib)
+        if text:
+            element.text = str(text)
+        return element
 
 
 def slice_aufzählung(

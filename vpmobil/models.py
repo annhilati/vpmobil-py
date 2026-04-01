@@ -6,20 +6,20 @@ from pathlib import Path
 from typing import Literal, Any
 import re
 
-from vpmobil.utils import prettyxml, slice_aufzählung
+from vpmobil.utils import prettyxml, slice_aufzählung, add_Element
 from vpmobil import config
 
 @dataclass(init=True, eq=False)
 class VpMobilPyModell:
 
-    _data:    XML.Element            = field(init=True)
+    data:    XML.Element            = field(init=True)
     _planart: Literal["K", "L", "R"] = field(init=True)
 
-    def _data_value_safe_type(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict:
+    def _tag_data(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict:
         "Gibt ein Attribut eines Untertags zurück. Ist niemals `None`. Stattdessen wird `\"\"` oder `{}` zurückgegeben."
         
         # Hier mal hinzufügen, dass direkt Keys aus Element.attrib angefordert werden können?
-        element = self._data.find(tag)
+        element = self.data.find(tag)
         match attr:
             case "text":    return getattr(element, attr, "")
             case "attrib":  return getattr(element, attr, {})
@@ -83,12 +83,12 @@ class VertretungsTag(VpMobilPyModell):
     `RaumVertretungsTag` zurückgegeben.
     """
 
-    _data: XML.ElementTree                    = field(init=True)
+    data: XML.ElementTree                     = field(init=True)
     _planart: InitVar[Literal["K", "L", "R"]] = field(init=False, default=None) # what a nice workaround
 
     @property
     def _planart(self) -> Literal["K", "L", "R"]:
-        return self._data_value_safe_type("Kopf/planart", "text")
+        return self._tag_data("Kopf/planart", "text")
 
     def __new__(cls, _data: XML.ElementTree):
         if cls is VertretungsTag:
@@ -113,21 +113,21 @@ class VertretungsTag(VpMobilPyModell):
     @property
     def zeitstempel(self) -> datetime | None:
         "Veröffentlichungszeitpunkt des Vertretungsplans bzw. der letzten Änderung"
-        if s := self._data_value_safe_type("Kopf/zeitstempel", "text"):
+        if s := self._tag_data("Kopf/zeitstempel", "text"):
             return datetime.strptime(s, r"%d.%m.%Y, %H:%M")
         return None
         
     @property
     def datei(self) -> str | None:
         "Originaler Dateiname der Quelldatei"
-        return self._data_value_safe_type("Kopf/datei", "text") or None
+        return self._tag_data("Kopf/datei", "text") or None
 
     @property
     def datum(self) -> date | None:
         "Datum für das der Vertretungsplan gilt"
         import locale
         
-        if DatumPlan := self._data_value_safe_type("Kopf/DatumPlan", "text"):
+        if DatumPlan := self._tag_data("Kopf/DatumPlan", "text"):
             for s in ["de_DE.UTF-8", "German_Germany"]:
                 try:
                     locale.setlocale(locale.LC_TIME, s)
@@ -139,7 +139,7 @@ class VertretungsTag(VpMobilPyModell):
     @property
     def freieTage(self) -> list[date]:
         "Unterrichtsfreie Tage"
-        if freieTage := self._data.find("FreieTage"):
+        if freieTage := self.data.find("FreieTage"):
             return [
                 datetime.strptime(ft.text, "%y%m%d").date()
                 for ft in freieTage.findall("ft")
@@ -151,7 +151,7 @@ class VertretungsTag(VpMobilPyModell):
     def zusatzInfo(self) -> str | None:
         """Zusätzliche Informationen zum Tag. Kann mehrzeilig sein.
         """
-        if zusatzInfo := self._data.find('ZusatzInfo'):
+        if zusatzInfo := self.data.find('ZusatzInfo'):
             return '\n'.join([
                 ziZeile.text
                 for ziZeile in zusatzInfo.findall('ZiZeile')
@@ -186,7 +186,7 @@ class VertretungsTag(VpMobilPyModell):
                         continue
                     result[stunde.periode] = (stunde.beginn, stunde.ende)
 
-            if (KlStunden := klasse._data.find("KlStunden")):
+            if (KlStunden := klasse.data.find("KlStunden")):
                 for KlSt in KlStunden.findall("KlSt"):
                     if not KlSt.text or KlSt.text in result or not KlSt.attrib.get("ZeitVon") or not KlSt.attrib.get("ZeitBis"):
                         continue
@@ -252,7 +252,7 @@ class VertretungsTag(VpMobilPyModell):
             FileExistsError: Falls die Datei bereits existiert und `overwrite` `False` ist
         """
 
-        xmlpretty = prettyxml(self._data)
+        xmlpretty = prettyxml(self.data)
 
         zielpfad = Path(pfad).resolve() # Funktioniert für Path und str
         zielverzeichnis = zielpfad.parent
@@ -297,7 +297,7 @@ class VertretungsTag(VpMobilPyModell):
                 json.dump(data, f, ensure_ascii=False, indent=4)
 
     def _Kl_Elemente(self) -> list[XML.Element]:
-        if klassen := self._data.find('.//Klassen'):
+        if klassen := self.data.find('.//Klassen'):
             return [
                 kl for kl in klassen.findall(".//Kl")
                 if kl.find('Kurz') is not None
@@ -427,7 +427,7 @@ class KlasseLikeBase(VpMobilPyModell):
     
     @property
     def kürzel(self) -> str:
-        return self._data.find('Kurz').text
+        return self.data.find('Kurz').text
     
     @property
     def stunden(self) -> dict[int, list[Stunde]]:
@@ -436,7 +436,7 @@ class KlasseLikeBase(VpMobilPyModell):
         """
 
         fin: dict[int, list[Stunde]] = {}
-        pl = self._data.find("Pl")
+        pl = self.data.find("Pl")
         for std in pl.findall("Std"):
             stunde = Stunde(std, self._planart, self.kürzel)
             nr = stunde.periode
@@ -467,7 +467,7 @@ class Klasse(KlasseLikeBase):
     @property
     def kurse(self) -> dict[int, Kurs]:
         "Kurse der Klasse als Dictionary. Die Keys sind die Kursnummern der Kurse." 
-        if unterricht := self._data.find("Unterricht"):
+        if unterricht := self.data.find("Unterricht"):
             return {
                 Kurs(ue, self._planart).kursnummer: Kurs(ue, self._planart)
                 for ue in unterricht.findall("Ue")
@@ -477,7 +477,7 @@ class Klasse(KlasseLikeBase):
     @property
     def klausuren(self) -> list[Klausur]:
         "Klausuren der Klasse"
-        if klausuren := self._data.find("Klausuren"):
+        if klausuren := self.data.find("Klausuren"):
             return [
                 Klausur(klausur, self._planart)
                 for klausur in klausuren.findall("Klausur")
@@ -505,7 +505,7 @@ class Lehrer(KlasseLikeBase):
     @property
     def aufsichten(self) -> list[Aufsicht]:
         """Aufsichten des Lehrers"""
-        if aufsichten := self._data.find("Aufsichten"):
+        if aufsichten := self.data.find("Aufsichten"):
             return [
                 Aufsicht(aufsicht, self._planart)
                 for aufsicht in aufsichten.findall("Aufsicht")
@@ -545,24 +545,24 @@ class Aufsicht(VpMobilPyModell):
     @property
     def vorStunde(self) -> int | None:
         "Unterrichtsperiode, vor der die Aufsicht stattfindet"
-        return self._data_value_safe_type("AuVorStunde", "text") or None
+        return self._tag_data("AuVorStunde", "text") or None
     
     @property
     def uhrzeit(self) -> time | None:
         "Uhrzeit der Aufsicht"
-        if s := self._data_value_safe_type("AuUhrzeit", "text"):
+        if s := self._tag_data("AuUhrzeit", "text"):
             return datetime.strptime(s, "%H:%M").time()  
         return None
     
     @property
     def zeit(self) -> str | None:
         "Hinweis zum Zeitpunkt der Aufsicht"
-        return self._data_value_safe_type("AuZeit", "text") or None
+        return self._tag_data("AuZeit", "text") or None
     
     @property
     def ort(self) -> str | None:
         "Hinweis zum Ort der Aufsicht"
-        return self._data_value_safe_type("AuOrt", "text") or None
+        return self._tag_data("AuOrt", "text") or None
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -579,38 +579,38 @@ class Klausur(VpMobilPyModell):
     @property
     def kurs(self) -> str | None:
         "Kurs für den die Klausur ansteht"
-        return self._data_value_safe_type("KlKurs", "text") or None
+        return self._tag_data("KlKurs", "text") or None
 
     @property
     def lehrer(self) -> str | None:
         "Lehrer des Kurses für den die Klausur ansteht"
-        return self._data_value_safe_type("KlKursleiter", "text") or None
+        return self._tag_data("KlKursleiter", "text") or None
     
     @property
     def periode(self) -> int | None:
         "Unterrichtsperiode, zu der die Klausur beginnt. Kann `0` sein."
-        if s := self._data_value_safe_type("KlStunde", "text"):
+        if s := self._tag_data("KlStunde", "text"):
             return int(s)
         return None
     
     @property
     def beginn(self) -> time | None:
         "Beginn der Klausur"
-        if s := self._data_value_safe_type("KlBeginn", "text"):
+        if s := self._tag_data("KlBeginn", "text"):
             return datetime.strptime(s, "%H:%M").time()
         return None
     
     @property
     def dauer(self) -> timedelta | None:
         "Dauer der Klausur"
-        if s := self._data_value_safe_type("KlDauer", "text"):
+        if s := self._tag_data("KlDauer", "text"):
             return timedelta(minutes=int(s))
         return None
     
     @property
     def info(self) -> str | None:
         "Zusätzliche Informationen zur Klausur"
-        return self._data_value_safe_type("KlKinfo", "text") or None
+        return self._tag_data("KlKinfo", "text") or None
     
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -632,19 +632,19 @@ class Stunde(VpMobilPyModell):
     @property
     def periode(self) -> int:
         "Unterrichtsperiode der Stunde. Kann `0` sein."
-        return int(self._data.find("St").text)
+        return int(self.data.find("St").text)
 
     @property
     def beginn(self) -> time | None:
         "Beginn der Stunde. Falls keine Uhrzeit angegeben ist, sollte `VertretungsTag.zeitplan` zu Rate gezogen werden."
-        if s := self._data_value_safe_type("Beginn", "text"):
+        if s := self._tag_data("Beginn", "text"):
             return datetime.strptime(s, "%H:%M").time()  
         return None
     
     @property
     def ende(self) -> time | None:
         "Ende der Stunde. Falls keine Uhrzeit angegeben ist, sollte `VertretungsTag.zeitplan` zu Rate gezogen werden."
-        if s := self._data_value_safe_type("Ende", "text"):
+        if s := self._tag_data("Ende", "text"):
             return datetime.strptime(s, "%H:%M").time() 
         return None
     
@@ -655,7 +655,7 @@ class Stunde(VpMobilPyModell):
         Wenn die Stundeninfo das Stichwort `"selbst"` enthält und weder Lehrer
         noch Räume angegeben sind, wird das ebenfalls als Ausfall interpretiert.
         """
-        return self._data_value_safe_type("Fa", "text") == "---" or ("selbst" in (self.info or "") and not self.räume + self.lehrer)
+        return self._tag_data("Fa", "text") == "---" or ("selbst" in (self.info or "") and not self.räume + self.lehrer)
 
     @property
     def fach(self) -> str | None:
@@ -671,7 +671,7 @@ class Stunde(VpMobilPyModell):
         """
         if self.ausfall:
             return None
-        if (s := self._data_value_safe_type("Fa", "text")):
+        if (s := self._tag_data("Fa", "text")):
             return s
         return None
     
@@ -687,7 +687,7 @@ class Stunde(VpMobilPyModell):
         Dieser Wert ist bei entsprechenden Stunden immer gesetzt, auch wenn die Stunde
         entfällt oder das Fach geändert wurde.
         """
-        if (s := self._data_value_safe_type("Ku2", "text")):
+        if (s := self._tag_data("Ku2", "text")):
             return s
         return None
 
@@ -700,9 +700,9 @@ class Stunde(VpMobilPyModell):
         if self._planart == "K":
             return [self._context] if not self.ausfall else []
         elif self._planart == "L":
-            return slice_aufzählung(self._data.find("Le").text) if self._data_value_safe_type("Le", "text") else []
+            return slice_aufzählung(self.data.find("Le").text) if self._tag_data("Le", "text") else []
         elif self._planart == "R":
-            return slice_aufzählung(self._data.find("Ra").text) if self._data_value_safe_type("Ra", "text") else []
+            return slice_aufzählung(self.data.find("Ra").text) if self._tag_data("Ra", "text") else []
 
     @property
     def lehrer(self) -> list[str]:
@@ -713,7 +713,7 @@ class Stunde(VpMobilPyModell):
         if self._planart == "L":
             return [self._context] if not self.ausfall else []
         else:
-            if s := self._data_value_safe_type("Le", "text"):
+            if s := self._tag_data("Le", "text"):
                 return slice_aufzählung(s)
             return []
 
@@ -726,24 +726,24 @@ class Stunde(VpMobilPyModell):
         if self._planart == "R":
             return [self._context] if not self.ausfall else []
         else:
-            if s := self._data_value_safe_type("Ra", "text"):
+            if s := self._tag_data("Ra", "text"):
                 return slice_aufzählung(s)
             return []
             
     @property
     def fachgeändert(self) -> bool:
         "Ob das Fach der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
-        return "FaAe" in self._data_value_safe_type("Fa", "attrib")
+        return "FaAe" in self._tag_data("Fa", "attrib")
     
     @property
     def lehrergeändert(self) -> bool:
         "Ob der Lehrer der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
-        return "LeAe" in self._data_value_safe_type("Le", "attrib") if self._planart != "L" else self.raumgeändert
+        return "LeAe" in self._tag_data("Le", "attrib") if self._planart != "L" else self.raumgeändert
     
     @property
     def raumgeändert(self) -> bool:
         "Ob der Raum der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
-        return "RaAe" in self._data_value_safe_type("Ra", "attrib") if self._planart != "R" else self.klassegeändert
+        return "RaAe" in self._tag_data("Ra", "attrib") if self._planart != "R" else self.klassegeändert
     
     @property
     def klassegeändert(self) -> bool:
@@ -751,9 +751,9 @@ class Stunde(VpMobilPyModell):
         if self._planart == "K":
             return self.raumgeändert
         elif self._planart == "L":
-            return "LeAe" in self._data_value_safe_type("Le", "attrib")
+            return "LeAe" in self._tag_data("Le", "attrib")
         elif self._planart == "R":
-            return "RaAe" in self._data_value_safe_type("Ra", "attrib")
+            return "RaAe" in self._tag_data("Ra", "attrib")
 
     @property
     def geändert(self) -> bool:
@@ -778,7 +778,7 @@ class Stunde(VpMobilPyModell):
         Details zu einem Kurs zu erhalten, beispielsweise wenn eine Unterrichtsstunde
         ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
         """
-        if nr := self._data_value_safe_type("Nr", "text"):
+        if nr := self._tag_data("Nr", "text"):
             if nr.endswith("+"): # Gemäß #44
                 nr = nr[:-1]
             return int(nr)
@@ -787,7 +787,39 @@ class Stunde(VpMobilPyModell):
     @property
     def info(self) -> str | None:
         "Zusätzliche Informationen zur Stunde"
-        return self._data_value_safe_type("If", "text") or None
+        return self._tag_data("If", "text") or None
+
+    @classmethod
+    def new(cls,
+        periode: int,
+        beginn: time,
+        ende: time,
+        kursnummer: int | None = None,
+        *,
+        fach: str | None = None,
+        fachmeta: str | None = None,
+        fachgeändert: bool = False,
+        lehrer: list[str] = [],
+        räume: list[str] = [],
+        klassen: list[str] = [],
+        lehrergeändert: bool = False,
+        raumgeändert: bool = False,
+        klassegeändert: bool = False,
+        info: str = None,
+        planart: Literal["K", "L", "R"] = "K"
+    )-> Stunde:
+        # Falls die Planart K ist, muss ein Wert in klassen gesetzt sein, etc., sonst kommen leere Werte in die XML, was zu Fehlern bei der Interpretation durch vpmobil führen kann.
+        Std = XML.Element("Std")
+        add_Element(Std, "St", str(periode))
+        add_Element(Std, "Beginn", beginn.strftime("%H:%M"))
+        add_Element(Std, "Ende", ende.strftime("%H:%M"))
+        add_Element(Std, "Nr", kursnummer)
+        add_Element(Std, "If", info)
+        add_Element(Std, "Fa", fach or "---", {"FaAe": "FaGeaendert"} if fachgeändert else {})
+        add_Element(Std, "Ku2", fachmeta)
+        add_Element(Std, "Le", config.AUFZÄHLUNGS_SEPARATOR.join(klassen if planart == "L" else lehrer), {"LeAe": "LeGeaendert"} if (klassegeändert if planart == "L" else lehrergeändert ) else {})
+        add_Element(Std, "Ra", config.AUFZÄHLUNGS_SEPARATOR.join(klassen if planart == "R" else räume), {"RaAe": "RaGeaendert"} if (klassegeändert if planart == "L" else raumgeändert) else {})
+        return cls(Std, planart, ((klassen if planart == "K" else lehrer if planart == "L" else räume) or [""])[0])
     
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -802,23 +834,29 @@ class Kurs(VpMobilPyModell):
         return f"<'{self.kürzel}' bei '{self.lehrer}' (Kursnummer '{self.kursnummer}')>"
     
     @property
-    def kürzel(self) -> str | None:
-        "Gruppenbezeichnung des Kurses. Falls keine vorhanden ist, wird das Fach zurückgegeben."
-        return self._data_value_safe_type("UeNr", "attrib").get("UeGr", self.fach)
+    def kursnummer(self) -> int:
+        "Kursnummer des Kurses"
+        if s := self._tag_data("UeNr", "text"):
+            return int(s)
+        return None # Error-Safe
     
     @property
-    def lehrer(self) -> str | None:
-        "Lehrer des Kurses"
-        return self._data_value_safe_type("UeNr", "attrib").get("UeLe", None)
+    def kürzel(self) -> str | None:
+        "Gruppenbezeichnung des Kurses. Falls keine vorhanden ist, wird das Fach zurückgegeben."
+        return self._tag_data("UeNr", "attrib").get("UeGr", self.fach)
     
     @property
     def fach(self) -> str | None:
         "Fach des Kurses"
-        return self._data_value_safe_type("UeNr", "attrib").get("UeFa", None)
-
+        return self._tag_data("UeNr", "attrib").get("UeFa", None)
+    
     @property
-    def kursnummer(self) -> int:
-        "Kursnummer des Kurses"
-        if s := self._data_value_safe_type("UeNr", "text"):
-            return int(s)
-        return None
+    def lehrer(self) -> str | None:
+        "Lehrer des Kurses"
+        return self._tag_data("UeNr", "attrib").get("UeLe", None)
+
+    @classmethod
+    def new(cls, kursnummer: int, fach: str | None = None, lehrer: str | None = None, kürzel: str | None = None, planart: Literal["K", "L", "R"] = "K") -> Kurs:
+        return cls(XML.fromstring(
+            f"""<Ue><UeNr UeFa="{fach or ''}" UeLe="{lehrer or ''}" UeGr="{kürzel or ''}">{kursnummer}</UeNr></Ue>"""
+        ), planart)
