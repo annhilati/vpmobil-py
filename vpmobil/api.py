@@ -82,7 +82,7 @@ class Vertretungsplan():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def fetch(self, datum: date = date.today(), /, datei: str = None) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
+    def get(self, datum: date = date.today(), /, datei: str = None) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
         """Ruft die Daten eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
 
         Parameters:
@@ -118,7 +118,7 @@ class Vertretungsplan():
             response.raise_for_status()
             return VertretungsTag(XML.fromstring(response.content))
         
-    def fetchall(self, standardplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag]:
+    def getall(self, standardplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag]:
         """Ruft die Daten für alle verfügbaren Tage ab. Genauer gesagt wird versucht,
         jeden Tag im Zeitraum von 14 Tagen vor bis 7 Tagen nach dem zuletzt veröffentlichten
         Tag abzurufen. Jeder erhaltene Tag fordert wenige hundert Kilobyte.
@@ -129,7 +129,7 @@ class Vertretungsplan():
             wochenenden (bool): Ob auch Wochenenden abgerufen werden sollen
         """
 
-        standard = self.fetch(datei=standardplan)
+        standard = self.get(datei=standardplan)
 
         results: list[VertretungsTag] = []
 
@@ -139,7 +139,7 @@ class Vertretungsplan():
                     and (not nur_zukünftige or tag >= date.today())
         ):
             try:
-               results.append(self.fetch(tag))
+               results.append(self.get(tag))
             except VpMobilPyError:
                 continue
 

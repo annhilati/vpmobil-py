@@ -12,7 +12,7 @@ vp = Vertretungsplan(getenv("SCHULNUMMER"), getenv("NUTZER"), getenv("PASSWORT")
 vp = Vertretungsplan(getenv("SCHULNUMMER"), getenv("NUTZER"), getenv("PASSWORT"))
 set_config(config_presets.TolkewitzCampus)
 
-tag = vp.fetch(datei=Standardpfade.Klassen)
+tag = vp.get(datei=Standardpfade.Klassen)
 
 def main():
 

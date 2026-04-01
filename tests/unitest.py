@@ -31,7 +31,7 @@ endNow = False
 while endNow == False:
     print("UNITEST - Check " + dat, end="\r")
     try:
-        tag = vertretPlan.fetch(datetime.strptime(dat, "%Y%m%d").date())
+        tag = vertretPlan.get(datetime.strptime(dat, "%Y%m%d").date())
     except:
         keinPln += 1
     else:

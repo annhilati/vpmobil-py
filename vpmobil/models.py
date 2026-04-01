@@ -48,7 +48,7 @@ class VpMobilPyModell:
             if isinstance(value, list):
                 return [apply_converter(v) for v in value]
             if isinstance(value, tuple):
-                return tuple(apply_converter(v) for v in value)
+                return list(apply_converter(v) for v in value)
             if isinstance(value, dict):
                 return {k: apply_converter(v) for k, v in value.items()}
 
@@ -158,13 +158,51 @@ class VertretungsTag(VpMobilPyModell):
                 if ziZeile.text
             ])
         return None
+
+    @property
+    def zeitplan(self) -> dict[int, tuple[time | None, time | None]]:
+        """Gibt die Unterrichtsperioden mit Beginn- und Endzeiten zurück. Die Schlüssel
+        sind die Periodennummern, die Werte sind Tupel aus Beginn- und Endzeit.
+        """
+        result = {}
+        if self._planart == "K":
+            klasselikes: list[Klasse] = self.klassen.values()
+        elif self._planart == "L":
+            klasselikes: list[Lehrer] = self.lehrer.values()
+        elif self._planart == "R":
+            klasselikes: list[Raum] = self.räume.values()
+        else:
+            raise NotImplementedError
+        for klasse in klasselikes:
+            for stunden in klasse.stunden.values():
+                for stunde in stunden:
+                    if stunde.periode in result:
+                        beginn, ende = result[stunde.periode]
+                        if beginn is None and stunde.beginn is not None:
+                            beginn = stunde.beginn
+                        if ende is None and stunde.ende is not None:
+                            ende = stunde.ende
+                        result[stunde.periode] = (beginn, ende)
+                        continue
+                    result[stunde.periode] = (stunde.beginn, stunde.ende)
+
+            if (KlStunden := klasse._data.find("KlStunden")):
+                for KlSt in KlStunden.findall("KlSt"):
+                    if not KlSt.text or KlSt.text in result or not KlSt.attrib.get("ZeitVon") or not KlSt.attrib.get("ZeitBis"):
+                        continue
+                    result[int(KlSt.text)] = (
+                        datetime.strptime(KlSt.attrib.get("ZeitVon"), "%H:%M").time(),
+                        datetime.strptime(KlSt.attrib.get("ZeitBis"), "%H:%M").time()
+                    )
+
+        return {k: result[k] for k in sorted(result.keys())}
     
     def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> list[str]:
         """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.
         
         Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt.
         Um das zu berücksichtigen, sollten in `räume_context` die Kürzel möglicher
-        Räume mitgegeben werden.
+        Räume mitgegeben werden, zum Beispiel aus den Plänen der anderen Wochentage.
         """
 
         from vpmobil.extensions import reparser
@@ -598,14 +636,14 @@ class Stunde(VpMobilPyModell):
 
     @property
     def beginn(self) -> time | None:
-        "Beginn der Stunde"
+        "Beginn der Stunde. Falls keine Uhrzeit angegeben ist, sollte `VertretungsTag.zeitplan` zu Rate gezogen werden."
         if s := self._data_value_safe_type("Beginn", "text"):
             return datetime.strptime(s, "%H:%M").time()  
         return None
     
     @property
     def ende(self) -> time | None:
-        "Ende der Stunde"
+        "Ende der Stunde. Falls keine Uhrzeit angegeben ist, sollte `VertretungsTag.zeitplan` zu Rate gezogen werden."
         if s := self._data_value_safe_type("Ende", "text"):
             return datetime.strptime(s, "%H:%M").time() 
         return None
@@ -657,10 +695,10 @@ class Stunde(VpMobilPyModell):
     def klassen(self) -> list[str]:
         """Alle Klassen der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder
         keine Klassen eingetragen sind. Falls die Stunden einer Klasse ausgewertet
-        werden, wird hier auch nur diese Klasse zurückgegeben.
+        werden, wird hier höchstens nur diese Klasse zurückgegeben.
         """
         if self._planart == "K":
-            return [self._context]
+            return [self._context] if not self.ausfall else []
         elif self._planart == "L":
             return slice_aufzählung(self._data.find("Le").text) if self._data_value_safe_type("Le", "text") else []
         elif self._planart == "R":
@@ -670,10 +708,10 @@ class Stunde(VpMobilPyModell):
     def lehrer(self) -> list[str]:
         """Alle Lehrer der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder
         keine Lehrer eingetragen sind. Falls die Stunden einer Lehrer ausgewertet
-        werden, wird hier auch nur diese Lehrer zurückgegeben.
+        werden, wird hier höchstens nur diese Lehrer zurückgegeben.
         """
         if self._planart == "L":
-            return [self._context]
+            return [self._context] if not self.ausfall else []
         else:
             if s := self._data_value_safe_type("Le", "text"):
                 return slice_aufzählung(s)
@@ -683,10 +721,10 @@ class Stunde(VpMobilPyModell):
     def räume(self) -> list[str]:
         """Alle Räume der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder
         keine Räume eingetragen sind. Falls die Stunden eines Raums ausgewertet
-        werden, wird hier auch nur dieser Raum zurückgegeben.
+        werden, wird hier höchstens nur dieser Raum zurückgegeben.
         """
         if self._planart == "R":
-            return [self._context]
+            return [self._context] if not self.ausfall else []
         else:
             if s := self._data_value_safe_type("Ra", "text"):
                 return slice_aufzählung(s)

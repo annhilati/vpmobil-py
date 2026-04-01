@@ -19,7 +19,7 @@ klausur = Klausur()
 
 Standardpfade
 
-vp.fetch()
+vp.get()
 
 day.datei
 day.datum
