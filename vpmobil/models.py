@@ -483,6 +483,21 @@ class Klasse(KlasseLikeBase):
                 for klausur in klausuren.findall("Klausur")
             ]
         return []
+
+    @classmethod
+    def new(cls, kürzel: str, stunden: list[Stunde] = [], kurse: list[Kurs] = [], klausuren: list[Klausur] = []):
+        Kl = XML.Element("Kl")
+        add_Element(Kl, "Kurz", kürzel)
+        Pl = add_Element(Kl, "Pl")
+        for stunde in stunden:
+            Pl.append(stunde.data)
+        Unterricht = add_Element(Kl, "Unterricht")
+        for kurs in kurse:
+            Unterricht.append(kurs.data)
+        Klausuren = add_Element(Kl, "Klausuren")
+        for klausur in klausuren:
+            Klausuren.append(klausur.data)
+        return cls(Kl, "K")
     
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -512,6 +527,18 @@ class Lehrer(KlasseLikeBase):
             ]
         return []
 
+    @classmethod
+    def new(cls, kürzel: str, stunden: list[Stunde] = [], aufsichten: list[Aufsicht] = []):
+        Kl = XML.Element("Kl")
+        add_Element(Kl, "Kurz", kürzel)
+        Pl = add_Element(Kl, "Pl")
+        for stunde in stunden:
+            Pl.append(stunde.data)
+        Aufsichten = add_Element(Kl, "Aufsichten")
+        for aufsicht in aufsichten:
+            Aufsichten.append(aufsicht.data)
+        return cls(Kl, "L")
+
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                           Raum                                           │ 
@@ -529,6 +556,15 @@ class Raum(KlasseLikeBase):
 
     def __repr__(self):
         return f"<Raum '{self.kürzel}'>"
+
+    @classmethod
+    def new(cls, kürzel: str, stunden: list[Stunde] = []):
+        Kl = XML.Element("Kl")
+        add_Element(Kl, "Kurz", kürzel)
+        Pl = add_Element(Kl, "Pl")
+        for stunde in stunden:
+            Pl.append(stunde.data)
+        return cls(Kl, "R")
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -563,6 +599,20 @@ class Aufsicht(VpMobilPyModell):
     def ort(self) -> str | None:
         "Hinweis zum Ort der Aufsicht"
         return self._tag_data("AuOrt", "text") or None
+
+    @classmethod
+    def new(cls, 
+        vorStunde: int | None = None,
+        uhrzeit: time | None = None,
+        zeit: str | None = None,
+        ort: str | None = None
+    ) -> Aufsicht:
+        Aufsicht = XML.Element("Aufsicht")
+        if vorStunde: add_Element(Aufsicht, "AuVorStunde", str(vorStunde))
+        if uhrzeit: add_Element(Aufsicht, "AuUhrzeit", uhrzeit.strftime("%H:%M"))
+        if zeit: add_Element(Aufsicht, "AuZeit", zeit)
+        if ort: add_Element(Aufsicht, "AuOrt", ort)
+        return cls(Aufsicht, "K")
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -612,6 +662,23 @@ class Klausur(VpMobilPyModell):
         "Zusätzliche Informationen zur Klausur"
         return self._tag_data("KlKinfo", "text") or None
     
+    @classmethod
+    def new(cls,
+        kurs: str | None = None,
+        lehrer: str | None = None,
+        periode: int | None = None,
+        beginn: time | None = None,
+        dauer: timedelta | None = None,
+        info: str | None = None
+    ) -> Klausur:
+        Klausur = XML.Element("Klausur")
+        if kurs: add_Element(Klausur, "KlKurs", kurs)
+        if lehrer: add_Element(Klausur, "KlKursleiter", lehrer)
+        if periode is not None: add_Element(Klausur, "KlStunde", str(periode))
+        if beginn: add_Element(Klausur, "KlKurs", beginn.strftime("%H:%M"))
+        if dauer: add_Element(Klausur, "KlDauer", str(int(dauer.total_seconds()/60)))
+        if info: add_Element(Klausur, "KlKinfo", kurs)
+        return cls(Klausur, "K")
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Stunde                                          │ 
@@ -795,6 +862,7 @@ class Stunde(VpMobilPyModell):
         beginn: time,
         ende: time,
         kursnummer: int | None = None,
+        planart: Literal["K", "L", "R"] = "K",
         *,
         fach: str | None = None,
         fachmeta: str | None = None,
@@ -805,10 +873,15 @@ class Stunde(VpMobilPyModell):
         lehrergeändert: bool = False,
         raumgeändert: bool = False,
         klassegeändert: bool = False,
-        info: str = None,
-        planart: Literal["K", "L", "R"] = "K"
+        info: str = None
     )-> Stunde:
-        # Falls die Planart K ist, muss ein Wert in klassen gesetzt sein, etc., sonst kommen leere Werte in die XML, was zu Fehlern bei der Interpretation durch vpmobil führen kann.
+        """Erstellt ein neues `Stunde`-Objekt.
+
+        **ACHTUNG**: Entsprechend der Planart muss mindestens ein Wert in `klassen`,
+        `lehrer`, `räume` gesetzt sein, auch wenn die Stunde entfällt, damit die
+        Auswertung korrekt erfolgen kann.
+        
+        """
         Std = XML.Element("Std")
         add_Element(Std, "St", str(periode))
         add_Element(Std, "Beginn", beginn.strftime("%H:%M"))
@@ -856,7 +929,7 @@ class Kurs(VpMobilPyModell):
         return self._tag_data("UeNr", "attrib").get("UeLe", None)
 
     @classmethod
-    def new(cls, kursnummer: int, fach: str | None = None, lehrer: str | None = None, kürzel: str | None = None, planart: Literal["K", "L", "R"] = "K") -> Kurs:
-        return cls(XML.fromstring(
-            f"""<Ue><UeNr UeFa="{fach or ''}" UeLe="{lehrer or ''}" UeGr="{kürzel or ''}">{kursnummer}</UeNr></Ue>"""
-        ), planart)
+    def new(cls, kursnummer: int, kürzel: str | None = None, fach: str | None = None, lehrer: str | None = None) -> Kurs:
+        Ue = XML.Element("Ue")
+        add_Element(Ue, "UeNr", str(kursnummer), {"UeFa": fach or "", "UeLe": lehrer or "", "UeGr": kürzel or ""})
+        return cls(Ue, "K")

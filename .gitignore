@@ -1,9 +1,14 @@
-# Environment
+
+# Development
 *.env
 /.vscode
 test*.*
 
-# Python Build
+# Testing
+!tests/**.py
+
+# Packaging
+__pycache__
 **.egg-info/
 build/
 dist/
@@ -12,4 +17,3 @@ dist/
 # Dev
 tests/temp/*
 analyse
-__pycache__
