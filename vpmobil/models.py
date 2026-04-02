@@ -362,6 +362,36 @@ class KlassenVertretungsTag(VertretungsTag):
             Klasse(element, self._planart).kürzel: Klasse(element, self._planart)
             for element in self._Kl_Elemente()
         }
+    
+    @classmethod
+    def new(cls,
+        datum: date,
+        zeitstempel: datetime | None = datetime.now(),
+        datei: str | None = None,
+        freieTage: list[date] = [],
+        zusatzInfo: str | None = None,
+        klassen: list[Klasse] = [],
+    ) -> KlassenVertretungsTag:
+        import locale
+        locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
+        
+        VpMobil = XML.Element("VpMobil")
+        Kopf = add_Element(VpMobil, "Kopf")
+        add_Element(Kopf, "planart", "R")
+        add_Element(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
+        if zeitstempel: add_Element(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
+        if datei: add_Element(Kopf, "datei", datei)
+        FreieTage = add_Element(VpMobil, "FreieTage")
+        for tag in freieTage:
+            add_Element(FreieTage, "ft", tag.strftime("%y%m%d"))
+        Klassen = add_Element(VpMobil, "Klassen")
+        for klasse in klassen:
+            Klassen.append(klasse.data)
+        ZusatzInfo = add_Element(VpMobil, "ZusatzInfo")
+        for zeile in (zusatzInfo or "").split("\n"):
+            if zeile.strip():
+                add_Element(ZusatzInfo, "ZiZeile", zeile)
+        return cls(XML.ElementTree(VpMobil))
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -388,6 +418,36 @@ class LehrerVertretungsTag(VertretungsTag):
             Lehrer(element, self._planart).kürzel: Lehrer(element, self._planart)
             for element in self._Kl_Elemente()
         }    
+
+    @classmethod
+    def new(cls,
+        datum: date,
+        zeitstempel: datetime | None = datetime.now(),
+        datei: str | None = None,
+        freieTage: list[date] = [],
+        zusatzInfo: str | None = None,
+        lehrer: list[Lehrer] = [],
+    ) -> LehrerVertretungsTag:
+        import locale
+        locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
+        
+        VpMobil = XML.Element("VpMobil")
+        Kopf = add_Element(VpMobil, "Kopf")
+        add_Element(Kopf, "planart", "R")
+        add_Element(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
+        if zeitstempel: add_Element(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
+        if datei: add_Element(Kopf, "datei", datei)
+        FreieTage = add_Element(VpMobil, "FreieTage")
+        for tag in freieTage:
+            add_Element(FreieTage, "ft", tag.strftime("%y%m%d"))
+        Klassen = add_Element(VpMobil, "Klassen")
+        for kl in lehrer:
+            Klassen.append(kl.data)
+        ZusatzInfo = add_Element(VpMobil, "ZusatzInfo")
+        for zeile in (zusatzInfo or "").split("\n"):
+            if zeile.strip():
+                add_Element(ZusatzInfo, "ZiZeile", zeile)
+        return cls(XML.ElementTree(VpMobil))
     
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -414,6 +474,36 @@ class RaumVertretungsTag(VertretungsTag):
             Raum(element, self._planart).kürzel: Raum(element, self._planart)
             for element in self._Kl_Elemente()
         }   
+
+    @classmethod
+    def new(cls,
+        datum: date,
+        zeitstempel: datetime | None = datetime.now(),
+        datei: str | None = None,
+        freieTage: list[date] = [],
+        zusatzInfo: str | None = None,
+        räume: list[Raum] = [],
+    ) -> RaumVertretungsTag:
+        import locale
+        locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
+        
+        VpMobil = XML.Element("VpMobil")
+        Kopf = add_Element(VpMobil, "Kopf")
+        add_Element(Kopf, "planart", "R")
+        add_Element(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
+        if zeitstempel: add_Element(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
+        if datei: add_Element(Kopf, "datei", datei)
+        FreieTage = add_Element(VpMobil, "FreieTage")
+        for tag in freieTage:
+            add_Element(FreieTage, "ft", tag.strftime("%y%m%d"))
+        Klassen = add_Element(VpMobil, "Klassen")
+        for raum in räume:
+            Klassen.append(raum.data)
+        ZusatzInfo = add_Element(VpMobil, "ZusatzInfo")
+        for zeile in (zusatzInfo or "").split("\n"):
+            if zeile.strip():
+                add_Element(ZusatzInfo, "ZiZeile", zeile)
+        return cls(XML.ElementTree(VpMobil))
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -459,6 +549,8 @@ class Klasse(KlasseLikeBase):
     data: Klasse = tag.klassen["10a"]
     stunden_zur_dritten = data[3]
     ```
+
+    Um eine komplett neue `Klasse`-Instanz zu erstellen, verwende `~.new()`.
     """
 
     def __repr__(self):
@@ -512,6 +604,8 @@ class Lehrer(KlasseLikeBase):
     data: Lehrer = tag.lehrer["Ah"]
     stunden_zur_dritten = data[3]
     ```
+
+    Um eine komplett neue `Lehrer`-Instanz zu erstellen, verwende `~.new()`.
     """
 
     def __repr__(self):
@@ -552,6 +646,8 @@ class Raum(KlasseLikeBase):
     data: Raum = tag.räume["E07"]
     stunden_zur_dritten = data[3]
     ```
+
+    Um eine komplett neue `Raum`-Instanz zu erstellen, verwende `~.new()`.
     """
 
     def __repr__(self):
@@ -573,6 +669,8 @@ class Raum(KlasseLikeBase):
 
 class Aufsicht(VpMobilPyModell):
     """Klasse, die eine Lehreraufsicht repräsentiert.
+
+    Um eine komplett neue `Aufsicht`-Instanz zu erstellen, verwende `~.new()`.
     """
 
     def __repr__(self):
@@ -621,6 +719,8 @@ class Aufsicht(VpMobilPyModell):
 
 class Klausur(VpMobilPyModell):
     """Klasse, die eine Klausur repräsentiert.
+
+    Um eine komplett neue `Klausur`-Instanz zu erstellen, verwende `~.new()`.
     """
 
     def __repr__(self):
@@ -687,6 +787,8 @@ class Klausur(VpMobilPyModell):
 @dataclass(eq=False)
 class Stunde(VpMobilPyModell):
     """Klasse, die eine bestimmte Unterrichtsstunde repräsentiert.
+
+    Um eine komplett neue `Stunde`-Instanz zu erstellen, verwende `~.new()`.
     """
 
     _context: str = field(init=True) # Kürzel der Klasse/des Lehrers/des Raums, zu der/dem die Stunde gehört
@@ -901,6 +1003,8 @@ class Stunde(VpMobilPyModell):
 
 class Kurs(VpMobilPyModell):
     """Klasse die einen bestimmten Kurs repräsentiert.
+
+    Um eine komplett neue `Kurs`-Instanz zu erstellen, verwende `~.new()`.
     """
 
     def __repr__(self) -> str:

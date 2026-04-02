@@ -13,7 +13,7 @@ icon: clock-rotate-left
 * Neue Methode `saveasfile()` zu `VertretungsTag` hinzugefügt, mit der direkt ausgewertete JSON- oder YAML-Dateien erstellt werden können.
 * Eigenschaft `fachmeta` zu `Stunde` hinzugefügt, die die Information aus dem `Ku2`-Tag der Quelldaten bereitstellt
 * Eigenschaft `verlegt` zu `Stunde` hinzugefügt
-* Höchst experimentelle `new()`-Klassen-Methoden zu `Stunde` und `Kurs` hinzugefügt, mit denen Objekte aus Klarwerten erstellt werden können 
+* Klassenmethoden `new()` zu allen Modellklassen hinzugefügt, mit denen Objekte aus Klarwerten erstellt werden können 
 
 ### 🔧 Änderungen
 
