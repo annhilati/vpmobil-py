@@ -24,6 +24,7 @@ icon: clock-rotate-left
 * `Stundenplan24Pfade` in `Standardpfade` umbenannt
 * `Stunde.lehrergeändert`, `~.raumgeändert` und `.~klassegeändert` können bei respektiven Plantypen nun nicht mehr `None` sein. Stattdessen wird `~.geändert` weitergegeben
 * Alle Docstrings wurden überarbeitet
+* `VertretungsTag.klassen`, `~.lehrer` und `~.räume` werden jetzt alphabetisch sortiert zurückgegeben
 
 ## [2.1.0.1](https://pypi.org/project/vpmobil/2.1.0.1/) (2026-03-27)
 

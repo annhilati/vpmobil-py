@@ -12,8 +12,12 @@ from vpmobil import config
 @dataclass(init=True, eq=False)
 class VpMobilPyModell:
 
-    data:    XML.Element            = field(init=True)
-    _planart: Literal["K", "L", "R"] = field(init=True)
+    data:     XML.Element                     = field(init=True)
+    planart:  InitVar[Literal["K", "L", "R"]]
+    _planart: Literal["K", "L", "R"]          = field(init=False)
+
+    def __post_init__(self, planart):
+        self._planart = planart
 
     def _tag_data(self, tag: str, attr: Literal["text", "attrib"]) -> str | dict:
         "Gibt ein Attribut eines Untertags zurück. Ist niemals `None`. Stattdessen wird `\"\"` oder `{}` zurückgegeben."
@@ -83,27 +87,26 @@ class VertretungsTag(VpMobilPyModell):
     `RaumVertretungsTag` zurückgegeben.
     """
 
-    data: XML.ElementTree                     = field(init=True)
-    _planart: InitVar[Literal["K", "L", "R"]] = field(init=False, default=None) # what a nice workaround
+    data: XML.ElementTree            = field(init=True)
+    planart: Literal["K", "L", "R"]  = field(init=False) # Feld der Basisklasse deaktivieren
 
-    @property
-    def _planart(self) -> Literal["K", "L", "R"]:
-        return self._tag_data("Kopf/planart", "text")
+    def __post_init__(self):
+        self._planart = self._tag_data("Kopf/planart", "text")
 
-    def __new__(cls, _data: XML.ElementTree):
+    def __new__(cls, data: XML.ElementTree):
         if cls is VertretungsTag:
-            if _data.find("Kopf/planart") is None or _data.find("Kopf/planart").text is None:
+            if data.find("Kopf/planart") is None or data.find("Kopf/planart").text is None:
                 raise ValueError(config.ERRORS.UNKNWON_XML)
             
-            match _data.find("Kopf/planart").text:
+            match data.find("Kopf/planart").text:
                 case "K":
-                    return KlassenVertretungsTag(_data)
+                    return KlassenVertretungsTag(data)
                 case "L":
-                    return LehrerVertretungsTag(_data)
+                    return LehrerVertretungsTag(data)
                 case "R":
-                    return RaumVertretungsTag(_data)
+                    return RaumVertretungsTag(data)
                 case _:
-                    raise ValueError(f"Planart muss eins von 'K', 'L' oder 'R' sein, nicht '{_data.find('Kopf/planart').text}'")
+                    raise ValueError(f"Planart muss eins von 'K', 'L' oder 'R' sein, nicht '{data.find('Kopf/planart').text}'")
                 
         return super().__new__(cls)
                         
@@ -297,9 +300,9 @@ class VertretungsTag(VpMobilPyModell):
                 json.dump(data, f, ensure_ascii=False, indent=4)
 
     def _Kl_Elemente(self) -> list[XML.Element]:
-        if klassen := self.data.find('.//Klassen'):
+        if Klassen := self.data.find('.//Klassen'):
             return [
-                kl for kl in klassen.findall(".//Kl")
+                kl for kl in Klassen.findall(".//Kl")
                 if kl.find('Kurz') is not None
             ]
         return []
@@ -358,10 +361,10 @@ class KlassenVertretungsTag(VertretungsTag):
     @property
     def klassen(self) -> dict[str, Klasse]:
         "Im Vertretungsplan beschriebene Klassen"
-        return {
+        return dict(sorted({
             Klasse(element, self._planart).kürzel: Klasse(element, self._planart)
             for element in self._Kl_Elemente()
-        }
+        }.items()))
     
     @classmethod
     def new(cls,
@@ -414,10 +417,10 @@ class LehrerVertretungsTag(VertretungsTag):
     @property
     def lehrer(self) -> dict[str, Lehrer]:
         "Im Vertretungsplan beschriebene Lehrer"
-        return {
+        return dict(sorted({
             Lehrer(element, self._planart).kürzel: Lehrer(element, self._planart)
             for element in self._Kl_Elemente()
-        }    
+        }.items()))
 
     @classmethod
     def new(cls,
@@ -470,10 +473,10 @@ class RaumVertretungsTag(VertretungsTag):
     @property
     def räume(self) -> dict[str, Raum]:
         "Im Vertretungsplan beschriebene Räume"
-        return {
+        return dict(sorted({
             Raum(element, self._planart).kürzel: Raum(element, self._planart)
             for element in self._Kl_Elemente()
-        }   
+        }.items()))  
 
     @classmethod
     def new(cls,
@@ -707,9 +710,9 @@ class Aufsicht(VpMobilPyModell):
     ) -> Aufsicht:
         Aufsicht = XML.Element("Aufsicht")
         if vorStunde: add_Element(Aufsicht, "AuVorStunde", str(vorStunde))
-        if uhrzeit: add_Element(Aufsicht, "AuUhrzeit", uhrzeit.strftime("%H:%M"))
-        if zeit: add_Element(Aufsicht, "AuZeit", zeit)
-        if ort: add_Element(Aufsicht, "AuOrt", ort)
+        if uhrzeit:   add_Element(Aufsicht, "AuUhrzeit", uhrzeit.strftime("%H:%M"))
+        if zeit:      add_Element(Aufsicht, "AuZeit", zeit)
+        if ort:       add_Element(Aufsicht, "AuOrt", ort)
         return cls(Aufsicht, "K")
 
 
@@ -772,12 +775,12 @@ class Klausur(VpMobilPyModell):
         info: str | None = None
     ) -> Klausur:
         Klausur = XML.Element("Klausur")
-        if kurs: add_Element(Klausur, "KlKurs", kurs)
-        if lehrer: add_Element(Klausur, "KlKursleiter", lehrer)
         if periode is not None: add_Element(Klausur, "KlStunde", str(periode))
-        if beginn: add_Element(Klausur, "KlKurs", beginn.strftime("%H:%M"))
-        if dauer: add_Element(Klausur, "KlDauer", str(int(dauer.total_seconds()/60)))
-        if info: add_Element(Klausur, "KlKinfo", kurs)
+        if kurs:    add_Element(Klausur, "KlKurs", kurs)
+        if lehrer:  add_Element(Klausur, "KlKursleiter", lehrer)
+        if beginn:  add_Element(Klausur, "KlKurs", beginn.strftime("%H:%M"))
+        if dauer:   add_Element(Klausur, "KlDauer", str(int(dauer.total_seconds()/60)))
+        if info:    add_Element(Klausur, "KlKinfo", kurs)
         return cls(Klausur, "K")
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -791,7 +794,12 @@ class Stunde(VpMobilPyModell):
     Um eine komplett neue `Stunde`-Instanz zu erstellen, verwende `~.new()`.
     """
 
-    _context: str = field(init=True) # Kürzel der Klasse/des Lehrers/des Raums, zu der/dem die Stunde gehört
+    context:  InitVar[str] = field(init=True) # Kürzel der Klasse/des Lehrers/des Raums, zu der/dem die Stunde gehört
+    _context: str          = field(init=False) 
+
+    def __post_init__(self, planart, context):
+        super().__post_init__(planart)
+        self._context = context
     
     def __repr__(self):
         if self.ausfall:
