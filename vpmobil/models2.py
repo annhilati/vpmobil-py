@@ -3,15 +3,14 @@ from dataclasses import dataclass, field, fields
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
-from typing import Literal, Any, overload
+from typing import Literal, Any
 import re
 
 from vpmobil import config
-from vpmobil.utils import slice_aufzählung
+from vpmobil.utils import slice_aufzählung, find
 
 @dataclass(frozen=False)
 class VpMobilPyModell:
-    ...
 
     def as_dict(self) -> dict[str, Any]:
         """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und
@@ -64,19 +63,6 @@ class VpMobilPyModell:
 
         return result
 
-@overload
-def find(element: XML.Element, path: str, mode: Literal["text"]) -> str | Literal[""]: ...
-@overload
-def find(element: XML.Element, path: str, mode: Literal["attrib"]) -> dict: ...
-def find(element: XML.Element, path: str, mode: Literal["text", "attrib"]):
-    target = element.find(path)
-    if target is None:
-        target = XML.Element(path.split('/')[-1])
-    match mode:
-        case "text":    return getattr(target, "text", "")
-        case "attrib":  return getattr(target, "attrib", {})
-        case _:         raise ValueError
-
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    Vertretungsplan                                       │ 
@@ -98,6 +84,7 @@ class Vertretungsplan(VpMobilPyModell):
     """Die Unterrichtsperioden mit ihren Beginn- und Endzeiten. Die Schlüssel
     sind die Periodennummern, die Werte sind Tupel aus Beginn- und Endzeit.
     """
+    kurse:       list[Kurs]                                 = field(default_factory=list)
     stunden:     list[Stunde]                               = field(default_factory=list)
     aufsichten:  list[Aufsicht]                             = field(default_factory=list)
     klausuren:   list[Klausur]                              = field(default_factory=list)
@@ -106,6 +93,70 @@ class Vertretungsplan(VpMobilPyModell):
     def __repr__(self):
         return f"<Vertretungsplan {f'(Typ {self._planart}) ' if self._planart else ""}vom {self.datum.strftime(r'%d.%m.%Y')}>"
     
+    @property
+    def klassen(self) -> dict[str, Klasse]:
+        "Im Vertretungsplan beschriebene Klassen"
+
+        klassen: dict[str, Klasse] = {}
+        for stunde in self.stunden:
+            for klasse in stunde.klassen:
+                if klasse not in klassen:
+                    klassen[klasse] = Klasse(kürzel=klasse)
+                if stunde.periode not in klassen[klasse].stunden:
+                    klassen[klasse].stunden[stunde.periode] = []
+                klassen[klasse].stunden[stunde.periode].append(stunde)
+
+        for kurs in self.kurse:
+            for klasse in kurs.klassen:
+                if klasse not in klassen:
+                    klassen[klasse] = Klasse(kürzel=klasse)
+                klassen[klasse].kurse[kurs.kursnummer] = kurs
+
+        for klausur in self.klausuren:
+            for kurs in klausur.kurse:
+                for klasse in self.klassen.get(kurs, Klasse()).stunden:
+                    if klasse not in klassen:
+                        klassen[klasse] = Klasse(kürzel=klasse)
+                    klassen[klasse].klausuren.append(klausur)
+
+        return dict(sorted(klassen.items()))
+    
+    @property
+    def lehrer(self) -> dict[str, Lehrer]:
+        "Im Vertretungsplan beschriebene Lehrer"
+        
+        lehrerE: dict[str, Lehrer] = {}
+        for stunde in self.stunden:
+            for klasse in stunde.räume:
+                if klasse not in lehrerE:
+                    lehrerE[klasse] = Lehrer(kürzel=klasse)
+                if stunde.periode not in lehrerE[klasse].stunden:
+                    lehrerE[klasse].stunden[stunde.periode] = []
+                lehrerE[klasse].stunden[stunde.periode].append(stunde)
+
+        for kurs in self.kurse:
+            lehrer = kurs.lehrer or ""
+            if lehrer not in lehrerE:
+                lehrerE[lehrer] = Lehrer(kürzel=lehrer)
+            lehrerE[lehrer].kurse[kurs.kursnummer] = kurs
+
+        return dict(sorted(lehrerE.items()))
+    
+    @property
+    def räume(self) -> dict[str, Raum]:
+        "Im Vertretungsplan beschriebene Räume"
+        
+        räumeE: dict[str, Raum] = {}
+        for stunde in self.stunden:
+            for raum in stunde.räume:
+                if raum not in räumeE:
+                    räumeE[raum] = Raum(kürzel=raum)
+                if stunde.periode not in räumeE[raum].stunden:
+                    räumeE[raum].stunden[stunde.periode] = []
+                räumeE[raum].stunden[stunde.periode].append(stunde)
+
+        return dict(sorted(räumeE.items()))
+
     @classmethod # TODO
     def from_xml(cls, data: XML.Element | XML.ElementTree) -> Vertretungsplan:
         root = data if isinstance(data, XML.Element) else data.getroot()
@@ -152,6 +203,7 @@ class Vertretungsplan(VpMobilPyModell):
             ])
 
         #======// Stunden, Aufsichten, Klausuren und Zeitplan //==//
+        kurse:      list[Kurs]     = []
         klausuren:  list[Klausur]  = []
         aufsichten: list[Aufsicht] = []
         stunden:    list[Stunde]   = []
@@ -161,13 +213,14 @@ class Vertretungsplan(VpMobilPyModell):
             for KlTag in KlassenTag.findall("Kl"):
                 Kurz = find(KlTag, "Kurz", "text")
 
+                # Klausuren auswerten
                 if (KlausurenTag := KlTag.find("Klausuren")) is not None:
                     klausuren.extend([
                         Klausur.from_xml(KlausurTag)
                         for KlausurTag in KlausurenTag.findall("Klausur")
                     ])
-                # Mergen macht für Klausuren meines Erachtens nach keinen Sinn
         
+                # Aufsichten auswerten
                 if (AufsichtenTag := KlTag.find("Aufsichten")) is not None:
                     for AufsichtTag in AufsichtenTag.findall("Aufsicht"):
                         aufsicht = Aufsicht.from_xml(AufsichtTag, lehrer=[Kurz])
@@ -178,13 +231,14 @@ class Vertretungsplan(VpMobilPyModell):
                         else:
                             aufsichten.append(aufsicht)
 
+                # Stunden auswerten
                 if (PlTag := KlTag.find("Pl")) is not None:
                     for StdTag in PlTag.findall("Std"):
 
                         stunde = Stunde.from_xml(StdTag, planart, kontext={Kurz})
 
                         # Bekannte Stunden mergen
-                        if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and s.lehrer == stunde.lehrer), None)):
+                        if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and s.räume == stunde.räume), None)):
                             existing_stunde.klassen.update(stunde.klassen)
                             existing_stunde.räume.update(stunde.räume)
                         else:
@@ -211,6 +265,17 @@ class Vertretungsplan(VpMobilPyModell):
                             datetime.strptime(KlStTag.attrib.get("ZeitBis"), "%H:%M").time()
                         )
 
+                # Kurse auswerten
+                if (UnterrichtsTag := KlTag.find("Unterricht")) is not None:
+                    for UeTag in UnterrichtsTag.findall("Ue"):
+                        kurs = Kurs.from_xml(UeTag, klassen={Kurz})
+
+                        # Bekannte Stunden mergen
+                        if (existing_kurs := next((k for k in kurse if k.kursnummer == kurs.kursnummer), None)):
+                            existing_kurs.klassen.update(kurs.klassen)
+                        else:
+                            kurse.append(kurs)
+
         vp = Vertretungsplan(
             datum = datum,
             datei = find(root, "Kopf/datei", "text") or None,
@@ -218,6 +283,7 @@ class Vertretungsplan(VpMobilPyModell):
             freieTage = freieTage,
             zusatzinfo = zusatzinfo,
             zeitplan = zeitplan,
+            kurse = sorted(kurse, key=lambda kurs: (kurs.kursnummer is None, kurs.kursnummer)),
             stunden = stunden,
             aufsichten = aufsichten,
             klausuren = klausuren
@@ -266,18 +332,59 @@ class Vertretungsplan(VpMobilPyModell):
 @dataclass(frozen=False)
 class Stunde(VpMobilPyModell):
     periode:         int
+    "Unterrichtsperiode der Stunde. Kann `0` sein."
     beginn:          time | None = field(default=None)
+    "Beginn der Stunde. Falls keine Uhrzeit angegeben ist, sollte `VertretungsTag.zeitplan` zu Rate gezogen werden."
     ende:            time | None = field(default=None)
+    "Ende der Stunde. Falls keine Uhrzeit angegeben ist, sollte `VertretungsTag.zeitplan` zu Rate gezogen werden."
     fach:            str  | None = field(default=None)
+    """Fach bzw. Kürzel des Kurses der Stunde. Gibt `None` zurück, wenn die Stunde entfällt.
+
+    Das tatsächlich gängige Kürzel des Fachs kann über
+    `klasse.kurs(stunde.kursnummer).fach` erhalten werden.
+
+    Bei Unsicherheit mit Fallback wäre beispielsweise denkbar:
+    ```
+    stunde.fach if klasse.kurse[stunde.kursnummer] is None else klasse.kurse[stunde.kursnummer].fach
+    ```
+    """
+    fachmeta:        str | None  = field(default=None)
+    """Metainformation über das Fach das normalerweise in dieser Stunde stattfindet.
+
+    Das Verhalten dieses Werts ist etwas unintuitiv. Er wird hauptsächlich bei
+    Stunden von Kursen gesetzt, die mehrere inhatlich parallele Gruppen haben,
+    beispielsweise bei Sport (wenn es separate Kurse für Jungen und Mädchen gibt),
+    Profilen, Religionsgruppen und Kursen der Oberstufe generell.
+    
+    Dieser Wert ist bei entsprechenden Stunden immer gesetzt, auch wenn die Stunde
+    entfällt oder das Fach geändert wurde.
+    """
     fachänderung:    bool        = field(default=False)
+    "Ob das Fach der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
     klassen:         set[str]    = field(default_factory=set)
+    "Alle Klassen der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder keine Klassen eingetragen sind."
     klassenänderung: bool        = field(default=False)
+    "Ob die Klassen der Stunde geändert wurden. Ebenfalls `True`, wenn die Stunde entfällt."
     lehrer:          set[str]    = field(default_factory=set)
+    "Alle Lehrer der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder keine Lehrer eingetragen sind."
     lehreränderung:  bool        = field(default=False)
+    "Ob die Lehrer der Stunde geändert wurden. Ebenfalls `True`, wenn die Stunde entfällt."
     räume:           set[str]    = field(default_factory=set)
+    "Alle Räume der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder keine Räume eingetragen sind."
     raumänderung:    bool        = field(default=False)
+    "Ob der Raum der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
     kursnummer:      int | None  = field(default=None)
+    """Nummer des Kurses der Stunde
+
+    Kann `None` sein, wenn das Fach der Stunde geändert wurde, jedoch nicht, wenn
+    die Stunde entfällt oder, beispielsweise wenn die Stunde eine Exkursion ist.
+    
+    Kursnummern können verwendet werden, um in den Kursen einer Klasse mehr
+    Details zu einem Kurs zu erhalten, beispielsweise wenn eine Unterrichtsstunde
+    ausfällt und Informationen wie Lehrer, Fach und Raum deswegen nicht verfügbar sind.
+    """
     info:            str | None  = field(default=None)
+    "Zusätzliche Informationen zur Stunde"
 
     def __repr__(self):
         if self.ausfall:
@@ -291,7 +398,12 @@ class Stunde(VpMobilPyModell):
         Wenn die Stundeninfo das Stichwort `"selbst"` enthält und weder Lehrer
         noch Räume angegeben sind, wird das ebenfalls als Ausfall interpretiert.
         """
-        return self.fach is None or ("selbst" in (self.info or "") and not self.räume + self.lehrer)
+        return self.fach is None or ("selbst" in (self.info or "") and not self.lehrer | self.räume)
+    
+    @property
+    def änderung(self) -> bool:
+        "Ob die Stunde in irgendeiner Weise geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt"
+        return self.fachänderung or self.lehreränderung or self.raumänderung or self.klassenänderung
     
     @classmethod
     def from_xml(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", kontext: set[str] = set(), kontextgeändert: bool = False) -> Stunde:
@@ -306,6 +418,8 @@ class Stunde(VpMobilPyModell):
 
         kursnummer = None
         if s := find(data, "Nr", "text"):
+            if s.endswith("+"): # Gemäß #44
+                s = s[:-1]
             kursnummer = int(s)
 
         #======// Fach & Änderungen bzw. Ausfall //==//
@@ -315,8 +429,6 @@ class Stunde(VpMobilPyModell):
         fach = find(data, "Fa", "text") or None
         if fach == "---":
             fach = None
-        # if "selbst" in fach and not Le and not Ra:
-        #     fach = None # TODO: konkretisieren
 
         #======// Klassen, Lehrer & Räume //=========//
         klassen = set()
@@ -350,6 +462,7 @@ class Stunde(VpMobilPyModell):
             beginn = beginn,
             ende = ende,
             fach = fach,
+            fachmeta= find(data, "Ku2", "text") or None,
             fachänderung = "FaAe" in find(data, "Fa", "attrib"),
             klassen=klassen,
             klassenänderung=klassenänderung,
@@ -363,6 +476,38 @@ class Stunde(VpMobilPyModell):
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                          Kurs                                            │ 
+# ╰──────────────────────────────────────────────────────────────────────────────────────────╯
+
+@dataclass(frozen=False)
+class Kurs(VpMobilPyModell):
+    """Klasse die einen bestimmten Kurs repräsentiert.
+    """
+    kursnummer: int | None
+    "Kursnummer des Kurses"
+    kürzel:     str | None = field(default=None)
+    "Gruppenbezeichnung des Kurses. Falls in den Quelldaten nicht vorhanden, wird stattdessen das Fach zurückgegeben."
+    fach:       str | None = field(default=None)
+    "Fach des Kurses"
+    lehrer:     str | None = field(default=None)
+    "Lehrer des Kurses"
+    klassen:    set[str]   = field(default_factory=set)
+
+    @classmethod
+    def from_xml(cls, data: XML.Element, klassen: set[str]) -> Kurs:
+        return Kurs(
+            kursnummer = int(find(data, "UeNr", "text")) if find(data, "UeNr", "text") else None,
+            kürzel = find(data, "UeNr", "attrib").get("UeGr", None) or find(data, "UeNr", "attrib").get("UeFa", None),
+            fach = find(data, "UeNr", "attrib").get("UeFa", None),
+            lehrer = find(data, "UeNr", "attrib").get("UeLe", None),
+            klassen = klassen
+        )
+
+    def __repr__(self) -> str:
+        return f"<'{self.kürzel}' bei '{self.lehrer}' (Kursnummer '{self.kursnummer}')>"
+
+
+# ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                        Aufsicht                                          │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
@@ -370,9 +515,13 @@ class Stunde(VpMobilPyModell):
 class Aufsicht(VpMobilPyModell):
     lehrer:    set[str]    = field(default_factory=set)
     vorStunde: int  | None = field(default=None)
+    "Unterrichtsperiode, vor der die Aufsicht stattfindet"
     beginn:    time | None = field(default=None)
+    "Uhrzeit der Aufsicht"
     zeitinfo:  str  | None = field(default=None)
+    "Hinweis zum Zeitpunkt der Aufsicht"
     ortinfo:   str  | None = field(default=None)
+    "Hinweis zum Ort der Aufsicht"
 
     def __repr__(self):
         return f"<Aufsicht {f'von \'{", ".join(self.lehrer)}\' ' if self.lehrer else ""}{f'ab \'{self.beginn}\' - ' if self.beginn else "- "}{f'\'{self.ortinfo}\'' if self.ortinfo else ""}>"
@@ -438,8 +587,44 @@ class Klausur(VpMobilPyModell):
         )
 
 
+@dataclass(frozen=False)
+class ViewBase(VpMobilPyModell):
+    kürzel: str
+    stunden: dict[int, list[Stunde]] = field(default_factory=dict)
+    "Stunden gruppiert nach Unterrichtsperiode"
+
+
+@dataclass(frozen=False)
+class Klasse(ViewBase):
+    kurse: dict[int, Kurs]   = field(default_factory=dict)
+    "Kurse der Klasse, zugänglich über die Kursnummer"
+    klausuren: list[Klausur] = field(default_factory=list)
+    "Klausuren der Klasse"
+
+    def __repr__(self):
+        return f"<Klasse '{self.kürzel}'>"
+
+@dataclass(frozen=False)
+class Lehrer(ViewBase):
+    kurse: dict[int, Kurs]     = field(default_factory=dict)
+    "Kurse des Lehrers, zugänglich über die Kursnummer"
+    aufsichten: list[Aufsicht] = field(default_factory=list)
+    "Aufsichten des Lehrers"
+
+    def __repr__(self):
+        return f"<Lehrer '{self.kürzel}'>"
+
+@dataclass(frozen=False)
+class Raum(ViewBase):
+
+    def __repr__(self):
+        return f"<Raum '{self.kürzel}'>"
+
+
 if __name__ == "__main__":
     with open(r"C:\Users\Annhilati\Documents\GitHub\dof-shaderpack\vpmobil-py\analyse\PlanKl20250811.xml", "r", encoding="utf-8") as f:
         vp = Vertretungsplan.from_xml(XML.parse(f))
 
-        vp.saveasfile("test.yml")
+        print(vp.klassen)
+        print(vp.lehrer)
+        print(vp.räume)

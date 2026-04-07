@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from typing import Any
+from typing import Any, overload, Literal
 from string import ascii_lowercase
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
@@ -26,6 +26,19 @@ def date_range(start: date, end: date):
         yield current
         current += timedelta(days=1)
 
+
+@overload
+def find(element: ET.Element, path: str, mode: Literal["text"]) -> str | Literal[""]: ...
+@overload
+def find(element: ET.Element, path: str, mode: Literal["attrib"]) -> dict: ...
+def find(element: ET.Element, path: str, mode: Literal["text", "attrib"]):
+    target = element.find(path)
+    if target is None:
+        target = ET.Element(path.split('/')[-1])
+    match mode:
+        case "text":    return getattr(target, "text", "")
+        case "attrib":  return getattr(target, "attrib", {})
+        case _:         raise ValueError
 
 def add_Element(parent: ET.Element, tag: str, text: str | Any = None, attrib: dict = {}) -> ET.Element:
         element = ET.SubElement(parent, tag, attrib)
