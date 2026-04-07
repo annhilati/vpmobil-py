@@ -30,7 +30,7 @@ heute = vp.fetch()
 
 from vpmobil.api import Vertretungsplan, VpMobilPyError, Unauthorized, ResourceNotFound, Standardpfade
 from vpmobil.models import (
-    VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
+    VertretungsplanNEU,
     Klasse, Raum, Lehrer,
     Stunde, Kurs, Aufsicht, Klausur
     )
@@ -39,7 +39,7 @@ from vpmobil import config
 
 _symbols = [
     Vertretungsplan,
-    VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag,
+    VertretungsplanNEU,
     Klasse, Lehrer, Raum,
     Stunde, Kurs, Aufsicht, Klausur,
     VpMobilPyError, Unauthorized, ResourceNotFound,

@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import xml.etree.ElementTree as XML
 import requests
 
-from vpmobil.models import VertretungsTag, KlassenVertretungsTag, LehrerVertretungsTag, RaumVertretungsTag
+from vpmobil.models import VertretungsplanNEU
 
 class Standardpfade(StrEnum):
     """Enumerator mit den Pfaden für Vertretungsplanquelldateien,
@@ -82,7 +82,7 @@ class Vertretungsplan():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def get(self, datum: date = date.today(), /, datei: str = None) -> KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag:
+    def get(self, datum: date = date.today(), /, datei: str = None) -> VertretungsplanNEU:
         """Ruft die Daten eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
 
         Parameters:
@@ -116,9 +116,9 @@ class Vertretungsplan():
             raise ResourceNotFound(message=f"Datei '{dateipfad}' existiert nicht", response=response)
         else:
             response.raise_for_status()
-            return VertretungsTag(XML.fromstring(response.content))
+            return VertretungsplanNEU.from_xml(XML.fromstring(response.content))
         
-    def getall(self, standardplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[KlassenVertretungsTag | LehrerVertretungsTag | RaumVertretungsTag]:
+    def getall(self, standardplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[VertretungsplanNEU]:
         """Ruft die Daten für alle verfügbaren Tage ab. Genauer gesagt wird versucht,
         jeden Tag im Zeitraum von 14 Tagen vor bis 7 Tagen nach dem zuletzt veröffentlichten
         Tag abzurufen. Jeder erhaltene Tag fordert wenige hundert Kilobyte.
@@ -131,7 +131,7 @@ class Vertretungsplan():
 
         standard = self.get(datei=standardplan)
 
-        results: list[VertretungsTag] = []
+        results: list[VertretungsplanNEU] = []
 
         for tag in (tag for tag in ((standard.datum or date.today()) + timedelta(days=i) for i in range(-7, 15))
                     if tag not in standard.freieTage

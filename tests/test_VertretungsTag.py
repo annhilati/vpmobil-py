@@ -1,4 +1,4 @@
-from vpmobil import Vertretungsplan, Standardpfade, VertretungsTag, KlassenVertretungsTag
+from vpmobil import Vertretungsplan, Standardpfade, VertretungsplanNEU
 import dotenv, os
 
 dotenv.load_dotenv()
@@ -7,4 +7,4 @@ vp = Vertretungsplan(os.getenv("SCHULNUMMER"), os.getenv("NUTZER"), os.getenv("P
 def test_fetch():
     data = vp.get(datei=Standardpfade.Klassen)
 
-    assert type(data) == KlassenVertretungsTag
+    assert type(data) == VertretungsplanNEU

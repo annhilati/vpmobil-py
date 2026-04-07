@@ -1,21 +1,22 @@
 from vpmobil import Stunde, Kurs, Klasse, Lehrer, Raum
 from datetime import time
 
-Klasse. new
-Lehrer. new
-Raum.   new
-Stunde. new
-Kurs.   new
+if 2 == 3:
+    Klasse ()
+    Lehrer ()
+    Raum   ()
+    Stunde ()
+    Kurs   ()
 
 
 def test_stunde():
-    stunde = Stunde.new(
+    stunde = Stunde(
         periode=1,
         beginn=time(8, 0),
         ende=time(9, 30),
         kursnummer=4242,
         fach="Os",
-        raumgeändert=True,
+        raumänderung=True,
         klassen=["10a"],
         lehrer=["Ah"],
         räume=["101"],

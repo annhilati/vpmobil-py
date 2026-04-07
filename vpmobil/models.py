@@ -3,7 +3,7 @@ from dataclasses import dataclass, field, fields
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
-from typing import Literal, Any
+from typing import Literal, Any, ClassVar
 import re
 
 from vpmobil import config
@@ -11,6 +11,7 @@ from vpmobil.utils import slice_aufzählung, find
 
 @dataclass(frozen=False)
 class VpMobilPyModell:
+    _hidden: ClassVar[list[str]] = []
 
     def as_dict(self) -> dict[str, Any]:
         """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und
@@ -25,10 +26,10 @@ class VpMobilPyModell:
         """
 
         converters = {
+            VpMobilPyModell: lambda m: m.as_dict(),
             datetime:        lambda d: d.strftime("%d.%m.%Y, %H:%M"),
             time:            lambda t: t.strftime("%H:%M"),
-            date:            lambda d: d.strftime("%d.%m.%Y"),
-            VpMobilPyModell: lambda m: m.as_dict(),
+            date:            lambda d: d.strftime("%d.%m.%Y")
         }
 
         def apply_converter(value: Any) -> Any:
@@ -51,11 +52,11 @@ class VpMobilPyModell:
 
         for f in fields(self):
             name = f.name
-            if not name.startswith("_"):
+            if not name.startswith("_") and name not in self._hidden:
                 result[name] = apply_converter(getattr(self, name))
 
         for name, attr in vars(self.__class__).items():
-            if isinstance(attr, property) and not name.startswith("_"):
+            if isinstance(attr, property) and not name.startswith("_") and name not in self._hidden:
                 result[name] = apply_converter(getattr(self, name))
 
         try: import json; _ = json.dumps(result, ensure_ascii=False)
@@ -69,7 +70,7 @@ class VpMobilPyModell:
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(frozen=False)
-class Vertretungsplan(VpMobilPyModell):
+class VertretungsplanNEU(VpMobilPyModell):
     datum:       date       | None                          = field(default=None)
     "Datum für das der Vertretungsplan gilt"
     datei:       str        | None                          = field(default=None)
@@ -89,13 +90,19 @@ class Vertretungsplan(VpMobilPyModell):
     aufsichten:  list[Aufsicht]                             = field(default_factory=list)
     klausuren:   list[Klausur]                              = field(default_factory=list)
     _planart:    Literal["K", "L", "R"] | None              = field(init=False, default="K")
+    _hidden:     ClassVar[list[str]]                        = ["kurse", "stunden", "aufsichten", "klausuren"]
 
     def __repr__(self):
         return f"<Vertretungsplan {f'(Typ {self._planart}) ' if self._planart else ""}vom {self.datum.strftime(r'%d.%m.%Y')}>"
     
     @property
     def klassen(self) -> dict[str, Klasse]:
-        "Im Vertretungsplan beschriebene Klassen"
+        """Im Vertretungsplan beschriebene Klassen.
+        
+        Alle `Stunde`-, `Kurs`- und `Klausur`-Objekte sind Referenzen. Das heißt,
+        Änderungen an diesen Objekten wirken sich auch auf das ursprünglichen
+        `Vertretungsplan`-Objekt aus.
+        """
 
         klassen: dict[str, Klasse] = {}
         for stunde in self.stunden:
@@ -123,16 +130,21 @@ class Vertretungsplan(VpMobilPyModell):
     
     @property
     def lehrer(self) -> dict[str, Lehrer]:
-        "Im Vertretungsplan beschriebene Lehrer"
+        """Im Vertretungsplan beschriebene Lehrer.
+        
+        Alle `Stunde`-, `Kurs`- und `Aufsicht`-Objekte sind Referenzen. Das heißt,
+        Änderungen an diesen Objekten wirken sich auch auf das ursprünglichen
+        `Vertretungsplan`-Objekt aus.
+        """
         
         lehrerE: dict[str, Lehrer] = {}
         for stunde in self.stunden:
-            for klasse in stunde.räume:
-                if klasse not in lehrerE:
-                    lehrerE[klasse] = Lehrer(kürzel=klasse)
-                if stunde.periode not in lehrerE[klasse].stunden:
-                    lehrerE[klasse].stunden[stunde.periode] = []
-                lehrerE[klasse].stunden[stunde.periode].append(stunde)
+            for lehrer in stunde.lehrer:
+                if lehrer not in lehrerE:
+                    lehrerE[lehrer] = Lehrer(kürzel=lehrer)
+                if stunde.periode not in lehrerE[lehrer].stunden:
+                    lehrerE[lehrer].stunden[stunde.periode] = []
+                lehrerE[lehrer].stunden[stunde.periode].append(stunde)
 
         for kurs in self.kurse:
             lehrer = kurs.lehrer or ""
@@ -140,11 +152,21 @@ class Vertretungsplan(VpMobilPyModell):
                 lehrerE[lehrer] = Lehrer(kürzel=lehrer)
             lehrerE[lehrer].kurse[kurs.kursnummer] = kurs
 
+        for aufsicht in self.aufsichten:
+            for lehrer in aufsicht.lehrer:
+                if lehrer not in lehrerE:
+                    lehrerE[lehrer] = Lehrer(kürzel=lehrer)
+                lehrerE[lehrer].aufsichten.append(aufsicht)
+
         return dict(sorted(lehrerE.items()))
     
     @property
     def räume(self) -> dict[str, Raum]:
-        "Im Vertretungsplan beschriebene Räume"
+        """Im Vertretungsplan beschriebene Klassen.
+        
+        Alle `Stunde`-Objekte sind Referenzen. Das heißt, Änderungen an diesen
+        Objekten wirken sich auch auf das ursprünglichen `Vertretungsplan`-Objekt aus.
+        """
         
         räumeE: dict[str, Raum] = {}
         for stunde in self.stunden:
@@ -157,8 +179,8 @@ class Vertretungsplan(VpMobilPyModell):
 
         return dict(sorted(räumeE.items()))
 
-    @classmethod # TODO
-    def from_xml(cls, data: XML.Element | XML.ElementTree) -> Vertretungsplan:
+    @classmethod
+    def from_xml(cls, data: XML.Element | XML.ElementTree) -> VertretungsplanNEU:
         root = data if isinstance(data, XML.Element) else data.getroot()
         if root is None:
             raise ValueError
@@ -276,7 +298,7 @@ class Vertretungsplan(VpMobilPyModell):
                         else:
                             kurse.append(kurs)
 
-        vp = Vertretungsplan(
+        vp = VertretungsplanNEU(
             datum = datum,
             datei = find(root, "Kopf/datei", "text") or None,
             zeitstempel = zeitstempel,
@@ -323,6 +345,33 @@ class Vertretungsplan(VpMobilPyModell):
         else:
             with zielpfad.open('w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
+
+    def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> list[str]:
+        """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.
+        
+        Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt.
+        Um das zu berücksichtigen, sollten in `räume_context` die Kürzel möglicher
+        Räume mitgegeben werden, zum Beispiel aus den Plänen der anderen Wochentage.
+        """
+
+        frei = set(räume_context)
+
+        for kürzel, raum in self.räume.items():
+
+            frei.add(kürzel)
+            for stunden in raum.stunden.values():
+                for stunde in stunden:
+
+                    if stunde.beginn is None or stunde.ende is None:
+                        continue # keine Aussage möglich -> überspringen
+                    if stunde.ausfall is True:
+                        continue # Stunde fällt aus
+                    if stunde.ende <= beginn or ende <= stunde.beginn:
+                        continue # Stunde überschneidet sich nicht mit Zeitraum
+                    if kürzel in frei:
+                        frei.remove(kürzel)
+
+        return sorted(list(frei))
     
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -588,14 +637,14 @@ class Klausur(VpMobilPyModell):
 
 
 @dataclass(frozen=False)
-class ViewBase(VpMobilPyModell):
+class KLRViewBase(VpMobilPyModell):
     kürzel: str
     stunden: dict[int, list[Stunde]] = field(default_factory=dict)
-    "Stunden gruppiert nach Unterrichtsperiode"
+    "Unterrichtsstunden gruppiert nach Unterrichtsperiode"
 
 
 @dataclass(frozen=False)
-class Klasse(ViewBase):
+class Klasse(KLRViewBase):
     kurse: dict[int, Kurs]   = field(default_factory=dict)
     "Kurse der Klasse, zugänglich über die Kursnummer"
     klausuren: list[Klausur] = field(default_factory=list)
@@ -605,7 +654,7 @@ class Klasse(ViewBase):
         return f"<Klasse '{self.kürzel}'>"
 
 @dataclass(frozen=False)
-class Lehrer(ViewBase):
+class Lehrer(KLRViewBase):
     kurse: dict[int, Kurs]     = field(default_factory=dict)
     "Kurse des Lehrers, zugänglich über die Kursnummer"
     aufsichten: list[Aufsicht] = field(default_factory=list)
@@ -615,16 +664,7 @@ class Lehrer(ViewBase):
         return f"<Lehrer '{self.kürzel}'>"
 
 @dataclass(frozen=False)
-class Raum(ViewBase):
+class Raum(KLRViewBase):
 
     def __repr__(self):
         return f"<Raum '{self.kürzel}'>"
-
-
-if __name__ == "__main__":
-    with open(r"C:\Users\Annhilati\Documents\GitHub\dof-shaderpack\vpmobil-py\analyse\PlanKl20250811.xml", "r", encoding="utf-8") as f:
-        vp = Vertretungsplan.from_xml(XML.parse(f))
-
-        print(vp.klassen)
-        print(vp.lehrer)
-        print(vp.räume)
