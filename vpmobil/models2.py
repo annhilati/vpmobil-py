@@ -79,7 +79,9 @@ class Vertretungsplan(VpMobilPyModell):
     datum:       date       | None                          = field(default=None)
     "Datum für das der Vertretungsplan gilt"
     datei:       str        | None                          = field(default=None)
+    "Originaler Dateiname der Quelldatei"
     zeitstempel: datetime   | None                          = field(default=None)
+    "Veröffentlichungszeitpunkt des Vertretungsplans bzw. der letzten Änderung"
     freieTage:   list[date]                                 = field(default_factory=list)
     "Unterrichtsfreie Tage"
     zusatzinfo:  str        | None                          = field(default=None)
@@ -103,16 +105,20 @@ class Vertretungsplan(VpMobilPyModell):
             raise ValueError
 
         import locale
+
+        planart = find(root, "Kopf/planart", "text") or None
         
         #======// Datum //=====================//
         datum = None
         if DatumPlan := find(root, "Kopf/DatumPlan", "text"):
-            for s in ["de_DE.UTF-8", "German_Germany"]:
+            for loc in ["de_DE.UTF-8", "German_Germany"]:
                 try:
-                    locale.setlocale(locale.LC_TIME, s)
+                    locale.setlocale(locale.LC_TIME, loc)
                     datum: date = datetime.strptime(DatumPlan, (r"%A, %d. %B %Y")).date()
+                    break
                 except: continue
-            raise ValueError(f"Das Datum {DatumPlan} konnte nicht dekodiert werden. Bitte erstelle ein Issue im Bugtracker von vpmobil-py auf GitHub (https://github.com/annhilati/vpmobil-py/issues)")
+            else:
+                raise ValueError(f"Das Datum '{DatumPlan}' konnte nicht dekodiert werden. Bitte erstelle ein Issue im Bugtracker von vpmobil-py auf GitHub (https://github.com/annhilati/vpmobil-py/issues)")
         
         #======// Zeitstempel //===============//
         zeitstempel = None
@@ -141,7 +147,7 @@ class Vertretungsplan(VpMobilPyModell):
         klausuren:   list[Klausur]  = []
         aufsichten:  list[Aufsicht] = []
         zeitplan:    dict[int, tuple[time | None, time | None]] = {}
-        stunden_map: dict[str, dict[int, list]] = {}
+        stunden:     list[Stunde]   = []
 
         #                   TODO TODO TODO TODO TODO TODO
 
@@ -150,25 +156,54 @@ class Vertretungsplan(VpMobilPyModell):
                 Kurz = find(KlTag, "Kurz", "text")
 
                 if KlausurenTag := KlTag.find("Klausuren"):
-                    klausuren = [
+                    klausuren.extend([
                         Klausur.from_xml(KlausurTag)
                         for KlausurTag in KlausurenTag.findall("Klausur")
-                    ]
+                    ])
                 # Mergen macht für Klausuren meines Erachtens nach keinen Sinn
         
                 if AufsichtenTag := KlTag.find("Aufsichten"):
-                    aufsichten = [
-                        Aufsicht.from_xml(AufsichtTag, lehrer=[Kurz])
-                        for AufsichtTag in AufsichtenTag.findall("Aufsicht")
-                    ]
-
-                # TODO Aufsichten-Merge-Logik
+                    for AufsichtTag in AufsichtenTag.findall("Aufsicht"):
+                        aufsicht = Aufsicht.from_xml(AufsichtTag, lehrer=[Kurz])
+                                                
+                        # Bekannte Aufsichten mergen
+                        if (existing_aufsicht := next((a for a in aufsichten if a.beginn == aufsicht.beginn and a.ortinfo == aufsicht.ortinfo), None)):
+                            existing_aufsicht.lehrer.extend(aufsicht.lehrer)
+                        else:
+                            aufsichten.append(aufsicht)
 
                 if (PlTag := KlTag.find("Pl")):
                     for StdTag in PlTag.findall("Std"):
 
-                        # TODO Alles mit Stunden
-                        ...
+                        stunde = Stunde.from_xml(StdTag, planart, kontext=[Kurz])
+
+                        # Bekannte Stunden mergen
+                        if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and s.lehrer == stunde.lehrer), None)):
+                            existing_stunde.klassen.extend(stunde.klassen)
+                            existing_stunde.räume.extend(stunde.räume)
+                        else:
+                            stunden.append(stunde)
+
+                        # Zeitplan extrahieren
+                        if stunde.periode in zeitplan:
+                            beginn, ende = zeitplan[stunde.periode]
+                            if beginn is None and stunde.beginn is not None:
+                                beginn = stunde.beginn
+                            if ende is None and stunde.ende is not None:
+                                ende = stunde.ende
+                            zeitplan[stunde.periode] = (beginn, ende)
+                            continue
+                        zeitplan[stunde.periode] = (stunde.beginn, stunde.ende)
+
+                # Zeitplan ergänzen
+                if (KlStundenTag := KlTag.find("KlStunden")):
+                    for KlStTag in KlStundenTag.findall("KlSt"):
+                        if not KlStTag.text or KlStTag.text in zeitplan or not KlStTag.attrib.get("ZeitVon") or not KlStTag.attrib.get("ZeitBis"):
+                            continue
+                        zeitplan[int(KlStTag.text)] = (
+                            datetime.strptime(KlStTag.attrib.get("ZeitVon"), "%H:%M").time(),
+                            datetime.strptime(KlStTag.attrib.get("ZeitBis"), "%H:%M").time()
+                        )
 
         vp = Vertretungsplan(
             datum = datum,
@@ -177,11 +212,11 @@ class Vertretungsplan(VpMobilPyModell):
             freieTage = freieTage,
             zusatzinfo = zusatzinfo,
             zeitplan = zeitplan,
-            stunden = ...,
+            stunden = stunden,
             aufsichten = aufsichten,
             klausuren = klausuren
         )
-        vp._planart = find(root, "Kopf/planart", "text") or None
+        vp._planart = planart
         return vp
     
 
@@ -365,4 +400,9 @@ class Klausur(VpMobilPyModell):
 
 
 if __name__ == "__main__":
-    ...
+    with open(r"C:\Users\Annhilati\Documents\GitHub\dof-shaderpack\vpmobil-py\analyse\PlanKl20250811.xml", "r", encoding="utf-8") as f:
+        vp = Vertretungsplan.from_xml(XML.parse(f))
+
+        print(vp)
+        [print(s) for s in vp.stunden]
+        print(vp.zeitplan)
