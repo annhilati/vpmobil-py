@@ -1,5 +1,5 @@
 from __future__ import annotations
-from dataclasses import dataclass, field, InitVar
+from dataclasses import dataclass, field, fields
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
@@ -13,49 +13,56 @@ from vpmobil.utils import slice_aufzählung
 class VpMobilPyModell:
     ...
 
-    # def as_dict(self) -> dict[str, Any]:
-    #     """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und
-    #     wandelt alle Datentypen in Primitives um, sodass das Dictionary beispielsweise
-    #     in JSON modelliert werden kann.
+    def as_dict(self) -> dict[str, Any]:
+        """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und
+        wandelt alle Datentypen in Primitives um, sodass das Dictionary beispielsweise
+        in JSON modelliert werden kann.
         
-    #     Verwendete Formate: 
+        Verwendete Formate: 
 
-    #     - `datetime(2025, 10, 18, 21, 3)` -> `"18.10.2025, 21:03"`
-    #     - `time(21, 3)` -> `"21:03"`
-    #     - `date(2025, 10, 18)` -> `"18.10.2025"`
-    #     """
+        - `datetime(2025, 10, 18, 21, 3)` -> `"18.10.2025, 21:03"`
+        - `time(21, 3)` -> `"21:03"`
+        - `date(2025, 10, 18)` -> `"18.10.2025"`
+        """
 
-    #     converters = {
-    #         datetime:        lambda d: d.strftime("%d.%m.%Y, %H:%M"),
-    #         time:            lambda t: t.strftime("%H:%M"),
-    #         date:            lambda d: d.strftime("%d.%m.%Y"),
-    #         VpMobilPyModell: lambda m: m.as_dict()
-    #     }
+        converters = {
+            datetime:        lambda d: d.strftime("%d.%m.%Y, %H:%M"),
+            time:            lambda t: t.strftime("%H:%M"),
+            date:            lambda d: d.strftime("%d.%m.%Y"),
+            VpMobilPyModell: lambda m: m.as_dict(),
+        }
 
-    #     def apply_converter(value: Any) -> Any:
-    #         if isinstance(value, list):
-    #             return [apply_converter(v) for v in value]
-    #         if isinstance(value, tuple):
-    #             return list(apply_converter(v) for v in value)
-    #         if isinstance(value, dict):
-    #             return {k: apply_converter(v) for k, v in value.items()}
+        def apply_converter(value: Any) -> Any:
+            if isinstance(value, list):
+                return [apply_converter(v) for v in value]
+            if isinstance(value, tuple):
+                return list(apply_converter(v) for v in value)
+            if isinstance(value, set):
+                return list(apply_converter(v) for v in value)
+            if isinstance(value, dict):
+                return {k: apply_converter(v) for k, v in value.items()}
 
-    #         for t, conv in converters.items():
-    #             if isinstance(value, t):
-    #                 return conv(value)
+            for t, conv in converters.items():
+                if isinstance(value, t):
+                    return conv(value)
 
-    #         return value
+            return value
 
-    #     result = {}
-    #     for name in dir(self.__class__):
-    #         if isinstance(getattr(self.__class__, name, None), property) and not name.startswith("_"):
-    #             val = getattr(self, name)
-    #             result[name] = apply_converter(val)
+        result = {}
 
-    #     try: import json; _ = json.dumps(result, ensure_ascii=False)
-    #     except: raise AssertionError(config.ERRORS.KEY_VALUE_ASSERTION)
+        for f in fields(self):
+            name = f.name
+            if not name.startswith("_"):
+                result[name] = apply_converter(getattr(self, name))
 
-    #     return result
+        for name, attr in vars(self.__class__).items():
+            if isinstance(attr, property) and not name.startswith("_"):
+                result[name] = apply_converter(getattr(self, name))
+
+        try: import json; _ = json.dumps(result, ensure_ascii=False)
+        except: raise AssertionError(config.ERRORS.KEY_VALUE_ASSERTION)
+
+        return result
 
 @overload
 def find(element: XML.Element, path: str, mode: Literal["text"]) -> str | Literal[""]: ...
@@ -69,6 +76,7 @@ def find(element: XML.Element, path: str, mode: Literal["text", "attrib"]):
         case "text":    return getattr(target, "text", "")
         case "attrib":  return getattr(target, "attrib", {})
         case _:         raise ValueError
+
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    Vertretungsplan                                       │ 
@@ -127,7 +135,7 @@ class Vertretungsplan(VpMobilPyModell):
 
         #======// Freie Tage //================//
         freieTage = []
-        if FreieTageTag := root.find("FreieTage"):
+        if (FreieTageTag := root.find("FreieTage")) is not None:
             freieTage = [
                 datetime.strptime(ft.text, "%y%m%d").date()
                 for ft in FreieTageTag.findall("ft")
@@ -136,7 +144,7 @@ class Vertretungsplan(VpMobilPyModell):
 
         #======// Zusatzinfo //================//
         zusatzinfo = None
-        if ZusatzInfoTag := root.find('ZusatzInfo'):
+        if (ZusatzInfoTag := root.find('ZusatzInfo')) is not None:
             zusatzinfo = '\n'.join([
                 ziZeile.text
                 for ziZeile in ZusatzInfoTag.findall('ZiZeile')
@@ -144,43 +152,41 @@ class Vertretungsplan(VpMobilPyModell):
             ])
 
         #======// Stunden, Aufsichten, Klausuren und Zeitplan //==//
-        klausuren:   list[Klausur]  = []
-        aufsichten:  list[Aufsicht] = []
-        zeitplan:    dict[int, tuple[time | None, time | None]] = {}
-        stunden:     list[Stunde]   = []
+        klausuren:  list[Klausur]  = []
+        aufsichten: list[Aufsicht] = []
+        stunden:    list[Stunde]   = []
+        zeitplan:   dict[int, tuple[time | None, time | None]] = {}
 
-        #                   TODO TODO TODO TODO TODO TODO
-
-        if (KlassenTag := root.find("Klassen")):
+        if (KlassenTag := root.find("Klassen")) is not None:
             for KlTag in KlassenTag.findall("Kl"):
                 Kurz = find(KlTag, "Kurz", "text")
 
-                if KlausurenTag := KlTag.find("Klausuren"):
+                if (KlausurenTag := KlTag.find("Klausuren")) is not None:
                     klausuren.extend([
                         Klausur.from_xml(KlausurTag)
                         for KlausurTag in KlausurenTag.findall("Klausur")
                     ])
                 # Mergen macht für Klausuren meines Erachtens nach keinen Sinn
         
-                if AufsichtenTag := KlTag.find("Aufsichten"):
+                if (AufsichtenTag := KlTag.find("Aufsichten")) is not None:
                     for AufsichtTag in AufsichtenTag.findall("Aufsicht"):
                         aufsicht = Aufsicht.from_xml(AufsichtTag, lehrer=[Kurz])
                                                 
                         # Bekannte Aufsichten mergen
                         if (existing_aufsicht := next((a for a in aufsichten if a.beginn == aufsicht.beginn and a.ortinfo == aufsicht.ortinfo), None)):
-                            existing_aufsicht.lehrer.extend(aufsicht.lehrer)
+                            existing_aufsicht.lehrer.update(aufsicht.lehrer)
                         else:
                             aufsichten.append(aufsicht)
 
-                if (PlTag := KlTag.find("Pl")):
+                if (PlTag := KlTag.find("Pl")) is not None:
                     for StdTag in PlTag.findall("Std"):
 
-                        stunde = Stunde.from_xml(StdTag, planart, kontext=[Kurz])
+                        stunde = Stunde.from_xml(StdTag, planart, kontext={Kurz})
 
                         # Bekannte Stunden mergen
                         if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and s.lehrer == stunde.lehrer), None)):
-                            existing_stunde.klassen.extend(stunde.klassen)
-                            existing_stunde.räume.extend(stunde.räume)
+                            existing_stunde.klassen.update(stunde.klassen)
+                            existing_stunde.räume.update(stunde.räume)
                         else:
                             stunden.append(stunde)
 
@@ -196,7 +202,7 @@ class Vertretungsplan(VpMobilPyModell):
                         zeitplan[stunde.periode] = (stunde.beginn, stunde.ende)
 
                 # Zeitplan ergänzen
-                if (KlStundenTag := KlTag.find("KlStunden")):
+                if (KlStundenTag := KlTag.find("KlStunden")) is not None:
                     for KlStTag in KlStundenTag.findall("KlSt"):
                         if not KlStTag.text or KlStTag.text in zeitplan or not KlStTag.attrib.get("ZeitVon") or not KlStTag.attrib.get("ZeitBis"):
                             continue
@@ -219,6 +225,39 @@ class Vertretungsplan(VpMobilPyModell):
         vp._planart = planart
         return vp
     
+    def saveasfile(self, pfad: Path | str = "./datei.yml", overwrite=True) -> None:
+        """Speichert den ausgewerteten Vertretungsplan als JSON- oder YAML-Datei.
+
+        **ACHTUNG**: vpmobil-py hat momentan keine Funktion,
+        um so abgespeicherte Dateien wieder einzulesen.
+
+        Parameters:
+            pfad (Path | str): Dateipfad der zu erstellenden Datei. Die Dateiendung bestimmt,
+                welches Format gewählt wird. Unterstützt werden `.json` und `.yaml` (bzw. `.yml`).
+                Andernfalls wird JSON gewählt.
+            overwrite (bool): Ob die Datei überschrieben werden darf, falls sie bereits existiert
+
+        Raises:
+            FileExistsError: Falls die Datei bereits existiert und `overwrite` `False` ist
+        """
+        import yaml, json
+
+        data = self.as_dict()
+
+        zielpfad = Path(pfad).resolve() # Funktioniert für Path und str
+        zielverzeichnis = zielpfad.parent
+        zielverzeichnis.mkdir(parents=True, exist_ok=True)
+
+        if zielpfad.exists() and not overwrite:
+            raise FileExistsError(f"Datei '{zielpfad}' existiert bereits.")
+
+        if zielpfad.suffix.lower() in ['.yaml', '.yml']:
+            with zielpfad.open('w', encoding='utf-8') as f:
+                yaml.dump(data, f, allow_unicode=True, default_flow_style=False)
+        else:
+            with zielpfad.open('w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
+    
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                          Stunde                                          │ 
@@ -231,11 +270,11 @@ class Stunde(VpMobilPyModell):
     ende:            time | None = field(default=None)
     fach:            str  | None = field(default=None)
     fachänderung:    bool        = field(default=False)
-    klassen:         list[str]   = field(default_factory=list)
+    klassen:         set[str]    = field(default_factory=set)
     klassenänderung: bool        = field(default=False)
-    lehrer:          list[str]   = field(default_factory=list)
+    lehrer:          set[str]    = field(default_factory=set)
     lehreränderung:  bool        = field(default=False)
-    räume:           list[str]   = field(default_factory=list)
+    räume:           set[str]    = field(default_factory=set)
     raumänderung:    bool        = field(default=False)
     kursnummer:      int | None  = field(default=None)
     info:            str | None  = field(default=None)
@@ -255,7 +294,7 @@ class Stunde(VpMobilPyModell):
         return self.fach is None or ("selbst" in (self.info or "") and not self.räume + self.lehrer)
     
     @classmethod
-    def from_xml(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", kontext: list[str] = [], kontextgeändert: bool = False) -> Stunde:
+    def from_xml(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", kontext: set[str] = set(), kontextgeändert: bool = False) -> Stunde:
 
         beginn = None
         if s := find(data, "Beginn", "text"):
@@ -280,27 +319,27 @@ class Stunde(VpMobilPyModell):
         #     fach = None # TODO: konkretisieren
 
         #======// Klassen, Lehrer & Räume //=========//
-        klassen = []
-        lehrer = []
-        räume = []
+        klassen = set()
+        lehrer = set()
+        räume = set()
 
         if planart == "K":
             klassen = kontext
-            lehrer = Le.split(config.AUFZÄHLUNGS_SEPARATOR)  if fach else []
-            räume = Ra.split(config.AUFZÄHLUNGS_SEPARATOR)   if fach else []
+            lehrer = set(Le.split(config.AUFZÄHLUNGS_SEPARATOR))  if fach else set()
+            räume = set(Ra.split(config.AUFZÄHLUNGS_SEPARATOR))   if fach else set()
             klassenänderung = kontextgeändert
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "L":
-            klassen = Le.split(config.AUFZÄHLUNGS_SEPARATOR) if fach else []
+            klassen = set(Le.split(config.AUFZÄHLUNGS_SEPARATOR)) if fach else set()
             lehrer = kontext
-            räume = Ra.split(config.AUFZÄHLUNGS_SEPARATOR)   if fach else []
+            räume = set(Ra.split(config.AUFZÄHLUNGS_SEPARATOR))   if fach else set()
             klassenänderung = "LeAe" in find(data, "Le", "attrib")
             lehreränderung = kontextgeändert
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "R":
-            klassen = Ra.split(config.AUFZÄHLUNGS_SEPARATOR) if fach else []
-            lehrer = Le.split(config.AUFZÄHLUNGS_SEPARATOR)  if fach else []
+            klassen = set(Ra.split(config.AUFZÄHLUNGS_SEPARATOR)) if fach else set()
+            lehrer = set(Le.split(config.AUFZÄHLUNGS_SEPARATOR))  if fach else set()
             räume = kontext
             klassenänderung = "RaAe" in find(data, "Ra", "attrib")
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
@@ -329,7 +368,7 @@ class Stunde(VpMobilPyModell):
 
 @dataclass(frozen=False)
 class Aufsicht(VpMobilPyModell):
-    lehrer:    list[str]   = field(default_factory=list)
+    lehrer:    set[str]    = field(default_factory=set)
     vorStunde: int  | None = field(default=None)
     beginn:    time | None = field(default=None)
     zeitinfo:  str  | None = field(default=None)
@@ -364,7 +403,7 @@ class Aufsicht(VpMobilPyModell):
 
 @dataclass(frozen=False)
 class Klausur(VpMobilPyModell): 
-    kurse:   list[str]        = field(default_factory=list)
+    kurse:   set[str]         = field(default_factory=set)
     lehrer:  str       | None = field(default=None)
     periode: int       | None = field(default=None)
     beginn:  time      | None = field(default=None)
@@ -403,6 +442,4 @@ if __name__ == "__main__":
     with open(r"C:\Users\Annhilati\Documents\GitHub\dof-shaderpack\vpmobil-py\analyse\PlanKl20250811.xml", "r", encoding="utf-8") as f:
         vp = Vertretungsplan.from_xml(XML.parse(f))
 
-        print(vp)
-        [print(s) for s in vp.stunden]
-        print(vp.zeitplan)
+        vp.saveasfile("test.yml")
