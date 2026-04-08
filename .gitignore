@@ -7,6 +7,10 @@ test*.*
 # Testing
 !tests/**.py
 
+# Documentation
+site/
+.cache/
+
 # Packaging
 __pycache__
 **.egg-info/

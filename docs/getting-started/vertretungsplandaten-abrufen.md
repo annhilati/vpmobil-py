@@ -1,5 +1,6 @@
 ---
-icon: file-export
+title: Vertretungspläne abrufen
+icon: lucide/arrow-down-to-line
 ---
 
 # Vertretungsplandaten abrufen

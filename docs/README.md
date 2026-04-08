@@ -1,5 +1,6 @@
 ---
-icon: python
+title: Installation
+icon: lucide/circle-fading-plus
 ---
 
 # vpmobil-py installieren

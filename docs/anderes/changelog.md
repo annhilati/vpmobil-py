@@ -1,5 +1,5 @@
 ---
-icon: clock-rotate-left
+icon: lucide/scroll-text
 ---
 
 # Changelog

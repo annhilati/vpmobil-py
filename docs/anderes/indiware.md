@@ -1,5 +1,5 @@
 ---
-icon: sparkle
+
 ---
 
 # Indiware Spezifikationen
@@ -8,24 +8,25 @@ icon: sparkle
 
 ```py
 # VpMobil24 App
-f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/Klassen.xml"             # aktueller Klassenplan
-f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/PlanKl{yyyymmdd}.xml"    # bestimmter Klassenplan
-f"https://stundenplan24.de/{schoolcode}/moble/mobdaten/Lehrer.xml"              # aktueller Lehrerplan
-f"https://stundenplan24.de/{schoolcode}/moble/mobdaten/PlanLe{yyyymmdd}.xml"    # bestimmter Lehrerplan
-f"https://stundenplan24.de/{schoolcode}/mobra/mobdaten/Raeume.xml"              # aktueller Raumplan
-f"https://stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"    # bestimmter Raumplan
+f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/Klassen.xml"             # zuletzt geänderter Klassenplan
+f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/PlanKl{yyyymmdd}.xml"    # datierter Klassenplan
+f"https://stundenplan24.de/{schoolcode}/moble/mobdaten/Lehrer.xml"              # zuletzt geänderter Lehrerplan
+f"https://stundenplan24.de/{schoolcode}/moble/mobdaten/PlanLe{yyyymmdd}.xml"    # datierter Lehrerplan
+f"https://stundenplan24.de/{schoolcode}/mobra/mobdaten/Raeume.xml"              # zuletzt geänderter Raumplan
+f"https://stundenplan24.de/{schoolcode}/mobra/mobdaten/PlanRa{yyyymmdd}.xml"    # datierter Raumplan
 f"https://stundenplan24.de/{schoolcode}/mobil/mobdaten/vpinfok.txt"             # (konkrete Funktion unbekannt)
 
 # Vertretungsplan (Monitor & PDF)
-f"https://stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl.xml"               # aktueller Änderungsplan für Schüler
-f"https://stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl{yyyymmdd}.xml"     # bestimmter Änderungsplan für Schüler
-f"https://stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe.xml"             # aktueller Änderungsplan für Lehrer
-f"https://stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe{yyyymmdd}.xml"   # bestimmter Änderungsplan für Lehrer
+f"https://stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl.xml"               # zuletzt geänderter Änderungsplan für Schüler
+f"https://stundenplan24.de/{schoolcode}/vplan/vdaten/VplanKl{yyyymmdd}.xml"     # datierter Änderungsplan für Schüler
+f"https://stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe.xml"             # zuletzt geänderter Änderungsplan für Lehrer
+f"https://stundenplan24.de/{schoolcode}/vplanle/vdaten/VplanLe{yyyymmdd}.xml"   # datierter Änderungsplan für Lehrer
 
 # Funktion unbekannt
 f"https://stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanKl_Basis.xml"
 f"https://stundenplan24.de/{schoolcode}/wplan/wdaten/SPlanLe_Basis.xml"
 f"https://stundenplan24.de/{schoolcode}/wplan/wdatenr/SPlanRa_Basis.xml"
+f"https://stundenplan24.de/{schoolcode}/wplan/wdatenk/WPlanKl{yyyymmdd}.xml"
 
 ```
 

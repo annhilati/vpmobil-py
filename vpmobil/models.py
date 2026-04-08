@@ -13,10 +13,10 @@ from vpmobil.utils import slice_aufzählung, find
 class VpMobilPyModell:
     _hidden: ClassVar[list[str]] = []
 
-    def as_dict(self) -> dict[str, Any]:
-        """Gibt alle nicht versteckten Properties des Modells als Dictionary zurück und
-        wandelt alle Datentypen in Primitives um, sodass das Dictionary beispielsweise
-        in JSON modelliert werden kann.
+    def as_dict(self, hidden: list[str] = []) -> dict[str, Any]:
+        """Gibt alle nicht versteckten Felder und Properties des Modells als Dictionary
+        zurück und wandelt alle Datentypen in Primitives um, sodass das Dictionary
+        beispielsweise in JSON modelliert werden kann.
         
         Verwendete Formate: 
 
@@ -52,11 +52,11 @@ class VpMobilPyModell:
 
         for f in fields(self):
             name = f.name
-            if not name.startswith("_") and name not in self._hidden:
+            if not name.startswith("_") and name not in self._hidden + hidden:
                 result[name] = apply_converter(getattr(self, name))
 
         for name, attr in vars(self.__class__).items():
-            if isinstance(attr, property) and not name.startswith("_") and name not in self._hidden:
+            if isinstance(attr, property) and not name.startswith("_") and name not in self._hidden + hidden:
                 result[name] = apply_converter(getattr(self, name))
 
         try: import json; _ = json.dumps(result, ensure_ascii=False)
@@ -313,7 +313,7 @@ class VertretungsplanNEU(VpMobilPyModell):
         vp._planart = planart
         return vp
     
-    def saveasfile(self, pfad: Path | str = "./datei.yml", overwrite=True) -> None:
+    def saveasfile(self, pfad: Path | str = "./datei.yml", overwrite=True, hidden: list[str] = []) -> None:
         """Speichert den ausgewerteten Vertretungsplan als JSON- oder YAML-Datei.
 
         **ACHTUNG**: vpmobil-py hat momentan keine Funktion,
@@ -324,13 +324,15 @@ class VertretungsplanNEU(VpMobilPyModell):
                 welches Format gewählt wird. Unterstützt werden `.json` und `.yaml` (bzw. `.yml`).
                 Andernfalls wird JSON gewählt.
             overwrite (bool): Ob die Datei überschrieben werden darf, falls sie bereits existiert
+            hidden (list[str]): Liste der Felder/Eigenschaften, die nicht in der Datei enthalten
+                sein sollen
 
         Raises:
             FileExistsError: Falls die Datei bereits existiert und `overwrite` `False` ist
         """
         import yaml, json
 
-        data = self.as_dict()
+        data = self.as_dict(hidden=hidden)
 
         zielpfad = Path(pfad).resolve() # Funktioniert für Path und str
         zielverzeichnis = zielpfad.parent
