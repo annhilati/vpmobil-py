@@ -34,8 +34,7 @@ from vpmobil.models import (
     Klasse, Raum, Lehrer,
     Stunde, Kurs, Aufsicht, Klausur
     )
-from vpmobil.config import set_config
-from vpmobil import config
+from vpmobil.parser import Parser
 
 _symbols = [
     Vertretungsplan,

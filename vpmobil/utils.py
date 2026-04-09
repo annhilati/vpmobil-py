@@ -1,11 +1,10 @@
-from datetime import date, timedelta
 from typing import Any, overload, Literal
 from string import ascii_lowercase
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
 import re
 
-from vpmobil import config
+from vpmobil.parser import Parser
 
 def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     if isinstance(object, ET.ElementTree):
@@ -13,18 +12,11 @@ def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     elif isinstance(object, ET.Element):
         element = object
     else:
-        element = object
+        raise TypeError
     
     string = ET.tostring(element, 'utf-8')
     reparsed = MD.parseString(string)
     return reparsed.toprettyxml(indent="\t")
-
-
-def date_range(start: date, end: date):
-    current = start
-    while current <= end:
-        yield current
-        current += timedelta(days=1)
 
 
 @overload
@@ -40,6 +32,7 @@ def find(element: ET.Element, path: str, mode: Literal["text", "attrib"]):
         case "attrib":  return getattr(target, "attrib", {})
         case _:         raise ValueError
 
+
 def add_Element(parent: ET.Element, tag: str, text: str | Any = None, attrib: dict = {}) -> ET.Element:
         element = ET.SubElement(parent, tag, attrib)
         if text:
@@ -47,23 +40,18 @@ def add_Element(parent: ET.Element, tag: str, text: str | Any = None, attrib: di
         return element
 
 
-def slice_aufzählung(
-    string: str,
-    separator: str = config.AUFZÄHLUNGS_SEPARATOR,
-    parse_hyphen: bool = config.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN,
-    class_pattern: str = config.KLASSENBEZEICHNER_PATTERN,
-) -> list[str]:
+def slice_aufzählung(string: str, parser: Parser = Parser(), ) -> list[str]:
     """Wandelt Aufzählungen in Strings in eine Liste von Strings um.
     
-    Unterstützt auch Bereiche von Klassen, je nach `class_pattern`
+    Unterstützt auch Bereiche von Klassen, je nach `parser`.
     """
 
     if not string:
         return []
 
-    parts = [p.strip() for p in string.split(separator) if p.strip()]
+    parts = [p.strip() for p in string.split(parser.AUFZÄHLUNGS_TRENNZEICHEN) if p.strip()]
 
-    if not parse_hyphen:
+    if not parser.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN:
         return parts
 
     result: list[str] = []
@@ -74,8 +62,8 @@ def slice_aufzählung(
             continue
 
         start_raw, end_raw = part.split("-", 1)
-        start_match = re.fullmatch(class_pattern, start_raw.strip())
-        end_match = re.fullmatch(class_pattern, end_raw.strip())
+        start_match = re.fullmatch(parser.KLASSENBEZEICHNER_PATTERN, start_raw.strip())
+        end_match = re.fullmatch(parser.KLASSENBEZEICHNER_PATTERN, end_raw.strip())
 
         if not (start_match and end_match):
             # Fallback: unverständlicher Bereich, unverändert übernehmen

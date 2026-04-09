@@ -10,7 +10,7 @@
     <img alt="PyPI Downloads" src="https://img.shields.io/pypi/dw/vpmobil?style=for-the-badge&logo=pypi&logoColor=white&label=Downloads&color=5865F2"></a>
   <br>
   <a href="https://annhilati.github.io/vpmobil-py">
-    <img alt="Dokumentation" src="https://img.shields.io/badge/Dokumentation?style=for-the-badge&logo=gitbook&logoColor=white&label=Dokumentation&color=23A55A"></a>
+    <img alt="Dokumentation" src="https://img.shields.io/badge/Gitbook-Documentation?style=for-the-badge&logo=gitbook&logoColor=white&label=Dokumentation&color=23A55A"></a>
   <a href="https://github.com/annhilati/vpmobil-py?tab=EUPL-1.2-1-ov-file">
     <img alt="GitHub License" src="https://img.shields.io/github/license/annhilati/vpmobil-py?style=for-the-badge&label=Lizenz&color=F23F42"></a>
   <br>

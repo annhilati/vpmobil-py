@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Literal, Any, ClassVar
 import re
 
-from vpmobil import config
 from vpmobil.utils import slice_aufzählung, find
+from vpmobil.parser import Parser
 
 @dataclass(frozen=False)
 class VpMobilPyModell:
@@ -60,7 +60,7 @@ class VpMobilPyModell:
                 result[name] = apply_converter(getattr(self, name))
 
         try: import json; _ = json.dumps(result, ensure_ascii=False)
-        except: raise AssertionError(config.ERRORS.KEY_VALUE_ASSERTION)
+        except: raise AssertionError("Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt auf GitHub im Bugtracker von vpmobil-py")
 
         return result
 
@@ -180,7 +180,12 @@ class VertretungsplanNEU(VpMobilPyModell):
         return dict(sorted(räumeE.items()))
 
     @classmethod
-    def from_xml(cls, data: XML.Element | XML.ElementTree) -> VertretungsplanNEU:
+    def from_xml(cls, data: XML.Element | XML.ElementTree, *, parser: Parser = Parser()) -> VertretungsplanNEU:
+        """Erstellt ein `Vertretungsplan`-Objekt aus einem XML-Dokument.
+
+        Parameters:
+            parser (Parser): Parsing-Parameter
+        """
         root = data if isinstance(data, XML.Element) else data.getroot()
         if root is None:
             raise ValueError
@@ -238,7 +243,7 @@ class VertretungsplanNEU(VpMobilPyModell):
                 # Klausuren auswerten
                 if (KlausurenTag := KlTag.find("Klausuren")) is not None:
                     klausuren.extend([
-                        Klausur.from_xml(KlausurTag)
+                        Klausur.from_xml(KlausurTag, parser=parser)
                         for KlausurTag in KlausurenTag.findall("Klausur")
                     ])
         
@@ -257,7 +262,7 @@ class VertretungsplanNEU(VpMobilPyModell):
                 if (PlTag := KlTag.find("Pl")) is not None:
                     for StdTag in PlTag.findall("Std"):
 
-                        stunde = Stunde.from_xml(StdTag, planart, kontext={Kurz})
+                        stunde = Stunde.from_xml(StdTag, planart=planart, kontext={Kurz}, parser=parser)
 
                         # Bekannte Stunden mergen
                         if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and s.räume == stunde.räume), None)):
@@ -457,7 +462,18 @@ class Stunde(VpMobilPyModell):
         return self.fachänderung or self.lehreränderung or self.raumänderung or self.klassenänderung
     
     @classmethod
-    def from_xml(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", kontext: set[str] = set(), kontextgeändert: bool = False) -> Stunde:
+    def from_xml(cls, data: XML.Element, *, parser: Parser = Parser(), planart: Literal["K", "L", "R"] = "K", kontext: set[str] = set(), kontextgeändert: bool = False) -> Stunde:
+        """Erstellt ein `Stunde`-Objekt aus einem XML-Element.
+
+        Parameters:
+            parser (Parser): Parsing-Parameter
+            planart (str): Typ der Quelldatei, aus dem das Element stammt
+            kontext (set[str]): Klassen, Lehrer, bzw. Räume, die selbst von der Stunde
+                betroffen sind. Bei Typ K müssen das Klassen sein, bei Typ R Räume, etc.
+                Es sollte mindestens ein Kürzel angegeben sein
+            kontextgeändert (bool): Ob die Klassen, Lehrer, bzw. Räume, die selbst von
+                der Stunde betroffen sind, geändert wurden
+        """
 
         beginn = None
         if s := find(data, "Beginn", "text"):
@@ -486,23 +502,25 @@ class Stunde(VpMobilPyModell):
         lehrer = set()
         räume = set()
 
+        default_parser = Parser(AUFZÄHLUNGS_TRENNZEICHEN=parser.AUFZÄHLUNGS_TRENNZEICHEN, BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN=False)
+
         if planart == "K":
             klassen = kontext
-            lehrer = set(Le.split(config.AUFZÄHLUNGS_SEPARATOR))  if fach else set()
-            räume = set(Ra.split(config.AUFZÄHLUNGS_SEPARATOR))   if fach else set()
+            lehrer = set(slice_aufzählung(Le, default_parser))  if fach else set()
+            räume = set(slice_aufzählung(Ra, default_parser))   if fach else set()
             klassenänderung = kontextgeändert
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "L":
-            klassen = set(Le.split(config.AUFZÄHLUNGS_SEPARATOR)) if fach else set()
+            klassen = set(slice_aufzählung(Le, parser)) if fach else set()
             lehrer = kontext
-            räume = set(Ra.split(config.AUFZÄHLUNGS_SEPARATOR))   if fach else set()
+            räume = set(slice_aufzählung(Le, default_parser))   if fach else set()
             klassenänderung = "LeAe" in find(data, "Le", "attrib")
             lehreränderung = kontextgeändert
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "R":
-            klassen = set(Ra.split(config.AUFZÄHLUNGS_SEPARATOR)) if fach else set()
-            lehrer = set(Le.split(config.AUFZÄHLUNGS_SEPARATOR))  if fach else set()
+            klassen = set(slice_aufzählung(Le, parser)) if fach else set()
+            lehrer = set(slice_aufzählung(Le, default_parser))  if fach else set()
             räume = kontext
             klassenänderung = "RaAe" in find(data, "Ra", "attrib")
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
@@ -546,6 +564,8 @@ class Kurs(VpMobilPyModell):
 
     @classmethod
     def from_xml(cls, data: XML.Element, klassen: set[str]) -> Kurs:
+        """Erstellt ein `Kurs`-Objekt aus einem XML-Element.
+        """
         return Kurs(
             kursnummer = int(find(data, "UeNr", "text")) if find(data, "UeNr", "text") else None,
             kürzel = find(data, "UeNr", "attrib").get("UeGr", None) or find(data, "UeNr", "attrib").get("UeFa", None),
@@ -578,7 +598,12 @@ class Aufsicht(VpMobilPyModell):
         return f"<Aufsicht {f'von \'{", ".join(self.lehrer)}\' ' if self.lehrer else ""}{f'ab \'{self.beginn}\' - ' if self.beginn else "- "}{f'\'{self.ortinfo}\'' if self.ortinfo else ""}>"
     
     @classmethod
-    def from_xml(cls, data: XML.Element, lehrer: list[str]) -> Aufsicht:
+    def from_xml(cls, data: XML.Element, lehrer: set[str]) -> Aufsicht:
+        """Erstellt ein `Aufsicht`-Objekt aus einem XML-Element.
+
+        Parameters:
+            lehrer (set[str]): Lehrer, die von der Aufsicht betroffen sind
+        """
 
         vorStunde = None
         if s := find(data, "AuVorStunde", "text"):
@@ -614,7 +639,12 @@ class Klausur(VpMobilPyModell):
         return f"<Klausur {f'für \'{", ".join(self.kurse)}\' ' if self.kurs else ""}{f'ab \'{self.beginn}\'' if self.beginn else ""}>"
     
     @classmethod
-    def from_xml(cls, data: XML.Element) -> Klausur:
+    def from_xml(cls, data: XML.Element, *, parser: Parser = Parser()) -> Klausur:
+        """Erstellt ein `Klausur`-Objekt aus einem XML-Element.
+
+        Parameters:
+            parser (Parser): Parsing-Parameter
+        """
 
         periode = None
         if s := find(data, "KlStunde", "text"):
@@ -629,7 +659,7 @@ class Klausur(VpMobilPyModell):
             dauer = timedelta(minutes=int(s))
 
         return Klausur(
-            kurse=slice_aufzählung(find(data, "KlKurs", "text")) or None,
+            kurse=slice_aufzählung(find(data, "KlKurs", "text"), separator=parser.AUFZÄHLUNGS_TRENNZEICHEN, parse_hyphen=False) or None,
             lehrer=find(data, "KlKursleiter", "text") or None,
             periode=periode,
             beginn=beginn,
