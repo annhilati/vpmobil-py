@@ -1,10 +1,14 @@
 ---
 icon: lucide/notebook-tabs
+title: Endpoints
 ---
 
 # Indiware Spezifikationen
 
 ## Endpoints
+
+!!! info
+    Nicht alle Schulen stellen alle Endpunkte zur Verfügung.
 
 ```py
 # VpMobil24 App
@@ -26,16 +30,16 @@ f"https://stundenplan24.de/{schulnummer}/vplanle/vdaten/VplanLe{yyyymmdd}.xml"  
 f"https://stundenplan24.de/{schulnummer}/wplan/wdaten/SPlanKl_Basis.xml"
 f"https://stundenplan24.de/{schulnummer}/wplan/wdaten/SPlanLe_Basis.xml"
 f"https://stundenplan24.de/{schulnummer}/wplan/wdatenr/SPlanRa_Basis.xml"
-f"https://stundenplan24.de/{schulnummer}/wplan/wdatenk/SPlanKl_Sw{schoolWeekIndex}.xml"
+f"https://stundenplan24.de/{schulnummer}/wplan/wdatenk/SPlanKl_Sw{schulwoche}.xml"
 f"https://stundenplan24.de/{schulnummer}/wplan/wdatenk/WPlanKl{yyyymmdd}.xml"
 
-f"https://stundenplan24.de/{schulnummer}/splan/sdaten/splank.xml"
+f"https://stundenplan24.de/{schulnummer}/splan/sdaten/splank.xml"               # Stundenpläne der Klassen
 
 ```
 
-## Tagesplan
+## Vertretungsplan
 
-Dieses XML-Format wird als Quellformat für die VpMobil24 App verwendet.
+Dieses XML-Format wird als Quellformat für einzelne Tage in der VpMobil24 App verwendet.
 
 ```yaml
 <VpMobil>
@@ -102,7 +106,7 @@ Dieses XML-Format wird als Quellformat für die VpMobil24 App verwendet.
     └── <ZiZeile>
 ```
 
-## Vertretungsplan
+## Vertretungsplan (nur Änderungen)
 
 Dieses XML-Format wird als Quellformat für Informationsmonitore und Vertretungsplan-PDFs verwendet.
 
@@ -134,6 +138,55 @@ Dieses XML-Format wird als Quellformat für Informationsmonitore und Vertretungs
 └── <fuss>
     └── <fusszeile>
         └── <fussinfo>
+```
+
+## Stundenplan
+
+```yaml
+<splan>
+├── <Kopf>
+│   ├── <PlanArt>
+│   ├── <zeitstempel>
+│   ├── <datei>
+│   ├── <gueltigab>
+│   ├── <schulname>
+│   ├── <schulort>
+│   ├── <upname>
+│   ├── <upmodul>
+│   └── <upversion>
+├── <FreieTage>
+│   └── *<ft>                           # strptime Format: '%y%m%d'
+├── <Kalenderwochen>
+│   └─── *<Kw>
+│       ├ KwNr
+│       ├ KwDatumVon
+│       ├ KwDatumBis
+│       └ KwWoche
+├── <Schulwochen>
+│   └─── *<Sw>
+│       ├ SwKw
+│       └ SwDatum
+└── <Klassen>
+    └── *<Kl>
+        ├── <Kurz>
+        ├── <Stunden>
+        │   └── *<St>
+        │       ├ StZeit
+        │       └ StZeitBis
+        ├── <Sperrungen>
+        │   └── *<Sp>
+        │       ├ SpTg
+        │       └ SpSt
+        └── <Pl>
+            └── *<Std>
+                ├── <PlSw>
+                ├── <PlTg>
+                ├── <PlSt>
+                ├── <PlFa>
+                ├── <PlKl>
+                ├── <PlLe>
+                ├── <PlRa>
+                └── <PlWo>
 ```
 
 ## vpinfok.txt

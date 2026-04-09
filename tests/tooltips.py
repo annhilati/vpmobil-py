@@ -1,75 +1,83 @@
 # In dieser Datei können Tooltips, Docstrings und Typehints getestet werden
 
 from vpmobil import *
-from vpmobil.extensions.reparser import *
-from vpmobil.models import KlasseLikeBase, KlasseLikeType, VertretungsTagType
 
-VertretungsTag()
-vp =   Vertretungsplan()
-day =  KlassenVertretungsTag()         # Tag <- Klassen <- Stunden <- Fa, Le, Ra, FaAe, LeAe, ...
-day1 = RaumVertretungsTag()    # Tag <- Räume   <- Stunden <- Fa, Le, Kl, FaAe, LeAe, ...
-day2 = LehrerVertretungsTag()   # Tag <- Lehrer  <- Stunden <- Fa, Kl, Ra, FaAe, LeAe, ...
-klasse  = Klasse()
-raum    = Raum()
-lehrer  = Lehrer()
-stunde  = Stunde()
-kurs    = Kurs()
+vp       = Vertretungsplan()
+day      = VertretungsplanNEU()
+klasse   = Klasse()
+lehrer   = Lehrer()
+raum     = Raum()
+stunde   = Stunde()
+kurs     = Kurs()
 aufsicht = Aufsicht()
-klausur = Klausur()
+klausur  = Klausur()
 
 Standardpfade
 
 vp.get()
 
+day.from_xml()
+day.fromfile()
+day.as_dict()
+day.saveasfile()
 day.datei
 day.datum
 day.zeitstempel
-day.zusatzInfo
-day.save_source()
-day.fromfile()
+day.zusatzinfo
 day.freieTage
-
+day.stunden
+day.kurse
+day.klausuren
+day.aufsichten
+day.zeitplan
 day.lehrerKrank
-
 day.klassen
-day1.räume
-day2.lehrer
+day.lehrer
+day.räume
+day.freieRäume()
 
-klasse.stunden
-klasse.stundenInPeriode()
+stunde.fach
+stunde.fachmeta
+stunde.fachänderung
+stunde.klassen
+stunde.klassenänderung
+stunde.lehrer
+stunde.lehreränderung
+stunde.räume
+stunde.raumänderung
+stunde.ausfall
+stunde.änderung
+stunde.beginn
+stunde.ende
+stunde.info
+stunde.kursnummer
+stunde.periode
+
 klasse.kürzel
+klasse.stunden
 klasse.kurse
-klasse.kurs()
+klasse.klausuren
 
+lehrer.kürzel
+lehrer.stunden
+lehrer.kurse
 lehrer.aufsichten
 
-aufsicht.ort
-aufsicht.uhrzeit
+raum.kürzel
+raum.stunden
+
+aufsicht.lehrer
+aufsicht.ortinfo
+aufsicht.zeitinfo
 aufsicht.vorStunde
-aufsicht.zeit
+aufsicht.beginn
 
 klausur.beginn
 klausur.dauer
 klausur.info
-klausur.kurs
+klausur.kurse
 klausur.lehrer
 klausur.periode
-
-stunde.geändert
-stunde.lehrergeändert
-stunde.raumgeändert
-stunde.klassegeändert
-stunde.fachgeändert
-stunde.ausfall
-stunde.beginn
-stunde.ende
-stunde.fach
-stunde.info
-stunde.kursnummer
-stunde.periode
-stunde.lehrer
-stunde.räume
-stunde.klassen
 
 kurs.kursnummer
 kurs.fach

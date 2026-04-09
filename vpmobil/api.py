@@ -15,7 +15,7 @@ class Standardpfade(StrEnum):
     Pläne für beliebige Tage.
     
     Die Pfade enthalten immer den Platzhalter `{schulnummer}`, gegebenenfalls
-    auch die strftime-Direktiven `%%Y`, `%%%m` und `%%d`.
+    auch die strftime-Direktiven `%Y`, `%m` und `%d`.
     """
     Klassen = "{schulnummer}/mobil/mobdaten/Klassen.xml"
     PlanKl  = "{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
@@ -82,7 +82,7 @@ class Vertretungsplan():
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
     def get(self, datum: date = date.today(), /, datei: str = None) -> VertretungsplanNEU:
-        """Ruft die Daten eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
+        """Ruft den Vertretungsplan eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
 
         Parameters:
             datum (date): Datum des abzurufenden Tags
@@ -118,9 +118,9 @@ class Vertretungsplan():
             return VertretungsplanNEU.from_xml(XML.fromstring(response.content))
         
     def getall(self, standardplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[VertretungsplanNEU]:
-        """Ruft die Daten für alle verfügbaren Tage ab. Genauer gesagt wird versucht,
-        jeden Tag im Zeitraum von 14 Tagen vor bis 7 Tagen nach dem zuletzt veröffentlichten
-        Tag abzurufen. Jeder erhaltene Tag fordert wenige hundert Kilobyte.
+        """Ruft die Vertretungspläne für alle verfügbaren Tage ab. Genauer gesagt wird
+        versucht, jeden Tag im Zeitraum von 14 Tagen vor bis 7 Tagen nach dem zuletzt
+        veröffentlichten Tag abzurufen. Jeder erhaltene Tag fordert wenige hundert Kilobyte.
 
         Parameters:
             standardplan (str): Pfad, unter dem immer ein Plan vorhanden ist

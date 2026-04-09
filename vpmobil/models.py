@@ -71,6 +71,8 @@ class VpMobilPyModell:
 
 @dataclass(frozen=False)
 class VertretungsplanNEU(VpMobilPyModell):
+    """"""
+    
     datum:       date       | None                          = field(default=None)
     "Datum für das der Vertretungsplan gilt"
     datei:       str        | None                          = field(default=None)
@@ -94,6 +96,14 @@ class VertretungsplanNEU(VpMobilPyModell):
 
     def __repr__(self):
         return f"<Vertretungsplan {f'(Typ {self._planart}) ' if self._planart else ""}vom {self.datum.strftime(r'%d.%m.%Y')}>"
+    
+    def __getitem__(self, key) -> Klasse | Lehrer | Raum:
+        if key in self.klassen: 
+            return self.klassen[key]
+        elif key in self.lehrer: 
+            return self.lehrer[key]
+        elif key in self.räume: 
+            return self.räume[key]
     
     @property
     def klassen(self) -> dict[str, Klasse]:
@@ -126,7 +136,7 @@ class VertretungsplanNEU(VpMobilPyModell):
                         klassen[klasse] = Klasse(kürzel=klasse)
                     klassen[klasse].klausuren.append(klausur)
 
-        return dict(sorted(klassen.items()))
+        return dict(sorted((k, v) for k, v in klassen.items() if k))
     
     @property
     def lehrer(self) -> dict[str, Lehrer]:
@@ -158,7 +168,7 @@ class VertretungsplanNEU(VpMobilPyModell):
                     lehrerE[lehrer] = Lehrer(kürzel=lehrer)
                 lehrerE[lehrer].aufsichten.append(aufsicht)
 
-        return dict(sorted(lehrerE.items()))
+        return dict(sorted((k, v) for k, v in lehrerE.items() if k))
     
     @property
     def räume(self) -> dict[str, Raum]:
@@ -177,7 +187,39 @@ class VertretungsplanNEU(VpMobilPyModell):
                     räumeE[raum].stunden[stunde.periode] = []
                 räumeE[raum].stunden[stunde.periode].append(stunde)
 
-        return dict(sorted(räumeE.items()))
+        return dict(sorted((k, v) for k, v in räumeE.items() if k))
+    
+    @property
+    def lehrerKrank(self) -> set[str]:
+        "Lehrer, die unplanmäßig keinen Unterricht haben"
+        
+        lehrerMitUnterricht: set[str] = set()
+        lehrerVielleichtKrank: set[str] = set()
+
+        for klasse in self.klassen.values():
+            for stunde in [stunde for stunden in klasse.stunden.values() for stunde in stunden]:
+
+                if stunde.ausfall and klasse.kurse.get(stunde.kursnummer) is not None:
+                    lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
+
+                elif stunde.lehreränderung:
+                    if len(stunde.lehrer) > 0:
+                        lehrerMitUnterricht.update(stunde.lehrer)
+                    if klasse.kurse.get(stunde.kursnummer) is not None:
+                        lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
+
+                elif not stunde.ausfall and not stunde.lehreränderung:
+                    if len(stunde.lehrer) > 0:
+                        lehrerMitUnterricht.update(stunde.lehrer)
+
+        return set(sorted(
+            {
+                lehrer for lehrer in lehrerVielleichtKrank
+                if lehrer not in lehrerMitUnterricht
+                and lehrer != ""
+                and lehrer is not None
+            }
+        ))
 
     @classmethod
     def from_xml(cls, data: XML.Element | XML.ElementTree, *, parser: Parser = Parser()) -> VertretungsplanNEU:
@@ -317,6 +359,19 @@ class VertretungsplanNEU(VpMobilPyModell):
         )
         vp._planart = planart
         return vp
+    
+    @classmethod
+    def fromfile(cls, pfad: Path | str, *, parser: Parser = Parser) -> VertretungsplanNEU:
+        """
+        Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
+
+        Raises:
+            FileNotFoundError : Wenn die Datei nicht existiert
+            ValueError : Wenn die Datei nicht gelesen werden kann
+        """
+        with open(pfad, encoding="utf-8-sig") as f:
+            instance = cls.from_xml(XML.parse(f), parser=parser)
+        return instance
     
     def saveasfile(self, pfad: Path | str = "./datei.yml", overwrite=True, hidden: list[str] = []) -> None:
         """Speichert den ausgewerteten Vertretungsplan als JSON- oder YAML-Datei.
@@ -531,14 +586,14 @@ class Stunde(VpMobilPyModell):
             beginn = beginn,
             ende = ende,
             fach = fach,
-            fachmeta= find(data, "Ku2", "text") or None,
+            fachmeta = find(data, "Ku2", "text") or None,
             fachänderung = "FaAe" in find(data, "Fa", "attrib"),
-            klassen=klassen,
-            klassenänderung=klassenänderung,
-            lehrer=lehrer,
-            lehreränderung=lehreränderung,
-            räume=räume,
-            raumänderung=raumänderung,
+            klassen = klassen,
+            klassenänderung = klassenänderung,
+            lehrer = lehrer,
+            lehreränderung = lehreränderung,
+            räume = räume,
+            raumänderung = raumänderung,
             kursnummer = kursnummer,
             info = find(data, "If", "text") or None
         )
@@ -668,11 +723,18 @@ class Klausur(VpMobilPyModell):
         )
 
 
+# ╭──────────────────────────────────────────────────────────────────────────────────────────╮
+# │                                      KLR-Ansichten                                       │ 
+# ╰──────────────────────────────────────────────────────────────────────────────────────────╯
+
 @dataclass(frozen=False)
 class KLRViewBase(VpMobilPyModell):
-    kürzel: str
+    kürzel:  str
     stunden: dict[int, list[Stunde]] = field(default_factory=dict)
     "Unterrichtsstunden gruppiert nach Unterrichtsperiode"
+    
+    def __getitem__(self, key) -> list[Stunde]:
+        return self.stunden.get(key, None)
 
 
 @dataclass(frozen=False)
