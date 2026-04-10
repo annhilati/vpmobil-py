@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Literal, Any, ClassVar
 import re
 
-from vpmobil.utils import find, SubElement, ElementBuilder
+from vpmobil.utils import find, ElementBuilder
 from vpmobil.parser import Parser
 
 @dataclass(frozen=False)
@@ -482,7 +482,7 @@ class Stunde(VpMobilPyModell):
     """Fach bzw. Kürzel des Kurses der Stunde. Gibt `None` zurück, wenn die Stunde entfällt.
 
     Das tatsächlich gängige Kürzel des Fachs kann über
-    `klasse.kurs(stunde.kursnummer).fach` erhalten werden.
+    `klasse.kurse[stunde.kursnummer].fach` erhalten werden.
 
     Bei Unsicherheit mit Fallback wäre beispielsweise denkbar:
     ```
@@ -555,7 +555,7 @@ class Stunde(VpMobilPyModell):
             planart (str): Typ der Quelldatei, aus dem das Element stammt
             kontext (set[str]): Klassen, Lehrer, bzw. Räume, die selbst von der Stunde
                 betroffen sind. Bei Typ K müssen das Klassen sein, bei Typ R Räume, etc.
-                Es sollte mindestens ein Kürzel angegeben sein
+                Es sollte mindestens ein Kürzel angegeben sein.
             kontextgeändert (bool): Ob die Klassen, Lehrer, bzw. Räume, die selbst von
                 der Stunde betroffen sind, geändert wurden
         """
@@ -587,25 +587,25 @@ class Stunde(VpMobilPyModell):
         lehrer = set()
         räume = set()
 
-        default_parser = Parser(AUFZÄHLUNGS_TRENNZEICHEN=parser.AUFZÄHLUNGS_TRENNZEICHEN, BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN=False)
+        nicht_klassen_parser = Parser(AUFZÄHLUNGS_TRENNZEICHEN=parser.AUFZÄHLUNGS_TRENNZEICHEN, BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN=False)
 
         if planart == "K":
             klassen = kontext
-            lehrer = set(default_parser.slice_aufzählung(Le))  if fach else set()
-            räume = set(default_parser.slice_aufzählung(Ra))   if fach else set()
+            lehrer = set(nicht_klassen_parser.slice_aufzählung(Le))  if fach else set()
+            räume = set(nicht_klassen_parser.slice_aufzählung(Ra))   if fach else set()
             klassenänderung = kontextgeändert
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "L":
             klassen = set(parser.slice_aufzählung(Le)) if fach else set()
             lehrer = kontext
-            räume = set(default_parser.slice_aufzählung(Le))   if fach else set()
+            räume = set(nicht_klassen_parser.slice_aufzählung(Le))   if fach else set()
             klassenänderung = "LeAe" in find(data, "Le", "attrib")
             lehreränderung = kontextgeändert
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "R":
             klassen = set(parser.slice_aufzählung(Le)) if fach else set()
-            lehrer = set(default_parser.slice_aufzählung(Le))  if fach else set()
+            lehrer = set(nicht_klassen_parser.slice_aufzählung(Le))  if fach else set()
             räume = kontext
             klassenänderung = "RaAe" in find(data, "Ra", "attrib")
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
