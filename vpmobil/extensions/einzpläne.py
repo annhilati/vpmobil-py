@@ -5,7 +5,7 @@
 EinzPläne-PDF-Dateien sind PDFs, die von der Indiware-Planungssoftware bereitgestellt werden und die Wochenpläne von Schüler einzeln untereinander als Tabelle enthalten.
 """
 
-from pypdf import PdfReader
+from PyPDF2 import PdfReader
 from pathlib import Path
 
 def kurse(pfad: Path | str) -> dict[str, set[tuple[str, str]]]:

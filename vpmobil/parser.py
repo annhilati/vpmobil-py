@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from string import ascii_lowercase
+import re
 
 @dataclass
 class Parser:
@@ -31,3 +33,63 @@ class Parser:
     STUNDE_HERVERLEGT_PATTERN: str = r"verlegt von St\.(?P<periode>\d+);"
     """Capture-Pattern, dass die Periode, von der eine Stunde verleg wurde, extrahiert.  
     Muss die Capture-Group `periode` enthalten"""
+    
+    def slice_aufzählung(self, string: str) -> list[str]:
+        """Wandelt Aufzählungen in Strings in eine Liste von Strings um.
+        
+        Unterstützt auch Bereiche von Klassen, je nach `parser`.
+        """
+
+        if not string:
+            return []
+
+        parts = [p.strip() for p in string.split(self.AUFZÄHLUNGS_TRENNZEICHEN) if p.strip()]
+
+        if not self.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN:
+            return parts
+
+        result: list[str] = []
+
+        for part in parts:
+            if "-" not in part:
+                result.append(part)
+                continue
+
+            start_raw, end_raw = part.split("-", 1)
+            start_match = re.fullmatch(self.KLASSENBEZEICHNER_PATTERN, start_raw.strip())
+            end_match = re.fullmatch(self.KLASSENBEZEICHNER_PATTERN, end_raw.strip())
+
+            if not (start_match and end_match):
+                # Fallback: unverständlicher Bereich, unverändert übernehmen
+                result.append(part)
+                continue
+
+            s_stufe, s_suffix = start_match["stufe"], start_match["suffix"]
+            e_stufe, e_suffix = end_match["stufe"], end_match["suffix"]
+
+            # Unterscheide Zahlensuffix (z. B. 5/1–5/3) vs. Buchstabensuffix (z. B. 5a–5c)
+            if s_suffix.isdigit() and e_suffix.isdigit():
+                if s_stufe == e_stufe:
+                    for i in range(int(s_suffix), int(e_suffix) + 1):
+                        result.append(f"{s_stufe}/{i}")
+                else:
+                    for n in range(int(s_stufe), int(e_stufe) + 1):
+                        result.append(f"{n}/{s_suffix}")  # fallback bei ungleicher stufe
+                continue
+
+            if s_suffix.isalpha() and e_suffix.isalpha():
+                letters = list(ascii_lowercase)
+                start_i = letters.index(s_suffix)
+                end_i = letters.index(e_suffix)
+                if s_stufe == e_stufe:
+                    for c in letters[start_i:end_i + 1]:
+                        result.append(f"{s_stufe}{c}")
+                else:
+                    for n in range(int(s_stufe), int(e_stufe) + 1):
+                        for c in letters[start_i:end_i + 1]:
+                            result.append(f"{n}{c}")
+                continue
+
+            result.append(part)
+
+        return result

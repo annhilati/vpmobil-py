@@ -1,10 +1,6 @@
 from typing import Any, overload, Literal
-from string import ascii_lowercase
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
-import re
-
-from vpmobil.parser import Parser
 
 def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     if isinstance(object, ET.ElementTree):
@@ -33,69 +29,16 @@ def find(element: ET.Element, path: str, mode: Literal["text", "attrib"]):
         case _:         raise ValueError
 
 
-def add_Element(parent: ET.Element, tag: str, text: str | Any = None, attrib: dict = {}) -> ET.Element:
-        element = ET.SubElement(parent, tag, attrib)
-        if text:
-            element.text = str(text)
-        return element
-
-
-def slice_aufzählung(string: str, parser: Parser = Parser(), ) -> list[str]:
-    """Wandelt Aufzählungen in Strings in eine Liste von Strings um.
+# def SubElement(parent: ET.Element, tag: str, text: str | Any = None, attrib: dict = {}) -> ET.Element:
+#         element = ET.SubElement(parent, tag, attrib)
+#         if text:
+#             element.text = str(text)
+#         return element
     
-    Unterstützt auch Bereiche von Klassen, je nach `parser`.
-    """
-
-    if not string:
-        return []
-
-    parts = [p.strip() for p in string.split(parser.AUFZÄHLUNGS_TRENNZEICHEN) if p.strip()]
-
-    if not parser.BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN:
-        return parts
-
-    result: list[str] = []
-
-    for part in parts:
-        if "-" not in part:
-            result.append(part)
-            continue
-
-        start_raw, end_raw = part.split("-", 1)
-        start_match = re.fullmatch(parser.KLASSENBEZEICHNER_PATTERN, start_raw.strip())
-        end_match = re.fullmatch(parser.KLASSENBEZEICHNER_PATTERN, end_raw.strip())
-
-        if not (start_match and end_match):
-            # Fallback: unverständlicher Bereich, unverändert übernehmen
-            result.append(part)
-            continue
-
-        s_stufe, s_suffix = start_match["stufe"], start_match["suffix"]
-        e_stufe, e_suffix = end_match["stufe"], end_match["suffix"]
-
-        # Unterscheide Zahlensuffix (z. B. 5/1–5/3) vs. Buchstabensuffix (z. B. 5a–5c)
-        if s_suffix.isdigit() and e_suffix.isdigit():
-            if s_stufe == e_stufe:
-                for i in range(int(s_suffix), int(e_suffix) + 1):
-                    result.append(f"{s_stufe}/{i}")
-            else:
-                for n in range(int(s_stufe), int(e_stufe) + 1):
-                    result.append(f"{n}/{s_suffix}")  # fallback bei ungleicher stufe
-            continue
-
-        if s_suffix.isalpha() and e_suffix.isalpha():
-            letters = list(ascii_lowercase)
-            start_i = letters.index(s_suffix)
-            end_i = letters.index(e_suffix)
-            if s_stufe == e_stufe:
-                for c in letters[start_i:end_i + 1]:
-                    result.append(f"{s_stufe}{c}")
-            else:
-                for n in range(int(s_stufe), int(e_stufe) + 1):
-                    for c in letters[start_i:end_i + 1]:
-                        result.append(f"{n}{c}")
-            continue
-
-        result.append(part)
-
-    return result
+def ElementBuilder(tag: str, text: str | Any | None = None, attrib: dict[str] = {}, *, children: list[ET.Element | None] = []) -> ET.Element:
+    "Jedes None in `children` wird ignoriert und nicht angehangen"
+    element = ET.Element(tag=tag, attrib=attrib)
+    if text:
+        element.text = str(text)
+    element.extend([c for c in children if c is not None])
+    return element

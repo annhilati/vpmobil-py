@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Literal, Any, ClassVar
 import re
 
-from vpmobil.utils import slice_aufzählung, find
+from vpmobil.utils import find, SubElement, ElementBuilder
 from vpmobil.parser import Parser
 
 @dataclass(frozen=False)
@@ -360,6 +360,36 @@ class VertretungsplanNEU(VpMobilPyModell):
         vp._planart = planart
         return vp
     
+    def to_xml(self, planart: Literal["K", "L", "R"], *, parser: Parser = Parser()) -> XML.ElementTree:
+        import locale
+        locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
+        
+        VpMobil = ElementBuilder("VpMobil", children=[
+            ElementBuilder("Kopf", children=[
+                ElementBuilder("planart", planart),
+                ElementBuilder("DatumPlan", self.datum.strftime("%A, %d. %B %Y"))           if self.datum else None,
+                ElementBuilder("zeitstempel", self.zeitstempel.strftime("%d.%m.%Y, %H:%M")) if self.zeitstempel else None,
+                ElementBuilder("datei", self.datei)                                         if self.datei else None,
+            ]),
+            ElementBuilder("FreieTage", children=[
+                ElementBuilder("ft", tag.strftime("%y%m%d"))
+                for tag in self.freieTage
+            ]),
+            ElementBuilder("Klassen", children=[
+                KlObjekt.to_xml(parser=parser)
+                for KlObjekt in (
+                    self.klassen.values() if planart == "K" else
+                    self.lehrer.values() if planart == "L" else
+                    self.räume.values())
+            ]),
+            ElementBuilder("ZusatzInfo", children=[
+                ElementBuilder("ZiZeile", zeile.strip())
+                for zeile in (self.zusatzinfo or "").split("\n")
+            ])                                                                              if self.zusatzinfo else None
+        ])
+        
+        return XML.ElementTree(VpMobil)
+    
     @classmethod
     def fromfile(cls, pfad: Path | str, *, parser: Parser = Parser) -> VertretungsplanNEU:
         """
@@ -561,21 +591,21 @@ class Stunde(VpMobilPyModell):
 
         if planart == "K":
             klassen = kontext
-            lehrer = set(slice_aufzählung(Le, default_parser))  if fach else set()
-            räume = set(slice_aufzählung(Ra, default_parser))   if fach else set()
+            lehrer = set(default_parser.slice_aufzählung(Le))  if fach else set()
+            räume = set(default_parser.slice_aufzählung(Ra))   if fach else set()
             klassenänderung = kontextgeändert
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "L":
-            klassen = set(slice_aufzählung(Le, parser)) if fach else set()
+            klassen = set(parser.slice_aufzählung(Le)) if fach else set()
             lehrer = kontext
-            räume = set(slice_aufzählung(Le, default_parser))   if fach else set()
+            räume = set(default_parser.slice_aufzählung(Le))   if fach else set()
             klassenänderung = "LeAe" in find(data, "Le", "attrib")
             lehreränderung = kontextgeändert
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "R":
-            klassen = set(slice_aufzählung(Le, parser)) if fach else set()
-            lehrer = set(slice_aufzählung(Le, default_parser))  if fach else set()
+            klassen = set(parser.slice_aufzählung(Le)) if fach else set()
+            lehrer = set(default_parser.slice_aufzählung(Le))  if fach else set()
             räume = kontext
             klassenänderung = "RaAe" in find(data, "Ra", "attrib")
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
@@ -597,6 +627,26 @@ class Stunde(VpMobilPyModell):
             kursnummer = kursnummer,
             info = find(data, "If", "text") or None
         )
+        
+    def to_xml(self, planart: Literal["K", "L", "R"], parser: Parser = Parser()) -> XML.Element:
+        Std = ElementBuilder("Std", children=[
+            ElementBuilder("St", self.periode),
+            ElementBuilder("Beginn", self.beginn.strftime("%H:%M"))         if self.beginn else None,
+            ElementBuilder("Ende", self.ende.strftime("%H:%M"))             if self.ende else None,
+            ElementBuilder("Fa", self.fach or "" if not self.ausfall else "---"),
+            ElementBuilder("Ku2", self.fachmeta)                            if self.fachmeta else None,
+            ElementBuilder("Le",
+                parser.AUFZÄHLUNGS_TRENNZEICHEN.join(self.lehrer if planart != "L" else self.klassen),
+                {"LeAe": "LeGeaendert"} if (self.lehreränderung if planart != "L" else self.klassenänderung) else {}
+            ),
+            ElementBuilder("Ra",
+                parser.AUFZÄHLUNGS_TRENNZEICHEN.join(self.räume if planart != "R" else self.klassen),
+                {"RaAe": "RaGeaendert"} if (self.raumänderung if planart != "R" else self.klassenänderung) else {}
+            ),
+            ElementBuilder("Nr", self.kursnummer),
+            ElementBuilder("If", self.info),
+        ])
+        return Std
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -691,7 +741,7 @@ class Klausur(VpMobilPyModell):
     info:    str       | None = field(default=None)
 
     def __repr__(self):
-        return f"<Klausur {f'für \'{", ".join(self.kurse)}\' ' if self.kurs else ""}{f'ab \'{self.beginn}\'' if self.beginn else ""}>"
+        return f"<Klausur {f'für \'{", ".join(self.kurse)}\' ' if self.kurse else ""}{f'ab \'{self.beginn}\'' if self.beginn else ""}>"
     
     @classmethod
     def from_xml(cls, data: XML.Element, *, parser: Parser = Parser()) -> Klausur:
@@ -714,7 +764,7 @@ class Klausur(VpMobilPyModell):
             dauer = timedelta(minutes=int(s))
 
         return Klausur(
-            kurse=slice_aufzählung(find(data, "KlKurs", "text"), separator=parser.AUFZÄHLUNGS_TRENNZEICHEN, parse_hyphen=False) or None,
+            kurse=parser.slice_aufzählung(find(data, "KlKurs", "text")) or None,
             lehrer=find(data, "KlKursleiter", "text") or None,
             periode=periode,
             beginn=beginn,
@@ -746,6 +796,24 @@ class Klasse(KLRViewBase):
 
     def __repr__(self):
         return f"<Klasse '{self.kürzel}'>"
+    
+    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        Kl = ElementBuilder("Kl", children=[
+            ElementBuilder("Kurz", self.kürzel),
+            ElementBuilder("Pl", children=[
+                StdObjekt.to_xml(planart="K", parser=parser)
+                for stunden in self.stunden.values() for StdObjekt in stunden
+            ]),
+            ElementBuilder("Unterricht", children=[
+                UeObjekt.to_xml()
+                for UeObjekt in self.kurse.values()
+            ]),
+            ElementBuilder("Klausuren", children=[
+                KlausurObjekt.to_xml()
+                for KlausurObjekt in self.klausuren
+            ])
+        ])
+        return Kl
 
 @dataclass(frozen=False)
 class Lehrer(KLRViewBase):
@@ -756,9 +824,37 @@ class Lehrer(KLRViewBase):
 
     def __repr__(self):
         return f"<Lehrer '{self.kürzel}'>"
+    
+    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        Kl = ElementBuilder("Kl", children=[
+            ElementBuilder("Kurz", self.kürzel),
+            ElementBuilder("Pl", children=[
+                StdObjekt.to_xml(planart="L", parser=parser)
+                for stunden in self.stunden.values() for StdObjekt in stunden
+            ]),
+            ElementBuilder("Unterricht", children=[
+                UeObjekt.to_xml()
+                for UeObjekt in self.kurse.values()
+            ]),
+            ElementBuilder("Aufsichten", children=[
+                AufsichtObjekt.to_xml()
+                for AufsichtObjekt in self.aufsichten
+            ])
+        ])
+        return Kl
 
 @dataclass(frozen=False)
 class Raum(KLRViewBase):
 
     def __repr__(self):
         return f"<Raum '{self.kürzel}'>"
+    
+    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        Kl = ElementBuilder("Kl", children=[
+            ElementBuilder("Kurz", self.kürzel),
+            ElementBuilder("Pl", children=[
+                StdObjekt.to_xml(planart="R", parser=parser)
+                for stunden in self.stunden.values() for StdObjekt in stunden
+            ])
+        ])
+        return Kl

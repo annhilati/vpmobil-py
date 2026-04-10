@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Literal, Any
 import re
 
-from vpmobil.utils import prettyxml, slice_aufzählung, add_Element
+from vpmobil.utils import prettyxml, slice_aufzählung, SubElement
 from vpmobil import config
 
 @dataclass(init=True, eq=False)
@@ -379,21 +379,21 @@ class KlassenVertretungsTag(VertretungsTag):
         locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
         
         VpMobil = XML.Element("VpMobil")
-        Kopf = add_Element(VpMobil, "Kopf")
-        add_Element(Kopf, "planart", "R")
-        add_Element(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
-        if zeitstempel: add_Element(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
-        if datei: add_Element(Kopf, "datei", datei)
-        FreieTage = add_Element(VpMobil, "FreieTage")
+        Kopf = SubElement(VpMobil, "Kopf")
+        SubElement(Kopf, "planart", "R")
+        SubElement(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
+        if zeitstempel: SubElement(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
+        if datei: SubElement(Kopf, "datei", datei)
+        FreieTage = SubElement(VpMobil, "FreieTage")
         for tag in freieTage:
-            add_Element(FreieTage, "ft", tag.strftime("%y%m%d"))
-        Klassen = add_Element(VpMobil, "Klassen")
+            SubElement(FreieTage, "ft", tag.strftime("%y%m%d"))
+        Klassen = SubElement(VpMobil, "Klassen")
         for klasse in klassen:
             Klassen.append(klasse.data)
-        ZusatzInfo = add_Element(VpMobil, "ZusatzInfo")
+        ZusatzInfo = SubElement(VpMobil, "ZusatzInfo")
         for zeile in (zusatzInfo or "").split("\n"):
             if zeile.strip():
-                add_Element(ZusatzInfo, "ZiZeile", zeile)
+                SubElement(ZusatzInfo, "ZiZeile", zeile)
         return cls(XML.ElementTree(VpMobil))
 
 
@@ -435,21 +435,21 @@ class LehrerVertretungsTag(VertretungsTag):
         locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
         
         VpMobil = XML.Element("VpMobil")
-        Kopf = add_Element(VpMobil, "Kopf")
-        add_Element(Kopf, "planart", "R")
-        add_Element(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
-        if zeitstempel: add_Element(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
-        if datei: add_Element(Kopf, "datei", datei)
-        FreieTage = add_Element(VpMobil, "FreieTage")
+        Kopf = SubElement(VpMobil, "Kopf")
+        SubElement(Kopf, "planart", "R")
+        SubElement(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
+        if zeitstempel: SubElement(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
+        if datei: SubElement(Kopf, "datei", datei)
+        FreieTage = SubElement(VpMobil, "FreieTage")
         for tag in freieTage:
-            add_Element(FreieTage, "ft", tag.strftime("%y%m%d"))
-        Klassen = add_Element(VpMobil, "Klassen")
+            SubElement(FreieTage, "ft", tag.strftime("%y%m%d"))
+        Klassen = SubElement(VpMobil, "Klassen")
         for kl in lehrer:
             Klassen.append(kl.data)
-        ZusatzInfo = add_Element(VpMobil, "ZusatzInfo")
+        ZusatzInfo = SubElement(VpMobil, "ZusatzInfo")
         for zeile in (zusatzInfo or "").split("\n"):
             if zeile.strip():
-                add_Element(ZusatzInfo, "ZiZeile", zeile)
+                SubElement(ZusatzInfo, "ZiZeile", zeile)
         return cls(XML.ElementTree(VpMobil))
     
 
@@ -491,21 +491,21 @@ class RaumVertretungsTag(VertretungsTag):
         locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
         
         VpMobil = XML.Element("VpMobil")
-        Kopf = add_Element(VpMobil, "Kopf")
-        add_Element(Kopf, "planart", "R")
-        add_Element(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
-        if zeitstempel: add_Element(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
-        if datei: add_Element(Kopf, "datei", datei)
-        FreieTage = add_Element(VpMobil, "FreieTage")
+        Kopf = SubElement(VpMobil, "Kopf")
+        SubElement(Kopf, "planart", "R")
+        SubElement(Kopf, "DatumPlan", datum.strftime("%A, %d. %B %Y"))
+        if zeitstempel: SubElement(Kopf, "zeitstempel", zeitstempel.strftime("%d.%m.%Y, %H:%M"))
+        if datei: SubElement(Kopf, "datei", datei)
+        FreieTage = SubElement(VpMobil, "FreieTage")
         for tag in freieTage:
-            add_Element(FreieTage, "ft", tag.strftime("%y%m%d"))
-        Klassen = add_Element(VpMobil, "Klassen")
+            SubElement(FreieTage, "ft", tag.strftime("%y%m%d"))
+        Klassen = SubElement(VpMobil, "Klassen")
         for raum in räume:
             Klassen.append(raum.data)
-        ZusatzInfo = add_Element(VpMobil, "ZusatzInfo")
+        ZusatzInfo = SubElement(VpMobil, "ZusatzInfo")
         for zeile in (zusatzInfo or "").split("\n"):
             if zeile.strip():
-                add_Element(ZusatzInfo, "ZiZeile", zeile)
+                SubElement(ZusatzInfo, "ZiZeile", zeile)
         return cls(XML.ElementTree(VpMobil))
 
 
@@ -582,14 +582,14 @@ class Klasse(KlasseLikeBase):
     @classmethod
     def new(cls, kürzel: str, stunden: list[Stunde] = [], kurse: list[Kurs] = [], klausuren: list[Klausur] = []):
         Kl = XML.Element("Kl")
-        add_Element(Kl, "Kurz", kürzel)
-        Pl = add_Element(Kl, "Pl")
+        SubElement(Kl, "Kurz", kürzel)
+        Pl = SubElement(Kl, "Pl")
         for stunde in stunden:
             Pl.append(stunde.data)
-        Unterricht = add_Element(Kl, "Unterricht")
+        Unterricht = SubElement(Kl, "Unterricht")
         for kurs in kurse:
             Unterricht.append(kurs.data)
-        Klausuren = add_Element(Kl, "Klausuren")
+        Klausuren = SubElement(Kl, "Klausuren")
         for klausur in klausuren:
             Klausuren.append(klausur.data)
         return cls(Kl, "K")
@@ -627,11 +627,11 @@ class Lehrer(KlasseLikeBase):
     @classmethod
     def new(cls, kürzel: str, stunden: list[Stunde] = [], aufsichten: list[Aufsicht] = []):
         Kl = XML.Element("Kl")
-        add_Element(Kl, "Kurz", kürzel)
-        Pl = add_Element(Kl, "Pl")
+        SubElement(Kl, "Kurz", kürzel)
+        Pl = SubElement(Kl, "Pl")
         for stunde in stunden:
             Pl.append(stunde.data)
-        Aufsichten = add_Element(Kl, "Aufsichten")
+        Aufsichten = SubElement(Kl, "Aufsichten")
         for aufsicht in aufsichten:
             Aufsichten.append(aufsicht.data)
         return cls(Kl, "L")
@@ -659,8 +659,8 @@ class Raum(KlasseLikeBase):
     @classmethod
     def new(cls, kürzel: str, stunden: list[Stunde] = []):
         Kl = XML.Element("Kl")
-        add_Element(Kl, "Kurz", kürzel)
-        Pl = add_Element(Kl, "Pl")
+        SubElement(Kl, "Kurz", kürzel)
+        Pl = SubElement(Kl, "Pl")
         for stunde in stunden:
             Pl.append(stunde.data)
         return cls(Kl, "R")
@@ -709,10 +709,10 @@ class Aufsicht(VpMobilPyModell):
         ort: str | None = None
     ) -> Aufsicht:
         Aufsicht = XML.Element("Aufsicht")
-        if vorStunde: add_Element(Aufsicht, "AuVorStunde", str(vorStunde))
-        if uhrzeit:   add_Element(Aufsicht, "AuUhrzeit", uhrzeit.strftime("%H:%M"))
-        if zeit:      add_Element(Aufsicht, "AuZeit", zeit)
-        if ort:       add_Element(Aufsicht, "AuOrt", ort)
+        if vorStunde: SubElement(Aufsicht, "AuVorStunde", str(vorStunde))
+        if uhrzeit:   SubElement(Aufsicht, "AuUhrzeit", uhrzeit.strftime("%H:%M"))
+        if zeit:      SubElement(Aufsicht, "AuZeit", zeit)
+        if ort:       SubElement(Aufsicht, "AuOrt", ort)
         return cls(Aufsicht, "K")
 
 
@@ -775,12 +775,12 @@ class Klausur(VpMobilPyModell):
         info: str | None = None
     ) -> Klausur:
         Klausur = XML.Element("Klausur")
-        if periode is not None: add_Element(Klausur, "KlStunde", str(periode))
-        if kurs:    add_Element(Klausur, "KlKurs", kurs)
-        if lehrer:  add_Element(Klausur, "KlKursleiter", lehrer)
-        if beginn:  add_Element(Klausur, "KlKurs", beginn.strftime("%H:%M"))
-        if dauer:   add_Element(Klausur, "KlDauer", str(int(dauer.total_seconds()/60)))
-        if info:    add_Element(Klausur, "KlKinfo", kurs)
+        if periode is not None: SubElement(Klausur, "KlStunde", str(periode))
+        if kurs:    SubElement(Klausur, "KlKurs", kurs)
+        if lehrer:  SubElement(Klausur, "KlKursleiter", lehrer)
+        if beginn:  SubElement(Klausur, "KlKurs", beginn.strftime("%H:%M"))
+        if dauer:   SubElement(Klausur, "KlDauer", str(int(dauer.total_seconds()/60)))
+        if info:    SubElement(Klausur, "KlKinfo", kurs)
         return cls(Klausur, "K")
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -993,15 +993,15 @@ class Stunde(VpMobilPyModell):
         
         """
         Std = XML.Element("Std")
-        add_Element(Std, "St", str(periode))
-        add_Element(Std, "Beginn", beginn.strftime("%H:%M"))
-        add_Element(Std, "Ende", ende.strftime("%H:%M"))
-        add_Element(Std, "Nr", kursnummer)
-        add_Element(Std, "If", info)
-        add_Element(Std, "Fa", fach or "---", {"FaAe": "FaGeaendert"} if fachgeändert else {})
-        add_Element(Std, "Ku2", fachmeta)
-        add_Element(Std, "Le", config.AUFZÄHLUNGS_SEPARATOR.join(klassen if planart == "L" else lehrer), {"LeAe": "LeGeaendert"} if (klassegeändert if planart == "L" else lehrergeändert ) else {})
-        add_Element(Std, "Ra", config.AUFZÄHLUNGS_SEPARATOR.join(klassen if planart == "R" else räume), {"RaAe": "RaGeaendert"} if (klassegeändert if planart == "L" else raumgeändert) else {})
+        SubElement(Std, "St", str(periode))
+        SubElement(Std, "Beginn", beginn.strftime("%H:%M"))
+        SubElement(Std, "Ende", ende.strftime("%H:%M"))
+        SubElement(Std, "Nr", kursnummer)
+        SubElement(Std, "If", info)
+        SubElement(Std, "Fa", fach or "---", {"FaAe": "FaGeaendert"} if fachgeändert else {})
+        SubElement(Std, "Ku2", fachmeta)
+        SubElement(Std, "Le", config.AUFZÄHLUNGS_SEPARATOR.join(klassen if planart == "L" else lehrer), {"LeAe": "LeGeaendert"} if (klassegeändert if planart == "L" else lehrergeändert ) else {})
+        SubElement(Std, "Ra", config.AUFZÄHLUNGS_SEPARATOR.join(klassen if planart == "R" else räume), {"RaAe": "RaGeaendert"} if (klassegeändert if planart == "L" else raumgeändert) else {})
         return cls(Std, planart, ((klassen if planart == "K" else lehrer if planart == "L" else räume) or [""])[0])
     
 
@@ -1043,5 +1043,5 @@ class Kurs(VpMobilPyModell):
     @classmethod
     def new(cls, kursnummer: int, kürzel: str | None = None, fach: str | None = None, lehrer: str | None = None) -> Kurs:
         Ue = XML.Element("Ue")
-        add_Element(Ue, "UeNr", str(kursnummer), {"UeFa": fach or "", "UeLe": lehrer or "", "UeGr": kürzel or ""})
+        SubElement(Ue, "UeNr", str(kursnummer), {"UeFa": fach or "", "UeLe": lehrer or "", "UeGr": kürzel or ""})
         return cls(Ue, "K")
