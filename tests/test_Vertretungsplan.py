@@ -2,12 +2,12 @@ from vpmobil import *
 import dotenv, os
 
 dotenv.load_dotenv()
-vp = Vertretungsplan(os.getenv("SCHULNUMMER"), os.getenv("NUTZER"), os.getenv("PASSWORT"))
+vp = VertretungsplanZugang(os.getenv("SCHULNUMMER"), os.getenv("NUTZER"), os.getenv("PASSWORT"))
 
 def test_fetch():
     data = vp.get(datei=Standardpfade.Klassen)
 
-    assert type(data) == VertretungsplanNEU
+    assert type(data) == Vertretungsplan
     
     # Subskription
     bsp_klasse = list(data.klassen.keys())[0]

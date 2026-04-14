@@ -28,17 +28,17 @@ heute = vp.fetch()
 ```
 """
 
-from vpmobil.api import Vertretungsplan, VpMobilPyError, Unauthorized, ResourceNotFound, Standardpfade
+from vpmobil.api import VertretungsplanZugang, VpMobilPyError, Unauthorized, ResourceNotFound, Standardpfade
 from vpmobil.models import (
-    VertretungsplanNEU,
+    Vertretungsplan,
     Klasse, Raum, Lehrer,
     Stunde, Kurs, Aufsicht, Klausur
     )
 from vpmobil.parser import Parser
 
 _symbols = [
+    VertretungsplanZugang,
     Vertretungsplan,
-    VertretungsplanNEU,
     Klasse, Lehrer, Raum,
     Stunde, Kurs, Aufsicht, Klausur,
     VpMobilPyError, Unauthorized, ResourceNotFound,

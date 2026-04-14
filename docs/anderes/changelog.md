@@ -8,6 +8,8 @@ icon: lucide/scroll-text
 
 ### 🚀 Neue Funktionen
 
+* Neuimplementierung aller Modellklassen
+  * Vertretungsplan-Daten werden nun durch die `Vertretungsplan`-Klasse repräsentiert
 * Methode `getall()` zu `Vertretungsplan` hinzugefügt
 * Eigenschaft `zeitplan` zu `VertretungsTag` hinzugefügt
 * Neue Methode `saveasfile()` zu `VertretungsTag` hinzugefügt, mit der direkt ausgewertete JSON- oder YAML-Dateien erstellt werden können.

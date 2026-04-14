@@ -5,7 +5,8 @@ from dataclasses import dataclass
 import xml.etree.ElementTree as XML
 import requests
 
-from vpmobil.models import VertretungsplanNEU
+from vpmobil.models import Vertretungsplan
+from vpmobil.parser import Parser
 
 class Standardpfade(StrEnum):
     """Enumerator mit den Pfaden für Vertretungsplanquelldateien,
@@ -25,7 +26,7 @@ class Standardpfade(StrEnum):
     PlanRa  = "{schulnummer}/mobra/mobdaten/PlanRa%Y%m%d.xml"
 
 @dataclass
-class Vertretungsplan():
+class VertretungsplanZugang():
     """Das Vertretungsplan-Objekt verwaltet den Zugang und das Abrufen von
     Daten über Zugangsdaten zu einem Indiware-Vertretungsplan. Pro Instanz
     werden standardmäßig nur Vertretungspläne eines Typs abgerufen.
@@ -81,7 +82,7 @@ class Vertretungsplan():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def get(self, datum: date = date.today(), /, datei: str = None) -> VertretungsplanNEU:
+    def get(self, datum: date = date.today(), /, datei: str = None, parser: Parser = Parser()) -> Vertretungsplan:
         """Ruft den Vertretungsplan eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
 
         Parameters:
@@ -89,6 +90,9 @@ class Vertretungsplan():
             datei (str): Pfad der abzurufenden Datei (beginnend nach der Domain). Wenn
                 sowohl `datum` als auch `datei` angegeben sind, wird das Datum aus `datum`
                 in `datei` eingesetzt, falls letzteres strftime-Direktiven enthält.
+            parser (Parser): Parsing-Anweisungen, um die Eigenheiten des Planers zu
+                berücksichtigen
+
 
         Raises:
             ResourceNotFound: Wenn für den Tag keine Daten verfügbar sind oder die
@@ -115,22 +119,22 @@ class Vertretungsplan():
             raise ResourceNotFound(message=f"Datei '{dateipfad}' existiert nicht", response=response)
         else:
             response.raise_for_status()
-            return VertretungsplanNEU.from_xml(XML.fromstring(response.content))
+            return Vertretungsplan.from_xml(XML.fromstring(response.content), parser=parser)
         
-    def getall(self, standardplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[VertretungsplanNEU]:
+    def getall(self, referenzplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[Vertretungsplan]:
         """Ruft die Vertretungspläne für alle verfügbaren Tage ab. Genauer gesagt wird
         versucht, jeden Tag im Zeitraum von 14 Tagen vor bis 7 Tagen nach dem zuletzt
         veröffentlichten Tag abzurufen. Jeder erhaltene Tag fordert wenige hundert Kilobyte.
 
         Parameters:
-            standardplan (str): Pfad, unter dem immer ein Plan vorhanden ist
+            referenzplan (str): Pfad, unter dem definitiv ein Plan vorhanden ist
             nur_zukünftige (bool): Ob nur zukünftige Tage abgerufen werden sollen
             wochenenden (bool): Ob auch Wochenenden abgerufen werden sollen
         """
 
-        standard = self.get(datei=standardplan)
+        standard = self.get(datei=referenzplan)
 
-        results: list[VertretungsplanNEU] = []
+        results: list[Vertretungsplan] = []
 
         for tag in (tag for tag in ((standard.datum or date.today()) + timedelta(days=i) for i in range(-7, 15))
                     if tag not in standard.freieTage

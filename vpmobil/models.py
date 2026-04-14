@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Literal, Any, ClassVar
 import re
 
-from vpmobil.utils import find, ElementBuilder
+from vpmobil.utils import find, ElementBuilder, prettyxml
 from vpmobil.parser import Parser
 
 @dataclass(frozen=False)
@@ -23,10 +23,12 @@ class VpMobilPyModell:
         - `datetime(2025, 10, 18, 21, 3)` -> `"18.10.2025, 21:03"`
         - `time(21, 3)` -> `"21:03"`
         - `date(2025, 10, 18)` -> `"18.10.2025"`
+        - `("A", "B")` -> `["A", "B"]`
+        - `{"A", "B"}` -> `["A", "B"]`
         """
 
         converters = {
-            VpMobilPyModell: lambda m: m.as_dict(),
+            VpMobilPyModell: lambda m: m.as_dict(hidden=hidden),
             datetime:        lambda d: d.strftime("%d.%m.%Y, %H:%M"),
             time:            lambda t: t.strftime("%H:%M"),
             date:            lambda d: d.strftime("%d.%m.%Y")
@@ -70,7 +72,7 @@ class VpMobilPyModell:
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(frozen=False)
-class VertretungsplanNEU(VpMobilPyModell):
+class Vertretungsplan(VpMobilPyModell):
     """"""
     
     datum:       date       | None                          = field(default=None)
@@ -222,11 +224,11 @@ class VertretungsplanNEU(VpMobilPyModell):
         ))
 
     @classmethod
-    def from_xml(cls, data: XML.Element | XML.ElementTree, *, parser: Parser = Parser()) -> VertretungsplanNEU:
+    def from_xml(cls, data: XML.Element | XML.ElementTree, *, parser: Parser = Parser()) -> Vertretungsplan:
         """Erstellt ein `Vertretungsplan`-Objekt aus einem XML-Dokument.
 
         Parameters:
-            parser (Parser): Parsing-Parameter
+            parser (Parser): Parsing-Anweisungen, um die Eigenheiten des Plabners zu berücksichtigen
         """
         root = data if isinstance(data, XML.Element) else data.getroot()
         if root is None:
@@ -345,7 +347,7 @@ class VertretungsplanNEU(VpMobilPyModell):
                         else:
                             kurse.append(kurs)
 
-        vp = VertretungsplanNEU(
+        vp = Vertretungsplan(
             datum = datum,
             datei = find(root, "Kopf/datei", "text") or None,
             zeitstempel = zeitstempel,
@@ -363,8 +365,9 @@ class VertretungsplanNEU(VpMobilPyModell):
     def to_xml(self, planart: Literal["K", "L", "R"], *, parser: Parser = Parser()) -> XML.ElementTree:
         import locale
         locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
-        
-        VpMobil = ElementBuilder("VpMobil", children=[
+        from importlib.metadata import version
+
+        VpMobil = ElementBuilder("VpMobil", attrib={"generator": "vpmobil==" + version("vpmobil")}, children=[
             ElementBuilder("Kopf", children=[
                 ElementBuilder("planart", planart),
                 ElementBuilder("DatumPlan", self.datum.strftime("%A, %d. %B %Y"))           if self.datum else None,
@@ -387,11 +390,10 @@ class VertretungsplanNEU(VpMobilPyModell):
                 for zeile in (self.zusatzinfo or "").split("\n")
             ])                                                                              if self.zusatzinfo else None
         ])
-        
         return XML.ElementTree(VpMobil)
     
     @classmethod
-    def fromfile(cls, pfad: Path | str, *, parser: Parser = Parser) -> VertretungsplanNEU:
+    def fromfile(cls, pfad: Path | str, *, parser: Parser = Parser) -> Vertretungsplan:
         """
         Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
 
@@ -464,6 +466,28 @@ class VertretungsplanNEU(VpMobilPyModell):
                         frei.remove(kürzel)
 
         return sorted(list(frei))
+
+    def save_source(self, planart: Literal["K", "L", "R"], pfad: Path | str = "./datei.xml", *, parser: Parser=Parser(), overwrite=True) -> None:
+        """Speichert den Vertretungsplan als XML-Datei.
+
+        Parameters:
+            pfad (Path | str): Dateipfad der zu erstellenden Datei
+            overwrite (bool): Ob die Datei überschrieben werden darf, falls sie bereits existiert
+
+        Raises:
+            FileExistsError: Falls die Datei bereits existiert und `overwrite` `False` ist
+        """
+
+        xmlpretty = prettyxml(self.to_xml(planart=planart, parser=parser))
+
+        zielpfad = Path(pfad).resolve() # Funktioniert für Path und str
+        zielverzeichnis = zielpfad.parent
+        zielverzeichnis.mkdir(parents=True, exist_ok=True)
+
+        if zielpfad.exists() and not overwrite:
+            raise FileExistsError(f"Datei '{zielpfad}' existiert bereits")
+
+        zielpfad.write_text(xmlpretty, encoding="utf-8")
     
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
@@ -575,18 +599,14 @@ class Stunde(VpMobilPyModell):
             kursnummer = int(s)
 
         #======// Fach & Änderungen bzw. Ausfall //==//
-        Le = find(data, "Le", "text") or ""
-        Ra = find(data, "Ra", "text") or ""
+        Le = find(data, "Le", "text")
+        Ra = find(data, "Ra", "text")
 
         fach = find(data, "Fa", "text") or None
         if fach == "---":
             fach = None
 
         #======// Klassen, Lehrer & Räume //=========//
-        klassen = set()
-        lehrer = set()
-        räume = set()
-
         nicht_klassen_parser = Parser(AUFZÄHLUNGS_TRENNZEICHEN=parser.AUFZÄHLUNGS_TRENNZEICHEN, BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN=False)
 
         if planart == "K":
@@ -679,6 +699,15 @@ class Kurs(VpMobilPyModell):
             klassen = klassen
         )
 
+    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        return ElementBuilder("Ue", children=[
+            ElementBuilder("UeNr", self.kursnummer, {
+                **({"UeLe": self.lehrer} if self.lehrer else {}),
+                **({"UeGr": self.kürzel} if self.kürzel else {}),
+                **({"UeFa": self.fach} if self.fach else {}),
+            })
+        ])
+
     def __repr__(self) -> str:
         return f"<'{self.kürzel}' bei '{self.lehrer}' (Kursnummer '{self.kursnummer}')>"
 
@@ -726,6 +755,14 @@ class Aufsicht(VpMobilPyModell):
             ortinfo=find(data, "AuOrt", "text") or None,
         )
 
+    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        return ElementBuilder("Aufsicht", children=[
+            ElementBuilder("AuVorStunde", str(self.vorStunde))          if self.vorStunde else None,
+            ElementBuilder("AuUhrzeit", self.beginn.strftime("HH:MM"))  if self.beginn else None,
+            ElementBuilder("AuZeit", self.zeitinfo)                     if self.zeitinfo else None,
+            ElementBuilder("AuOrt", self.ortinfo)                       if self.ortinfo else None
+        ])
+
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                         Klausur                                          │ 
@@ -771,6 +808,16 @@ class Klausur(VpMobilPyModell):
             dauer=dauer,
             info=find(data, "KlKinfo", "text") or None
         )
+    
+    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        return ElementBuilder("Klausur", children=[
+            ElementBuilder("KlKurs", parser.AUFZÄHLUNGS_TRENNZEICHEN.join(self.kurse)) if self.kurse else None,
+            ElementBuilder("KlKursleiter", self.lehrer)                                if self.lehrer else None,
+            ElementBuilder("KlStunde", str(self.periode))                              if self.periode or self.periode == 0 else None,
+            ElementBuilder("KlBeginn", self.beginn.strftime("HH:MM"))                  if self.beginn else None,
+            ElementBuilder("KlDauer", str(int(self.dauer.total_seconds()/60)))         if self.dauer else None,
+            ElementBuilder("Klinfo", self.info)                                        if self.info else None,
+        ])
 
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮

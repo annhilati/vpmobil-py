@@ -37,7 +37,7 @@ def find(element: ET.Element, path: str, mode: Literal["text", "attrib"]):
     
 def ElementBuilder(tag: str, text: str | Any | None = None, attrib: dict[str] = {}, *, children: list[ET.Element | None] = []) -> ET.Element:
     "Jedes None in `children` wird ignoriert und nicht angehangen"
-    element = ET.Element(tag=tag, attrib=attrib)
+    element = ET.Element(tag, attrib)
     if text:
         element.text = str(text)
     element.extend([c for c in children if c is not None])
