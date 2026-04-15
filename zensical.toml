@@ -14,8 +14,9 @@ nav = [
             "anderes/credits.md"
         ]},
     ]},
-    {"Reverse Engineering" = [
-        "anderes/indiware.md",
+    {"Entwickler" = [
+        "entwickler/endpoints.md",
+        "entwickler/einschränkungen.md"
     ]}
 ]
 extra_css = ["style.css"]
