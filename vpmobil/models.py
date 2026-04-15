@@ -4,7 +4,7 @@ from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
 from typing import Literal, Any, ClassVar
-import re
+from types import MappingProxyType
 
 from vpmobil.utils import find, ElementBuilder, prettyxml
 from vpmobil.parser import Parser
@@ -309,8 +309,9 @@ class Vertretungsplan(VpMobilPyModell):
                         stunde = Stunde.from_xml(StdTag, planart=planart, kontext={Kurz}, parser=parser)
 
                         # Bekannte Stunden mergen
-                        if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and s.räume == stunde.räume), None)):
+                        if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and (s.klassen == stunde.klassen or s.lehrer == stunde.lehrer or s.räume == stunde.räume)), None)):
                             existing_stunde.klassen.update(stunde.klassen)
+                            existing_stunde.lehrer.update(stunde.lehrer)
                             existing_stunde.räume.update(stunde.räume)
                         else:
                             stunden.append(stunde)
@@ -560,10 +561,10 @@ class Stunde(VpMobilPyModell):
     def ausfall(self) -> bool:
         """Ob die Stunde entfällt.
         
-        Wenn die Stundeninfo das Stichwort `"selbst"` enthält und weder Lehrer
-        noch Räume angegeben sind, wird das ebenfalls als Ausfall interpretiert.
+        Wenn die Stundeninfo das Stichwort `"selbst"` enthält und keine Lehrer
+        angegeben sind, wird das ebenfalls als Ausfall interpretiert.
         """
-        return self.fach is None or ("selbst" in (self.info or "") and not self.lehrer | self.räume)
+        return self.fach is None or ("selbst" in (self.info or "") and not self.lehrer)
     
     @property
     def änderung(self) -> bool:
@@ -571,7 +572,7 @@ class Stunde(VpMobilPyModell):
         return self.fachänderung or self.lehreränderung or self.raumänderung or self.klassenänderung
     
     @classmethod
-    def from_xml(cls, data: XML.Element, *, parser: Parser = Parser(), planart: Literal["K", "L", "R"] = "K", kontext: set[str] = set(), kontextgeändert: bool = False) -> Stunde:
+    def from_xml(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", *, parser: Parser = Parser(), kontext: set[str] = set(), kontextgeändert: bool = False) -> Stunde:
         """Erstellt ein `Stunde`-Objekt aus einem XML-Element.
 
         Parameters:
@@ -611,21 +612,21 @@ class Stunde(VpMobilPyModell):
 
         if planart == "K":
             klassen = kontext
-            lehrer = set(nicht_klassen_parser.slice_aufzählung(Le))  if fach else set()
-            räume = set(nicht_klassen_parser.slice_aufzählung(Ra))   if fach else set()
+            lehrer = set(nicht_klassen_parser.slice_aufzählung(Le))
+            räume = set(nicht_klassen_parser.slice_aufzählung(Ra))
             klassenänderung = kontextgeändert
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "L":
-            klassen = set(parser.slice_aufzählung(Le)) if fach else set()
+            klassen = set(parser.slice_aufzählung(Le))
             lehrer = kontext
-            räume = set(nicht_klassen_parser.slice_aufzählung(Le))   if fach else set()
+            räume = set(nicht_klassen_parser.slice_aufzählung(Le))
             klassenänderung = "LeAe" in find(data, "Le", "attrib")
             lehreränderung = kontextgeändert
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "R":
-            klassen = set(parser.slice_aufzählung(Le)) if fach else set()
-            lehrer = set(nicht_klassen_parser.slice_aufzählung(Le))  if fach else set()
+            klassen = set(parser.slice_aufzählung(Le))
+            lehrer = set(nicht_klassen_parser.slice_aufzählung(Le))
             räume = kontext
             klassenänderung = "RaAe" in find(data, "Ra", "attrib")
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
