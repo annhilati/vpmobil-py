@@ -90,9 +90,13 @@ class Vertretungsplan(VpMobilPyModell):
     sind die Periodennummern, die Werte sind Tupel aus Beginn- und Endzeit.
     """
     kurse:       list[Kurs]                                 = field(default_factory=list)
+    "Globales Reservoir für Kurse"
     stunden:     list[Stunde]                               = field(default_factory=list)
+    "Globales Reservoir für Stunden"
     aufsichten:  list[Aufsicht]                             = field(default_factory=list)
+    "Globales Reservoir für Aufsichten"
     klausuren:   list[Klausur]                              = field(default_factory=list)
+    "Globales Reservoir für Klausuren"
     _planart:    Literal["K", "L", "R"] | None              = field(init=False, default="K")
     _hidden:     ClassVar[list[str]]                        = ["kurse", "stunden", "aufsichten", "klausuren"]
 
@@ -406,7 +410,7 @@ class Vertretungsplan(VpMobilPyModell):
             instance = cls.from_xml(XML.parse(f), parser=parser)
         return instance
     
-    def saveasfile(self, pfad: Path | str = "./datei.yml", overwrite=True, hidden: list[str] = []) -> None:
+    def saveasfile(self, pfad: Path | str, overwrite=True, hidden: list[str] = []) -> None:
         """Speichert den ausgewerteten Vertretungsplan als JSON- oder YAML-Datei.
 
         **ACHTUNG**: vpmobil-py hat momentan keine Funktion,
@@ -468,7 +472,7 @@ class Vertretungsplan(VpMobilPyModell):
 
         return sorted(list(frei))
 
-    def save_source(self, planart: Literal["K", "L", "R"], pfad: Path | str = "./datei.xml", *, parser: Parser=Parser(), overwrite=True) -> None:
+    def save_source(self, pfad: Path | str, planart: Literal["K", "L", "R"], *, parser: Parser=Parser(), overwrite=True) -> None:
         """Speichert den Vertretungsplan als XML-Datei.
 
         Parameters:
@@ -555,7 +559,7 @@ class Stunde(VpMobilPyModell):
     def __repr__(self):
         if self.ausfall:
             return f"<Ausfall: '{self.info}'>"
-        return f"<\'{', '.join(self.klassen)}\' mit \'{self.fach}\' bei \'{', '.join(self.lehrer)}\' in \'{', '.join(self.räume)}\'>"
+        return f"<{f'\'{", ".join(self.klassen)}\'' if self.klassen else ""}{f' mit \'{self.fach}\'' if self.fach else ""}{f' bei \'{", ".join(self.lehrer)}\'' if self.lehrer else ""}{f' in \'{", ".join(self.räume)}\'' if self.räume else ""}>"
     
     @property
     def ausfall(self) -> bool:
