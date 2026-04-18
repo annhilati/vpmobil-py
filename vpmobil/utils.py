@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
-from typing import Generic, Self, TypeVar
-from typing import Any, overload, Literal, Iterable, Iterator, Callable, Self
+from typing import Any, overload, Literal, Iterator, Callable
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD

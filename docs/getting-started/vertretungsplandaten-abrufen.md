@@ -13,7 +13,7 @@ from vpmobil import Vertretungsplan
 plan = Vertretungsplan(10000000, "schueler", "password")
 # Eine Vertretungsplan-Instanz erstellen
 
-heute = plan.fetch()
+heute = plan.get()
 # Die heutigen Plandaten abrufen
 
 klasse8b = heute.klassen["8b"]
@@ -28,30 +28,29 @@ for periode, stunden in klasse8b.stunden:
 ## 2. Andere Pläne abrufen
 
 ```python
-from vpmobil import Vertretungsplan, Stundenplan24Pfade, Unauthorized
+from vpmobil import Vertretungsplan, Standardpfade, Unauthorized
 from datetime import date
 
 plan = Vertretungsplan(10000000, "schueler", "password")
 
 try:
-    tag = plan.fetch(date(2025, 10, 5), datei=Stundenplan24Pfade.PlanRa)
+    tag = plan.get(date(2025, 10, 5), datei=Standardpfade.PlanRa)
     # Die Plandaten der Räume vom 5.10.2025 abrufen
 
 except Unauthorized:
     # Abfangen, falls die Zugangsdaten keine Berechtigung für Raumpläne haben
     continue
-
 ...
 ```
 
 ## 3. Pläne aus anderen Perspektiven auswerten
 
 ```python
-from vpmobil import Vertretungsplan, Stundenplan24Pfade
+from vpmobil import Vertretungsplan, Standardpfade
 from vpmobil.extensions.reparser import LehrerPerspektive
 
 plan = Vertretungsplan(10000000, "schueler", "password")
-heute = plan.fetch(datei=Stundenplan24Pfade.PlanKl)
+heute = plan.get(datei=Standardpfade.PlanKl)
 # Den heutigen Klassenplan abrufen
 
 reparsed = LehrerPerspektive(heute)

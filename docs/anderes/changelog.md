@@ -10,18 +10,17 @@ icon: lucide/scroll-text
 
 * Neuimplementierung aller Modellklassen
   * Vertretungsplan-Daten werden nun durch die `Vertretungsplan`-Klasse repräsentiert
-* Methode `getall()` zu `Vertretungsplan` hinzugefügt
-* Eigenschaft `zeitplan` zu `VertretungsTag` hinzugefügt
-* Neue Methode `saveasfile()` zu `VertretungsTag` hinzugefügt, mit der direkt ausgewertete JSON- oder YAML-Dateien erstellt werden können.
-* Eigenschaft `fachmeta` zu `Stunde` hinzugefügt, die die Information aus dem `Ku2`-Tag der Quelldaten bereitstellt
-* Eigenschaft `verlegt` zu `Stunde` hinzugefügt
-* Klassenmethoden `new()` zu allen Modellklassen hinzugefügt, mit denen Objekte aus Klarwerten erstellt werden können 
+* Methode `getall()` zu `VertretungsplanZugang` hinzugefügt
+* Eigenschaft `zeitplan` zu `Vertretungsplan` hinzugefügt
+* Methode `saveasfile()` zu `Vertretungsplan` hinzugefügt, mit der direkt ausgewertete JSON- oder YAML-Dateien erstellt werden können.
+* Feld `fachmeta` zu `Stunde` hinzugefügt, die die Information aus dem `Ku2`-Tag der Quelldaten bereitstellt
 
 ### 🔧 Änderungen
 
-* Parameter `serverdomain` von `Vertretungsplan` in `domain` umbenannt
-* Methode `fetch()` von `Vertretungsplan` in `get()` umbenannt
-* Methode `saveasfile()` von `VertretungsTag` in `save_source` umbenannt
+* `Vertretungsplan` in `VertretungsplanZugang` umbenannt
+* Parameter `serverdomain` von `VertretungsplanZugang` in `domain` umbenannt
+* Methode `fetch()` von `VertretungsplanZugang` in `get()` umbenannt
+* Methode `saveasfile()` von `Vertretungsplan` in `save_source` umbenannt
 * Methode `stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum` entfernt
 * `Stundenplan24Pfade` in `Standardpfade` umbenannt
 * `Stunde.lehrergeändert`, `~.raumgeändert` und `.~klassegeändert` können bei respektiven Plantypen nun nicht mehr `None` sein. Stattdessen wird `~.geändert` weitergegeben

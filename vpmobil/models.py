@@ -4,7 +4,6 @@ from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
 from typing import Literal, Any, ClassVar
-from types import MappingProxyType
 
 from vpmobil.utils import find, ElementBuilder, prettyxml
 from vpmobil.parser import Parser
@@ -92,7 +91,11 @@ class Vertretungsplan(VpMobilPyModell):
     kurse:       list[Kurs]                                 = field(default_factory=list)
     "Globales Reservoir für Kurse"
     stunden:     list[Stunde]                               = field(default_factory=list)
-    "Globales Reservoir für Stunden"
+    """Globales Reservoir für Stunden.
+    
+    **ACHTUNG**: Auf dieser Liste sollte nicht operiert werden, um
+    das Entstehen von Redundanzen zu vermeiden.
+    """
     aufsichten:  list[Aufsicht]                             = field(default_factory=list)
     "Globales Reservoir für Aufsichten"
     klausuren:   list[Klausur]                              = field(default_factory=list)
@@ -118,8 +121,7 @@ class Vertretungsplan(VpMobilPyModell):
         Alle `Stunde`-, `Kurs`- und `Klausur`-Objekte sind Referenzen. Das heißt,
         Änderungen an diesen Objekten wirken sich auch auf das ursprünglichen
         `Vertretungsplan`-Objekt aus.
-        """
-
+        """ 
         klassen: dict[str, Klasse] = {}
         for stunde in self.stunden:
             for klasse in stunde.klassen:
@@ -559,7 +561,12 @@ class Stunde(VpMobilPyModell):
     def __repr__(self):
         if self.ausfall:
             return f"<Ausfall: '{self.info}'>"
-        return f"<{f'\'{", ".join(self.klassen)}\'' if self.klassen else ""}{f' mit \'{self.fach}\'' if self.fach else ""}{f' bei \'{", ".join(self.lehrer)}\'' if self.lehrer else ""}{f' in \'{", ".join(self.räume)}\'' if self.räume else ""}>"
+        return "<" + " ".join([
+            ", ".join(self.klassen) if self.klassen else "",
+            f"mit {self.fach}" if self.fach else "",
+            "bei " + ", ".join(self.lehrer) if self.lehrer else "",
+            "in " + ", ".join(self.räume) if self.räume else ""
+        ]) + ">"
     
     @property
     def ausfall(self) -> bool:
