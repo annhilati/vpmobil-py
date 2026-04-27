@@ -42,7 +42,7 @@ for periode, stunden in klasse.stunden.items():
 - 🔧 **Konfiguration:** Eigenheiten der Vertretungsplaner können bei der Auswertung berücksichtig werden 
 - ⚙️ **Kompatibilität:** Export der Daten in beliebige Key-Value-Formate wie JSON oder YAML
 - 👁️ **Perspektivisch:** Auswertung von Plänen aus Perspektive von Klassen, Lehrern und Räumen
-- 🧪 **Genese:** Generierung von Quelldateien können aus Klarwerten
+- 🧪 **Genese:** Generierung von Quelldateien aus Klarwerten
 - ➕ **Weitere Funktionen**: Parsen von PDFs, die von Indiware-Software erstellt werden
 
 
