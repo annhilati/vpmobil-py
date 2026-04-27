@@ -2,11 +2,14 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
-from typing import Any, overload, Literal, Iterator, Callable
+from typing import Any, overload, Literal, Iterator, Callable, Mapping as _Mapping, Sequence as _Sequence
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
 from types import MappingProxyType
+
+type Mapping[KT, VT] = _Mapping[KT, VT]
+type Collection[T] = _Sequence[T]
 
 def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     if isinstance(object, ET.ElementTree):
@@ -34,7 +37,7 @@ def find(element: ET.Element, path: str, mode: Literal["text", "attrib"]):
         case "attrib":  return getattr(target, "attrib", {})
         case _:         raise ValueError
 
- 
+    
 def ElementBuilder(tag: str, text: str | Any | None = None, attrib: dict[str] = {}, *, children: list[ET.Element | None] = []) -> ET.Element:
     "Jedes None in `children` wird ignoriert und nicht angehangen"
     element = ET.Element(tag, attrib)
@@ -96,4 +99,3 @@ class SelectionProxy[T]:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({list(self.selection)!r})"
-

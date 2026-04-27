@@ -4,7 +4,9 @@ import re
 
 @dataclass
 class Parser:
-    """
+    """Die `Parser`-Klasse beinhält Parameter für die Auswertung von Zeichenketten,
+    die durch Konvention oder Eigenheiten des Vertretungsplaners unterschiedlich
+    sein können.
     
     Parameters:
         AUFZÄHLUNGS_TRENNZEICHEN (str): Zeichen das verwendet wird, um etwaige

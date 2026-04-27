@@ -3,11 +3,10 @@ from dataclasses import dataclass, field, fields
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
-from typing import Literal, Any, ClassVar, Mapping
+from typing import Literal, Any, ClassVar
 from types import MappingProxyType
-from collections.abc import Collection
 
-from vpmobil.utils import find, ElementBuilder, prettyxml
+from vpmobil.utils import find, ElementBuilder, prettyxml, Mapping, Collection
 from vpmobil.parser import Parser
 
 @dataclass(frozen=False)

@@ -1,9 +1,10 @@
 from yarl import URL
 from enum import StrEnum
-from datetime import date, timedelta
+from datetime import datetime, date, time, timedelta
 from dataclasses import dataclass
 import xml.etree.ElementTree as XML
 import requests
+import configparser
 
 from vpmobil.models import Vertretungsplan
 from vpmobil.parser import Parser
@@ -146,6 +147,34 @@ class VertretungsplanZugang():
                 continue
 
         return results
+
+
+    def get_vpinfok(self) -> tuple[date, time, tuple[date]]:
+        """Ruft die Daten der `vpinfok.txt` ab."""
+
+        dateipfad = f"{self.schulnummer}/mobil/mobdaten/vpinfok.txt"
+
+        response = requests.get(str(self.socket / dateipfad))
+        response.raise_for_status()
+
+        status = response.status_code
+        if status == 401:
+            raise Unauthorized(message=f"Zugangsdaten haben keinen Zugriff auf '{dateipfad}'", response=response)
+        elif status == 404:
+            raise ResourceNotFound(message=f"Datei '{dateipfad}' existiert nicht", response=response)
+        else:
+            response.raise_for_status()
+            config = configparser.ConfigParser()
+            config.read_string(response.text)
+            Grunddaten = config["Grunddaten"]
+            return (
+                datetime.strptime(Grunddaten.get("Datum"), "%d.%m.%Y").date() if Grunddaten.get("Datum") else None,
+                datetime.strptime(Grunddaten.get("Uhrzeit"), "%H:%M:%S").time() if Grunddaten.get("Uhrzeit") else None,
+                tuple(
+                    datetime.strptime(Grunddaten[key], "%Y%m%d").date() for key in Grunddaten if key.startswith("Plan")
+                )
+            )
+        
         
         
 class VpMobilPyError(Exception):
