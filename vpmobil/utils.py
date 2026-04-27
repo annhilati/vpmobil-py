@@ -6,6 +6,9 @@ from typing import Any, overload, Literal, Iterator, Callable
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
+from types import MappingProxyType
+
+type Mapping[KT, VT] = MappingProxyType[KT, VT]
 
 def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     if isinstance(object, ET.ElementTree):

@@ -51,13 +51,13 @@ stunde.lehrer
 stunde.lehreränderung
 stunde.räume
 stunde.raumänderung
-stunde.ausfall
-stunde.änderung
 stunde.beginn
 stunde.ende
 stunde.info
 stunde.kursnummer
 stunde.periode
+stunde.ausfall
+stunde.änderung
 
 klasse.to_xml()
 klasse.kürzel

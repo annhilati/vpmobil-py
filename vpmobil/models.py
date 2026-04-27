@@ -4,9 +4,12 @@ from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
 from typing import Literal, Any, ClassVar
+from types import MappingProxyType
 
-from vpmobil.utils import find, ElementBuilder, prettyxml
+from vpmobil.utils import find, ElementBuilder, prettyxml, Mapping
 from vpmobil.parser import Parser
+
+
 
 @dataclass(frozen=False)
 class VpMobilPyModell:
@@ -60,11 +63,16 @@ class VpMobilPyModell:
             if isinstance(attr, property) and not name.startswith("_") and name not in self._hidden + hidden:
                 result[name] = apply_converter(getattr(self, name))
 
-        try: import json; _ = json.dumps(result, ensure_ascii=False)
+        try: import json; json.dumps(result, ensure_ascii=False)
         except: raise AssertionError("Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt auf GitHub im Bugtracker von vpmobil-py")
 
         return result
 
+    def copy(self):
+        copy = self.__class__.__new__(self.__class__)
+        for feld in fields(self):
+            setattr(copy, feld.name, getattr(self, feld.name))
+        return copy
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    Vertretungsplan                                       │ 
@@ -115,7 +123,7 @@ class Vertretungsplan(VpMobilPyModell):
             return self.räume[key]
     
     @property
-    def klassen(self) -> dict[str, Klasse]:
+    def klassen(self) -> Mapping[str, Klasse]:
         """Im Vertretungsplan beschriebene Klassen.
         
         Alle `Stunde`-, `Kurs`- und `Klausur`-Objekte sind Referenzen. Das heißt,
@@ -123,31 +131,35 @@ class Vertretungsplan(VpMobilPyModell):
         `Vertretungsplan`-Objekt aus.
         """ 
         klassen: dict[str, Klasse] = {}
+
         for stunde in self.stunden:
             for klasse in stunde.klassen:
                 if klasse not in klassen:
                     klassen[klasse] = Klasse(kürzel=klasse)
-                if stunde.periode not in klassen[klasse].stunden:
-                    klassen[klasse].stunden[stunde.periode] = []
-                klassen[klasse].stunden[stunde.periode].append(stunde)
+                current = klassen[klasse].stunden.get(stunde.periode, tuple())
+                new_stunden = dict(klassen[klasse].stunden)
+                new_stunden[stunde.periode] = current + (stunde,)
+                klassen[klasse].stunden = MappingProxyType(new_stunden)
 
         for kurs in self.kurse:
             for klasse in kurs.klassen:
                 if klasse not in klassen:
                     klassen[klasse] = Klasse(kürzel=klasse)
-                klassen[klasse].kurse[kurs.kursnummer] = kurs
+                new_kurse = dict(klassen[klasse].kurse)
+                new_kurse[kurs.kursnummer] = kurs
+                klassen[klasse].kurse = MappingProxyType(new_kurse)
 
         for klausur in self.klausuren:
             for kurs in klausur.kurse:
                 for klasse in self.klassen.get(kurs, Klasse()).stunden:
                     if klasse not in klassen:
                         klassen[klasse] = Klasse(kürzel=klasse)
-                    klassen[klasse].klausuren.append(klausur)
+                    klassen[klasse].klausuren = klassen[klasse].klausuren + (klausur,)
 
-        return dict(sorted((k, v) for k, v in klassen.items() if k))
+        return MappingProxyType(dict(sorted((k, v) for k, v in klassen.items() if k)))
     
     @property
-    def lehrer(self) -> dict[str, Lehrer]:
+    def lehrer(self) -> Mapping[str, Lehrer]:
         """Im Vertretungsplan beschriebene Lehrer.
         
         Alle `Stunde`-, `Kurs`- und `Aufsicht`-Objekte sind Referenzen. Das heißt,
@@ -160,26 +172,29 @@ class Vertretungsplan(VpMobilPyModell):
             for lehrer in stunde.lehrer:
                 if lehrer not in lehrerE:
                     lehrerE[lehrer] = Lehrer(kürzel=lehrer)
-                if stunde.periode not in lehrerE[lehrer].stunden:
-                    lehrerE[lehrer].stunden[stunde.periode] = []
-                lehrerE[lehrer].stunden[stunde.periode].append(stunde)
+                current = lehrerE[lehrer].stunden.get(stunde.periode, tuple())
+                new_stunden = dict(lehrerE[lehrer].stunden)
+                new_stunden[stunde.periode] = current + (stunde,)
+                lehrerE[lehrer].stunden = MappingProxyType(new_stunden)
 
         for kurs in self.kurse:
             lehrer = kurs.lehrer or ""
             if lehrer not in lehrerE:
                 lehrerE[lehrer] = Lehrer(kürzel=lehrer)
-            lehrerE[lehrer].kurse[kurs.kursnummer] = kurs
+            new_kurse = dict(lehrerE[lehrer].kurse)
+            new_kurse[kurs.kursnummer] = kurs
+            lehrerE[lehrer].kurse = MappingProxyType(new_kurse)
 
         for aufsicht in self.aufsichten:
             for lehrer in aufsicht.lehrer:
                 if lehrer not in lehrerE:
                     lehrerE[lehrer] = Lehrer(kürzel=lehrer)
-                lehrerE[lehrer].aufsichten.append(aufsicht)
+                lehrerE[lehrer].aufsichten = lehrerE[lehrer].aufsichten + (aufsicht,)
 
-        return dict(sorted((k, v) for k, v in lehrerE.items() if k))
+        return MappingProxyType(dict(sorted((k, v) for k, v in lehrerE.items() if k)))
     
     @property
-    def räume(self) -> dict[str, Raum]:
+    def räume(self) -> Mapping[str, Raum]:
         """Im Vertretungsplan beschriebene Klassen.
         
         Alle `Stunde`-Objekte sind Referenzen. Das heißt, Änderungen an diesen
@@ -191,11 +206,12 @@ class Vertretungsplan(VpMobilPyModell):
             for raum in stunde.räume:
                 if raum not in räumeE:
                     räumeE[raum] = Raum(kürzel=raum)
-                if stunde.periode not in räumeE[raum].stunden:
-                    räumeE[raum].stunden[stunde.periode] = []
-                räumeE[raum].stunden[stunde.periode].append(stunde)
+                current = räumeE[raum].stunden.get(stunde.periode, tuple())
+                new_stunden = dict(räumeE[raum].stunden)
+                new_stunden[stunde.periode] = current + (stunde,)
+                räumeE[raum].stunden = MappingProxyType(new_stunden)
 
-        return dict(sorted((k, v) for k, v in räumeE.items() if k))
+        return MappingProxyType(dict(sorted((k, v) for k, v in räumeE.items() if k)))
     
     @property
     def lehrerKrank(self) -> set[str]:
@@ -839,18 +855,18 @@ class Klausur(VpMobilPyModell):
 @dataclass(frozen=False)
 class KLRViewBase(VpMobilPyModell):
     kürzel:  str
-    stunden: dict[int, list[Stunde]] = field(default_factory=dict)
+    stunden: Mapping[int, tuple[Stunde]] = field(default_factory=lambda: MappingProxyType({}))
     "Unterrichtsstunden gruppiert nach Unterrichtsperiode"
     
-    def __getitem__(self, key) -> list[Stunde]:
+    def __getitem__(self, key) -> tuple[Stunde]:
         return self.stunden.get(key, None)
 
 
 @dataclass(frozen=False)
 class Klasse(KLRViewBase):
-    kurse: dict[int, Kurs]   = field(default_factory=dict)
+    kurse: Mapping[int, Kurs] = field(default_factory=lambda: MappingProxyType({}))
     "Kurse der Klasse, zugänglich über die Kursnummer"
-    klausuren: list[Klausur] = field(default_factory=list)
+    klausuren: tuple[Klausur] = field(default_factory=tuple)
     "Klausuren der Klasse"
 
     def __repr__(self):
@@ -876,9 +892,9 @@ class Klasse(KLRViewBase):
 
 @dataclass(frozen=False)
 class Lehrer(KLRViewBase):
-    kurse: dict[int, Kurs]     = field(default_factory=dict)
+    kurse: Mapping[int, Kurs]   = field(default_factory=lambda: MappingProxyType({}))
     "Kurse des Lehrers, zugänglich über die Kursnummer"
-    aufsichten: list[Aufsicht] = field(default_factory=list)
+    aufsichten: tuple[Aufsicht] = field(default_factory=tuple)
     "Aufsichten des Lehrers"
 
     def __repr__(self):
