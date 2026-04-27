@@ -5,11 +5,10 @@ from datetime import datetime, date, time, timedelta
 from pathlib import Path
 from typing import Literal, Any, ClassVar, Mapping
 from types import MappingProxyType
+from collections.abc import Collection
 
-from vpmobil.utils import find, ElementBuilder, prettyxml#, Mapping
+from vpmobil.utils import find, ElementBuilder, prettyxml
 from vpmobil.parser import Parser
-
-
 
 @dataclass(frozen=False)
 class VpMobilPyModell:
@@ -464,7 +463,7 @@ class Vertretungsplan(VpMobilPyModell):
             with zielpfad.open('w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
 
-    def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> list[str]:
+    def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> set[str]:
         """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.
         
         Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt.
@@ -489,7 +488,7 @@ class Vertretungsplan(VpMobilPyModell):
                     if kürzel in frei:
                         frei.remove(kürzel)
 
-        return sorted(list(frei))
+        return set(sorted(list(frei)))
 
     def save_source(self, pfad: Path | str, planart: Literal["K", "L", "R"], *, parser: Parser=Parser(), overwrite=True) -> None:
         """Speichert den Vertretungsplan als XML-Datei.
@@ -856,7 +855,7 @@ class Klausur(VpMobilPyModell):
 @dataclass(frozen=False)
 class KLRViewBase(VpMobilPyModell):
     kürzel:  str
-    stunden: Mapping[int, tuple[Stunde]] = field(default_factory=lambda: MappingProxyType({}))
+    stunden: Mapping[int, Collection[Stunde]] = field(default_factory=lambda: MappingProxyType({}))
     "Unterrichtsstunden gruppiert nach Unterrichtsperiode"
     
     def __getitem__(self, key) -> tuple[Stunde]:
@@ -867,7 +866,7 @@ class KLRViewBase(VpMobilPyModell):
 class Klasse(KLRViewBase):
     kurse: Mapping[int, Kurs] = field(default_factory=lambda: MappingProxyType({}))
     "Kurse der Klasse, zugänglich über die Kursnummer"
-    klausuren: tuple[Klausur] = field(default_factory=tuple)
+    klausuren: Collection[Klausur] = field(default_factory=tuple)
     "Klausuren der Klasse"
 
     def __repr__(self):
@@ -895,7 +894,7 @@ class Klasse(KLRViewBase):
 class Lehrer(KLRViewBase):
     kurse: Mapping[int, Kurs]   = field(default_factory=lambda: MappingProxyType({}))
     "Kurse des Lehrers, zugänglich über die Kursnummer"
-    aufsichten: tuple[Aufsicht] = field(default_factory=tuple)
+    aufsichten: Collection[Aufsicht] = field(default_factory=tuple)
     "Aufsichten des Lehrers"
 
     def __repr__(self):

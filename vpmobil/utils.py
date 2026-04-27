@@ -34,13 +34,7 @@ def find(element: ET.Element, path: str, mode: Literal["text", "attrib"]):
         case "attrib":  return getattr(target, "attrib", {})
         case _:         raise ValueError
 
-
-# def SubElement(parent: ET.Element, tag: str, text: str | Any = None, attrib: dict = {}) -> ET.Element:
-#         element = ET.SubElement(parent, tag, attrib)
-#         if text:
-#             element.text = str(text)
-#         return element
-    
+ 
 def ElementBuilder(tag: str, text: str | Any | None = None, attrib: dict[str] = {}, *, children: list[ET.Element | None] = []) -> ET.Element:
     "Jedes None in `children` wird ignoriert und nicht angehangen"
     element = ET.Element(tag, attrib)
@@ -102,3 +96,4 @@ class SelectionProxy[T]:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({list(self.selection)!r})"
+

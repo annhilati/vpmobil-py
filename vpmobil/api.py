@@ -36,8 +36,7 @@ class VertretungsplanZugang():
     Üblicherweise ist stark begrenzt, welche Planart für einen Benutzer
     verfügbar ist. Schüler-Benutzer können deswegen nur Klassenpläne abrufen.
     Lehrer- und Raumpläne können allerdings unter gewissen Verlusten aus den
-    Klassenplänen rekonstruiert werden. Funktionen dafür sind in
-    `vpmobil.extensions.reparser` verfügbar.
+    Klassenplänen rekonstruiert werden.
 
     Parameters:
         schulnummer (int): Schulnummer der Schule auf deren Plan zugegriffen werden soll
@@ -47,7 +46,7 @@ class VertretungsplanZugang():
         port (int): Port des Service, der die Vertretungsplandaten bereitstellt
         dateipfadschema (str):
             Schema der Pfade unter dem die Quelldateien abgerufen werden können.
-            `{schulnummer}` sowie strftime-Direktiven können als Platzhalter verwendet werden.
+            `{schulnummer}` sowie strptime-Direktiven können als Platzhalter verwendet werden.
             Die Standardpfade sind im Enumerator `Standardpfade` enthalten.
     """
     
