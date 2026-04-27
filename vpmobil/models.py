@@ -3,10 +3,10 @@ from dataclasses import dataclass, field, fields
 from xml.etree import ElementTree as XML
 from datetime import datetime, date, time, timedelta
 from pathlib import Path
-from typing import Literal, Any, ClassVar
+from typing import Literal, Any, ClassVar, Mapping
 from types import MappingProxyType
 
-from vpmobil.utils import find, ElementBuilder, prettyxml, Mapping
+from vpmobil.utils import find, ElementBuilder, prettyxml#, Mapping
 from vpmobil.parser import Parser
 
 
@@ -69,6 +69,7 @@ class VpMobilPyModell:
         return result
 
     def copy(self):
+        "Erzeugt eine neue identische Instanz."
         copy = self.__class__.__new__(self.__class__)
         for feld in fields(self):
             setattr(copy, feld.name, getattr(self, feld.name))
