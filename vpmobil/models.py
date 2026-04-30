@@ -5,6 +5,7 @@ from datetime import datetime, date, time, timedelta
 from pathlib import Path
 from typing import Literal, Any, ClassVar
 from types import MappingProxyType
+import copy
 
 from vpmobil.utils import find, ElementBuilder, prettyxml, Mapping, Collection
 from vpmobil.parser import Parser
@@ -68,10 +69,10 @@ class VpMobilPyModell:
 
     def copy(self):
         "Erzeugt eine neue identische Instanz."
-        copy = self.__class__.__new__(self.__class__)
+        new = self.__class__.__new__(self.__class__)
         for feld in fields(self):
-            setattr(copy, feld.name, getattr(self, feld.name))
-        return copy
+            setattr(new, feld.name, copy.deepcopy(getattr(self, feld.name)))
+        return new
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    Vertretungsplan                                       │ 
