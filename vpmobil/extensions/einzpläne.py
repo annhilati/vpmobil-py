@@ -1,4 +1,4 @@
-"""Erweiterung für die Arbeit mit EinzPläne-PDF-Dateien
+"""Erweiterung für die Asuwertung von EinzPläne-PDF-Dateien
 
 ---
 
