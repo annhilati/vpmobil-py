@@ -18,10 +18,10 @@
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/annhilati/vpmobil-py?style=for-the-badge&logo=github&label=Letzter%20Commit&color=23A55A"></a>  
 
 ```python
-from vpmobil import Vertretungsplan
+from vpmobil import VertretungsplanZugang
 from datetime import date
 
-vp = Vertretungsplan(10000000, "schueler", "password")
+vp = VertretungsplanZugang(10000000, "schueler", "password")
 
 tag = vp.fetch(date(2025, 11, 11))
 klasse = tag.klassen["9b"]

@@ -58,8 +58,10 @@ class VpMobilPyModell:
             if isinstance(attr, property) and not name.startswith("_") and name not in self._hidden + hidden:
                 result[name] = apply_converter(getattr(self, name))
 
-        try: import json; json.dumps(result, ensure_ascii=False)
-        except Exception as e: raise AssertionError(f"Die Konvertierung des Datenmodells ist fehlgeschlagen. ({e}) Melde diesen Fall unbedingt auf GitHub im Bugtracker von vpmobil-py")
+        try:
+            import json; json.dumps(result, ensure_ascii=False)
+        except Exception as e:
+            raise AssertionError(f"Die Konvertierung des Datenmodells ist fehlgeschlagen. ({e}) Melde diesen Fall unbedingt auf GitHub im Bugtracker von vpmobil-py")
 
         return result
 

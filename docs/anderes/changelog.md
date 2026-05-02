@@ -18,16 +18,16 @@ In dieser Version wurden alle Datenmodellklassen überarbeitet. Einige Namen hab
 ### 🔧 Änderungen
 
 * Abrufen der Daten
-  * `Vertretungsplan` in `VertretungsplanZugang` umbenannt
-  * Parameter `serverdomain` von `VertretungsplanZugang` in `domain` umbenannt
-  * Methode `fetch()` von `VertretungsplanZugang` in `get()` umbenannt
-  * `Stundenplan24Pfade` in `Standardpfade` umbenannt
+    * `Vertretungsplan` in `VertretungsplanZugang` umbenannt
+    * Parameter `serverdomain` von `VertretungsplanZugang` in `domain` umbenannt
+    * Methode `fetch()` von `VertretungsplanZugang` in `get()` umbenannt
+    * `Stundenplan24Pfade` in `Standardpfade` umbenannt
 * Alle Klassen für Vertretungspläne laufen nun in `Vertretungsplan` zusammen
-  * Die Daten der Vertretungspläne werden nicht mehr als XML-Daten erhalten, sondern direkt bei der Instantiierung ausgewertet. Neue XML-Objekte können mit `~.to_xml()` erzeugt werden
-  * Methode `saveasfile()` von `Vertretungsplan` in `save_xml` umbenannt
-  * `Klasse`, `Raum` und `Lehrer` sind nun nur noch Proxies für die Daten in `Vertretungsplan` und ihre Felder sind immutable
-  * Feld `datei` in `dateiname` umbenannt
-  * Eigenschaft `lehrerKrank` in `abwesendeLehrer` umbenannt. Es gibt nun alle Lehrer zurück, die keinen Unterricht haben
+    * Die Daten der Vertretungspläne werden nicht mehr als XML-Daten erhalten, sondern direkt bei der Instantiierung ausgewertet. Neue XML-Objekte können mit `~.to_xml()` erzeugt werden
+    * Methode `saveasfile()` von `Vertretungsplan` in `save_xml` umbenannt
+    * `Klasse`, `Raum` und `Lehrer` sind nun nur noch Proxies für die Daten in `Vertretungsplan` und ihre Felder sind immutable
+    * Feld `datei` in `dateiname` umbenannt
+    * Eigenschaft `lehrerKrank` in `abwesendeLehrer` umbenannt. Es gibt nun alle Lehrer zurück, die keinen Unterricht haben
 * Datenmodellklassen haben eine neue `copy()`-Methode, die eine neue Instanz mit identischen Werten erzeugt
 * Methode `stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum` entfernt
 * `Vertretungsplan.klassen`, `~.lehrer` und `~.räume` werden jetzt alphabetisch sortiert zurückgegeben
@@ -83,28 +83,28 @@ Im Rahmen der Einführung neuer Vertretungsplantypen wurden einige Datenmodelle 
 Neue Klassen sind:
 
 * `VertretungsTag`
-  * Basisklasse für Vertretungspläne
-  * Erzeugt beim Instanzierungsversuch eine Instanz einer ihrer Subklassen
-  * Kann mit `isinstance()` als Protokoll für alle Vertretungspläne genutzt werden
+    * Basisklasse für Vertretungspläne
+    * Erzeugt beim Instanzierungsversuch eine Instanz einer ihrer Subklassen
+    * Kann mit `isinstance()` als Protokoll für alle Vertretungspläne genutzt werden
 * `LehrerVertretungsTag`
-  * Subklasse von `VertretungsTag`
-  * Hat `.lehrer` und `.get_lehrer()`
+    * Subklasse von `VertretungsTag`
+    * Hat `.lehrer` und `.get_lehrer()`
 * `RaumVertretungsTag`
   * Subklasse von `VertretungsTag`
   * Hat `.räume` und `.raum()`
 * `Lehrer`
-  * Das Lehrerplan-Äquivalent zu `Klasse`
-  * Wird von `LehrerVertretungsTag.lehrer` erzeugt
+    * Das Lehrerplan-Äquivalent zu `Klasse`
+    * Wird von `LehrerVertretungsTag.lehrer` erzeugt
 * `Raum`
-  * Das Raumplan-Äquivalent zu `Klasse`
-  * Wird von `RaumVertretungsTag.räume` erzeugt
+    * Das Raumplan-Äquivalent zu `Klasse`
+    * Wird von `RaumVertretungsTag.räume` erzeugt
 * `Aufsicht`
-  * Ein primitives Datenmodell, ähnlich zu `Stunde`, das Informationen über eine Lehreraufsicht enthält
-  * Hat `.vorStunde`, `.uhrzeit`, `.zeit` und `.ort`
-  * Wird von `Lehrer.aufsichten` erzeugt
+    * Ein primitives Datenmodell, ähnlich zu `Stunde`, das Informationen über eine Lehreraufsicht enthält
+    * Hat `.vorStunde`, `.uhrzeit`, `.zeit` und `.ort`
+    * Wird von `Lehrer.aufsichten` erzeugt
 * `Klausur`
-  * Ein primitives Datenmodell, ähnlich zu `Aufsicht`, das Informationen über eine Klausur enthält
-  * Wird von `Klasse.klausuren` erzeugt
+    * Ein primitives Datenmodell, ähnlich zu `Aufsicht`, das Informationen über eine Klausur enthält
+    * Wird von `Klasse.klausuren` erzeugt
 
 ### 🔧 Änderungen
 
