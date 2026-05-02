@@ -28,16 +28,16 @@ class Standardpfade(StrEnum):
 
 @dataclass
 class VertretungsplanZugang():
-    """Das Vertretungsplan-Objekt verwaltet den Zugang und das Abrufen von
-    Daten über Zugangsdaten zu einem Indiware-Vertretungsplan. Pro Instanz
-    werden standardmäßig nur Vertretungspläne eines Typs abgerufen.
+    """Das VertretungsplanZugang-Objekt verwaltet den Zugang und das Abrufen
+    von Daten über Zugangsdaten zu einem Indiware-Vertretungsplan. Pro
+    Instanz werden standardmäßig nur Vertretungspläne eines Typs abgerufen.
     Beliebige andere Dateien können aber dennoch durch Angabe des
     Dateipfads abgerufen werden.
 
     Üblicherweise ist stark begrenzt, welche Planart für einen Benutzer
-    verfügbar ist. Schüler-Benutzer können deswegen nur Klassenpläne abrufen.
-    Lehrer- und Raumpläne können allerdings unter gewissen Verlusten aus den
-    Klassenplänen rekonstruiert werden.
+    verfügbar ist. Schüler-Benutzer können deswegen in der Regel nur Klassenpläne
+    abrufen. Lehrer- und Raumpläne können allerdings unter gewissen Verlusten aus
+    den Klassenplänen rekonstruiert werden.
 
     Parameters:
         schulnummer (int): Schulnummer der Schule auf deren Plan zugegriffen werden soll
@@ -82,7 +82,7 @@ class VertretungsplanZugang():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def get(self, datum: date = date.today(), /, datei: str = None, parser: Parser = Parser()) -> Vertretungsplan:
+    def get(self, datum: date = date.today(), *, datei: str = None, parser: Parser = Parser()) -> Vertretungsplan:
         """Ruft den Vertretungsplan eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
 
         Parameters:

@@ -74,13 +74,17 @@ class VpMobilPyModell:
             setattr(new, feld.name, copy.deepcopy(getattr(self, feld.name)))
         return new
 
+
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    Vertretungsplan                                       │ 
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(frozen=False)
 class Vertretungsplan(VpMobilPyModell):
-    """"""
+    """`Vertretungsplan` ist die einheitliche Klasse für die Vertretungsplan-Daten eines Tages.
+    
+    Ein `Vertretungsplan`-Objekt kann über `~.from_xml()` aus XML-Quelldaten erzeugt werden.
+    """
     
     datum:       date       | None                          = field(default=None)
     "Datum für das der Vertretungsplan gilt"
@@ -250,7 +254,7 @@ class Vertretungsplan(VpMobilPyModell):
         """Erstellt ein `Vertretungsplan`-Objekt aus einem XML-Dokument.
 
         Parameters:
-            parser (Parser): Parsing-Anweisungen, um die Eigenheiten des Plabners zu berücksichtigen
+            parser (Parser): Parsing-Anweisungen, um die Eigenheiten des Planers zu berücksichtigen
         """
         root = data if isinstance(data, XML.Element) else data.getroot()
         if root is None:
@@ -495,6 +499,7 @@ class Vertretungsplan(VpMobilPyModell):
 
         Parameters:
             pfad (Path | str): Dateipfad der zu erstellenden Datei
+            parser (Parser): Formattierungsanweisungen
             overwrite (bool): Ob die Datei überschrieben werden darf, falls sie bereits existiert
 
         Raises:
@@ -603,8 +608,8 @@ class Stunde(VpMobilPyModell):
         """Erstellt ein `Stunde`-Objekt aus einem XML-Element.
 
         Parameters:
-            parser (Parser): Parsing-Parameter
             planart (str): Typ der Quelldatei, aus dem das Element stammt
+            parser (Parser): Parsing-Anweisungen, um die Eigenheiten des Planers zu berücksichtigen
             kontext (set[str]): Klassen, Lehrer, bzw. Räume, die selbst von der Stunde
                 betroffen sind. Bei Typ K müssen das Klassen sein, bei Typ R Räume, etc.
                 Es sollte mindestens ein Kürzel angegeben sein.
@@ -718,6 +723,12 @@ class Kurs(VpMobilPyModell):
     @classmethod
     def from_xml(cls, data: XML.Element, klassen: set[str]) -> Kurs:
         """Erstellt ein `Kurs`-Objekt aus einem XML-Element.
+
+        Parameters:
+            klassen (set[str]): Klassen, die den Kurs besuchen.
+                Da in den Quelldaten die Klasse des Kurses nur implizit über die
+                XML-Hierarchie gegeben ist, muss sie und etwaige andere bei Bedarf
+                manuell als Argument mitgegeben werden.       
         """
         return Kurs(
             kursnummer = int(find(data, "UeNr", "text")) if find(data, "UeNr", "text") else None,
@@ -813,7 +824,7 @@ class Klausur(VpMobilPyModell):
         """Erstellt ein `Klausur`-Objekt aus einem XML-Element.
 
         Parameters:
-            parser (Parser): Parsing-Parameter
+            parser (Parser): Parsing-Anweisungen, um die Eigenheiten des Planers zu berücksichtigen
         """
 
         periode = None
@@ -853,7 +864,7 @@ class Klausur(VpMobilPyModell):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(frozen=False)
-class KLRViewBase(VpMobilPyModell):
+class KLRProxyBase(VpMobilPyModell):
     kürzel:  str
     stunden: Mapping[int, Collection[Stunde]] = field(default_factory=lambda: MappingProxyType({}))
     "Unterrichtsstunden gruppiert nach Unterrichtsperiode"
@@ -863,7 +874,7 @@ class KLRViewBase(VpMobilPyModell):
 
 
 @dataclass(frozen=False)
-class Klasse(KLRViewBase):
+class Klasse(KLRProxyBase):
     kurse: Mapping[int, Kurs] = field(default_factory=lambda: MappingProxyType({}))
     "Kurse der Klasse, zugänglich über die Kursnummer"
     klausuren: Collection[Klausur] = field(default_factory=tuple)
@@ -891,7 +902,7 @@ class Klasse(KLRViewBase):
         return Kl
 
 @dataclass(frozen=False)
-class Lehrer(KLRViewBase):
+class Lehrer(KLRProxyBase):
     kurse: Mapping[int, Kurs]   = field(default_factory=lambda: MappingProxyType({}))
     "Kurse des Lehrers, zugänglich über die Kursnummer"
     aufsichten: Collection[Aufsicht] = field(default_factory=tuple)
@@ -919,7 +930,7 @@ class Lehrer(KLRViewBase):
         return Kl
 
 @dataclass(frozen=False)
-class Raum(KLRViewBase):
+class Raum(KLRProxyBase):
 
     def __repr__(self):
         return f"<Raum '{self.kürzel}'>"

@@ -42,7 +42,7 @@ _symbols = [
     Klasse, Lehrer, Raum,
     Stunde, Kurs, Aufsicht, Klausur,
     VpMobilPyError, Unauthorized, ResourceNotFound,
-    Standardpfade
+    Standardpfade, Parser
 ]
 _constants = []
 

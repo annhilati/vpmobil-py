@@ -6,10 +6,11 @@ from typing import Any, overload, Literal, Iterator, Callable, Mapping as _Mappi
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
-from types import MappingProxyType
 
 type Mapping[KT, VT] = _Mapping[KT, VT]
+"Mapping type von vpmobil-py (immutable Mapping, z.B. MappingProxyType)"
 type Collection[T] = _Sequence[T]
+"Collection type von vpmobil-py (immutable Sequenz, z.B. tuple)"
 
 def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     if isinstance(object, ET.ElementTree):

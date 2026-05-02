@@ -4,12 +4,12 @@ icon: lucide/scroll-text
 
 # Changelog
 
-## Development
+## [3.0.0](https://pypi.org/project/vpmobil/3.0.0/) (2026-05-XX)
 
 ### 🚀 Neue Funktionen
 
-* Neuimplementierung aller Modellklassen
-  * Vertretungsplan-Daten werden nun durch die `Vertretungsplan`-Klasse repräsentiert
+In dieser Version wurden alle Datenmodellklassen überarbeitet. Einige Namen haben sich geändert. Der Abschnitt ***Änderungen*** sollte zuerst gelesen werden.
+
 * Methode `getall()` zu `VertretungsplanZugang` hinzugefügt
 * Eigenschaft `zeitplan` zu `Vertretungsplan` hinzugefügt
 * Methode `saveasfile()` zu `Vertretungsplan` hinzugefügt, mit der direkt ausgewertete JSON- oder YAML-Dateien erstellt werden können.
@@ -17,15 +17,24 @@ icon: lucide/scroll-text
 
 ### 🔧 Änderungen
 
-* `Vertretungsplan` in `VertretungsplanZugang` umbenannt
-* Parameter `serverdomain` von `VertretungsplanZugang` in `domain` umbenannt
-* Methode `fetch()` von `VertretungsplanZugang` in `get()` umbenannt
-* Methode `saveasfile()` von `Vertretungsplan` in `save_source` umbenannt
+* Abrufen der Daten
+  * `Vertretungsplan` in `VertretungsplanZugang` umbenannt
+  * Parameter `serverdomain` von `VertretungsplanZugang` in `domain` umbenannt
+  * Methode `fetch()` von `VertretungsplanZugang` in `get()` umbenannt
+  * `Stundenplan24Pfade` in `Standardpfade` umbenannt
+* Alle Klassen für Vertretungspläne laufen nun in `Vertretungsplan` zusammen
+  * Die Daten der Vertretungspläne werden nicht mehr als XML-Daten erhalten, sondern direkt bei der Instantiierung ausgewertet. Neue XML-Objekte können mit `~.to_xml()` erzeugt werden
+  * Methode `saveasfile()` von `Vertretungsplan` in `save_source` umbenannt
+  * `Klasse`, `Raum` und `Lehrer` sind nun nur noch Proxies für die Daten in `Vertretungsplan` und ihre Felder sind immutable
+* Datenmodellklassen haben eine neue `copy()`-Methode, die eine neue Instanz mit identischen Werten erzeugt
 * Methode `stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum` entfernt
-* `Stundenplan24Pfade` in `Standardpfade` umbenannt
+* `Vertretungsplan.klassen`, `~.lehrer` und `~.räume` werden jetzt alphabetisch sortiert zurückgegeben
 * `Stunde.lehrergeändert`, `~.raumgeändert` und `.~klassegeändert` können bei respektiven Plantypen nun nicht mehr `None` sein. Stattdessen wird `~.geändert` weitergegeben
+* Das `config`-Modul wurde durch die `Parser`-Klasse ersetzt. Ein `Parser`-Objekt enthält die Parameter, wie die Eigenheiten des Vertretungsplaners bei der Auswertung berücksichtigt werden sollen
 * Alle Docstrings wurden überarbeitet
-* `VertretungsTag.klassen`, `~.lehrer` und `~.räume` werden jetzt alphabetisch sortiert zurückgegeben
+* Das Erweiterungs-Modul `config_presets` wurde in `pp` umbenannt und enthält nun Parser-Objekte als Presets für verschiedene Schulen
+
+**ACHTUNG:** Diese Version enthält viele weitere Änderungen, die hier nicht alle aufgelistet werden können. Es wird empfohlen, sich Zeit zu nehmen, alte Programme in der neuen Version durchzutesten. Die Docstrings der geänderten Funktionen sind allerdings umfangreichlich und sollten bei der Umstellung helfen.
 
 ## [2.1.0.1](https://pypi.org/project/vpmobil/2.1.0.1/) (2026-03-27)
 
