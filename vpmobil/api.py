@@ -174,8 +174,7 @@ class VertretungsplanZugang():
                     datetime.strptime(Grunddaten[key], "%Y%m%d").date() for key in Grunddaten if key.startswith("Plan")
                 )
             )
-        
-        
+                
         
 class VpMobilPyError(Exception):
     """Angeforderte Daten können nicht abgerufen werden. Mögliche Ursachen für

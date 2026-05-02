@@ -13,7 +13,8 @@ dependencies = [
   "requests",
   "yarl",
   "pdfplumber",
-  "pyyaml"
+  "pyyaml",
+  "toml"
 ]
 
 [project.urls]

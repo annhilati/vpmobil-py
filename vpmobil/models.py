@@ -287,6 +287,33 @@ class Vertretungsplan(VpMobilPyModell):
             }
         ))
 
+    def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> set[str]:
+        """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.
+        
+        Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt.
+        Um das zu berücksichtigen, sollten in `räume_context` die Kürzel möglicher
+        Räume mitgegeben werden, zum Beispiel aus den Plänen der anderen Wochentage.
+        """
+
+        frei = set(räume_context)
+
+        for kürzel, raum in self.räume.items():
+
+            frei.add(kürzel)
+            for stunden in raum.stunden.values():
+                for stunde in stunden:
+
+                    if stunde.beginn is None or stunde.ende is None:
+                        continue # keine Aussage möglich -> überspringen
+                    if stunde.ausfall is True:
+                        continue # Stunde fällt aus
+                    if stunde.ende <= beginn or ende <= stunde.beginn:
+                        continue # Stunde überschneidet sich nicht mit Zeitraum
+                    if kürzel in frei:
+                        frei.remove(kürzel)
+
+        return set(sorted(list(frei)))
+
     @classmethod
     def from_xml(cls, data: XML.Element | XML.ElementTree, *, parser: Parser = Parser()) -> Vertretungsplan:
         """Erstellt ein `Vertretungsplan`-Objekt aus einem XML-Dokument.
@@ -475,14 +502,14 @@ class Vertretungsplan(VpMobilPyModell):
         return instance
     
     def saveasfile(self, pfad: Path | str, overwrite=True, hidden: list[str] = []) -> None:
-        """Speichert den ausgewerteten Vertretungsplan als JSON- oder YAML-Datei.
+        """Speichert den ausgewerteten Vertretungsplan als JSON-, YAML- oder TOML-Datei.
 
         **ACHTUNG**: vpmobil-py hat momentan keine Funktion,
         um so abgespeicherte Dateien wieder einzulesen.
 
         Parameters:
             pfad (Path | str): Dateipfad der zu erstellenden Datei. Die Dateiendung bestimmt,
-                welches Format gewählt wird. Unterstützt werden `.json` und `.yaml` (bzw. `.yml`).
+                welches Format gewählt wird. Unterstützt werden `.json`, `.yaml` (bzw. `.yml`) und `.toml`.
                 Andernfalls wird JSON gewählt.
             overwrite (bool): Ob die Datei überschrieben werden darf, falls sie bereits existiert
             hidden (list[str]): Liste der Felder/Eigenschaften, die nicht in der Datei enthalten
@@ -491,7 +518,7 @@ class Vertretungsplan(VpMobilPyModell):
         Raises:
             FileExistsError: Falls die Datei bereits existiert und `overwrite` `False` ist
         """
-        import yaml, json
+        import yaml, json, toml
 
         data = self.as_dict(hidden=hidden)
 
@@ -505,36 +532,19 @@ class Vertretungsplan(VpMobilPyModell):
         if zielpfad.suffix.lower() in ['.yaml', '.yml']:
             with zielpfad.open('w', encoding='utf-8') as f:
                 yaml.dump(data, f, allow_unicode=True, default_flow_style=False)
+        elif zielpfad.suffix.lower() == '.toml':
+            def stringify_keys(obj):
+                if isinstance(obj, dict):
+                    return {str(k): stringify_keys(v) for k, v in obj.items()}
+                if isinstance(obj, list):
+                    return [stringify_keys(v) for v in obj]
+                return obj
+            data = stringify_keys(data)
+            with zielpfad.open('w', encoding='utf-8') as f:
+                toml.dump(data, f)
         else:
             with zielpfad.open('w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
-
-    def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> set[str]:
-        """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.
-        
-        Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt.
-        Um das zu berücksichtigen, sollten in `räume_context` die Kürzel möglicher
-        Räume mitgegeben werden, zum Beispiel aus den Plänen der anderen Wochentage.
-        """
-
-        frei = set(räume_context)
-
-        for kürzel, raum in self.räume.items():
-
-            frei.add(kürzel)
-            for stunden in raum.stunden.values():
-                for stunde in stunden:
-
-                    if stunde.beginn is None or stunde.ende is None:
-                        continue # keine Aussage möglich -> überspringen
-                    if stunde.ausfall is True:
-                        continue # Stunde fällt aus
-                    if stunde.ende <= beginn or ende <= stunde.beginn:
-                        continue # Stunde überschneidet sich nicht mit Zeitraum
-                    if kürzel in frei:
-                        frei.remove(kürzel)
-
-        return set(sorted(list(frei)))
 
     def save_xml(self, pfad: Path | str, planart: Literal["K", "L", "R"], *, parser: Parser=Parser(), overwrite=True) -> None:
         """Speichert den Vertretungsplan als XML-Datei.
