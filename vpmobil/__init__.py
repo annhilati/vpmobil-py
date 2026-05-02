@@ -1,30 +1,8 @@
 """
 API wrapper module for interacting with vpmobil substitution plans
 
----
-
-**💡 Wie man beginnt**
-```python
-from vpmobil import Vertretungsplan
-vp = Vertretungsplan(10000000, "schueler", "password")
-heute = vp.fetch()
-```
-
----
-
-📦 Alle grundlegenden Klassen können direkt aus `vpmobil` importiert werden.
-
----
-
-⚙️ Konfiguration kann im `config`-Submodul vorgenommen werden.
-
----
-
-🛠️ Im `extensions`-Submodul befinden sich weitere Indiware-related Funktionen.
-```
-└── extensions
-    ├── einzpläne        # Funktionen zum auswerten von EinzPläne-PDFs
-    └── reparser         # Funktionen zum ändern der Perspektive eines VertretungsTags
+[[Repository]](https://github.com/annhilati/vpmobil-py)
+[[Documentation]](https://annhilati.github.io/vpmobil-py/)
 ```
 """
 

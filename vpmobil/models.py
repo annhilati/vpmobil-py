@@ -29,22 +29,18 @@ class VpMobilPyModell:
         """
 
         converters = {
-            VpMobilPyModell: lambda m: m.as_dict(hidden=hidden),
-            datetime:        lambda d: d.strftime("%d.%m.%Y, %H:%M"),
-            time:            lambda t: t.strftime("%H:%M"),
-            date:            lambda d: d.strftime("%d.%m.%Y")
+            VpMobilPyModell:  lambda m: m.as_dict(hidden=hidden),
+            datetime:         lambda d: d.strftime("%d.%m.%Y, %H:%M"),
+            time:             lambda t: t.strftime("%H:%M"),
+            date:             lambda d: d.strftime("%d.%m.%Y"),
+            list:             lambda l: [apply_converter(v) for v in l],
+            tuple:            lambda t: [apply_converter(v) for v in t],
+            set:              lambda s: [apply_converter(v) for v in s],
+            dict:             lambda d: {k: apply_converter(v) for k, v in d.items()},
+            MappingProxyType: lambda m: {k: apply_converter(v) for k, v in m.items()}
         }
 
         def apply_converter(value: Any) -> Any:
-            if isinstance(value, list):
-                return [apply_converter(v) for v in value]
-            if isinstance(value, tuple):
-                return list(apply_converter(v) for v in value)
-            if isinstance(value, set):
-                return list(apply_converter(v) for v in value)
-            if isinstance(value, dict):
-                return {k: apply_converter(v) for k, v in value.items()}
-
             for t, conv in converters.items():
                 if isinstance(value, t):
                     return conv(value)
@@ -63,17 +59,49 @@ class VpMobilPyModell:
                 result[name] = apply_converter(getattr(self, name))
 
         try: import json; json.dumps(result, ensure_ascii=False)
-        except: raise AssertionError("Die Konvertierung des Datenmodells ist fehlgeschlagen. Melde diesen Fall unbedingt auf GitHub im Bugtracker von vpmobil-py")
+        except Exception as e: raise AssertionError(f"Die Konvertierung des Datenmodells ist fehlgeschlagen. ({e}) Melde diesen Fall unbedingt auf GitHub im Bugtracker von vpmobil-py")
 
         return result
 
-    def copy(self):
-        "Erzeugt eine neue identische Instanz."
-        new = self.__class__.__new__(self.__class__)
-        for feld in fields(self):
-            setattr(new, feld.name, copy.deepcopy(getattr(self, feld.name)))
-        return new
+    def __deepcopy__(self, memo):
+        result = self.__class__.__new__(self.__class__)
+        memo[id(self)] = result
 
+        for feld in fields(self):
+            value = getattr(self, feld.name)
+
+            if isinstance(value, MappingProxyType):
+                copied = copy.deepcopy(dict(value), memo)
+                copied = MappingProxyType(copied)
+            else:
+                copied = copy.deepcopy(value, memo)
+
+            setattr(result, feld.name, copied)
+
+        return result
+    
+    def __copy__(self):
+        def __copy__(self):
+            result = self.__class__.__new__(self.__class__)
+
+            for feld in fields(self):
+                value = getattr(self, feld.name)
+
+                if isinstance(value, MappingProxyType):
+                    copied = MappingProxyType(dict(value))
+                else:
+                    copied = copy.copy(value)
+
+                setattr(result, feld.name, copied)
+
+            return result
+    
+    def copy(self):
+        """Erzeugt eine neue identische Instanz. Auch der Inhalt der Felder werden
+        kopiert. Falls dies nicht erwünscht ist, nutze `~.__copy__()` bzw. `copy.copy()`.
+        """
+        return self.__deepcopy__(None)
+    
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                    Vertretungsplan                                       │ 
@@ -88,7 +116,7 @@ class Vertretungsplan(VpMobilPyModell):
     
     datum:       date       | None                          = field(default=None)
     "Datum für das der Vertretungsplan gilt"
-    datei:       str        | None                          = field(default=None)
+    dateiname:   str        | None                          = field(default=None)
     "Originaler Dateiname der Quelldatei"
     zeitstempel: datetime   | None                          = field(default=None)
     "Veröffentlichungszeitpunkt des Vertretungsplans bzw. der letzten Änderung"
@@ -218,34 +246,42 @@ class Vertretungsplan(VpMobilPyModell):
         return MappingProxyType(dict(sorted((k, v) for k, v in räumeE.items() if k)))
     
     @property
-    def lehrerKrank(self) -> set[str]:
-        "Lehrer, die unplanmäßig keinen Unterricht haben"
+    def abwesendeLehrer(self) -> set[str]:
+        "Lehrer, die keinen Unterricht haben"
         
-        lehrerMitUnterricht: set[str] = set()
+        # lehrerMitUnterricht: set[str] = set()
+        # lehrerVielleichtKrank: set[str] = set()
+
+        # for klasse in self.klassen.values():
+        #     for stunde in [stunde for stunden in klasse.stunden.values() for stunde in stunden]:
+
+        #         if stunde.ausfall and klasse.kurse.get(stunde.kursnummer) is not None:
+        #             lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
+
+        #         elif stunde.lehreränderung:
+        #             if len(stunde.lehrer) > 0:
+        #                 lehrerMitUnterricht.update(stunde.lehrer)
+        #             if klasse.kurse.get(stunde.kursnummer) is not None:
+        #                 lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
+
+        #         elif not stunde.ausfall and not stunde.lehreränderung:
+        #             if len(stunde.lehrer) > 0:
+        #                 lehrerMitUnterricht.update(stunde.lehrer)
+
         lehrerVielleichtKrank: set[str] = set()
 
-        for klasse in self.klassen.values():
-            for stunde in [stunde for stunden in klasse.stunden.values() for stunde in stunden]:
-
-                if stunde.ausfall and klasse.kurse.get(stunde.kursnummer) is not None:
-                    lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
-
-                elif stunde.lehreränderung:
-                    if len(stunde.lehrer) > 0:
-                        lehrerMitUnterricht.update(stunde.lehrer)
-                    if klasse.kurse.get(stunde.kursnummer) is not None:
-                        lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
-
-                elif not stunde.ausfall and not stunde.lehreränderung:
-                    if len(stunde.lehrer) > 0:
-                        lehrerMitUnterricht.update(stunde.lehrer)
+        for kürzel, lehrer in self.lehrer.items():
+            lehrerVielleichtKrank.add(kürzel)
+            for stunden in lehrer.stunden.values():
+                for stunde in stunden:
+                    if not stunde.ausfall:
+                        lehrerVielleichtKrank.discard(kürzel)
 
         return set(sorted(
             {
                 lehrer for lehrer in lehrerVielleichtKrank
-                if lehrer not in lehrerMitUnterricht
-                and lehrer != ""
-                and lehrer is not None
+                # and lehrer != ""
+                # and lehrer is not None
             }
         ))
 
@@ -337,8 +373,11 @@ class Vertretungsplan(VpMobilPyModell):
                         # Bekannte Stunden mergen
                         if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and (s.klassen == stunde.klassen or s.lehrer == stunde.lehrer or s.räume == stunde.räume)), None)):
                             existing_stunde.klassen.update(stunde.klassen)
+                            existing_stunde.klassen = set(sorted(existing_stunde.klassen))
                             existing_stunde.lehrer.update(stunde.lehrer)
+                            existing_stunde.lehrer = set(sorted(existing_stunde.lehrer))
                             existing_stunde.räume.update(stunde.räume)
+                            existing_stunde.räume = set(sorted(existing_stunde.räume))
                         else:
                             stunden.append(stunde)
 
@@ -371,12 +410,13 @@ class Vertretungsplan(VpMobilPyModell):
                         # Bekannte Stunden mergen
                         if (existing_kurs := next((k for k in kurse if k.kursnummer == kurs.kursnummer), None)):
                             existing_kurs.klassen.update(kurs.klassen)
+                            existing_kurs.klassen = set(sorted(existing_kurs.klassen))
                         else:
                             kurse.append(kurs)
 
         vp = Vertretungsplan(
             datum = datum,
-            datei = find(root, "Kopf/datei", "text") or None,
+            dateiname = find(root, "Kopf/datei", "text") or None,
             zeitstempel = zeitstempel,
             freieTage = freieTage,
             zusatzinfo = zusatzinfo,
@@ -399,7 +439,7 @@ class Vertretungsplan(VpMobilPyModell):
                 ElementBuilder("planart", planart),
                 ElementBuilder("DatumPlan", self.datum.strftime("%A, %d. %B %Y"))           if self.datum else None,
                 ElementBuilder("zeitstempel", self.zeitstempel.strftime("%d.%m.%Y, %H:%M")) if self.zeitstempel else None,
-                ElementBuilder("datei", self.datei)                                         if self.datei else None,
+                ElementBuilder("datei", self.dateiname)                                         if self.dateiname else None,
             ]),
             ElementBuilder("FreieTage", children=[
                 ElementBuilder("ft", tag.strftime("%y%m%d"))
@@ -494,7 +534,7 @@ class Vertretungsplan(VpMobilPyModell):
 
         return set(sorted(list(frei)))
 
-    def save_source(self, pfad: Path | str, planart: Literal["K", "L", "R"], *, parser: Parser=Parser(), overwrite=True) -> None:
+    def save_xml(self, pfad: Path | str, planart: Literal["K", "L", "R"], *, parser: Parser=Parser(), overwrite=True) -> None:
         """Speichert den Vertretungsplan als XML-Datei.
 
         Parameters:

@@ -23,8 +23,8 @@ day.fromfile()
 day.as_dict()
 day.saveasfile()
 day.to_xml()
-day.save_source()
-day.datei
+day.save_xml()
+day.dateiname
 day.datum
 day.zeitstempel
 day.zusatzinfo
@@ -34,7 +34,7 @@ day.kurse
 day.klausuren
 day.aufsichten
 day.zeitplan
-day.lehrerKrank
+day.abwesendeLehrer
 day.klassen
 day.lehrer
 day.räume

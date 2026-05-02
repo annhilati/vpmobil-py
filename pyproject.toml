@@ -12,7 +12,7 @@ authors = [
 dependencies = [
   "requests",
   "yarl",
-  "PyPDF2",
+  "pdfplumbers",
   "pyyaml"
 ]
 

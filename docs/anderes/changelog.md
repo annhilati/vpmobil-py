@@ -24,8 +24,10 @@ In dieser Version wurden alle Datenmodellklassen überarbeitet. Einige Namen hab
   * `Stundenplan24Pfade` in `Standardpfade` umbenannt
 * Alle Klassen für Vertretungspläne laufen nun in `Vertretungsplan` zusammen
   * Die Daten der Vertretungspläne werden nicht mehr als XML-Daten erhalten, sondern direkt bei der Instantiierung ausgewertet. Neue XML-Objekte können mit `~.to_xml()` erzeugt werden
-  * Methode `saveasfile()` von `Vertretungsplan` in `save_source` umbenannt
+  * Methode `saveasfile()` von `Vertretungsplan` in `save_xml` umbenannt
   * `Klasse`, `Raum` und `Lehrer` sind nun nur noch Proxies für die Daten in `Vertretungsplan` und ihre Felder sind immutable
+  * Feld `datei` in `dateiname` umbenannt
+  * Eigenschaft `lehrerKrank` in `abwesendeLehrer` umbenannt. Es gibt nun alle Lehrer zurück, die keinen Unterricht haben
 * Datenmodellklassen haben eine neue `copy()`-Methode, die eine neue Instanz mit identischen Werten erzeugt
 * Methode `stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum` entfernt
 * `Vertretungsplan.klassen`, `~.lehrer` und `~.räume` werden jetzt alphabetisch sortiert zurückgegeben
@@ -33,6 +35,8 @@ In dieser Version wurden alle Datenmodellklassen überarbeitet. Einige Namen hab
 * Das `config`-Modul wurde durch die `Parser`-Klasse ersetzt. Ein `Parser`-Objekt enthält die Parameter, wie die Eigenheiten des Vertretungsplaners bei der Auswertung berücksichtigt werden sollen
 * Alle Docstrings wurden überarbeitet
 * Das Erweiterungs-Modul `config_presets` wurde in `pp` umbenannt und enthält nun Parser-Objekte als Presets für verschiedene Schulen
+* Die Daenmodell-Klassen untersützen nun `~.__copy__()` und `~.__deepcopy__()` aus dem `copy`-Modul und stellen eine `~.copy()`-Methode zur Verfügung
+* Die `einzpläne`-Extension nuzt nun `pdfplumber` statt `PyPDF2`
 
 **ACHTUNG:** Diese Version enthält viele weitere Änderungen, die hier nicht alle aufgelistet werden können. Es wird empfohlen, sich Zeit zu nehmen, alte Programme in der neuen Version durchzutesten. Die Docstrings der geänderten Funktionen sind allerdings umfangreichlich und sollten bei der Umstellung helfen.
 

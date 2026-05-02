@@ -12,12 +12,12 @@ from vpmobil.parser import Parser
 class Standardpfade(StrEnum):
     """Enumerator mit den Pfaden für Vertretungsplanquelldateien,
     wie sie auf `stundenplan24.de` verwendet werden. `Klassen`, `Lehrer`
-    und `Raeume` enthalten immer die Tage des Plans, die zuletzt
+    und `Raeume` enthalten immer die Tage des Plans, der zuletzt
     veröffentlicht wurden. `PlanKl`, `PlanLe` und `PlanRa` enthalten die
     Pläne für beliebige Tage.
     
     Die Pfade enthalten immer den Platzhalter `{schulnummer}`, gegebenenfalls
-    auch die strftime-Direktiven `%Y`, `%m` und `%d`.
+    auch die strptime-Direktiven `%Y`, `%m` und `%d`.
     """
     Klassen = "{schulnummer}/mobil/mobdaten/Klassen.xml"
     PlanKl  = "{schulnummer}/mobil/mobdaten/PlanKl%Y%m%d.xml"
