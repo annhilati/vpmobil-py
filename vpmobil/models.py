@@ -576,6 +576,9 @@ class Vertretungsplan(VpMobilPyModell):
 
 @dataclass(frozen=False)
 class Stunde(VpMobilPyModell):
+    """Die Stunden-Klasse enthält alle Informationen einer Unterrichtsstunde, die im
+    Vertretungsplan beschrieben wird.
+    """
     periode:         int
     "Unterrichtsperiode der Stunde. Kann `0` sein."
     beginn:          time | None = field(default=None)
@@ -692,7 +695,7 @@ class Stunde(VpMobilPyModell):
             fach = None
 
         #======// Klassen, Lehrer & Räume //=========//
-        nicht_klassen_parser = Parser(AUFZÄHLUNGS_TRENNZEICHEN=parser.AUFZÄHLUNGS_TRENNZEICHEN, BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN=False)
+        nicht_klassen_parser = parser.clone(BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN=False)
 
         if planart == "K":
             klassen = kontext
@@ -760,7 +763,9 @@ class Stunde(VpMobilPyModell):
 
 @dataclass(frozen=False)
 class Kurs(VpMobilPyModell):
-    """Klasse die einen bestimmten Kurs repräsentiert.
+    """Die Kurs-Klasse enthält alle Informationen zu einem im Vertretungsplan
+    beschriebenen Kurs. In der Regel sind alle Kurse vorhanden, auch die,
+    die am betreffenden Tag keine Stunde haben.
     """
     kursnummer: int | None
     "Kursnummer des Kurses"
@@ -771,6 +776,7 @@ class Kurs(VpMobilPyModell):
     lehrer:     str | None = field(default=None)
     "Lehrer des Kurses"
     klassen:    set[str]   = field(default_factory=set)
+    "Klassen, die Anteile am Kurs haben"
 
     @classmethod
     def from_xml(cls, data: XML.Element, klassen: set[str]) -> Kurs:
@@ -809,9 +815,13 @@ class Kurs(VpMobilPyModell):
 
 @dataclass(frozen=False)
 class Aufsicht(VpMobilPyModell):
+    """Die Aufsicht-Klasse enthält alle Informationen zu einer im Vertretungsplan
+    beschriebenen Lehreraufsicht.
+    """
     lehrer:    set[str]    = field(default_factory=set)
+    "Lehrer, für die die Aufsicht angesetzt ist"
     vorStunde: int  | None = field(default=None)
-    "Unterrichtsperiode, vor der die Aufsicht stattfindet"
+    "Unterrichtsperiode, in deren davoriger Pause die Aufsicht stattfindet"
     beginn:    time | None = field(default=None)
     "Uhrzeit der Aufsicht"
     zeitinfo:  str  | None = field(default=None)
@@ -860,13 +870,22 @@ class Aufsicht(VpMobilPyModell):
 # ╰──────────────────────────────────────────────────────────────────────────────────────────╯
 
 @dataclass(frozen=False)
-class Klausur(VpMobilPyModell): 
+class Klausur(VpMobilPyModell):
+    """Die Klausur-Klasse enthält die Informationen zu einer im Vertretungsplan
+    beschriebenen Klausur.
+    """
     kurse:   set[str]         = field(default_factory=set)
+    "Kurse, für die die Klausur angesetzt ist"
     lehrer:  str       | None = field(default=None)
+    "Lehrer, die die Klausur beaufsichtigen"
     periode: int       | None = field(default=None)
+    "Unterrichtsperiode, in der die Klausur beginnt. Kann `0` sein."
     beginn:  time      | None = field(default=None)
+    "Uhrzeit, zu der die Klausur beginnt"
     dauer:   timedelta | None = field(default=None)
+    "Dauer der Klausur"
     info:    str       | None = field(default=None)
+    "Zusätzliche Informationen zur Klausur"
 
     def __repr__(self):
         return f"<Klausur {f'für \'{", ".join(self.kurse)}\' ' if self.kurse else ""}{f'ab \'{self.beginn}\'' if self.beginn else ""}>"
@@ -917,7 +936,6 @@ class Klausur(VpMobilPyModell):
 
 @dataclass(frozen=False)
 class KLRProxyBase(VpMobilPyModell):
-    kürzel:  str
     stunden: Mapping[int, Collection[Stunde]] = field(default_factory=lambda: MappingProxyType({}))
     "Unterrichtsstunden gruppiert nach Unterrichtsperiode"
     
@@ -927,8 +945,11 @@ class KLRProxyBase(VpMobilPyModell):
 
 @dataclass(frozen=False)
 class Klasse(KLRProxyBase):
+    "Proxy für auf eine bestimmte Klasse bezogene Informationen im Vertretungsplan"
+    kürzel:  str
+    "Bezeichner der Klasse"
     kurse: Mapping[int, Kurs] = field(default_factory=lambda: MappingProxyType({}))
-    "Kurse der Klasse, zugänglich über die Kursnummer"
+    "Kurse, an denen die Klasse Anteile hat"
     klausuren: Collection[Klausur] = field(default_factory=tuple)
     "Klausuren der Klasse"
 
@@ -955,6 +976,9 @@ class Klasse(KLRProxyBase):
 
 @dataclass(frozen=False)
 class Lehrer(KLRProxyBase):
+    "Proxy für auf einen bestimmten Lehrer bezogene Informationen im Vertretungsplan"
+    kürzel:  str
+    "Bezeichner des Lehrers"
     kurse: Mapping[int, Kurs]   = field(default_factory=lambda: MappingProxyType({}))
     "Kurse des Lehrers, zugänglich über die Kursnummer"
     aufsichten: Collection[Aufsicht] = field(default_factory=tuple)
@@ -983,7 +1007,10 @@ class Lehrer(KLRProxyBase):
 
 @dataclass(frozen=False)
 class Raum(KLRProxyBase):
-
+    "Proxy für auf einen bestimmten Raum bezogene Informationen im Vertretungsplan"
+    kürzel:  str
+    "Bezeichner des Raumes"
+    
     def __repr__(self):
         return f"<Raum '{self.kürzel}'>"
     

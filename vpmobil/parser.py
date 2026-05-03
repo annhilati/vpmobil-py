@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from string import ascii_lowercase
-import re
+import re, copy
 
 @dataclass
 class Parser:
@@ -35,6 +35,26 @@ class Parser:
     BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN: bool = True
     KLASSENBEZEICHNER_PATTERN: str = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
     STUNDE_HERVERLEGT_PATTERN: str = r"verlegt von St\.(?P<periode>\d+);"
+    
+    def clone(self, **overrides) -> "Parser":
+        """Erzeugt eine Kopie des Parser-Objekts und überschreibt besimmt Felder.
+
+        Ungültige Feldnamen erzeugen einen Fehler.
+        """
+        feldnamen = {field.name for field in fields(Parser)}
+
+        ungueltig = set(overrides) - feldnamen
+        if ungueltig:
+            raise TypeError(
+                f"Unbekannte Parser-Parameter: {', '.join(sorted(ungueltig))}"
+            )
+
+        instance = copy.deepcopy(self)
+
+        for key, value in overrides.items():
+            setattr(instance, key, copy.deepcopy(value))
+
+        return instance
     
     def slice_aufzählung(self, string: str) -> list[str]:
         """Wandelt Aufzählungen in Strings in eine Liste von Strings um.

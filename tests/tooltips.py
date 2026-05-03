@@ -4,19 +4,23 @@ from vpmobil import *
 
 vp       = VertretungsplanZugang()
 day      = Vertretungsplan()
+stunde   = Stunde()
+kurs     = Kurs()
+klausur  = Klausur()
+aufsicht = Aufsicht()
 klasse   = Klasse()
 lehrer   = Lehrer()
 raum     = Raum()
-stunde   = Stunde()
-kurs     = Kurs()
-aufsicht = Aufsicht()
-klausur  = Klausur()
+
+parser = Parser()
+parser.clone()
 
 Standardpfade
 
 vp.socket
 vp.get()
 vp.getall()
+vp.get_vpinfok()
 
 day.from_xml()
 day.fromfile()
@@ -95,6 +99,7 @@ klausur.periode
 kurs.from_xml()
 kurs.to_xml()
 kurs.kursnummer
+kurs.klassen
 kurs.fach
 kurs.kürzel
 kurs.lehrer
