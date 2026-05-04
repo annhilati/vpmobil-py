@@ -6,13 +6,13 @@ icon: lucide/scroll-text
 
 ## [3.0.0](https://pypi.org/project/vpmobil/3.0.0/) (2026-05-XX)
 
-> [!IMPORTANT]
-> Diese Version enthält viele weitere Änderungen, die hier nicht alle aufgelistet werden können. Es wird empfohlen, sich Zeit zu nehmen, alte Programme mit der neuen Version durchzutesten und da Anpassungen vorzunehmen, wo sie benötigt werden. Die Docstrings der geänderten Funktionen sind ziemlich umfangreichlich und sollten bei der Umstellung helfen.
+!!! warning
+    Diese Version enthält viele weitere Änderungen, die hier nicht alle aufgelistet werden können. Es wird empfohlen, sich Zeit zu nehmen, alte Programme mit der neuen Version durchzutesten und da Anpassungen vorzunehmen, wo sie benötigt werden. Die Docstrings der geänderten Funktionen sind ziemlich umfangreichlich und sollten bei der Umstellung helfen.
 
 ### 🚀 Neuerungen
 
-> [!TIP]
-> Eine Namen haben sich geändert. Es ist zu empfehlen, zuvor den Abschnitt *Umbenennungen* zu lesen.
+!!! question
+    Eine Namen haben sich geändert. Es ist zu empfehlen, zuvor den Abschnitt *Umbenennungen* zu lesen.
 
 <!-- 
     Zuerst benennen wir alle Neuerungen, ohne zu sehr ins Detail zu gehen.
