@@ -6,39 +6,59 @@ icon: lucide/scroll-text
 
 ## [3.0.0](https://pypi.org/project/vpmobil/3.0.0/) (2026-05-XX)
 
-### 🚀 Neue Funktionen
+> [!IMPORTANT]
+> Diese Version enthält viele weitere Änderungen, die hier nicht alle aufgelistet werden können. Es wird empfohlen, sich Zeit zu nehmen, alte Programme mit der neuen Version durchzutesten und da Anpassungen vorzunehmen, wo sie benötigt werden. Die Docstrings der geänderten Funktionen sind ziemlich umfangreichlich und sollten bei der Umstellung helfen.
 
-In dieser Version wurden alle Datenmodellklassen überarbeitet. Einige Namen haben sich geändert. Der Abschnitt ***Änderungen*** sollte zuerst gelesen werden.
+### 🚀 Neuerungen
 
-* Methode `getall()` zu `VertretungsplanZugang` hinzugefügt
-* Eigenschaft `zeitplan` zu `Vertretungsplan` hinzugefügt
-* Methode `saveasfile()` zu `Vertretungsplan` hinzugefügt, mit der direkt ausgewertete JSON- oder YAML-Dateien erstellt werden können.
-* Feld `fachmeta` zu `Stunde` hinzugefügt, die die Information aus dem `Ku2`-Tag der Quelldaten bereitstellt
+> [!TIP]
+> Eine Namen haben sich geändert. Es ist zu empfehlen, zuvor den Abschnitt *Umbenennungen* zu lesen.
+
+<!-- 
+    Zuerst benennen wir alle Neuerungen, ohne zu sehr ins Detail zu gehen.
+    Es ist in Ordnung den konkreten Sinn zu beschreiben, falls es unklar sein könnte 
+    
+    - Mit "hinzugefügt" enden
+-->
+- Klarwert-Konstruktoren für `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` hinzugefügt
+- Methode `~.copy` für `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` hinzugefügt
+- Kompatibilität für `copy` und `deepcopy` aus dem `copy`-Modul für `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` hinzugefügt
+- Methode `VertretungsplanZugang.getall()` hinzugefügt
+- Eigenschaft `Vertretungsplan.zeitplan` hinzugefügt
+- Methode `Vertretungsplan.saveasfile()` hinzugefügt
+- Feld `Stunde.fachmeta` hinzugefügt, das die Information aus dem `Ku2`-Tag der Quelldaten abbildet
+- Modul `extensions.parser_presets` (und Alias `~.pp`) hinzugefügt
+- Klasse `Parser` hinzugefügt, die nun anstatt des Modul `config` Parameter für das Parsing enthält
+
+<!-- Einzelne Features könnte man hier nochmal genauer erläutern -->
+
+### 🏷️ Namensänderungen
+<!-- Schon in einem Punkt benannte Symbole können mit ~ referenziert werden -->
+- `Vertretungsplan` in `VertretungsplanZugang` umbenannt
+- `VertretungsplanZugang.serverdomain` in `~.domain` umbenannt
+- `VertretungsplanZugang.fetch()` in `~.get()` umbenannt
+- `Stundenplan24Pfade` in `Standardpfade` umbenannt
+- `Vertretungsplan.saveasfile()` in `~.save_xml` umbenannt
+- `Vertretungsplan.datei` in `~.dateiname` umbenannt
+- `Vertretungsplan.lehrerKrank` in `abwesendeLehrer` umbenannt
+- `KlassenVertretungsTag`, `LehrerVertretungsTag` und `RaumVertretungsTag` finden sich als `Vertretungsplan`-Klasse wieder (siehe *Änderungen*)
+
+### 🗑️ Entfernungen
+- `extensions.config_presets` entfernt (durch `parser_presets` ersetzt)
+- `~.stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum`
 
 ### 🔧 Änderungen
 
-* Abrufen der Daten
-    * `Vertretungsplan` in `VertretungsplanZugang` umbenannt
-    * Parameter `serverdomain` von `VertretungsplanZugang` in `domain` umbenannt
-    * Methode `fetch()` von `VertretungsplanZugang` in `get()` umbenannt
-    * `Stundenplan24Pfade` in `Standardpfade` umbenannt
-* Alle Klassen für Vertretungspläne laufen nun in `Vertretungsplan` zusammen
-    * Die Daten der Vertretungspläne werden nicht mehr als XML-Daten erhalten, sondern direkt bei der Instantiierung ausgewertet. Neue XML-Objekte können mit `~.to_xml()` erzeugt werden
-    * Methode `saveasfile()` von `Vertretungsplan` in `save_xml` umbenannt
-    * `Klasse`, `Raum` und `Lehrer` sind nun nur noch Proxies für die Daten in `Vertretungsplan` und ihre Felder sind immutable
-    * Feld `datei` in `dateiname` umbenannt
-    * Eigenschaft `lehrerKrank` in `abwesendeLehrer` umbenannt. Es gibt nun alle Lehrer zurück, die keinen Unterricht haben
-* Datenmodellklassen haben eine neue `copy()`-Methode, die eine neue Instanz mit identischen Werten erzeugt
-* Methode `stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum` entfernt
-* `Vertretungsplan.klassen`, `~.lehrer` und `~.räume` werden jetzt alphabetisch sortiert zurückgegeben
-* `Stunde.lehrergeändert`, `~.raumgeändert` und `.~klassegeändert` können bei respektiven Plantypen nun nicht mehr `None` sein. Stattdessen wird `~.geändert` weitergegeben
-* Das `config`-Modul wurde durch die `Parser`-Klasse ersetzt. Ein `Parser`-Objekt enthält die Parameter, wie die Eigenheiten des Vertretungsplaners bei der Auswertung berücksichtigt werden sollen
-* Alle Docstrings wurden überarbeitet
-* Das Erweiterungs-Modul `config_presets` wurde in `pp` umbenannt und enthält nun Parser-Objekte als Presets für verschiedene Schulen
-* Die Daenmodell-Klassen untersützen nun `~.__copy__()` und `~.__deepcopy__()` aus dem `copy`-Modul und stellen eine `~.copy()`-Methode zur Verfügung
-* Die `einzpläne`-Extension nuzt nun `pdfplumber` statt `PyPDF2`
+- `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` speichern Daten nicht mehr als XML-`Element`, sondern in Klarwerten, beziehungsweise Instanzen der jeweils anderen Klassen
+  - Ihre Konstruktoren nehmen kein `Element` mehr entgegen. Instantiierung aus `Element`-Objekten kann mit `~.from_xml()` vorgenommen werden
+- Vertretungspläne jeder Art werden nur noch durch die `Vertretungsplan`-Klasse abgebildet
+- `Klasse`, `Raum` und `Lehrer` sind nur noch Proxies, die bis auf das Kürzel nur immutable Objekte mit Referenzen auf Objekte in den Feldern von `Vertretungsplan` enthalten
+- `Vertretungsplan.abwesendeLehrer` gibt nicht nur die Kürzel aller Lehrer zurück, die unplanmäßig keinen Unterricht haben, sondern die aller Lehrer, die keine Stunden haben
+- `Stunde.lehrergeändert`, `~.raumgeändert` und `.~klassegeändert` können beim entsprechenden Plantypen nun nicht mehr `None` sein. Stattdessen wird `~.geändert` weitergegeben
+- Das Typing der Felder von `Klasse`, `Raum` und `Lehrer` enthält nun oft `Mapping`, stehend für eine `MappingProxyType`-Instanz und `Collection`, stehend für eine Tupel
+- Alle Docstrings wurden überarbeitet
+- Das Modul `extensions.einzpläne` und seine Funktionen verwenden nun die Bibliothek `pdfplumber` an Stelle von `PyPDF2`
 
-**ACHTUNG:** Diese Version enthält viele weitere Änderungen, die hier nicht alle aufgelistet werden können. Es wird empfohlen, sich Zeit zu nehmen, alte Programme in der neuen Version durchzutesten. Die Docstrings der geänderten Funktionen sind allerdings umfangreichlich und sollten bei der Umstellung helfen.
 
 ## [2.1.0.1](https://pypi.org/project/vpmobil/2.1.0.1/) (2026-03-27)
 
