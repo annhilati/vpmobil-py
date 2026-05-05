@@ -459,6 +459,12 @@ class Vertretungsplan(VpMobilPyModell):
         return vp
     
     def to_xml(self, planart: Literal["K", "L", "R"], *, parser: Parser = Parser()) -> XML.ElementTree:
+        """Erzeugt ein XML-Dokument für den Vertretungsplan.
+        
+        Parameters:
+            planart (str): Die Planart, die die neuen Quelldaten primär repräsentieren, respektive Klassen, Lehrer oder Räume
+            parser (Parser): Formattierungsanweisungen
+        """
         import locale
         locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
         from importlib.metadata import version
@@ -468,7 +474,7 @@ class Vertretungsplan(VpMobilPyModell):
                 ElementBuilder("planart", planart),
                 ElementBuilder("DatumPlan", self.datum.strftime("%A, %d. %B %Y"))           if self.datum else None,
                 ElementBuilder("zeitstempel", self.zeitstempel.strftime("%d.%m.%Y, %H:%M")) if self.zeitstempel else None,
-                ElementBuilder("datei", self.dateiname)                                         if self.dateiname else None,
+                ElementBuilder("datei", self.dateiname)                                     if self.dateiname else None,
             ]),
             ElementBuilder("FreieTage", children=[
                 ElementBuilder("ft", tag.strftime("%y%m%d"))
@@ -531,7 +537,7 @@ class Vertretungsplan(VpMobilPyModell):
 
         if zielpfad.suffix.lower() in ['.yaml', '.yml']:
             with zielpfad.open('w', encoding='utf-8') as f:
-                yaml.dump(data, f, allow_unicode=True, default_flow_style=False)
+                yaml.dump(data, f, allow_unicode=True, default_flow_style=False, indent=4)
         elif zielpfad.suffix.lower() == '.toml':
             def stringify_keys(obj):
                 if isinstance(obj, dict):
@@ -736,7 +742,13 @@ class Stunde(VpMobilPyModell):
             info = find(data, "If", "text") or None
         )
         
-    def to_xml(self, planart: Literal["K", "L", "R"], parser: Parser = Parser()) -> XML.Element:
+    def to_xml(self, planart: Literal["K", "L", "R"], *, parser: Parser = Parser()) -> XML.Element:
+        """Erzeugt ein XML-Element für die Stunde.
+        
+        Parameters:
+            planart (str): Die Planart, die die neuen Quelldaten primär repräsentieren, respektive Klassen, Lehrer oder Räume
+            parser (Parser): Formattierungsanweisungen
+        """
         Std = ElementBuilder("Std", children=[
             ElementBuilder("St", self.periode),
             ElementBuilder("Beginn", self.beginn.strftime("%H:%M"))         if self.beginn else None,
@@ -797,6 +809,8 @@ class Kurs(VpMobilPyModell):
         )
 
     def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        """Erzeugt ein XML-Element für den Kurs.
+        """
         return ElementBuilder("Ue", children=[
             ElementBuilder("UeNr", self.kursnummer, {
                 **({"UeLe": self.lehrer} if self.lehrer else {}),
@@ -857,6 +871,8 @@ class Aufsicht(VpMobilPyModell):
         )
 
     def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        """Erzeugt ein XML-Element für die Aufsicht.
+        """
         return ElementBuilder("Aufsicht", children=[
             ElementBuilder("AuVorStunde", str(self.vorStunde))          if self.vorStunde else None,
             ElementBuilder("AuUhrzeit", self.beginn.strftime("HH:MM"))  if self.beginn else None,
@@ -920,6 +936,11 @@ class Klausur(VpMobilPyModell):
         )
     
     def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        """Erzeugt ein XML-Element für die Klausur.
+        
+        Parameters:
+            parser (Parser): Formattierungsanweisungen
+        """
         return ElementBuilder("Klausur", children=[
             ElementBuilder("KlKurs", parser.AUFZÄHLUNGS_TRENNZEICHEN.join(self.kurse)) if self.kurse else None,
             ElementBuilder("KlKursleiter", self.lehrer)                                if self.lehrer else None,
@@ -936,6 +957,7 @@ class Klausur(VpMobilPyModell):
 
 @dataclass(frozen=False)
 class KLRProxyBase(VpMobilPyModell):
+    kürzel:  str # notwendig, um default follows non-default nicht zu verletzen
     stunden: Mapping[int, Collection[Stunde]] = field(default_factory=lambda: MappingProxyType({}))
     "Unterrichtsstunden gruppiert nach Unterrichtsperiode"
     
@@ -957,6 +979,11 @@ class Klasse(KLRProxyBase):
         return f"<Klasse '{self.kürzel}'>"
     
     def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        """Erzeugt ein XML-Element für die Klasse.
+        
+        Parameters:
+            parser (Parser): Formattierungsanweisungen
+        """
         Kl = ElementBuilder("Kl", children=[
             ElementBuilder("Kurz", self.kürzel),
             ElementBuilder("Pl", children=[
@@ -988,6 +1015,11 @@ class Lehrer(KLRProxyBase):
         return f"<Lehrer '{self.kürzel}'>"
     
     def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        """Erzeugt ein XML-Element für den Lehrer.
+        
+        Parameters:
+            parser (Parser): Formattierungsanweisungen
+        """
         Kl = ElementBuilder("Kl", children=[
             ElementBuilder("Kurz", self.kürzel),
             ElementBuilder("Pl", children=[
@@ -1015,6 +1047,11 @@ class Raum(KLRProxyBase):
         return f"<Raum '{self.kürzel}'>"
     
     def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+        """Erzeugt ein XML-Element für den Raum.
+        
+        Parameters:
+            parser (Parser): Formattierungsanweisungen
+        """
         Kl = ElementBuilder("Kl", children=[
             ElementBuilder("Kurz", self.kürzel),
             ElementBuilder("Pl", children=[
