@@ -4,7 +4,14 @@ icon: lucide/scroll-text
 
 # Changelog
 
-## [3.0.0](https://pypi.org/project/vpmobil/3.0.0/) (2026-05-XX)
+## [3.0.1](https://pypi.org/project/vpmobil/3.0.1/) (2026-05-05)
+
+### 🔧 Änderungen
+
+- Parsing von `~.datum` in `Vertretungsplan.from_xml()` weniger anfällig für Lokalitätsprobleme gemacht
+
+
+## [3.0.0](https://pypi.org/project/vpmobil/3.0.0/) (2026-05-05)
 
 !!! warning
     Diese Version enthält viele weitere Änderungen, die hier nicht alle aufgelistet werden können. Es wird empfohlen, sich Zeit zu nehmen, alte Programme mit der neuen Version durchzutesten und da Anpassungen vorzunehmen, wo sie benötigt werden. Die Docstrings der geänderten Funktionen sind ziemlich umfangreichlich und sollten bei der Umstellung helfen.

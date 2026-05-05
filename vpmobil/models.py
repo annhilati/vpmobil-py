@@ -325,20 +325,22 @@ class Vertretungsplan(VpMobilPyModell):
         if root is None:
             raise ValueError
 
-        import locale
-
         planart = find(root, "Kopf/planart", "text") or None
         
         #======// Datum //=====================//
         datum = None
         if DatumPlan := find(root, "Kopf/DatumPlan", "text"):
-            for loc in ["de_DE.UTF-8", "German_Germany"]:
-                try:
-                    locale.setlocale(locale.LC_TIME, loc)
-                    datum: date = datetime.strptime(DatumPlan, (r"%A, %d. %B %Y")).date()
+            for name, num in {
+                "Januar": "01", "Februar": "02", "März": "03", "April": "04",
+                "Mai": "05", "Juni": "06", "Juli": "07", "August": "08",
+                "September": "09", "Oktober": "10", "November": "11", "Dezember": "12"
+            }.items():
+                if name in DatumPlan:
+                    datumplan = DatumPlan.replace(name, num)
                     break
-                except: continue
-            else:
+            try:
+                datum = datetime.strptime(datumplan.split(", ")[1], "%d. %m %Y").date()
+            except:
                 raise ValueError(f"Das Datum '{DatumPlan}' konnte nicht dekodiert werden. Bitte erstelle ein Issue im Bugtracker von vpmobil-py auf GitHub (https://github.com/annhilati/vpmobil-py/issues)")
         
         #======// Zeitstempel //===============//
