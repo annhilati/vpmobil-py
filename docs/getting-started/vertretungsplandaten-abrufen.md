@@ -1,17 +1,17 @@
 ---
-title: Vertretungspläne abrufen
+title: Getting Started
 icon: lucide/arrow-down-to-line
 ---
 
-# Vertretungsplandaten abrufen
+# Getting Started
 
 ## 1. Stundendaten auswerten
 
 ```python
-from vpmobil import Vertretungsplan
+from vpmobil import VertretungsplanZugang
 
-plan = Vertretungsplan(10000000, "schueler", "password")
-# Eine Vertretungsplan-Instanz erstellen
+plan = VertretungsplanZugang(10000000, "schueler", "password")
+# Eine VertretungsplanZugang-Instanz erstellen
 
 heute = plan.get()
 # Die heutigen Plandaten abrufen
@@ -28,10 +28,10 @@ for periode, stunden in klasse8b.stunden:
 ## 2. Andere Pläne abrufen
 
 ```python
-from vpmobil import Vertretungsplan, Standardpfade, Unauthorized
+from vpmobil import VertretungsplanZugang, Standardpfade, Unauthorized
 from datetime import date
 
-plan = Vertretungsplan(10000000, "schueler", "password")
+plan = VertretungsplanZugang(10000000, "schueler", "password")
 
 try:
     tag = plan.get(date(2025, 10, 5), datei=Standardpfade.PlanRa)
@@ -46,17 +46,13 @@ except Unauthorized:
 ## 3. Pläne aus anderen Perspektiven auswerten
 
 ```python
-from vpmobil import Vertretungsplan, Standardpfade
-from vpmobil.extensions.reparser import LehrerPerspektive
+from vpmobil import VertretungsplanZugang, Standardpfade
 
-plan = Vertretungsplan(10000000, "schueler", "password")
+plan = VertretungsplanZugang(10000000, "schueler", "password")
 heute = plan.get(datei=Standardpfade.PlanKl)
 # Den heutigen Klassenplan abrufen
 
-reparsed = LehrerPerspektive(heute)
-# Klassenplan in einen Lehrerplan umwandeln
-
-for lehrer in reparsed.lehrer:
+for lehrer in heute.lehrer:
     print(lehrer)
 # Details zu den Lehrern ausgeben
 ```

@@ -1,5 +1,6 @@
 ---
 title: Einschränkungen
+icon: lucide/bug
 ---
 
 # Einschränkungen

@@ -12,7 +12,7 @@ icon: lucide/user-round
     * Softwareentwicklung
         * Softwaredesign
         * Objektorientierung
-    * Dokumentation (GitBook-Besitzer)
+    * Dokumentation & Changelog
 
 !!! tip "[Joshi](https://github.com/Joshi1531)"
 
@@ -25,6 +25,8 @@ icon: lucide/user-round
 
 ## Verwendete Bibliotheken
 
-* [PyPDF2](https://pypi.org/project/PyPDF2)
+* [pdfplumber](https://pypi.org/project/pdfplumber/)
+* [pyyaml](https://pypi.org/project/pyyaml)
 * [requests](https://pypi.org/project/requests/)
+* [toml](https://pypi.org/project/toml)
 * [yarl](https://pypi.org/project/yarl)

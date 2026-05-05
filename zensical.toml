@@ -6,9 +6,7 @@ repo_name = "vpmobil-py"
 nav = [
     {"Nutzer" = [
         "README.md",
-        {"Getting Started" = [
-            "getting-started/vertretungsplandaten-abrufen.md"
-        ]},
+        "getting-started/vertretungsplandaten-abrufen.md",
         {"Anderes" = [
             "anderes/changelog.md",
             "anderes/credits.md"

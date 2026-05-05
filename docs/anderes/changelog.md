@@ -12,7 +12,7 @@ icon: lucide/scroll-text
 ### 🚀 Neuerungen
 
 !!! question
-    Eine Namen haben sich geändert. Es ist zu empfehlen, zuvor den Abschnitt *Umbenennungen* zu lesen.
+    Einige Namen haben sich geändert. Es ist zu empfehlen, zuvor den Abschnitt *Umbenennungen* zu lesen.
 
 <!-- 
     Zuerst benennen wir alle Neuerungen, ohne zu sehr ins Detail zu gehen.
@@ -21,8 +21,9 @@ icon: lucide/scroll-text
     - Mit "hinzugefügt" enden
 -->
 - Klarwert-Konstruktoren für `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` hinzugefügt
-- Methode `~.copy` für `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` hinzugefügt
 - Kompatibilität für `copy` und `deepcopy` aus dem `copy`-Modul für `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` hinzugefügt
+- Methode `~.copy` für `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` hinzugefügt
+- Methode `~.to_xml()` für `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` hinzugefügt
 - Methode `VertretungsplanZugang.getall()` hinzugefügt
 - Eigenschaft `Vertretungsplan.zeitplan` hinzugefügt
 - Methode `Vertretungsplan.saveasfile()` hinzugefügt
@@ -45,12 +46,12 @@ icon: lucide/scroll-text
 
 ### 🗑️ Entfernungen
 - `extensions.config_presets` entfernt (durch `parser_presets` ersetzt)
-- `~.stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum`
+- `~.stundenInPeriode()` von `Klasse`, `Lehrer` und `Raum` entfernt
 
 ### 🔧 Änderungen
 
 - `Vertretungsplan`, `Stunde`, `Klausur`, `Aufsicht`, `Klasse`, `Lehrer` und `Raum` speichern Daten nicht mehr als XML-`Element`, sondern in Klarwerten, beziehungsweise Instanzen der jeweils anderen Klassen
-  - Ihre Konstruktoren nehmen kein `Element` mehr entgegen. Instantiierung aus `Element`-Objekten kann mit `~.from_xml()` vorgenommen werden
+    - Ihre Konstruktoren nehmen kein `Element` mehr entgegen. Instantiierung aus `Element`-Objekten kann mit `~.from_xml()` vorgenommen werden
 - Vertretungspläne jeder Art werden nur noch durch die `Vertretungsplan`-Klasse abgebildet
 - `Klasse`, `Raum` und `Lehrer` sind nur noch Proxies, die bis auf das Kürzel nur immutable Objekte mit Referenzen auf Objekte in den Feldern von `Vertretungsplan` enthalten
 - `Vertretungsplan.abwesendeLehrer` gibt nicht nur die Kürzel aller Lehrer zurück, die unplanmäßig keinen Unterricht haben, sondern die aller Lehrer, die keine Stunden haben
@@ -110,8 +111,8 @@ Neue Klassen sind:
     * Subklasse von `VertretungsTag`
     * Hat `.lehrer` und `.get_lehrer()`
 * `RaumVertretungsTag`
-  * Subklasse von `VertretungsTag`
-  * Hat `.räume` und `.raum()`
+    * Subklasse von `VertretungsTag`
+    * Hat `.räume` und `.raum()`
 * `Lehrer`
     * Das Lehrerplan-Äquivalent zu `Klasse`
     * Wird von `LehrerVertretungsTag.lehrer` erzeugt
