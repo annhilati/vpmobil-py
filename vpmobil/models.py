@@ -497,7 +497,7 @@ class Vertretungsplan(VpMobilPyModell):
         return XML.ElementTree(VpMobil)
     
     @classmethod
-    def fromfile(cls, pfad: Path | str, *, parser: Parser = Parser) -> Vertretungsplan:
+    def fromfile(cls, pfad: Path | str, *, parser: Parser = Parser()) -> Vertretungsplan:
         """
         Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
 

@@ -4,6 +4,13 @@ icon: lucide/scroll-text
 
 # Changelog
 
+## [3.0.2](https://pypi.org/project/vpmobil/3.0.2/) (2026-XX-XX)
+
+### 🪲 Fehlerbehebungen
+
+- Parameter `parser` von `Vertretungsplan.fromfile()` erhält als Standardwert `Parser`, nicht aber `Parser()`
+
+
 ## [3.0.1](https://pypi.org/project/vpmobil/3.0.1/) (2026-05-05)
 
 ### 🔧 Änderungen
