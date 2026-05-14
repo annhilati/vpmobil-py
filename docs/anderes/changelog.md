@@ -6,6 +6,10 @@ icon: lucide/scroll-text
 
 ## [3.0.2](https://pypi.org/project/vpmobil/3.0.2/) (2026-XX-XX)
 
+### 🔧 Änderungen
+
+- `~.stunden` von `Klasse`, `Lehrer` und `Raum` werden nun korrekt nach Unterrichtsperiode sortiert
+
 ### 🪲 Fehlerbehebungen
 
 - Parameter `parser` von `Vertretungsplan.fromfile()` erhält als Standardwert `Parser`, nicht aber `Parser()`

@@ -14,7 +14,7 @@ dependencies = [
   "yarl",
   "pyyaml",
   "toml",
-  "pdfplumber",
+  # "pdfplumber",
 ]
 
 [project.urls]

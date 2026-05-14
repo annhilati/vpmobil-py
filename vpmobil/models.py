@@ -173,6 +173,7 @@ class Vertretungsplan(VpMobilPyModell):
                 current = klassen[klasse].stunden.get(stunde.periode, tuple())
                 new_stunden = dict(klassen[klasse].stunden)
                 new_stunden[stunde.periode] = current + (stunde,)
+                new_stunden = sorted(new_stunden)
                 klassen[klasse].stunden = MappingProxyType(new_stunden)
 
         for kurs in self.kurse:
@@ -209,6 +210,7 @@ class Vertretungsplan(VpMobilPyModell):
                 current = lehrerE[lehrer].stunden.get(stunde.periode, tuple())
                 new_stunden = dict(lehrerE[lehrer].stunden)
                 new_stunden[stunde.periode] = current + (stunde,)
+                new_stunden = sorted(new_stunden)
                 lehrerE[lehrer].stunden = MappingProxyType(new_stunden)
 
         for kurs in self.kurse:
@@ -243,6 +245,7 @@ class Vertretungsplan(VpMobilPyModell):
                 current = räumeE[raum].stunden.get(stunde.periode, tuple())
                 new_stunden = dict(räumeE[raum].stunden)
                 new_stunden[stunde.periode] = current + (stunde,)
+                new_stunden = sorted(new_stunden)
                 räumeE[raum].stunden = MappingProxyType(new_stunden)
 
         return MappingProxyType(dict(sorted((k, v) for k, v in räumeE.items() if k)))
