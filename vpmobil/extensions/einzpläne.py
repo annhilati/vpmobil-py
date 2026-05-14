@@ -6,8 +6,16 @@ EinzPläne-PDF-Dateien sind PDFs, die von der Indiware-Planungssoftware bereitge
 """
 
 from pathlib import Path
-import pdfplumber
 import re
+
+def check_dependency():
+    try:
+        import pdfplumber
+    except ImportError as e:
+        raise ImportError(
+            "Für PDF-Funktionen muss 'reportlab' installiert sein:\n"
+            "pip install meinpaket[pdf]"
+        ) from e
 
 _NAME_RE = re.compile(
     r"^Plan für .*?:\s*(.*?)\s+Tutor(?:in)?\s*:",
@@ -47,6 +55,10 @@ def kurse(pfad: Path | str) -> dict[str, set[tuple[str, str]]]:
     Extrahiert aus einem EinzPläne-PDF die Kurskürzel und die Namen zugehöriger Schüler.
     Die Namen werden als Tupel (Vorname, Nachname) gespeichert.
     """
+
+    check_dependency()
+    import pdfplumber
+
     pfad = Path(pfad)
     ergebnis: dict[str, set[tuple[str, str]]] = {}
 
@@ -152,6 +164,10 @@ def tutoren(pfad: Path | str) -> dict[str, list[tuple[str, str]]]:
     Raises:
         ValueError: Wenn das PDF auf unbekannte Weise formatiert ist
     """
+
+    check_dependency()
+    import pdfplumber
+
     pfad = Path(pfad)
     ergebnis: dict[str, set[tuple[str, str]]] = {}
 

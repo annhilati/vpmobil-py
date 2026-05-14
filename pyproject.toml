@@ -13,9 +13,10 @@ dependencies = [
   "requests",
   "yarl",
   "pyyaml",
-  "toml",
-  # "pdfplumber",
+  "toml"
 ]
+[project.optional-dependencies]
+pdfs = ["pdfplumber"]
 
 [project.urls]
 "Homepage" = "https://github.com/annhilati/vpmobil-py"

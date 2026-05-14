@@ -9,7 +9,9 @@ icon: lucide/scroll-text
 ### 🔧 Änderungen
 
 - `~.stunden` von `Klasse`, `Lehrer` und `Raum` werden nun korrekt nach Unterrichtsperiode sortiert
-
+- Paket `pdfplumber` ist nun keine strenge Voraussetzung mehr, um Geräte ohne C++-Distribution nicht einzuschränken. Es kann durch Angabe des Installationsparameters `pdfs` wie in `pip install vpmobil[pdfs]` mitinstalliert werden
+- Formatierungssicherheit der Darstellungen von `Vertretungsplan`-, `Stunde`-, `Kurs`-, `Aufsicht`- und `Klausur`-Objekten verbessert
+  
 ### 🪲 Fehlerbehebungen
 
 - Parameter `parser` von `Vertretungsplan.fromfile()` erhält als Standardwert `Parser`, nicht aber `Parser()`

@@ -146,7 +146,11 @@ class Vertretungsplan(VpMobilPyModell):
     _hidden:     ClassVar[list[str]]                        = ["kurse", "stunden", "aufsichten", "klausuren"]
 
     def __repr__(self):
-        return f"<Vertretungsplan {f'(Typ {self._planart}) ' if self._planart else ""}vom {self.datum.strftime(r'%d.%m.%Y')}>"
+        return "<" + " ".join(filter(None, [
+            "Vertretungsplan",
+            f"(Typ {self._planart})" if self._planart else "",
+            f"vom {self.datum.strftime(r'%d.%m.%Y')}" if self.datum else ""
+        ])) + ">"
     
     def __getitem__(self, key) -> Klasse | Lehrer | Raum:
         if key in self.klassen: 
@@ -589,6 +593,8 @@ class Vertretungsplan(VpMobilPyModell):
 class Stunde(VpMobilPyModell):
     """Die Stunden-Klasse enthält alle Informationen einer Unterrichtsstunde, die im
     Vertretungsplan beschrieben wird.
+
+    Um eine Stunde als ausfallend zu kennzeichnen, setze `fach` auf `---`
     """
     periode:         int
     "Unterrichtsperiode der Stunde. Kann `0` sein."
@@ -621,15 +627,15 @@ class Stunde(VpMobilPyModell):
     fachänderung:    bool        = field(default=False)
     "Ob das Fach der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
     klassen:         set[str]    = field(default_factory=set)
-    "Alle Klassen der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder keine Klassen eingetragen sind."
+    "Alle Klassen der Stunde. Gibt `set()` zurück, wenn die Stunde entfällt oder keine Klassen eingetragen sind."
     klassenänderung: bool        = field(default=False)
     "Ob die Klassen der Stunde geändert wurden. Ebenfalls `True`, wenn die Stunde entfällt."
     lehrer:          set[str]    = field(default_factory=set)
-    "Alle Lehrer der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder keine Lehrer eingetragen sind."
+    "Alle Lehrer der Stunde. Gibt `set()` zurück, wenn die Stunde entfällt oder keine Lehrer eingetragen sind."
     lehreränderung:  bool        = field(default=False)
     "Ob die Lehrer der Stunde geändert wurden. Ebenfalls `True`, wenn die Stunde entfällt."
     räume:           set[str]    = field(default_factory=set)
-    "Alle Räume der Stunde. Gibt `[]` zurück, wenn die Stunde entfällt oder keine Räume eingetragen sind."
+    "Alle Räume der Stunde. Gibt `set()` zurück, wenn die Stunde entfällt oder keine Räume eingetragen sind."
     raumänderung:    bool        = field(default=False)
     "Ob der Raum der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
     kursnummer:      int | None  = field(default=None)
@@ -648,12 +654,12 @@ class Stunde(VpMobilPyModell):
     def __repr__(self):
         if self.ausfall:
             return f"<Ausfall: '{self.info}'>"
-        return "<" + " ".join([
+        return "<" + " ".join(filter(None, [
             ", ".join(self.klassen) if self.klassen else "",
             f"mit {self.fach}" if self.fach else "",
             "bei " + ", ".join(self.lehrer) if self.lehrer else "",
             "in " + ", ".join(self.räume) if self.räume else ""
-        ]) + ">"
+        ])) + ">"
     
     @property
     def ausfall(self) -> bool:
@@ -795,6 +801,14 @@ class Kurs(VpMobilPyModell):
     klassen:    set[str]   = field(default_factory=set)
     "Klassen, die Anteile am Kurs haben"
 
+    def __repr__(self) -> str:
+        return "<" + " ".join(filter(None, [
+            "Kurs",
+            f"{self.kürzel}" if self.kürzel else "",
+            f"bei {self.lehrer}" if self.lehrer else "",
+            f"(Kursnummer {self.kursnummer})" if self.kursnummer else ""
+        ])) + ">"
+
     @classmethod
     def from_xml(cls, data: XML.Element, klassen: set[str]) -> Kurs:
         """Erstellt ein `Kurs`-Objekt aus einem XML-Element.
@@ -824,9 +838,6 @@ class Kurs(VpMobilPyModell):
             })
         ])
 
-    def __repr__(self) -> str:
-        return f"<'{self.kürzel}' bei '{self.lehrer}' (Kursnummer '{self.kursnummer}')>"
-
 
 # ╭──────────────────────────────────────────────────────────────────────────────────────────╮
 # │                                        Aufsicht                                          │ 
@@ -849,8 +860,12 @@ class Aufsicht(VpMobilPyModell):
     "Hinweis zum Ort der Aufsicht"
 
     def __repr__(self):
-        return f"<Aufsicht {f'von \'{", ".join(self.lehrer)}\' ' if self.lehrer else ""}{f'ab \'{self.beginn}\' - ' if self.beginn else "- "}{f'\'{self.ortinfo}\'' if self.ortinfo else ""}>"
-    
+        return "<" + " ".join(filter(None, [
+            "Aufsicht",
+            "durch " + ", ".join(self.lehrer) if self.lehrer else "",
+            f"ab {self.beginn.strftime("%H:%M")}" if self.beginn else ""
+        ])) + (((", " if self.lehrer or self.beginn else "") + (self.ortinfo)) if self.ortinfo else "") + ">"
+
     @classmethod
     def from_xml(cls, data: XML.Element, lehrer: set[str]) -> Aufsicht:
         """Erstellt ein `Aufsicht`-Objekt aus einem XML-Element.
@@ -909,8 +924,12 @@ class Klausur(VpMobilPyModell):
     "Zusätzliche Informationen zur Klausur"
 
     def __repr__(self):
-        return f"<Klausur {f'für \'{", ".join(self.kurse)}\' ' if self.kurse else ""}{f'ab \'{self.beginn}\'' if self.beginn else ""}>"
-    
+        return "<" + " ".join(filter(None, [
+            "Klausur",
+            "für " + ", ".join(self.kurse) if self.kurse else "",
+            f"ab {self.beginn.strftime("%H:%M")}" if self.beginn else "",
+        ])) + ">"
+
     @classmethod
     def from_xml(cls, data: XML.Element, *, parser: Parser = Parser()) -> Klausur:
         """Erstellt ein `Klausur`-Objekt aus einem XML-Element.
