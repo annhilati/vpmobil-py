@@ -15,6 +15,7 @@ icon: lucide/scroll-text
 ### 🪲 Fehlerbehebungen
 
 - Parameter `parser` von `Vertretungsplan.fromfile()` erhält als Standardwert `Parser`, nicht aber `Parser()`
+- Die Erweiterungsmodule `exensions.~` fehlen
 
 
 ## [3.0.1](https://pypi.org/project/vpmobil/3.0.1/) (2026-05-05)
