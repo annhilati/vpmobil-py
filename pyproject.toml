@@ -1,6 +1,6 @@
 [project]
 name = "vpmobil"
-version = "3.0.1"
+version = "3.0.2"
 description = "API wrapper library for evaluating VpMobil substitution plans"
 readme = "README.md"
 requires-python = ">=3.8"

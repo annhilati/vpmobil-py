@@ -7,7 +7,7 @@ from typing import Literal, Any, ClassVar
 from types import MappingProxyType
 import copy
 
-from vpmobil.utils import find, ElementBuilder, prettyxml, Mapping, Collection
+from vpmobil.utils import find, ElementBuilder, prettyxml, Mapping, Collection, natural_sort_key
 from vpmobil.parser import Parser
 
 @dataclass(frozen=False)
@@ -83,20 +83,19 @@ class VpMobilPyModell:
         return result
     
     def __copy__(self):
-        def __copy__(self):
-            result = self.__class__.__new__(self.__class__)
+        result = self.__class__.__new__(self.__class__)
 
-            for feld in fields(self):
-                value = getattr(self, feld.name)
+        for feld in fields(self):
+            value = getattr(self, feld.name)
 
-                if isinstance(value, MappingProxyType):
-                    copied = MappingProxyType(dict(value))
-                else:
-                    copied = copy.copy(value)
+            if isinstance(value, MappingProxyType):
+                copied = MappingProxyType(dict(value))
+            else:
+                copied = copy.copy(value)
 
-                setattr(result, feld.name, copied)
+            setattr(result, feld.name, copied)
 
-            return result
+        return result
     
     def copy(self):
         """Erzeugt eine neue identische Instanz. Auch der Inhalt der Felder werden
@@ -177,7 +176,7 @@ class Vertretungsplan(VpMobilPyModell):
                 current = klassen[klasse].stunden.get(stunde.periode, tuple())
                 new_stunden = dict(klassen[klasse].stunden)
                 new_stunden[stunde.periode] = current + (stunde,)
-                new_stunden = sorted(new_stunden)
+                new_stunden = dict(sorted(new_stunden.items()))
                 klassen[klasse].stunden = MappingProxyType(new_stunden)
 
         for kurs in self.kurse:
@@ -186,16 +185,23 @@ class Vertretungsplan(VpMobilPyModell):
                     klassen[klasse] = Klasse(kürzel=klasse)
                 new_kurse = dict(klassen[klasse].kurse)
                 new_kurse[kurs.kursnummer] = kurs
+                new_kurse = dict(sorted(new_kurse.items()))
                 klassen[klasse].kurse = MappingProxyType(new_kurse)
 
         for klausur in self.klausuren:
-            for kurs in klausur.kurse:
-                for klasse in self.klassen.get(kurs, Klasse()).stunden:
-                    if klasse not in klassen:
-                        klassen[klasse] = Klasse(kürzel=klasse)
+            klausur_klassen = set()
+            for kurs_kürzel in klausur.kurse:
+                for kurs in self.kurse:
+                    if kurs.kürzel == kurs_kürzel or str(kurs.kursnummer) == kurs_kürzel:
+                        klausur_klassen.update(kurs.klassen)
+            
+            for klasse in klausur_klassen:
+                if klasse not in klassen:
+                    klassen[klasse] = Klasse(kürzel=klasse)
+                if klausur not in klassen[klasse].klausuren:
                     klassen[klasse].klausuren = klassen[klasse].klausuren + (klausur,)
 
-        return MappingProxyType(dict(sorted((k, v) for k, v in klassen.items() if k)))
+        return MappingProxyType(dict(sorted(((k, v) for k, v in klassen.items() if k), key=lambda x: natural_sort_key(x[0]))))
     
     @property
     def lehrer(self) -> Mapping[str, Lehrer]:
@@ -214,7 +220,7 @@ class Vertretungsplan(VpMobilPyModell):
                 current = lehrerE[lehrer].stunden.get(stunde.periode, tuple())
                 new_stunden = dict(lehrerE[lehrer].stunden)
                 new_stunden[stunde.periode] = current + (stunde,)
-                new_stunden = sorted(new_stunden)
+                new_stunden = dict(sorted(new_stunden.items()))
                 lehrerE[lehrer].stunden = MappingProxyType(new_stunden)
 
         for kurs in self.kurse:
@@ -223,6 +229,7 @@ class Vertretungsplan(VpMobilPyModell):
                 lehrerE[lehrer] = Lehrer(kürzel=lehrer)
             new_kurse = dict(lehrerE[lehrer].kurse)
             new_kurse[kurs.kursnummer] = kurs
+            new_kurse = dict(sorted(new_kurse.items()))
             lehrerE[lehrer].kurse = MappingProxyType(new_kurse)
 
         for aufsicht in self.aufsichten:
@@ -231,7 +238,7 @@ class Vertretungsplan(VpMobilPyModell):
                     lehrerE[lehrer] = Lehrer(kürzel=lehrer)
                 lehrerE[lehrer].aufsichten = lehrerE[lehrer].aufsichten + (aufsicht,)
 
-        return MappingProxyType(dict(sorted((k, v) for k, v in lehrerE.items() if k)))
+        return MappingProxyType(dict(sorted(((k, v) for k, v in lehrerE.items() if k), key=lambda x: natural_sort_key(x[0]))))
     
     @property
     def räume(self) -> Mapping[str, Raum]:
@@ -249,13 +256,13 @@ class Vertretungsplan(VpMobilPyModell):
                 current = räumeE[raum].stunden.get(stunde.periode, tuple())
                 new_stunden = dict(räumeE[raum].stunden)
                 new_stunden[stunde.periode] = current + (stunde,)
-                new_stunden = sorted(new_stunden)
+                new_stunden = dict(sorted(new_stunden.items()))
                 räumeE[raum].stunden = MappingProxyType(new_stunden)
 
-        return MappingProxyType(dict(sorted((k, v) for k, v in räumeE.items() if k)))
+        return MappingProxyType(dict(sorted(((k, v) for k, v in räumeE.items() if k), key=lambda x: natural_sort_key(x[0]))))
     
     @property
-    def abwesendeLehrer(self) -> set[str]:
+    def abwesendeLehrer(self) -> tuple[str, ...]:
         "Lehrer, die keinen Unterricht haben"
         
         # lehrerMitUnterricht: set[str] = set()
@@ -286,15 +293,15 @@ class Vertretungsplan(VpMobilPyModell):
                     if not stunde.ausfall:
                         lehrerVielleichtKrank.discard(kürzel)
 
-        return set(sorted(
+        return tuple(sorted(
             {
                 lehrer for lehrer in lehrerVielleichtKrank
                 # and lehrer != ""
                 # and lehrer is not None
-            }
+            }, key=natural_sort_key
         ))
 
-    def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> set[str]:
+    def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: list[str] = []) -> tuple[str, ...]:
         """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.
         
         Räume, zu denen für den Tag kein Plan existiert sind nicht aufgeführt.
@@ -319,7 +326,7 @@ class Vertretungsplan(VpMobilPyModell):
                     if kürzel in frei:
                         frei.remove(kürzel)
 
-        return set(sorted(list(frei)))
+        return tuple(sorted(list(frei)))
 
     @classmethod
     def from_xml(cls, data: XML.Element | XML.ElementTree, *, parser: Parser = Parser()) -> Vertretungsplan:
@@ -398,7 +405,7 @@ class Vertretungsplan(VpMobilPyModell):
                                                 
                         # Bekannte Aufsichten mergen
                         if (existing_aufsicht := next((a for a in aufsichten if a.beginn == aufsicht.beginn and a.ortinfo == aufsicht.ortinfo), None)):
-                            existing_aufsicht.lehrer.update(aufsicht.lehrer)
+                            existing_aufsicht.lehrer = tuple(sorted(set(existing_aufsicht.lehrer) | set(aufsicht.lehrer), key=natural_sort_key))
                         else:
                             aufsichten.append(aufsicht)
 
@@ -410,12 +417,9 @@ class Vertretungsplan(VpMobilPyModell):
 
                         # Bekannte Stunden mergen
                         if (existing_stunde := next((s for s in stunden if s.periode == stunde.periode and s.kursnummer == stunde.kursnummer and (s.klassen == stunde.klassen or s.lehrer == stunde.lehrer or s.räume == stunde.räume)), None)):
-                            existing_stunde.klassen.update(stunde.klassen)
-                            existing_stunde.klassen = set(sorted(existing_stunde.klassen))
-                            existing_stunde.lehrer.update(stunde.lehrer)
-                            existing_stunde.lehrer = set(sorted(existing_stunde.lehrer))
-                            existing_stunde.räume.update(stunde.räume)
-                            existing_stunde.räume = set(sorted(existing_stunde.räume))
+                            existing_stunde.klassen = tuple(sorted(set(existing_stunde.klassen) | set(stunde.klassen), key=natural_sort_key))
+                            existing_stunde.lehrer = tuple(sorted(set(existing_stunde.lehrer) | set(stunde.lehrer), key=natural_sort_key))
+                            existing_stunde.räume = tuple(sorted(set(existing_stunde.räume) | set(stunde.räume), key=natural_sort_key))
                         else:
                             stunden.append(stunde)
 
@@ -447,8 +451,7 @@ class Vertretungsplan(VpMobilPyModell):
 
                         # Bekannte Stunden mergen
                         if (existing_kurs := next((k for k in kurse if k.kursnummer == kurs.kursnummer), None)):
-                            existing_kurs.klassen.update(kurs.klassen)
-                            existing_kurs.klassen = set(sorted(existing_kurs.klassen))
+                            existing_kurs.klassen = tuple(sorted(set(existing_kurs.klassen) | set(kurs.klassen), key=natural_sort_key))
                         else:
                             kurse.append(kurs)
 
@@ -626,15 +629,15 @@ class Stunde(VpMobilPyModell):
     """
     fachänderung:    bool        = field(default=False)
     "Ob das Fach der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
-    klassen:         set[str]    = field(default_factory=set)
+    klassen:         tuple[str, ...] = field(default_factory=tuple)
     "Alle Klassen der Stunde. Gibt `set()` zurück, wenn die Stunde entfällt oder keine Klassen eingetragen sind."
     klassenänderung: bool        = field(default=False)
     "Ob die Klassen der Stunde geändert wurden. Ebenfalls `True`, wenn die Stunde entfällt."
-    lehrer:          set[str]    = field(default_factory=set)
+    lehrer:          tuple[str, ...] = field(default_factory=tuple)
     "Alle Lehrer der Stunde. Gibt `set()` zurück, wenn die Stunde entfällt oder keine Lehrer eingetragen sind."
     lehreränderung:  bool        = field(default=False)
     "Ob die Lehrer der Stunde geändert wurden. Ebenfalls `True`, wenn die Stunde entfällt."
-    räume:           set[str]    = field(default_factory=set)
+    räume:           tuple[str, ...] = field(default_factory=tuple)
     "Alle Räume der Stunde. Gibt `set()` zurück, wenn die Stunde entfällt oder keine Räume eingetragen sind."
     raumänderung:    bool        = field(default=False)
     "Ob der Raum der Stunde geändert wurde. Ebenfalls `True`, wenn die Stunde entfällt."
@@ -676,7 +679,7 @@ class Stunde(VpMobilPyModell):
         return self.fachänderung or self.lehreränderung or self.raumänderung or self.klassenänderung
     
     @classmethod
-    def from_xml(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", *, parser: Parser = Parser(), kontext: set[str] = set(), kontextgeändert: bool = False) -> Stunde:
+    def from_xml(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", *, parser: Parser = Parser(), kontext: tuple[str, ...] = tuple(), kontextgeändert: bool = False) -> Stunde:
         """Erstellt ein `Stunde`-Objekt aus einem XML-Element.
 
         Parameters:
@@ -715,23 +718,23 @@ class Stunde(VpMobilPyModell):
         nicht_klassen_parser = parser.clone(BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN=False)
 
         if planart == "K":
-            klassen = kontext
-            lehrer = set(nicht_klassen_parser.slice_aufzählung(Le))
-            räume = set(nicht_klassen_parser.slice_aufzählung(Ra))
+            klassen = tuple(sorted(kontext, key=natural_sort_key))
+            lehrer = tuple(sorted(nicht_klassen_parser.slice_aufzählung(Le), key=natural_sort_key))
+            räume = tuple(sorted(nicht_klassen_parser.slice_aufzählung(Ra), key=natural_sort_key))
             klassenänderung = kontextgeändert
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "L":
-            klassen = set(parser.slice_aufzählung(Le))
-            lehrer = kontext
-            räume = set(nicht_klassen_parser.slice_aufzählung(Le))
+            klassen = tuple(sorted(parser.slice_aufzählung(Le), key=natural_sort_key))
+            lehrer = tuple(sorted(kontext, key=natural_sort_key))
+            räume = tuple(sorted(nicht_klassen_parser.slice_aufzählung(Le), key=natural_sort_key))
             klassenänderung = "LeAe" in find(data, "Le", "attrib")
             lehreränderung = kontextgeändert
             raumänderung = "RaAe" in find(data, "Ra", "attrib")
         elif planart == "R":
-            klassen = set(parser.slice_aufzählung(Le))
-            lehrer = set(nicht_klassen_parser.slice_aufzählung(Le))
-            räume = kontext
+            klassen = tuple(sorted(parser.slice_aufzählung(Le), key=natural_sort_key))
+            lehrer = tuple(sorted(nicht_klassen_parser.slice_aufzählung(Le), key=natural_sort_key))
+            räume = tuple(sorted(kontext, key=natural_sort_key))
             klassenänderung = "RaAe" in find(data, "Ra", "attrib")
             lehreränderung = "LeAe" in find(data, "Le", "attrib")
             raumänderung = kontextgeändert
@@ -798,7 +801,7 @@ class Kurs(VpMobilPyModell):
     "Fach des Kurses"
     lehrer:     str | None = field(default=None)
     "Lehrer des Kurses"
-    klassen:    set[str]   = field(default_factory=set)
+    klassen:         tuple[str, ...] = field(default_factory=tuple)
     "Klassen, die Anteile am Kurs haben"
 
     def __repr__(self) -> str:
@@ -810,7 +813,7 @@ class Kurs(VpMobilPyModell):
         ])) + ">"
 
     @classmethod
-    def from_xml(cls, data: XML.Element, klassen: set[str]) -> Kurs:
+    def from_xml(cls, data: XML.Element, klassen: tuple[str, ...]) -> Kurs:
         """Erstellt ein `Kurs`-Objekt aus einem XML-Element.
 
         Parameters:
@@ -848,7 +851,7 @@ class Aufsicht(VpMobilPyModell):
     """Die Aufsicht-Klasse enthält alle Informationen zu einer im Vertretungsplan
     beschriebenen Lehreraufsicht.
     """
-    lehrer:    set[str]    = field(default_factory=set)
+    lehrer:          tuple[str, ...] = field(default_factory=tuple)
     "Lehrer, für die die Aufsicht angesetzt ist"
     vorStunde: int  | None = field(default=None)
     "Unterrichtsperiode, in deren davoriger Pause die Aufsicht stattfindet"
@@ -867,7 +870,7 @@ class Aufsicht(VpMobilPyModell):
         ])) + (((", " if self.lehrer or self.beginn else "") + (self.ortinfo)) if self.ortinfo else "") + ">"
 
     @classmethod
-    def from_xml(cls, data: XML.Element, lehrer: set[str]) -> Aufsicht:
+    def from_xml(cls, data: XML.Element, lehrer: tuple[str, ...]) -> Aufsicht:
         """Erstellt ein `Aufsicht`-Objekt aus einem XML-Element.
 
         Parameters:
@@ -910,7 +913,7 @@ class Klausur(VpMobilPyModell):
     """Die Klausur-Klasse enthält die Informationen zu einer im Vertretungsplan
     beschriebenen Klausur.
     """
-    kurse:   set[str]         = field(default_factory=set)
+    kurse:   tuple[str, ...]         = field(default_factory=tuple)
     "Kurse, für die die Klausur angesetzt ist"
     lehrer:  str       | None = field(default=None)
     "Lehrer, die die Klausur beaufsichtigen"

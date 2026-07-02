@@ -4,18 +4,23 @@ icon: lucide/scroll-text
 
 # Changelog
 
-## [3.0.2](https://pypi.org/project/vpmobil/3.0.2/) (2026-XX-XX)
+## [3.0.2](https://pypi.org/project/vpmobil/3.0.2/) (2026-07-02)
 
 ### 🔧 Änderungen
 
 - `~.stunden` von `Klasse`, `Lehrer` und `Raum` werden nun korrekt nach Unterrichtsperiode sortiert
 - Paket `pdfplumber` ist nun keine strenge Voraussetzung mehr, um Geräte ohne C++-Distribution nicht einzuschränken. Es kann durch Angabe des Installationsparameters `pdfs` wie in `pip install vpmobil[pdfs]` mitinstalliert werden
 - Formatierungssicherheit der Darstellungen von `Vertretungsplan`-, `Stunde`-, `Kurs`-, `Aufsicht`- und `Klausur`-Objekten verbessert
+- `Stunde`, `Kurs`, `Aufsicht`, `Klausur` speichern `klassen`, `lehrer`, `räume` und `kurse` nun als `tuple[str, ...]` anstatt als `set[str]`, um die Sortierung der Kürzel beizubehalten
+- Kürzel von Klassen, Lehrern und Räumen in Stunden, Kursen, Aufsichten, Klausuren, `freieRäume` und `abwesendeLehrer` werden nun natürlich sortiert (z.B. "5a" vor "10a")
   
 ### 🪲 Fehlerbehebungen
 
 - Parameter `parser` von `Vertretungsplan.fromfile()` erhält als Standardwert `Parser`, nicht aber `Parser()`
 - Die Erweiterungsmodule `exensions.~` fehlen
+- Behebung eines Fehlers (`TypeError: mappingproxy() argument must be a mapping, not list`), der auftrat, wenn die generierten Eigenschaften `~.stunden` von `Klasse`, `Lehrer` und `Raum` aufgerufen wurden
+- Behebung einer Endlosschleife bzw. falscher Zuordnung beim Auswerten von Klausuren für die Eigenschaft `Vertretungsplan.klassen`
+- Behebung der verschachtelten Methodendefinition von `VpMobilPyModell.__copy__`, die immer `None` zurückgab
 
 
 ## [3.0.1](https://pypi.org/project/vpmobil/3.0.1/) (2026-05-05)

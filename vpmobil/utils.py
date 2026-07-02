@@ -6,6 +6,7 @@ from typing import Any, overload, Literal, Iterator, Callable, Mapping as _Mappi
 from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
+import re
 
 type Mapping[KT, VT] = _Mapping[KT, VT]
 "Mapping type von vpmobil-py (immutable Mapping, z.B. MappingProxyType)"
@@ -24,6 +25,10 @@ def prettyxml(object: ET.Element | ET.ElementTree) -> str:
     reparsed = MD.parseString(string)
     return reparsed.toprettyxml(indent="\t")
 
+
+def natural_sort_key(s: str) -> list[int | str]:
+    """Sortierschlüssel für natürliche Sortierung von Strings mit Zahlen (z.B. '5a', '10a')."""
+    return [int(text) if text.isdigit() else text.lower() for text in re.split('([0-9]+)', str(s))]
 
 @overload
 def find(element: ET.Element, path: str, mode: Literal["text"]) -> str | Literal[""]: ...
