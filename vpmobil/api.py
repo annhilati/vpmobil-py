@@ -102,6 +102,8 @@ class VertretungsplanZugang():
         Für beide Fehler gibt es verschiedene mögliche Ursachen, die in den
         entsprechenden Fehlerklassen genauer beschrieben sind.
         """
+        if not isinstance(datum, date): # Wir machen, das so explizit, weil die Standardfehlermeldung einfach verwirrend ist
+            raise TypeError(f"datum muss vom Typ 'date' sein, nicht '{type(datum).__name__}'")
 
         dateipfad: str = (
             datum

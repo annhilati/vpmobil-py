@@ -4,8 +4,19 @@ icon: lucide/scroll-text
 
 # Changelog
 
-## [3.0.2](https://pypi.org/project/vpmobil/3.0.2/) (2026-07-02)
+## [3.1.0](https://pypi.org/project/vpmobil/3.1.0/) (2026-07-1X)
 
+### 🚀 Neuerungen
+
+- Einführung der `Repository[T]`-Architektur für Listen-Attribute wie `klassen`, `lehrer` und `räume` in Modellen, um Redundanzen beim Mergen automatisch zu vermeiden und eine saubere Mutierbarkeit bei gleichzeitiger Sortierung zu gewährleisten
+- Implementierung von dynamischen Views (`SelectionProxy`, `GroupedSelectionProxy`) für abgeleitete Modelleigenschaften, die sich automatisch mit dem `Vertretungsplan` synchronisieren
+
+### 🔧 Änderungen
+
+- Die Export-Methodik via `saveasfile` (insbesondere bei YAML-Dateien) übernimmt nun durchgehend die natürliche Sortierung von Kürzeln, um die Navigierbarkeit zu verbessern
+- Feld `Klausur.lehrer` hat nun den Typ `Repository[str]` statt `str | None`
+
+## [3.0.2](https://pypi.org/project/vpmobil/3.0.2/) (2026-07-02)
 ### 🔧 Änderungen
 
 - `~.stunden` von `Klasse`, `Lehrer` und `Raum` werden nun korrekt nach Unterrichtsperiode sortiert
