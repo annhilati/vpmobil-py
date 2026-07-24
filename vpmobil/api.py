@@ -1,7 +1,7 @@
 from yarl import URL
 from enum import StrEnum
 from datetime import datetime, date, time, timedelta
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import xml.etree.ElementTree as XML
 import requests
 import configparser
@@ -54,9 +54,10 @@ class VertretungsplanZugang():
     schulnummer:      int
     benutzername:     str
     passwort:         str
-    domain:           str = "stundenplan24.de"
-    port:             int = None
-    dateipfadschema:  str = Standardpfade.PlanKl
+    domain:           str    = "stundenplan24.de"
+    port:             int    = None
+    dateipfadschema:  str    = Standardpfade.PlanKl
+    parser:           Parser = field(default_factory=Parser)
     
     def __post_init__(self):
 
@@ -82,7 +83,7 @@ class VertretungsplanZugang():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def get(self, datum: date = date.today(), *, datei: str = None, parser: Parser = Parser()) -> Vertretungsplan:
+    def get(self, datum: date = date.today(), *, datei: str = None, parser: Parser = ...) -> Vertretungsplan:
         """Ruft den Vertretungsplan eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
 
         Parameters:
@@ -91,7 +92,7 @@ class VertretungsplanZugang():
                 sowohl `datum` als auch `datei` angegeben sind, wird das Datum aus `datum`
                 in `datei` eingesetzt, falls letzteres strftime-Direktiven enthält.
             parser (Parser): Parsing-Anweisungen, um die Eigenheiten des Planers zu
-                berücksichtigen
+                berücksichtigen (standardmäßig von `self.parser` übernommen)
 
 
         Raises:
@@ -104,6 +105,9 @@ class VertretungsplanZugang():
         """
         if not isinstance(datum, date): # Wir machen, das so explizit, weil die Standardfehlermeldung einfach verwirrend ist
             raise TypeError(f"datum muss vom Typ 'date' sein, nicht '{type(datum).__name__}'")
+
+        if parser is ...:
+            parser = self.parser
 
         dateipfad: str = (
             datum
