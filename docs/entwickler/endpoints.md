@@ -191,13 +191,13 @@ Dieses XML-Format wird als Quellformat für Informationsmonitore und Vertretungs
 
 ## vpinfok.txt
 
-Die genaue Funktion dieser Datei im INI-Format ist unbekannt.
+Diese Datei enthält vermutlich Metadaten, die von der VpMobil24-App genutzt werden, um zu wissen, welche Pläne abzurufen sind.
 
 ```yaml
 [Grunddaten]
 ├── Nativ
-├── Datum                               # strptime Format: '%d.%m.%Y'
-├── Uhrzeit                             # strptime Format: '%H:%M:%S'
+├── Datum                               # strptime Format: '%d.%m.%Y', Datum der letzten Aktualisierung
+├── Uhrzeit                             # strptime Format: '%H:%M:%S', Uhrzeit der letzten Aktualisierung
 ├── Plan1                               # strptime Format: '%Y%m%d'
 ├── Plan2                               # strptime Format: '%Y%m%d'
 ├── Plan3                               # strptime Format: '%Y%m%d'
