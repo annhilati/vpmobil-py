@@ -294,13 +294,7 @@ class Vertretungsplan(VpMobilPyModell):
                     if not stunde.ausfall:
                         lehrerVielleichtKrank.discard(kürzel)
 
-        return tuple(sorted(
-            {
-                lehrer for lehrer in lehrerVielleichtKrank
-                # and lehrer != ""
-                # and lehrer is not None
-            }, key=natural_sort_key
-        ))
+        return tuple(sorted({lehrer for lehrer in lehrerVielleichtKrank}, key=natural_sort_key))
 
     def freieRäume(self, beginn: time = time(0, 0), ende: time = time(23, 59), räume_context: Iterable[str] = []) -> tuple[str, ...]:
         """Gibt die Kürzel der Räume zurück, die zwischen `beginn` und `ende` nicht belegt sind.

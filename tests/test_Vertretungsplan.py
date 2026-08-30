@@ -5,7 +5,7 @@ dotenv.load_dotenv()
 vp = VertretungsplanZugang(os.getenv("SCHULNUMMER"), os.getenv("NUTZER"), os.getenv("PASSWORT"))
 
 def test_fetch():
-    data = vp.get(datei=Standardpfade.Klassen)
+    data = vp.get(Standardpfade.Klassen)
 
     assert type(data) == Vertretungsplan
     

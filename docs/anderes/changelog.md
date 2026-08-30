@@ -4,7 +4,7 @@ icon: lucide/scroll-text
 
 # Changelog
 
-## [3.1.0](https://pypi.org/project/vpmobil/3.1.0/) (2026-07-1X)
+## [3.1.0](https://pypi.org/project/vpmobil/3.1.0/) (2026-09-XX)
 
 ### 🚀 Neuerungen
 
@@ -16,6 +16,11 @@ icon: lucide/scroll-text
 
 - Die Export-Methodik via `saveasfile` (insbesondere bei YAML-Dateien) übernimmt nun durchgehend die natürliche Sortierung von Kürzeln, um die Navigierbarkeit zu verbessern
 - Feld `Klausur.lehrer` hat nun den Typ `Repository[str]` statt `str | None`
+- Methode `VertretungsplanZugang.get()` kann nun sowohl mit `date` als auch mit `str` als Positionsargument genutzt werden. Das jeweils andere oder auch beide können weiterhin als Keyword-Argumente übergeben werden
+
+### 🪲 Fehlerbehebungen
+
+- Behebung eines Fehlers, bei dem das Standard-Datum in `VertretungsplanZugang.get()` nur einmal beim Import der Bibliothek ausgewertet wurde und bei längerer Laufzeit veraltete. Das Datum wird nun zur Laufzeit ausgewertet.
 
 ## [3.0.2](https://pypi.org/project/vpmobil/3.0.2/) (2026-07-02)
 ### 🔧 Änderungen

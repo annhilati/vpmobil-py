@@ -1,6 +1,7 @@
 from yarl import URL
 from enum import StrEnum
 from datetime import datetime, date, time, timedelta
+from typing import overload
 from dataclasses import dataclass, field
 import xml.etree.ElementTree as XML
 import requests
@@ -49,6 +50,8 @@ class VertretungsplanZugang():
             Schema der Pfade unter dem die Quelldateien abgerufen werden können.
             `{schulnummer}` sowie strptime-Direktiven können als Platzhalter verwendet werden.
             Die Standardpfade sind im Enumerator `Standardpfade` enthalten.
+        parser (Parser): Standard-Parsing-Anweisungen, um die Eigenheiten des Planers zu
+            berücksichtigen. Diese können bei jedem Abruf überschrieben werden.
     """
     
     schulnummer:      int
@@ -83,7 +86,14 @@ class VertretungsplanZugang():
     def __repr__(self):
         return f"<Vertretungsplan {self.benutzername}@{self.schulnummer}>"
 
-    def get(self, datum: date = date.today(), *, datei: str = None, parser: Parser = ...) -> Vertretungsplan:
+    @overload
+    def get(self, datum: date, *, datei: str = ..., parser: Parser = ...) -> Vertretungsplan: ...
+    @overload
+    def get(self, datei: str, *, datum: date = ..., parser: Parser = ...) -> Vertretungsplan: ...
+    @overload
+    def get(self, *, datum: date = ..., datei: str = ..., parser: Parser = ...) -> Vertretungsplan: ...
+
+    def get(self, datum_or_datei: date | str = None, *, datum: date = None, datei: str = None, parser: Parser = None) -> Vertretungsplan:
         """Ruft den Vertretungsplan eines Tages ab. Es wird eine HTTP-Request von wenigen hundert Kilobyte ausgelöst.
 
         Parameters:
@@ -103,10 +113,17 @@ class VertretungsplanZugang():
         Für beide Fehler gibt es verschiedene mögliche Ursachen, die in den
         entsprechenden Fehlerklassen genauer beschrieben sind.
         """
-        if not isinstance(datum, date): # Wir machen, das so explizit, weil die Standardfehlermeldung einfach verwirrend ist
-            raise TypeError(f"datum muss vom Typ 'date' sein, nicht '{type(datum).__name__}'")
+        if isinstance(datum_or_datei, date):
+            datum = datum_or_datei
+        elif isinstance(datum_or_datei, str):
+            datei = datum_or_datei
+        elif datum_or_datei is not None:
+            raise TypeError(f"Erstes Argument muss 'date' oder 'str' sein, nicht '{type(datum_or_datei).__name__}'")
 
-        if parser is ...:
+        if datum is None:
+            datum = date.today()
+
+        if parser is None:
             parser = self.parser
 
         dateipfad: str = (
