@@ -23,7 +23,7 @@ from datetime import date
 
 vp = VertretungsplanZugang(10000000, "schueler", "password")
 
-tag = vp.fetch(date(2025, 11, 11))
+tag = vp.get(date(2025, 11, 11))
 klasse = tag.klassen["9b"]
 
 for periode, stunden in klasse.stunden.items():
