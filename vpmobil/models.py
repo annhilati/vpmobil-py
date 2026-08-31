@@ -124,7 +124,7 @@ class VpMobilPyModell:
 class Vertretungsplan(VpMobilPyModell):
     """`Vertretungsplan` ist die einheitliche Klasse für die Vertretungsplan-Daten eines Tages.
     
-    Ein `Vertretungsplan`-Objekt kann über `~.from_xml()` aus XML-Quelldaten erzeugt werden.
+    Ein `Vertretungsplan`-Objekt kann über `~.from_element_tree()` aus XML-Quelldaten erzeugt werden.
     """
     
     datum:       date       | None                          = field(default=None)
@@ -306,7 +306,7 @@ class Vertretungsplan(VpMobilPyModell):
         return tuple(sorted(list(frei)))
 
     @classmethod
-    def from_xml(cls, data: XML.Element | XML.ElementTree, *, parser: Parser = Parser()) -> Vertretungsplan:
+    def from_element_tree(cls, data: XML.Element | XML.ElementTree, *, parser: Parser = Parser()) -> Vertretungsplan:
         """Erstellt ein `Vertretungsplan`-Objekt aus einem XML-Dokument.
 
         Parameters:
@@ -371,14 +371,14 @@ class Vertretungsplan(VpMobilPyModell):
                 # Klausuren auswerten
                 if (KlausurenTag := KlTag.find("Klausuren")) is not None:
                     for KlausurTag in KlausurenTag.findall("Klausur"):
-                        klausur = Klausur.from_xml(KlausurTag, parser=parser)
+                        klausur = Klausur.from_element(KlausurTag, parser=parser)
 
                         klausuren.add(klausur)
 
                 # Aufsichten auswerten
                 if (AufsichtenTag := KlTag.find("Aufsichten")) is not None:
                     for AufsichtTag in AufsichtenTag.findall("Aufsicht"):
-                        aufsicht = Aufsicht.from_xml(AufsichtTag, lehrer=[Kurz])
+                        aufsicht = Aufsicht.from_element(AufsichtTag, lehrer=[Kurz])
                                                 
                         aufsichten.add(aufsicht)
 
@@ -386,7 +386,7 @@ class Vertretungsplan(VpMobilPyModell):
                 if (PlTag := KlTag.find("Pl")) is not None:
                     for StdTag in PlTag.findall("Std"):
 
-                        stunde = Stunde.from_xml(StdTag, planart=planart, kontext={Kurz}, parser=parser)
+                        stunde = Stunde.from_element(StdTag, planart=planart, kontext={Kurz}, parser=parser)
 
                         stunden.add(stunde)
 
@@ -414,7 +414,7 @@ class Vertretungsplan(VpMobilPyModell):
                 # Kurse auswerten
                 if (UnterrichtsTag := KlTag.find("Unterricht")) is not None:
                     for UeTag in UnterrichtsTag.findall("Ue"):
-                        kurs = Kurs.from_xml(UeTag, klassen={Kurz})
+                        kurs = Kurs.from_element(UeTag, klassen={Kurz})
 
                         kurse.add(kurs)
 
@@ -434,16 +434,16 @@ class Vertretungsplan(VpMobilPyModell):
         vp._planart = planart
         return vp
     
-    def to_xml(self, planart: Literal["K", "L", "R"], *, parser: Parser = Parser()) -> XML.ElementTree:
+    def to_element_tree(self, planart: Literal["K", "L", "R"], *, parser: Parser = Parser()) -> XML.ElementTree:
         """Erzeugt ein XML-Dokument für den Vertretungsplan.
         
         Parameters:
             planart (str): Die Planart, die die neuen Quelldaten primär repräsentieren, respektive Klassen, Lehrer oder Räume
             parser (Parser): Formattierungsanweisungen
         """
+        from importlib.metadata import version
         import locale
         locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
-        from importlib.metadata import version
 
         VpMobil = ElementBuilder("VpMobil", attrib={"generator": "vpmobil==" + version("vpmobil")}, children=[
             ElementBuilder("Kopf", children=[
@@ -457,7 +457,7 @@ class Vertretungsplan(VpMobilPyModell):
                 for tag in self.freieTage
             ]),
             ElementBuilder("Klassen", children=[
-                KlObjekt.to_xml(parser=parser)
+                KlObjekt.to_element(parser=parser)
                 for KlObjekt in (
                     self.klassen.values() if planart == "K" else
                     self.lehrer.values() if planart == "L" else
@@ -471,7 +471,7 @@ class Vertretungsplan(VpMobilPyModell):
         return XML.ElementTree(VpMobil)
     
     @classmethod
-    def fromfile(cls, pfad: Path | str, *, parser: Parser = Parser()) -> Vertretungsplan:
+    def from_file(cls, pfad: Path | str, *, parser: Parser = Parser()) -> Vertretungsplan:
         """
         Erzeugt ein Vertretungsplan-Objekt aus einer XML-Vertretungsplandatei.
 
@@ -480,7 +480,7 @@ class Vertretungsplan(VpMobilPyModell):
             ValueError : Wenn die Datei nicht gelesen werden kann
         """
         with open(pfad, encoding="utf-8-sig") as f:
-            instance = cls.from_xml(XML.parse(f), parser=parser)
+            instance = cls.from_element_tree(XML.parse(f), parser=parser)
         return instance
     
     def export(self, pfad: Path | str, overwrite=True, hidden: list[str] = []) -> None:
@@ -540,7 +540,7 @@ class Vertretungsplan(VpMobilPyModell):
             FileExistsError: Falls die Datei bereits existiert und `overwrite` `False` ist
         """
 
-        xmlpretty = prettyxml(self.to_xml(planart=planart, parser=parser))
+        xmlpretty = prettyxml(self.to_element_tree(planart=planart, parser=parser))
 
         zielpfad = Path(pfad).resolve() # Funktioniert für Path und str
         zielverzeichnis = zielpfad.parent
@@ -643,7 +643,7 @@ class Stunde(VpMobilPyModell):
         return self.fachänderung or self.lehreränderung or self.raumänderung or self.klassenänderung
     
     @classmethod
-    def from_xml(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", *, parser: Parser = Parser(), kontext: Iterable[str] = (), kontextgeändert: bool = False) -> Stunde:
+    def from_element(cls, data: XML.Element, planart: Literal["K", "L", "R"] = "K", *, parser: Parser = Parser(), kontext: Iterable[str] = (), kontextgeändert: bool = False) -> Stunde:
         """Erstellt ein `Stunde`-Objekt aus einem XML-Element.
 
         Parameters:
@@ -720,7 +720,7 @@ class Stunde(VpMobilPyModell):
             info = find(data, "If", "text") or None
         )
         
-    def to_xml(self, planart: Literal["K", "L", "R"], *, parser: Parser = Parser()) -> XML.Element:
+    def to_element(self, planart: Literal["K", "L", "R"], *, parser: Parser = Parser()) -> XML.Element:
         """Erzeugt ein XML-Element für die Stunde.
         
         Parameters:
@@ -777,7 +777,7 @@ class Kurs(VpMobilPyModell):
         ])) + ">"
 
     @classmethod
-    def from_xml(cls, data: XML.Element, klassen: Iterable[str]) -> Kurs:
+    def from_element(cls, data: XML.Element, klassen: Iterable[str]) -> Kurs:
         """Erstellt ein `Kurs`-Objekt aus einem XML-Element.
 
         Parameters:
@@ -794,7 +794,7 @@ class Kurs(VpMobilPyModell):
             klassen = Repository(items=klassen, adder=uniqueness_adder, sorter=lambda l: sorted(l, key=natural_sort_key))
         )
 
-    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+    def to_element(self, *, parser: Parser = Parser()) -> XML.Element:
         """Erzeugt ein XML-Element für den Kurs.
         """
         return ElementBuilder("Ue", children=[
@@ -834,7 +834,7 @@ class Aufsicht(VpMobilPyModell):
         ])) + (((", " if self.lehrer or self.beginn else "") + (self.ortinfo)) if self.ortinfo else "") + ">"
 
     @classmethod
-    def from_xml(cls, data: XML.Element, lehrer: Iterable[str]) -> Aufsicht:
+    def from_element(cls, data: XML.Element, lehrer: Iterable[str]) -> Aufsicht:
         """Erstellt ein `Aufsicht`-Objekt aus einem XML-Element.
 
         Parameters:
@@ -857,7 +857,7 @@ class Aufsicht(VpMobilPyModell):
             ortinfo=find(data, "AuOrt", "text") or None,
         )
 
-    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+    def to_element(self, *, parser: Parser = Parser()) -> XML.Element:
         """Erzeugt ein XML-Element für die Aufsicht.
         """
         return ElementBuilder("Aufsicht", children=[
@@ -898,7 +898,7 @@ class Klausur(VpMobilPyModell):
         ])) + ">"
 
     @classmethod
-    def from_xml(cls, data: XML.Element, *, parser: Parser = Parser()) -> Klausur:
+    def from_element(cls, data: XML.Element, *, parser: Parser = Parser()) -> Klausur:
         """Erstellt ein `Klausur`-Objekt aus einem XML-Element.
 
         Parameters:
@@ -937,7 +937,7 @@ class Klausur(VpMobilPyModell):
             info=find(data, "KlKinfo", "text") or None
         )
     
-    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+    def to_element(self, *, parser: Parser = Parser()) -> XML.Element:
         """Erzeugt ein XML-Element für die Klausur.
         
         Parameters:
@@ -980,7 +980,7 @@ class Klasse(KLRProxyBase):
     def __repr__(self):
         return f"<Klasse '{self.kürzel}'>"
     
-    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+    def to_element(self, *, parser: Parser = Parser()) -> XML.Element:
         """Erzeugt ein XML-Element für die Klasse.
         
         Parameters:
@@ -989,15 +989,15 @@ class Klasse(KLRProxyBase):
         Kl = ElementBuilder("Kl", children=[
             ElementBuilder("Kurz", self.kürzel),
             ElementBuilder("Pl", children=[
-                StdObjekt.to_xml(planart="K", parser=parser)
+                StdObjekt.to_element(planart="K", parser=parser)
                 for stunden in self.stunden.values() for StdObjekt in stunden
             ]),
             ElementBuilder("Unterricht", children=[
-                UeObjekt.to_xml()
+                UeObjekt.to_element()
                 for kurse in self.kurse.values() for UeObjekt in kurse
             ]),
             ElementBuilder("Klausuren", children=[
-                KlausurObjekt.to_xml()
+                KlausurObjekt.to_element()
                 for KlausurObjekt in self.klausuren
             ])
         ])
@@ -1016,7 +1016,7 @@ class Lehrer(KLRProxyBase):
     def __repr__(self):
         return f"<Lehrer '{self.kürzel}'>"
     
-    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+    def to_element(self, *, parser: Parser = Parser()) -> XML.Element:
         """Erzeugt ein XML-Element für den Lehrer.
         
         Parameters:
@@ -1025,15 +1025,15 @@ class Lehrer(KLRProxyBase):
         Kl = ElementBuilder("Kl", children=[
             ElementBuilder("Kurz", self.kürzel),
             ElementBuilder("Pl", children=[
-                StdObjekt.to_xml(planart="L", parser=parser)
+                StdObjekt.to_element(planart="L", parser=parser)
                 for stunden in self.stunden.values() for StdObjekt in stunden
             ]),
             ElementBuilder("Unterricht", children=[
-                UeObjekt.to_xml()
-                for UeObjekt in self.kurse.values()
+                UeObjekt.to_element()
+                for kurse in self.kurse.values() for UeObjekt in kurse
             ]),
             ElementBuilder("Aufsichten", children=[
-                AufsichtObjekt.to_xml()
+                AufsichtObjekt.to_element()
                 for AufsichtObjekt in self.aufsichten
             ])
         ])
@@ -1048,7 +1048,7 @@ class Raum(KLRProxyBase):
     def __repr__(self):
         return f"<Raum '{self.kürzel}'>"
     
-    def to_xml(self, *, parser: Parser = Parser()) -> XML.Element:
+    def to_element(self, *, parser: Parser = Parser()) -> XML.Element:
         """Erzeugt ein XML-Element für den Raum.
         
         Parameters:
@@ -1057,7 +1057,7 @@ class Raum(KLRProxyBase):
         Kl = ElementBuilder("Kl", children=[
             ElementBuilder("Kurz", self.kürzel),
             ElementBuilder("Pl", children=[
-                StdObjekt.to_xml(planart="R", parser=parser)
+                StdObjekt.to_element(planart="R", parser=parser)
                 for stunden in self.stunden.values() for StdObjekt in stunden
             ])
         ])

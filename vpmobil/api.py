@@ -142,9 +142,9 @@ class VertretungsplanZugang():
             raise ResourceNotFound(message=f"Datei '{dateipfad}' existiert nicht", response=response)
         else:
             response.raise_for_status()
-            return Vertretungsplan.from_xml(XML.fromstring(response.content), parser=parser)
+            return Vertretungsplan.from_element_tree(XML.fromstring(response.content), parser=parser)
         
-    def getall(self, referenzplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[Vertretungsplan]:
+    def get_all(self, referenzplan: str = Standardpfade.Klassen, nur_zukünftige: bool = False, wochenenden: bool = False) -> list[Vertretungsplan]:
         """Ruft die Vertretungspläne für alle verfügbaren Tage ab. Genauer gesagt wird
         versucht, jeden Tag im Zeitraum von 14 Tagen vor bis 7 Tagen nach dem zuletzt
         veröffentlichten Tag abzurufen. Jeder erhaltene Tag fordert wenige hundert Kilobyte.
@@ -172,7 +172,7 @@ class VertretungsplanZugang():
         return results
 
 
-    def get_vpinfok(self) -> tuple[date, time, tuple[date]]:
+    def get_vpinfok(self) -> tuple[date | None, time | None, tuple[date]]:
         """Ruft die Daten der `vpinfok.txt` ab."""
 
         dateipfad = f"{self.schulnummer}/mobil/mobdaten/vpinfok.txt"

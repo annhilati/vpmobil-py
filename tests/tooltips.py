@@ -19,14 +19,14 @@ Standardpfade
 
 vp.socket
 vp.get()
-vp.getall()
+vp.get_all()
 vp.get_vpinfok()
 
-day.from_xml()
-day.fromfile()
+day.from_element_tree()
+day.from_file()
 day.as_dict()
 day.export()
-day.to_xml()
+day.to_element_tree()
 day.save_xml()
 day.dateiname
 day.datum
@@ -44,8 +44,8 @@ day.lehrer
 day.räume
 day.freieRäume()
 
-stunde.from_xml()
-stunde.to_xml()
+stunde.from_element()
+stunde.to_element()
 stunde.fach
 stunde.fachmeta
 stunde.fachänderung
@@ -63,32 +63,32 @@ stunde.periode
 stunde.ausfall
 stunde.änderung
 
-klasse.to_xml()
+klasse.to_element()
 klasse.kürzel
 klasse.stunden
 klasse.kurse
 klasse.klausuren
 
-lehrer.to_xml()
+lehrer.to_element()
 lehrer.kürzel
 lehrer.stunden
 lehrer.kurse
 lehrer.aufsichten
 
-raum.to_xml()
+raum.to_element()
 raum.kürzel
 raum.stunden
 
-aufsicht.from_xml()
-aufsicht.to_xml()
+aufsicht.from_element()
+aufsicht.to_element()
 aufsicht.lehrer
 aufsicht.ortinfo
 aufsicht.zeitinfo
 aufsicht.vorStunde
 aufsicht.beginn
 
-klausur.from_xml()
-klausur.to_xml()
+klausur.from_element()
+klausur.to_element()
 klausur.beginn
 klausur.dauer
 klausur.info
@@ -96,8 +96,8 @@ klausur.kurse
 klausur.lehrer
 klausur.periode
 
-kurs.from_xml()
-kurs.to_xml()
+kurs.from_element()
+kurs.to_element()
 kurs.kursnummer
 kurs.klassen
 kurs.fach

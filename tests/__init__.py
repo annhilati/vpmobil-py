@@ -1,0 +1,1 @@
+from .anonymize import anonymize_vertretungsplan

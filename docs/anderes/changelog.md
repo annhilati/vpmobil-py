@@ -14,10 +14,16 @@ icon: lucide/scroll-text
 
 ### 🔧 Änderungen
 
+- Methode `VertretungsplanZugang.get()` kann nun sowohl mit `date` als auch mit `str` als Positionsargument genutzt werden. Das jeweils andere oder auch beide können weiterhin als Keyword-Argumente übergeben werden
+- Methode `VertretungsplanZugang.getall()` in `~.get_all()` umbenannt
 - Methode `Vertretungsplan.saveasfile()` in `~.export()` umbenannt
 - Die Export-Methodik via `Vertretungsplan.export()` (insbesondere bei YAML-Dateien) übernimmt nun durchgehend die natürliche Sortierung von Kürzeln, um die Navigierbarkeit zu verbessern
+- Methode `Vertretungsplan.fromfile()` in `~.from_file()` umbenannt
+- Methode `Vertretungsplan.from_xml()` in `~.from_element_tree()` umbenannt
+- Methode `Vertretungsplan.to_xml()` in `~.to_element_tree()` umbenannt
+- Methoden `~.from_xml` der Klassen `Stunde`, `Kurs`, `Aufsicht`, `Klausur`, `Klasse`, `Lehrer` und `Raum` in `~.from_element()` umbenannt
+- Methoden `~.to_xml` der Klassen `Stunde`, `Kurs`, `Aufsicht`, und `Klausur` in `~.to_element()` umbenannt
 - Feld `Klausur.lehrer` hat nun den Typ `Repository[str]` statt `str | None`
-- Methode `VertretungsplanZugang.get()` kann nun sowohl mit `date` als auch mit `str` als Positionsargument genutzt werden. Das jeweils andere oder auch beide können weiterhin als Keyword-Argumente übergeben werden
 
 ### 🪲 Fehlerbehebungen
 
