@@ -14,7 +14,8 @@ icon: lucide/scroll-text
 
 ### 🔧 Änderungen
 
-- Die Export-Methodik via `saveasfile` (insbesondere bei YAML-Dateien) übernimmt nun durchgehend die natürliche Sortierung von Kürzeln, um die Navigierbarkeit zu verbessern
+- Methode `Vertretungsplan.saveasfile()` in `~.export()` umbenannt
+- Die Export-Methodik via `Vertretungsplan.export()` (insbesondere bei YAML-Dateien) übernimmt nun durchgehend die natürliche Sortierung von Kürzeln, um die Navigierbarkeit zu verbessern
 - Feld `Klausur.lehrer` hat nun den Typ `Repository[str]` statt `str | None`
 - Methode `VertretungsplanZugang.get()` kann nun sowohl mit `date` als auch mit `str` als Positionsargument genutzt werden. Das jeweils andere oder auch beide können weiterhin als Keyword-Argumente übergeben werden
 

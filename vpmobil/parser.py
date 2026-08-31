@@ -26,7 +26,7 @@ class Parser:
             - `"8a-10a"` als `"8a", "9a", "10a"` interpretiert.
         KLASSENBEZEICHNER_PATTERN (str): Capture-Pattern für Stufe und Suffix einer
             Klasse. Die Capture-Groups `stufe` und `suffix` müssen enthalten sein.
-        STUNDE_HERVERLEGT_PATTERN (str):
+        STUNDE_VERLEGT_VON_PATTERN (str):
             Capture-Pattern, dass die Periode, von der eine Stunde verleg wurde,
             extrahiert. Muss die Capture-Group `periode` enthalten
     """
@@ -34,7 +34,7 @@ class Parser:
     AUFZÄHLUNGS_TRENNZEICHEN: str = " "
     BINDESTRICHE_ALS_BEREICHE_INTERPRETIEREN: bool = True
     KLASSENBEZEICHNER_PATTERN: str = r"(?P<stufe>[1-9][0-9]?)(?P<suffix>[a-z])"
-    STUNDE_HERVERLEGT_PATTERN: str = r"verlegt von St\.(?P<periode>\d+);"
+    STUNDE_VERLEGT_VON_PATTERN: str = r"verlegt von St\.(?P<periode>\d+);"
     
     def clone(self, **overrides) -> "Parser":
         """Erzeugt eine Kopie des Parser-Objekts und überschreibt besimmt Felder.

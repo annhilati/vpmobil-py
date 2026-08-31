@@ -25,7 +25,7 @@ vp.get_vpinfok()
 day.from_xml()
 day.fromfile()
 day.as_dict()
-day.saveasfile()
+day.export()
 day.to_xml()
 day.save_xml()
 day.dateiname

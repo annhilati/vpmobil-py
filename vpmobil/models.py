@@ -262,28 +262,10 @@ class Vertretungsplan(VpMobilPyModell):
 
         return MappingProxyType(dict(sorted(((k, v) for k, v in räumeE.items() if k), key=lambda x: natural_sort_key(x[0]))))
     
+    # TODO: Das eine immutable Repo-View machen oder doch nicht weil eben imm
     @property
     def abwesendeLehrer(self) -> tuple[str, ...]:
         "Lehrer, die keinen Unterricht haben"
-        
-        # lehrerMitUnterricht: set[str] = set()
-        # lehrerVielleichtKrank: set[str] = set()
-
-        # for klasse in self.klassen.values():
-        #     for stunde in [stunde for stunden in klasse.stunden.values() for stunde in stunden]:
-
-        #         if stunde.ausfall and klasse.kurse.get(stunde.kursnummer) is not None:
-        #             lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
-
-        #         elif stunde.lehreränderung:
-        #             if len(stunde.lehrer) > 0:
-        #                 lehrerMitUnterricht.update(stunde.lehrer)
-        #             if klasse.kurse.get(stunde.kursnummer) is not None:
-        #                 lehrerVielleichtKrank.add(klasse.kurse.get(stunde.kursnummer).lehrer)
-
-        #         elif not stunde.ausfall and not stunde.lehreränderung:
-        #             if len(stunde.lehrer) > 0:
-        #                 lehrerMitUnterricht.update(stunde.lehrer)
 
         lehrerVielleichtKrank: set[str] = set()
 
@@ -501,7 +483,7 @@ class Vertretungsplan(VpMobilPyModell):
             instance = cls.from_xml(XML.parse(f), parser=parser)
         return instance
     
-    def saveasfile(self, pfad: Path | str, overwrite=True, hidden: list[str] = []) -> None:
+    def export(self, pfad: Path | str, overwrite=True, hidden: list[str] = []) -> None:
         """Speichert den ausgewerteten Vertretungsplan als JSON-, YAML- oder TOML-Datei.
 
         **ACHTUNG**: vpmobil-py hat momentan keine Funktion,
@@ -1012,7 +994,7 @@ class Klasse(KLRProxyBase):
             ]),
             ElementBuilder("Unterricht", children=[
                 UeObjekt.to_xml()
-                for UeObjekt in self.kurse.values()
+                for kurse in self.kurse.values() for UeObjekt in kurse
             ]),
             ElementBuilder("Klausuren", children=[
                 KlausurObjekt.to_xml()
