@@ -13,8 +13,8 @@ def check_dependency():
         import pdfplumber
     except ImportError as e:
         raise ImportError(
-            "Für PDF-Funktionen muss 'reportlab' installiert sein:\n"
-            "pip install meinpaket[pdf]"
+            "Für PDF-Funktionen muss 'pdfplumber' installiert sein:\n"
+            "pip install vpmobil[pdf]"
         ) from e
 
 _NAME_RE = re.compile(
