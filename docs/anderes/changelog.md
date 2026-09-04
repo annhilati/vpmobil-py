@@ -11,6 +11,7 @@ icon: lucide/scroll-text
 - Einführung der `Repository[T]`-Architektur für Listen-Attribute wie `klassen`, `lehrer` und `räume` in Modellen, um Redundanzen beim Mergen automatisch zu vermeiden und eine saubere Mutierbarkeit bei gleichzeitiger Sortierung zu gewährleisten
 - Implementierung von dynamischen Views (`SelectionProxy`, `GroupedSelectionProxy`) für abgeleitete Modelleigenschaften, die sich automatisch mit dem `Vertretungsplan` synchronisieren
 - Feld `parser` zu `VertretungsplanZugang` hinzugefügt. `VertretungsplanZugang.get()` übernimmt dessen Wert standardmäßig für den Parameter `parser`
+- Erweiterungs-Modul `vpmobil.extensions.anonymize` hinzugefügt. Es enthält die `anonymize_vertretungsplan()`-Methode, die Kürzel unkenntlich macht und Zusatzinfos entfernt
 
 ### 🔧 Änderungen
 

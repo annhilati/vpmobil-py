@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-and-upload:
@@ -15,17 +15,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Extract the version from pyproject.toml to use it in notifications/releases
+      - name: Extract version
+        run: |
+          VERSION=$(grep -m 1 -E '^\s*version\s*=' pyproject.toml | sed -E "s/.*['\"]([^'\"]+)['\"].*/\1/")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       # Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      # Install dependencies for building packages
+      # Install dependencies for building packages and testing
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          pip install build twine
+          pip install build twine setuptools pytest ruff
+          pip install .
+
+      # Format code with ruff
+      - name: Format code
+        run: |
+          ruff format .
+
+      # Run tests to ensure code quality before publishing
+      - name: Run tests
+        run: |
+          pytest
 
       # Build the Python package
       - name: Build package
@@ -39,3 +56,12 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           twine upload dist/*
+
+      # Create a GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          files: dist/*
+          generate_release_notes: false
