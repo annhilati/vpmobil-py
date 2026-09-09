@@ -443,7 +443,13 @@ class Vertretungsplan(VpMobilPyModell):
         """
         from importlib.metadata import version
         import locale
-        locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
+        try:
+            locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
+        except locale.Error:
+            try:
+                locale.setlocale(locale.LC_TIME, "de_DE")
+            except locale.Error:
+                pass # Fallback auf System-Standard
 
         VpMobil = ElementBuilder("VpMobil", attrib={"generator": "vpmobil==" + version("vpmobil")}, children=[
             ElementBuilder("Kopf", children=[

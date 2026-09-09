@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
-from dataclasses import dataclass, field
-from typing import Any, overload, Literal, Iterator, Callable, Mapping as _Mapping, Sequence as _Sequence
-from dataclasses import dataclass
+from typing import Any, overload, Literal, Mapping as _Mapping
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as MD
 import re
