@@ -4,7 +4,7 @@ icon: lucide/scroll-text
 
 # Changelog
 
-## [3.1.0-pre1](https://pypi.org/project/vpmobil/3.1.0/) (2026-09-09)
+## [3.1.0-pre1](https://pypi.org/project/vpmobil/3.1.0rc1/) (2026-09-09)
 
 ### 🚀 Neuerungen
 

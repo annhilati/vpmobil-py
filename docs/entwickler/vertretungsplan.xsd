@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:element name="VpMobil">
+    <xs:complexType>
+      <xs:sequence>
+        
+        <!-- ==================== KOPF ==================== -->
+        <xs:element name="Kopf">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="planart" type="xs:string" minOccurs="0"/>
+              
+              <!-- strptime Format: '%d.%m.%Y, %H:%M' -->
+              <xs:element name="zeitstempel" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="\d{2}\.\d{2}\.\d{4}, \d{2}:\d{2}"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              
+              <!-- strptime Format: '%A, %d. %B %Y' (z.B. Montag, 01. Januar 2024) -->
+              <xs:element name="DatumPlan" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <!-- Erlaubt Wochentage und Monate mit Umlauten -->
+                    <xs:pattern value="[a-zA-ZäöüÄÖÜß]+, \d{2}\. [a-zA-ZäöüÄÖÜß]+ \d{4}"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              
+              <xs:element name="datei" type="xs:string" minOccurs="0"/>
+              <xs:element name="nativ" type="xs:string" minOccurs="0"/>
+              <xs:element name="woche" type="xs:string" minOccurs="0"/>
+              <xs:element name="tageprowoche" type="xs:integer" minOccurs="0"/>
+              <xs:element name="schulnummer" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+            <xs:anyAttribute processContents="skip"/>
+          </xs:complexType>
+        </xs:element>
+
+        <!-- ==================== FREIE TAGE ==================== -->
+        <xs:element name="FreieTage" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- strptime Format: '%y%m%d' (z.B. 241224) -->
+              <xs:element name="ft" minOccurs="0" maxOccurs="unbounded">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="\d{6}"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+            <xs:anyAttribute processContents="skip"/>
+          </xs:complexType>
+        </xs:element>
+
+        <!-- ==================== KLASSEN ==================== -->
+        <xs:element name="Klassen" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Kl" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Kurz" type="xs:string" minOccurs="0"/>
+                    <xs:element name="Hash" type="xs:string" minOccurs="0"/>
+                    
+                    <xs:element name="KlStunden" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="KlSt" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <!-- strptime Format: '%H:%M' (Attribute!) -->
+                              <xs:attribute name="ZeitVon">
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:pattern value="\d{2}:\d{2}"/>
+                                  </xs:restriction>
+                                </xs:simpleType>
+                              </xs:attribute>
+                              <xs:attribute name="ZeitBis">
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:pattern value="\d{2}:\d{2}"/>
+                                  </xs:restriction>
+                                </xs:simpleType>
+                              </xs:attribute>
+                              <xs:anyAttribute processContents="skip"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:anyAttribute processContents="skip"/>
+                      </xs:complexType>
+                    </xs:element>
+
+                    <!-- Nur bei Typ K, aber um Fehler zu vermeiden optional -->
+                    <xs:element name="Kurse" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Ku" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="KKz" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="KLe" type="xs:string"/>
+                                        <xs:anyAttribute processContents="skip"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:anyAttribute processContents="skip"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:anyAttribute processContents="skip"/>
+                      </xs:complexType>
+                    </xs:element>
+
+                    <!-- Nur bei Typ K -->
+                    <xs:element name="Unterricht" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Ue" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="UeNr" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="UeLe" type="xs:string"/>
+                                        <xs:attribute name="UeGr" type="xs:string"/>
+                                        <xs:attribute name="UeFa" type="xs:string"/>
+                                        <xs:anyAttribute processContents="skip"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:anyAttribute processContents="skip"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:anyAttribute processContents="skip"/>
+                      </xs:complexType>
+                    </xs:element>
+
+                    <!-- PL (Stunden) -->
+                    <xs:element name="Pl" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Std" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="St" type="xs:string" minOccurs="0"/>
+                                
+                                <xs:element name="Beginn" minOccurs="0">
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                      <xs:pattern value="\d{2}:\d{2}"/>
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
+                                <xs:element name="Ende" minOccurs="0">
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                      <xs:pattern value="\d{2}:\d{2}"/>
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
+                                
+                                <xs:element name="Fa" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <!-- Entspricht Literal: 'FaGeaendert' -->
+                                        <xs:attribute name="FaAe" type="xs:string"/>
+                                        <xs:anyAttribute processContents="skip"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                
+                                <xs:element name="Ku2" type="xs:string" minOccurs="0"/>
+                                
+                                <xs:element name="Le" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="LeAe" type="xs:string"/>
+                                        <xs:anyAttribute processContents="skip"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                
+                                <xs:element name="Ra" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="RaAe" type="xs:string"/>
+                                        <xs:anyAttribute processContents="skip"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                
+                                <xs:element name="Nr" type="xs:string" minOccurs="0"/>
+                                <xs:element name="If" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                              <xs:anyAttribute processContents="skip"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:anyAttribute processContents="skip"/>
+                      </xs:complexType>
+                    </xs:element>
+
+                    <!-- Nur bei Typ K (Klausuren) -->
+                    <xs:element name="Klausuren" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Klausur" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="KlJahrgang" type="xs:string" minOccurs="0"/>
+                                <xs:element name="KlKurs" type="xs:string" minOccurs="0"/>
+                                <xs:element name="KlKursleiter" type="xs:string" minOccurs="0"/>
+                                <xs:element name="KlStunde" type="xs:string" minOccurs="0"/>
+                                <xs:element name="KlBeginn" type="xs:string" minOccurs="0"/>
+                                <xs:element name="KlDauer" type="xs:string" minOccurs="0"/>
+                                <xs:element name="KlKinfo" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                              <xs:anyAttribute processContents="skip"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:anyAttribute processContents="skip"/>
+                      </xs:complexType>
+                    </xs:element>
+
+                    <!-- Nur bei Typ L (Aufsichten) -->
+                    <xs:element name="Aufsichten" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Aufsicht" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="AuTag" type="xs:string" minOccurs="0"/>
+                                <xs:element name="AuVorStunde" type="xs:string" minOccurs="0"/>
+                                <xs:element name="AuUhrzeit" type="xs:string" minOccurs="0"/>
+                                <xs:element name="AuZeit" type="xs:string" minOccurs="0"/>
+                                <xs:element name="AuOrt" type="xs:string" minOccurs="0"/>
+                              </xs:sequence>
+                              <xs:anyAttribute processContents="skip"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:anyAttribute processContents="skip"/>
+                      </xs:complexType>
+                    </xs:element>
+
+                  </xs:sequence>
+                  <xs:anyAttribute processContents="skip"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:anyAttribute processContents="skip"/>
+          </xs:complexType>
+        </xs:element>
+
+        <!-- ==================== ZUSATZINFO ==================== -->
+        <xs:element name="ZusatzInfo" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ZiZeile" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:anyAttribute processContents="skip"/>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+      <!-- Beliebige Attribute (wie textAsInt) am Root-Element erlauben -->
+      <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

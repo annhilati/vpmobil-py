@@ -103,7 +103,7 @@ Dieses XML-Format wird als Quellformat für einzelne Tage in der VpMobil24 App v
 │               ├── <AuZeit>
 │               └── <AuOrt>
 └── <ZusatzInfo>
-    └── <ZiZeile>
+    └── *<ZiZeile>
 ```
 
 ## Vertretungsplan (nur Änderungen)
